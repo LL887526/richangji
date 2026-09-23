@@ -182,6 +182,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
 </div>
 <script>
 (function(){
+  return; /* 口令门已停用（2026-09-23 拍板：手机锁屏为主防线）。恢复口令门：删除本行即可 */
   var KEY='richangji-gate-ok';
   try{if(localStorage.getItem(KEY)==='1')return;}catch(e){return;}
   var m=document.getElementById('gateMask');if(!m)return;
