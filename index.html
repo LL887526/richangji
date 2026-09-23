@@ -4,6 +4,7 @@
   <meta data-page-node-id="dS6OFZyF7ffLyNpKGXJ4JH" charset="UTF-8">
   <meta data-page-node-id="CoiKV2xsupkh5HdrlyqmdX" content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport">
   <meta data-page-node-id="rvUDVCrHKMahST6E6GoNhS" content="#f5f0e8" name="theme-color">
+<meta name="robots" content="noindex, nofollow">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="mobile-web-app-capable" content="yes">
@@ -170,6 +171,42 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   <title data-page-node-id="N9uQg0dpiKTsyB4FFPFrxl" data-pnid-children="1t2kuYHDk4UITU5HQoJQo7">日常集 · 生活工作台</title>
 </head>
 <body data-page-node-id="rtikqOPMx1wMRBoYr58Tlo" data-sp-bindable="database" data-sp-database-id="SlzFSYqafJRJlZLTC5OvzN">
+<div id="gateMask" hidden style="position:fixed;inset:0;z-index:9999;background:#f5f0e8;display:none;align-items:center;justify-content:center">
+  <div style="text-align:center;padding:24px;width:min(320px,86vw)">
+    <p style="margin:0 0 6px;color:#746d63;font-size:13px;letter-spacing:.08em">日常集</p>
+    <h1 style="margin:0 0 18px;font-size:20px;color:#29251f">输入口令进入</h1>
+    <input id="gateInput" type="password" inputmode="numeric" maxlength="12" autocomplete="off" placeholder="口令" style="width:100%;min-height:44px;padding:10px 14px;border:1px solid #ded5c8;border-radius:12px;font-size:16px;background:#fffdfa;color:#29251f;text-align:center">
+    <button id="gateBtn" style="width:100%;min-height:44px;margin-top:12px;border:0;border-radius:12px;background:#4d3045;color:#fffdfa;font-size:15px">进入</button>
+    <p id="gateErr" hidden style="margin:10px 0 0;color:#b44d43;font-size:13px">口令不对，再试一次</p>
+  </div>
+</div>
+<script>
+(function(){
+  var KEY='richangji-gate-ok';
+  try{if(localStorage.getItem(KEY)==='1')return;}catch(e){return;}
+  var m=document.getElementById('gateMask');if(!m)return;
+  m.style.display='flex';document.documentElement.style.overflow='hidden';
+  var SHA='2358a16af9f6bd7cb611da9798294dcbae110ae52e455e03e7b06a3d07336b21',FB='4eb2f44e';
+  function fnv(s){var h=0x811c9dc5;for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=(h*0x01000193)>>>0;}return('0000000'+h.toString(16)).slice(-8);}
+  function shaOf(s){
+    if(window.crypto&&crypto.subtle&&window.TextEncoder){
+      return crypto.subtle.digest('SHA-256',new TextEncoder().encode(s)).then(function(b){return Array.prototype.map.call(new Uint8Array(b),function(x){return('0'+x.toString(16)).slice(-2);}).join('');}).catch(function(){return null;});
+    }
+    return Promise.resolve(null);
+  }
+  function check(){
+    var v=document.getElementById('gateInput').value;
+    if(!v)return;
+    shaOf(v).then(function(h){
+      var ok=(h&&h===SHA)||fnv(v+'#rj')===FB;
+      if(ok){try{localStorage.setItem(KEY,'1');}catch(e){}m.style.display='none';document.documentElement.style.overflow='';}
+      else{document.getElementById('gateErr').hidden=false;document.getElementById('gateInput').value='';}
+    });
+  }
+  document.getElementById('gateBtn').addEventListener('click',check);
+  document.getElementById('gateInput').addEventListener('keydown',function(e){if(e.key==='Enter')check();});
+})();
+</script>
   <div data-page-node-id="CQDsQx2QyIPWyU2AET1QJH" aria-label="语言 / Language" class="lang-switch" role="group"><button data-page-node-id="qwku7GC8gcBqMLg4aTdPPm" data-lang="zh" type="button"><!--pnid:PxrUGBItlh5AYWdBRBiG7T-->中文</button><span data-page-node-id="AJdyp6CWP6rYQgftB2djk5" aria-hidden="true"><!--pnid:VIsebkCeTRTScO0v28RLht-->/</span><button data-page-node-id="MKlI4lOTUIT07E7gXAaDi9" data-lang="en" type="button"><!--pnid:rnQqlFgyic5QpWpYtKbFuG-->EN</button></div>
   <svg data-page-node-id="hrhqw0y3fthw8UXdD5i1RV" aria-hidden="true" class="svg-sprite">
     <symbol data-page-node-id="ttRJv93RKbvUBgf5F4wumv" id="i-home" viewBox="0 0 24 24"><path data-page-node-id="vJiAYCrTScgXrfDzVHigEb" d="m3 11 9-8 9 8v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></symbol>
@@ -246,6 +283,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
             <div class="wrv" data-p5="grow"><div class="wrv-date">成长<button class="text-btn" data-nav="grow">去成长空间</button></div><div class="wrv-line" id="p5Grow"></div></div>
             <div class="wrv" data-p5="fit"><div class="wrv-date">健身<button class="text-btn" data-nav="fitness">去健身页</button></div><div class="wrv-line" id="p5Fit"></div></div>
           </div></article>
+          <article class="panel span-2" id="backupHint" hidden><div class="panel-head"><div><p class="eyebrow">数据安全</p><h2>该做一次备份了</h2></div></div><p class="mini-note" id="backupHintNote" style="margin:6px 0 0"></p><div class="wmore" style="margin-top:10px"><button data-act="bkExport"><svg><use href="#i-download"/></svg>立即备份</button><button data-act="bkDismiss">本周不再提醒</button></div></article>
           <article data-page-node-id="YfWNDApKCV3kvDVbTZj0Ln" class="panel span-2"><div data-page-node-id="uSs2wpse8HHjfxa5bjPwtS" class="panel-head"><div data-page-node-id="coQ7yz1Ta3oraHLm32pUHW"><p data-page-node-id="DpdGrC2CcNxwlwaKU46fyy" class="eyebrow"><!--pnid:7HhnFY6C54faAFCamd1trm-->今日节奏</p><h2 data-page-node-id="3MpuBp8rUL94vPOAtrrR6O"><!--pnid:n48s6Cn9wDLDRA6WNc78Un-->待办清单</h2></div><button data-page-node-id="pHyImc32EBsBxRJ96U54IC" class="text-btn" data-nav="planner"><!--pnid:b6kWmyGUpactQA3QXcKOZH-->查看全部</button></div><div data-page-node-id="xAYheBpFUJVXzUPW12GKEH" class="clean-list" id="dashboardTasks"></div></article>
           <article data-page-node-id="toSQyfTgP9eqvkBFDAyZQM" class="panel habit-panel"><div data-page-node-id="bdw93kkgLgksQipICbIIdM" class="panel-head"><div data-page-node-id="dB8d3ZIIIeaYqrlsCVVB7h"><p data-page-node-id="bKktTEbMGaqAPlQzAQpiQv" class="eyebrow"><!--pnid:os0Znfb4WxzEhxeUiQ8zAX-->连续发生</p><h2 data-page-node-id="sGCZIrBWDQoXHXiCkxAWEC"><!--pnid:GHEqAK98xVHy900lR4AaKV-->习惯打卡</h2></div><button data-page-node-id="DjNt3b7t9xWklgGpcv2f97" class="text-btn" data-nav="habits"><!--pnid:RXOvSixKPuPE4k6WQnmckj-->管理</button></div><div data-page-node-id="D3mB5lzAtA1p4MzjCDNnqn" class="habit-stack" id="dashboardHabits"></div></article>
           <article data-page-node-id="pjKPXRGwbmnI3lVIBpP52g" class="panel span-2"><div data-page-node-id="bXslLIeBe8a5sEIfcKEXvN" class="panel-head"><div data-page-node-id="rLVnUBnvPH9sRq0OYcmyii"><p data-page-node-id="bpUxBTE6LE0YszOk7gPjVE" class="eyebrow"><!--pnid:smyjYQVkNJON5eorYUiK9l-->生活脉络</p><h2 data-page-node-id="AmjCCBOLB4HxVQZZKQr7l6"><!--pnid:NQCXmgcttSoO3ORMFxJgj4-->最近记录</h2></div><button data-page-node-id="iz0FsTET02k3DpK6CLc9Nv" class="text-btn" data-nav="archive"><!--pnid:P2cnJpVZNzNLMMfuIxdhuK-->进入档案</button></div><div data-page-node-id="hm8ilNcOz8ChLCVCIu3Dth" class="timeline" id="recentRecords"></div></article>
@@ -567,6 +605,15 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     <section class="settings-sheet" role="dialog" aria-modal="true" aria-labelledby="moreTitle">
       <div class="settings-head"><div><p class="eyebrow">全部入口</p><h2 id="moreTitle">跳到任意模块</h2></div><button class="sheet-close" data-action="close-more" aria-label="关闭">×</button></div>
       <div class="wmore" id="moreList"></div>
+      <div id="backupBox" style="margin-top:14px;padding-top:14px;border-top:1px solid var(--line)">
+        <p class="eyebrow" style="margin:0 0 8px">数据备份</p>
+        <div class="wmore">
+          <button data-act="bkExport"><svg><use href="#i-download"/></svg>导出全量备份 JSON</button>
+          <button data-act="bkImport"><svg><use href="#i-download"/></svg>从备份恢复</button>
+        </div>
+        <small id="backupStamp" style="display:block;margin-top:8px;color:var(--muted);font-size:12px"></small>
+        <input type="file" id="bkFile" accept=".json,application/json" hidden>
+      </div>
     </section>
   </div>
 
@@ -1370,6 +1417,17 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     }).join('')+'</div></div>').join('');
   }
 
+  function renderBackupHint(){
+    const el=document.getElementById('backupHint');if(!el)return;
+    const last=Number(localStorage.getItem('richangji-lastExport')||0);
+    const due=!last||(Date.now()-last)>14*86400000;
+    const dismissed=localStorage.getItem('richangji-backup-dismissed')===new Date().toDateString();
+    el.hidden=!(due&&!dismissed);
+    const note=document.getElementById('backupHintNote');
+    if(note&&!el.hidden)note.textContent=last?('距上次导出已超过 14 天（上次：'+new Date(last).toLocaleDateString()+'）。数据只存在本机浏览器，换设备或清缓存会丢。'):('还没有导出过备份。数据只存在本机浏览器，换设备或清缓存会丢。');
+    const stamp=document.getElementById('backupStamp');
+    if(stamp)stamp.textContent=last?('上次全量备份：'+new Date(last).toLocaleString()):'还没有导出过全量备份';
+  }
   function renderCockpitP5(){
     const wk=document.getElementById('p5Work');if(!wk)return;
     const act=(state.work.projects||[]).filter(p=>Math.min(100,p.progress||0)<100).length;
@@ -1883,7 +1941,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     if(type==='delIdea'){if(!confirm('确定删除这条想法吗？删除后无法撤回。'))return;state.grow.ideas=growIdeas().filter(x=>x.id!==id);state.work.ideas=state.grow.ideas;saveState(true);renderWords();}
   }
 
-  function renderAll(){applyBrand();renderDashboard();renderCockpitP5();renderMoney();renderHabits();renderFitness();renderFitTrain();renderPlanner();renderHome();renderMedia();renderArchive();renderBackupStatus();renderWork();renderGrow();}
+  function renderAll(){applyBrand();renderDashboard();renderCockpitP5();renderBackupHint();renderMoney();renderHabits();renderFitness();renderFitTrain();renderPlanner();renderHome();renderMedia();renderArchive();renderBackupStatus();renderWork();renderGrow();}
 
   document.addEventListener('click',event=>{
     if(event.target.closest('#view-work textarea,#view-work input,#view-work select,#view-grow textarea,#view-grow input,#view-grow select'))return;
@@ -2026,6 +2084,9 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     rd.readAsText(f);e.target.value='';
   });
   document.addEventListener('click',event=>{
+    if(event.target.closest('[data-act="bkExport"]')){exportBackup();return;}
+    if(event.target.closest('[data-act="bkDismiss"]')){try{localStorage.setItem('richangji-backup-dismissed',new Date().toDateString());}catch(e){}renderBackupHint();return;}
+    if(event.target.closest('[data-act="bkImport"]')){document.getElementById('bkFile').click();return;}
     if(event.target.closest('[data-act="ftImportLib"]')){document.getElementById('ftLibFile').click();return;}
     if(event.target.closest('[data-act="ftResetLib"]')){
       if(confirm('恢复默认动作库？当前导入的库会被覆盖。')){state.fitTrain.lib=JSON.parse(JSON.stringify(FT_LIB_DEFAULT));saveState(true);renderFitTrain();toast('已恢复默认动作库');}
@@ -2138,6 +2199,33 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   function clearDraft(form){delete state.drafts[form.dataset.draft];form.reset();setDateDefaults();updateMoneyCategories();saveState();}
   function updateMoneyCategories(){const form=document.getElementById('moneyForm'),flow=form?.querySelector('[name="flow"]:checked')?.value||'expense',select=document.getElementById('moneyCategory');if(!select)return;const current=select.value,categories=flow==='income'?INCOME_CATEGORIES:EXPENSE_CATEGORIES;select.innerHTML=categories.map(c=>`<option ${c===current?'selected':''}>${c}</option>`).join('');}
 
+  function exportBackup(){
+    try{
+      const dump={kind:'richangji-backup-v1',ts:Date.now(),state:JSON.parse(localStorage.getItem(STORAGE_KEY)||'null')||JSON.parse(JSON.stringify(state)),indep:{}};
+      V13_INDEP.forEach(k=>{const v=localStorage.getItem(k);if(v!==null){try{dump.indep[k]=JSON.parse(v);}catch(e2){}}});
+      downloadBlob(JSON.stringify(dump),'application/json','richangji-backup-'+isoDate()+'.json');
+      try{localStorage.setItem('richangji-lastExport',String(Date.now()));}catch(e2){}
+      renderBackupHint();toast('备份已导出到下载');
+    }catch(e){toast('导出失败：'+((e&&e.message)||'未知错误'));}
+  }
+  const bkFileEl=document.getElementById('bkFile');
+  if(bkFileEl)bkFileEl.addEventListener('change',e=>{
+    const f=e.target.files&&e.target.files[0];if(!f)return;
+    const rd=new FileReader();
+    rd.onload=()=>{
+      let o=null;
+      try{o=JSON.parse(String(rd.result));}catch(err){toast('文件解析失败，需要本工作台导出的全量备份 JSON');return;}
+      if(!o||o.kind!=='richangji-backup-v1'||!o.state){toast('备份格式不正确');return;}
+      if(!confirm('导入将覆盖当前全部数据（生活/工作/成长/健身），且无法撤销。确定继续吗？'))return;
+      try{
+        localStorage.setItem(STORAGE_KEY,JSON.stringify(o.state));
+        if(o.indep)for(const k in o.indep){if(V13_INDEP.indexOf(k)>=0)localStorage.setItem(k,JSON.stringify(o.indep[k]));}
+        try{localStorage.setItem('richangji-lastExport',String(Date.now()));}catch(e2){}
+        location.reload();
+      }catch(err){toast('导入未完成：存储空间不足');}
+    };
+    rd.readAsText(f);e.target.value='';
+  });
   function downloadBlob(content,type,name){const blob=new Blob([content],{type}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
   function exportExcel(kind){
     let headers=[],rows=[],name=LANG==='en'?'daily-atlas':'日常集';
