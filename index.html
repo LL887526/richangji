@@ -7,6 +7,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="mobile-web-app-capable" content="yes">
+<script>if(window.navigator&&window.navigator.standalone===true){document.documentElement.classList.add('ios-standalone');}</script>
   <meta data-page-node-id="lwKqoyDA0rfEZIGPxfixAw" content="日常集——把财务、习惯、健康、日程与待买清单安放在一个地方。" name="description">
   <link data-page-node-id="w7YB8MGV3QPbUWWmUvFyZX" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%234d3045'/%3E%3Ctext x='32' y='43' text-anchor='middle' font-size='34' fill='white'%3E%E6%97%A5%3C/text%3E%3C/svg%3E" rel="icon" type="image/svg+xml">
   <style data-page-node-id="alNfkwH2IPmQ3H5kj7lYUb" data-pnid-children="O7Bo0xanfwwAngJqWELKSI">
@@ -146,6 +147,7 @@
 .ftgif-tip{margin:0 0 10px;color:var(--muted);font-size:12px;line-height:1.6}
 .ftgif-box .wbtn{width:100%;min-height:38px}
 @media all and (display-mode:standalone){body{padding-top:env(safe-area-inset-top)}}
+html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
 .wsk-edit{display:flex;flex-direction:column;gap:8px}
 .wsk-edit textarea{min-height:54px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);font:inherit;font-size:12.5px;line-height:1.6;resize:vertical}
 .wsk-acts{display:flex;gap:8px;flex-wrap:wrap}
