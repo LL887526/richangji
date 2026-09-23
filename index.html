@@ -166,6 +166,19 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
 .ww-time{color:var(--muted);font-size:11px}
 .ww-unread{flex:0 0 auto;width:6px;height:6px;border-radius:50%;background:var(--terra)}
 .ww-del{position:absolute;top:7px;right:7px;width:26px;height:26px;border:0;border-radius:8px;background:transparent;color:var(--muted)}
+.set-wrap{display:grid;gap:14px}
+.set-zone{padding:17px;border-radius:16px}
+.set-zone .zdesc{margin:0 0 10px;color:var(--muted);font-size:12.5px;line-height:1.6}
+.set-danger{border:1.5px solid #cf9086}
+.set-danger .ztitle{color:#a8402f}
+.set-danger .dbtn{width:100%;justify-content:center;display:inline-flex;align-items:center;gap:6px;background:transparent;color:#a8402f;border:1px solid #e3c3bd}
+.set-danger .dbtn-solid{width:100%;min-height:44px;border:0;border-radius:12px;background:#a8402f;color:#fff;font-size:13px}
+.danger-body{display:grid;gap:10px;margin-top:10px}
+.dgate{display:flex;gap:8px;flex-wrap:wrap}
+.dgate input{flex:1 1 150px;min-height:44px;padding:8px 12px;border:1px solid var(--line);border-radius:12px;background:#fffdfa;color:inherit;font-size:14px}
+.snap-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px;color:var(--muted);padding:8px 0;border-bottom:1px dashed var(--line)}
+.snap-row:last-child{border-bottom:0}
+.snap-row .wbtn{min-height:38px;padding:0 14px;font-size:12px;margin-left:auto}
 @media(max-width:860px){.wnote{display:none}.wpanel{padding:17px;border-radius:19px}.wmore{grid-template-columns:1fr}.wadd{flex-wrap:wrap}.wadd input{flex:1 1 100%}.wsel{flex:1 1 40%}.wtree-stage{flex-direction:column;align-items:stretch;gap:14px}.wtree-gamify{min-width:0;width:100%}.wsk-grid{grid-template-columns:1fr}.wword-grid{grid-template-columns:1fr}.wb-name{flex:0 0 100%}.wb-nodes{gap:6px}.wm-row .wsel{flex:1 1 28%}}
   </style>
   <title data-page-node-id="N9uQg0dpiKTsyB4FFPFrxl" data-pnid-children="1t2kuYHDk4UITU5HQoJQo7">日常集 · 生活工作台</title>
@@ -211,6 +224,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   <div data-page-node-id="CQDsQx2QyIPWyU2AET1QJH" aria-label="语言 / Language" class="lang-switch" role="group"><button data-page-node-id="qwku7GC8gcBqMLg4aTdPPm" data-lang="zh" type="button"><!--pnid:PxrUGBItlh5AYWdBRBiG7T-->中文</button><span data-page-node-id="AJdyp6CWP6rYQgftB2djk5" aria-hidden="true"><!--pnid:VIsebkCeTRTScO0v28RLht-->/</span><button data-page-node-id="MKlI4lOTUIT07E7gXAaDi9" data-lang="en" type="button"><!--pnid:rnQqlFgyic5QpWpYtKbFuG-->EN</button></div>
   <svg data-page-node-id="hrhqw0y3fthw8UXdD5i1RV" aria-hidden="true" class="svg-sprite">
     <symbol data-page-node-id="ttRJv93RKbvUBgf5F4wumv" id="i-home" viewBox="0 0 24 24"><path data-page-node-id="vJiAYCrTScgXrfDzVHigEb" d="m3 11 9-8 9 8v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24" aria-hidden="true"><path d="M19.4 13a7.5 7.5 0 0 0 .1-1 7.5 7.5 0 0 0-.1-1l2.1-1.6a.5.5 0 0 0 .1-.7l-2-3.4a.5.5 0 0 0-.6-.2l-2.5 1a7.7 7.7 0 0 0-1.7-1l-.4-2.6a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 0-.5.4l-.4 2.7a7.7 7.7 0 0 0-1.7 1l-2.5-1a.5.5 0 0 0-.6.2l-2 3.4a.5.5 0 0 0 .1.7L4.5 11a7.5 7.5 0 0 0 0 2l-2.1 1.6a.5.5 0 0 0-.1.7l2 3.4c.1.2.4.3.6.2l2.5-1a7.7 7.7 0 0 0 1.7 1l.4 2.6c0 .3.2.5.5.5h4c.2 0 .4-.2.5-.4l.4-2.7a7.7 7.7 0 0 0 1.7-1l2.5 1c.2.1.5 0 .6-.2l2-3.4a.5.5 0 0 0-.1-.7L19.4 13zM12 15.5A3.5 3.5 0 1 1 12 8.5a3.5 3.5 0 0 1 0 7z"/></symbol>
     <symbol data-page-node-id="menUOMJJbYlhSZS9KfQMi0" id="i-wallet" viewBox="0 0 24 24"><path data-page-node-id="ORwLcpYN6xcxNQNxBrUWM4" d="M4 6h15a2 2 0 0 1 2 2v11H4a2 2 0 0 1-2-2V6a3 3 0 0 1 3-3h12v3"/><path data-page-node-id="ADQCFXigGT4eqWMwJOs5PW" d="M16 11h5v4h-5a2 2 0 0 1 0-4Z"/></symbol>
     <symbol data-page-node-id="C2V9s6HGHF5FhXJrmEJlLf" id="i-habit" viewBox="0 0 24 24"><path data-page-node-id="ULyhIhjZMBtfq3kTjfZR82" d="M12 3a9 9 0 1 0 9 9"/><path data-page-node-id="p8PnMyFO2UtsO6YXv8539e" d="m8 12 3 3 10-11"/></symbol>
     <symbol data-page-node-id="bsIpuzuanIsCCmsZPPSzky" id="i-fitness" viewBox="0 0 24 24"><path data-page-node-id="E4Bkx0CiZW2zTIBWSlaNYz" d="M6 7v10M18 7v10M3 10v4M21 10v4M6 12h12"/></symbol>
@@ -263,7 +277,6 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
         <div data-page-node-id="3keL7GQXUP1x8h2qpGEyYl"><p data-page-node-id="VYKjiceTPLTBmL1fPsu3OT" class="eyebrow" id="todayLabel"></p><h1 data-page-node-id="pQemMdxWhkZWl98nFWSq73" id="viewTitle"><!--pnid:ysl3CSbSfS7uvL20SSlku7-->今天，慢慢来</h1></div>
         <div data-page-node-id="M068rhTYbNS8r7TUXRx8kH" class="top-actions">
           <span data-page-node-id="3McTBQocwXJjjokPXGEE8C" class="save-state"><span data-page-node-id="MD1wNcm29vPJy0ugerV0Sq"></span><b data-page-node-id="EKHc2qjGh3iUUFb0xuOyxX" id="saveText"><!--pnid:r01R289gxoz4IrrcUNqp23-->已自动保存</b></span>
-          <button data-page-node-id="cOKgUHgNxJftm90nPa43ay" class="btn ghost" id="clearSamplesBtn" title="清空示例"><svg data-page-node-id="ZuAltOOjRJf5YBr423M0J7"><use data-page-node-id="T1MPXJ9cwAcWJ3mhm10QQy" href="#i-trash"/></svg><span data-page-node-id="LMqPoEbnE1LSmRjENj0z9V"><!--pnid:FFBsWl63TTUR2Jv0p2tfoU-->清空示例</span></button>
         </div>
       </header>
 
@@ -345,8 +358,6 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
           </div>
           <div class="wadd">
             <input type="file" id="ftLibFile" accept=".json,application/json" hidden>
-            <button class="wbtn ghostbtn" data-act="ftImportLib">导入动作库 JSON 扩容</button>
-            <button class="wbtn ghostbtn" data-act="ftResetLib">恢复默认 40 条</button>
           </div>
           <div class="wsk-grid" id="ftExGrid"></div>
         </article>
@@ -431,9 +442,6 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
         <div class="v13bar" id="v13bar" hidden>
           <b>旧工作台数据</b>
           <small id="v13info"></small>
-          <span class="grow"></span>
-          <button class="wbtn" data-act="v13-auto">读取本机数据</button>
-          <button class="wbtn ghostbtn" data-act="v13-file">从备份文件导入</button>
           <input type="file" id="v13File" accept=".json,application/json" hidden>
         </div>
         <div class="wspace-tabs" id="workTabs">
@@ -599,6 +607,68 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
           </article>
         </div>
       </section>
+
+      <section class="view" data-title="全局设置" id="view-settings">
+        <div class="set-wrap">
+          <article class="panel set-zone">
+            <div class="panel-head"><div><p class="eyebrow">安全区</p><h2>数据与备份</h2></div></div>
+            <p class="zdesc">数据只存在本机浏览器，建议定期导出备份文件保存到别处。</p>
+            <div class="wmore">
+              <button class="wbtn" data-act="bkExport"><svg><use href="#i-download"/></svg>导出备份 JSON</button>
+              <button class="wbtn ghostbtn" data-act="bkImport"><svg><use href="#i-download"/></svg>导入备份（覆盖当前）</button>
+              <button class="wbtn ghostbtn" data-action="export-money"><svg><use href="#i-chart"/></svg>导出记账 Excel</button>
+              <button class="wbtn ghostbtn" data-action="export-fitness"><svg><use href="#i-chart"/></svg>导出健身 Excel</button>
+            </div>
+            <p class="zdesc" id="setBackupStamp" style="margin:10px 0 0">还没有备份过</p>
+            <input type="file" id="bkFile" accept=".json,application/json" hidden>
+            <p class="zdesc" style="margin:12px 0 6px">本地快照（危险操作前自动生成，最多保留 3 份）</p>
+            <div id="snapList"></div>
+          </article>
+
+          <article class="panel set-zone set-danger">
+            <div class="panel-head"><div><p class="eyebrow ztitle">危险区 · 慎重操作</p><h2>数据维护</h2></div></div>
+            <p class="zdesc">这里的操作会覆盖或删除数据。执行前会自动生成本地快照，可在上方「从快照恢复」找回。</p>
+            <button class="wbtn ghostbtn" data-act="dangerToggle" id="dangerToggleBtn" style="width:100%">展开危险操作</button>
+            <div class="danger-body" id="dangerBody" hidden>
+              <button class="wbtn ghostbtn dbtn" id="clearSamplesBtn" title="清空示例"><svg><use href="#i-trash"/></svg>清空示例数据</button>
+              <button class="wbtn ghostbtn dbtn" data-act="ftImportLib">导入动作库 JSON（覆盖当前库）</button>
+              <button class="wbtn ghostbtn dbtn" data-act="ftResetLib">恢复默认动作库（40 条）</button>
+              <button class="wbtn ghostbtn dbtn" data-action="reset-brand">恢复默认外观</button>
+              <button class="wbtn ghostbtn dbtn" data-act="v13-auto">V13 迁移 · 读取本机数据</button>
+              <div class="dgate">
+                <input type="text" id="v13GateInput" maxlength="6" placeholder="输入「导入」解锁" autocomplete="off">
+                <button class="wbtn dbtn-solid" data-act="v13-file">V13 迁移 · 从备份文件导入</button>
+              </div>
+              <div class="dgate">
+                <input type="text" id="wipeGateInput" maxlength="6" placeholder="输入「清除」解锁" autocomplete="off">
+                <button class="wbtn dbtn-solid" data-act="wipeAll">清除本机全部数据</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="panel set-zone">
+            <div class="panel-head"><div><p class="eyebrow">个性化</p><h2>外观</h2></div></div>
+            <div class="wmore">
+              <button class="wbtn" data-action="open-brand"><svg><use href="#i-settings"/></svg>名称 / 头像 / 副标题 / 主题色</button>
+            </div>
+            <p class="zdesc" style="margin:12px 0 6px">语言 / Language</p>
+            <div class="wmore">
+              <button class="wbtn ghostbtn" data-lang="zh" type="button">中文</button>
+              <button class="wbtn ghostbtn" data-lang="en" type="button">English</button>
+            </div>
+          </article>
+
+          <article class="panel set-zone">
+            <div class="panel-head"><div><p class="eyebrow">关于</p><h2>关于与隐私</h2></div></div>
+            <p class="zdesc">你的全部数据只存在这台设备的浏览器本地存储里，不会上传到任何服务器。换设备、清浏览器缓存或卸载浏览器前，请先在上方导出备份。</p>
+            <div class="dgate" style="margin:10px 0 6px;align-items:center">
+              <span class="zdesc" style="margin:0">备份提醒频率</span>
+              <select id="bkFreqSel" class="wsel" style="flex:0 0 auto;min-height:38px"><option value="7">每 7 天</option><option value="14">每 14 天</option><option value="30">每 30 天</option></select>
+            </div>
+            <p class="zdesc" style="margin:8px 0 0">版本：日常集 · 融合版 V1.3（2026-09-23 构建）</p>
+          </article>
+        </div>
+      </section>
     </main>
   </div>
 
@@ -609,11 +679,9 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
       <div id="backupBox" style="margin-top:14px;padding-top:14px;border-top:1px solid var(--line)">
         <p class="eyebrow" style="margin:0 0 8px">数据备份</p>
         <div class="wmore">
-          <button data-act="bkExport"><svg><use href="#i-download"/></svg>导出全量备份 JSON</button>
-          <button data-act="bkImport"><svg><use href="#i-download"/></svg>从备份恢复</button>
+          <button data-nav="settings"><svg><use href="#i-settings"/></svg>备份 / 导入 / 危险操作（全局设置）</button>
         </div>
         <small id="backupStamp" style="display:block;margin-top:8px;color:var(--muted);font-size:12px"></small>
-        <input type="file" id="bkFile" accept=".json,application/json" hidden>
       </div>
     </section>
   </div>
@@ -664,7 +732,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
         <div data-page-node-id="RzHBnj8K55lXk519Ov0ZXU" class="form-row"><label data-page-node-id="kCcmQDttQjhNhGOjAxDexP" class="field"><span data-page-node-id="wLeTuQfUSZwLUWfn0zSk6x"><!--pnid:ix7aD8HMm5sAlKJ6erbG4Y-->页面名称</span><input data-page-node-id="pLuX2fFJIXYSRa0j7kJN8I" maxlength="12" name="name" placeholder="日常集" required></label><label data-page-node-id="I3fZClzs4U7fB88gnEXh73" class="field"><span data-page-node-id="Tu83ph2paOcdEqDd18SYqG"><!--pnid:YAZVd9rfKSHiqrch03G59b-->头像文字</span><input data-page-node-id="hxnjH9OCjzmhmOlUp2fFVT" maxlength="2" name="avatar" placeholder="日" required></label></div>
         <label data-page-node-id="K0PMpfdmvDyaSaD0PQAGF0" class="field"><span data-page-node-id="XDQyC7Zmw50MXDwk4i5DCX"><!--pnid:JXOYg83ubLTtQiBDlZUutu-->副标题</span><input data-page-node-id="l9Ixz2KuL3Tgvem849qWuU" maxlength="20" name="tagline" placeholder="生活有迹可循"></label>
         <div data-page-node-id="Lc1Xp8ogjXffrGaaDVz0gu" class="field"><span data-page-node-id="jk9ZHw8urnCgxUzEmD7JTL"><!--pnid:onX10FjGkaL8Zgx73A3kwE-->主题色</span><div data-page-node-id="Y3sB7JlffWHzb70Kzr4v4v" class="theme-swatches"><label data-page-node-id="j4TmkEwO3yDG52XcoYFBVI"><input data-page-node-id="d2l5XoLwRO0ljZw1u8b9zk" name="theme" type="radio" value="plum"><i data-page-node-id="lwiC5xVeJ2hurMv1aXVapf" style="--swatch:#4d3045"></i><b data-page-node-id="sKdDl7nwcXuXEizIaSACD0"><!--pnid:tTEMgwy6KYSO61jXl4MlZ9-->暮色紫</b></label><label data-page-node-id="G5Ygvxgp7rqrMjhhe7nrX1"><input data-page-node-id="thZsCMnQKn4wBN6su9FGld" name="theme" type="radio" value="forest"><i data-page-node-id="x4GxPYuC3H5mXnSaOy7vlb" style="--swatch:#365f53"></i><b data-page-node-id="446M75jWXuVhlCKXxK0XwD"><!--pnid:kRozfYFmjrGiFbGrzwHgun-->森林绿</b></label><label data-page-node-id="KpDnOmpFrj6Ui6GGR4TeSo"><input data-page-node-id="tvSnuGcn3UinmPMf0EHEBe" name="theme" type="radio" value="clay"><i data-page-node-id="Y79sQtgQTJGQIzmx6sBHFj" style="--swatch:#8f4f3b"></i><b data-page-node-id="l24yAFYbvrouv3xGBIgKKq"><!--pnid:pokvlmU8n42RV1YXkMWbaB-->陶土棕</b></label><label data-page-node-id="cCN9wDwyt34zPg1BC2wqcX"><input data-page-node-id="fi047mUgAeXQb1DOrSw1I9" name="theme" type="radio" value="navy"><i data-page-node-id="1Hz7TTrTROFs82K5gTqUHn" style="--swatch:#344b63"></i><b data-page-node-id="aOEGJJmRpYCBosQZhdUC8t"><!--pnid:uJx2v3yld5h9WJDhhopXPS-->深海蓝</b></label></div></div>
-        <div data-page-node-id="K335TN0jHs0DaK2wXfVAY2" class="sheet-actions"><button data-page-node-id="toyDRsqluHbGVID7u4leeF" class="btn ghost" data-action="reset-brand" type="button"><!--pnid:aibPW3GlGXFiKguRsYiZEH-->恢复默认</button><button data-page-node-id="TortCZVDMS213xrKdV55sz" class="btn primary" type="submit"><!--pnid:NwLXO9K3O6g58o8W1OEbyx-->保存外观</button></div>
+        <div data-page-node-id="K335TN0jHs0DaK2wXfVAY2" class="sheet-actions"><button data-page-node-id="TortCZVDMS213xrKdV55sz" class="btn primary" type="submit"><!--pnid:NwLXO9K3O6g58o8W1OEbyx-->保存外观</button></div>
       </form>
     </section>
   </div>
@@ -1421,11 +1489,12 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   function renderBackupHint(){
     const el=document.getElementById('backupHint');if(!el)return;
     const last=Number(localStorage.getItem('richangji-lastExport')||0);
-    const due=!last||(Date.now()-last)>14*86400000;
+    const freq=Number(localStorage.getItem('richangji-backup-freq')||14);
+    const due=!last||(Date.now()-last)>freq*86400000;
     const dismissed=localStorage.getItem('richangji-backup-dismissed')===new Date().toDateString();
     el.hidden=!(due&&!dismissed);
     const note=document.getElementById('backupHintNote');
-    if(note&&!el.hidden)note.textContent=last?('距上次导出已超过 14 天（上次：'+new Date(last).toLocaleDateString()+'）。数据只存在本机浏览器，换设备或清缓存会丢。'):('还没有导出过备份。数据只存在本机浏览器，换设备或清缓存会丢。');
+    if(note&&!el.hidden)note.textContent=last?('距上次导出已超过 '+freq+' 天（上次：'+new Date(last).toLocaleDateString()+'）。数据只存在本机浏览器，换设备或清缓存会丢。'):('还没有导出过备份。数据只存在本机浏览器，换设备或清缓存会丢。');
     const stamp=document.getElementById('backupStamp');
     if(stamp)stamp.textContent=last?('上次全量备份：'+new Date(last).toLocaleString()):'还没有导出过全量备份';
   }
@@ -1497,7 +1566,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   const WSTAGES=['待剪','待发','已发'];
   const WORK_TABS=[['board','i-board','任务看板'],['proj','i-chart','项目'],['collab','i-list','协作'],['capture','i-fire','灵感捕获'],['topic','i-archive','选题库'],['copy','i-note','文案库']];
   const GROW_TABS=[['tree','i-sprout','成长树'],['review','i-note','每日复盘'],['skills','i-list','skill 库'],['mymedia','i-media','我的自媒体'],['words','i-fire','词海']];
-  const ALL_NAV=[['dashboard','i-home','今日总览'],['work','i-briefcase','工作空间'],['grow','i-sprout','成长空间'],['money','i-wallet','记账理财'],['habits','i-habit','习惯健康'],['fitness','i-fitness','减脂健身'],['planner','i-calendar','日程统筹'],['home','i-cart','待买清单'],['media','i-media','书影音'],['archive','i-archive','时光档案']];
+  const ALL_NAV=[['settings','i-settings','全局设置'],['dashboard','i-home','今日总览'],['work','i-briefcase','工作空间'],['grow','i-sprout','成长空间'],['money','i-wallet','记账理财'],['habits','i-habit','习惯健康'],['fitness','i-fitness','减脂健身'],['planner','i-calendar','日程统筹'],['home','i-cart','待买清单'],['media','i-media','书影音'],['archive','i-archive','时光档案']];
   let activeWorkSec='board',activeGrowSec='review';
   const nowStamp=()=>{const d=new Date();return `${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;};
   const workTasks=()=>state.work.tasks[state.work.account]||[];
@@ -1942,7 +2011,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     if(type==='delIdea'){if(!confirm('确定删除这条想法吗？删除后无法撤回。'))return;state.grow.ideas=growIdeas().filter(x=>x.id!==id);state.work.ideas=state.grow.ideas;saveState(true);renderWords();}
   }
 
-  function renderAll(){applyBrand();renderDashboard();renderCockpitP5();renderBackupHint();renderMoney();renderHabits();renderFitness();renderFitTrain();renderPlanner();renderHome();renderMedia();renderArchive();renderBackupStatus();renderWork();renderGrow();}
+  function renderAll(){applyBrand();renderDashboard();renderCockpitP5();renderBackupHint();renderMoney();renderHabits();renderFitness();renderFitTrain();renderPlanner();renderHome();renderMedia();renderArchive();renderBackupStatus();renderWork();renderGrow();renderSettingsPage();}
 
   document.addEventListener('click',event=>{
     if(event.target.closest('#view-work textarea,#view-work input,#view-work select,#view-grow textarea,#view-grow input,#view-grow select'))return;
@@ -1969,8 +2038,8 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
       if(a==='addTask'){const i=document.getElementById('taskInput');const v=i.value.trim();if(v){addWorkTask(v);i.value='';}}
       if(a==='addTodo'){const i=document.getElementById('todoInput');const v=i.value.trim();if(v){state.work.todos.unshift({id:uid(),text:v,done:false,date:isoDate(),ts:Date.now()});saveState(true);renderTodos();i.value='';}}
       if(a==='saveReview')saveReview();
-      if(a==='v13-auto'){const sc=scanV13();if(!sc.found){toast('本机没有旧工作台数据');return;}applyV13(sc,'manual');return;}
-      if(a==='v13-file'){const el=document.getElementById('v13File');if(el)el.click();return;}
+      if(a==='v13-auto'){if(!preDestruct())return;const sc=scanV13();if(!sc.found){toast('本机没有旧工作台数据');return;}applyV13(sc,'manual');return;}
+      if(a==='v13-file'){const g=document.getElementById('v13GateInput');if(g&&g.value.trim()!=='导入'){toast('请先在输入框输入「导入」再执行');return;}if(g)g.value='';if(!preDestruct())return;const el=document.getElementById('v13File');if(el)el.click();return;}
       if(a==='addProj'){
         const i=document.getElementById('projInput');const v=i.value.trim();if(!v){toast('先写项目名');return;}
         const cat=document.getElementById('projCat').value;
@@ -2077,6 +2146,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     rd.onload=()=>{try{
       const arr=JSON.parse(String(rd.result));
       if(!Array.isArray(arr)||!arr.length)throw new Error('格式');
+      takeSnapshot();
       state.fitTrain=state.fitTrain&&typeof state.fitTrain==='object'?state.fitTrain:{};
       state.fitTrain.lib=arr.map(x=>({id:String(x.id||uid()),name:String(x.name||'未命名'),muscle:String(x.muscle||''),equipment:String(x.equipment||'自重'),gif:x.gif?String(x.gif):'',unit:String(x.unit||'次'),tip:String(x.tip||'')}));
       const ok=saveState(true);renderFitTrain();
@@ -2088,9 +2158,26 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     if(event.target.closest('[data-act="bkExport"]')){exportBackup();return;}
     if(event.target.closest('[data-act="bkDismiss"]')){try{localStorage.setItem('richangji-backup-dismissed',new Date().toDateString());}catch(e){}renderBackupHint();return;}
     if(event.target.closest('[data-act="bkImport"]')){document.getElementById('bkFile').click();return;}
+    if(event.target.closest('[data-act="dangerToggle"]')){const b=document.getElementById('dangerBody'),t=document.getElementById('dangerToggleBtn');if(b){b.hidden=!b.hidden;if(t)t.textContent=b.hidden?'展开危险操作':'收起危险操作';}return;}
+    if(event.target.closest('[data-act="wipeAll"]')){
+      const inp=document.getElementById('wipeGateInput');
+      if(!inp||inp.value.trim()!=='清除'){toast('请先在输入框输入「清除」再执行');return;}
+      if(!preDestruct())return;
+      inp.value='';
+      try{[STORAGE_KEY].concat(V13_INDEP).forEach(k=>localStorage.removeItem(k));['richangji-lastExport','richangji-backup-dismissed'].forEach(k=>localStorage.removeItem(k));}catch(e){}
+      location.reload();return;
+    }
+    const snapBtn=event.target.closest('[data-act="snap-restore"]');
+    if(snapBtn){
+      const raw=(function(){try{return localStorage.getItem(SNAP_PREFIX+snapBtn.dataset.ts);}catch(e){return null;}})();
+      if(!raw){toast('快照不存在或已过期');return;}
+      if(!confirm('将用这份快照覆盖当前全部数据，且无法撤销。确定恢复吗？'))return;
+      try{localStorage.setItem(STORAGE_KEY,raw);location.reload();}catch(e){toast('恢复失败：存储空间不足');}
+      return;
+    }
     if(event.target.closest('[data-act="ftImportLib"]')){document.getElementById('ftLibFile').click();return;}
     if(event.target.closest('[data-act="ftResetLib"]')){
-      if(confirm('恢复默认动作库？当前导入的库会被覆盖。')){state.fitTrain.lib=JSON.parse(JSON.stringify(FT_LIB_DEFAULT));saveState(true);renderFitTrain();toast('已恢复默认动作库');}
+      if(preDestruct()&&confirm('恢复默认动作库？当前导入的库会被覆盖。')){state.fitTrain.lib=JSON.parse(JSON.stringify(FT_LIB_DEFAULT));saveState(true);renderFitTrain();toast('已恢复默认动作库');}
       return;
     }
     const gifCard=event.target.closest('#ftExGrid [data-ft-ex]');
@@ -2180,8 +2267,8 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     bar.hidden=false;
     bar.classList.toggle('done',!!m);
     if(m){const d=new Date(m.ts);info.textContent='已导入 '+(m.count||0)+' 条（'+(d.getMonth()+1)+'月'+d.getDate()+'日 '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')+'，来源：'+(m.src==='file'?'备份文件':'本机')+'）。旧 key 全部保留未删，可重复导入。';}
-    else if(scanV13().found){info.textContent='检测到本机有旧工作台数据，点「读取本机数据」迁入。';}
-    else{info.textContent='本机没读到。若换过浏览器或清理过缓存，用「从备份文件导入」，选旧工作台导出的 JSON。';}
+    else if(scanV13().found){info.textContent='检测到本机有旧工作台数据，去「全局设置 → 危险区」迁入。';}
+    else{info.textContent='本机没读到。若换过浏览器或清理过缓存，去「全局设置 → 危险区」从备份文件导入。';}
   }
   const v13FileEl=document.getElementById('v13File');
   if(v13FileEl)v13FileEl.addEventListener('change',e=>{
@@ -2200,6 +2287,35 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   function clearDraft(form){delete state.drafts[form.dataset.draft];form.reset();setDateDefaults();updateMoneyCategories();saveState();}
   function updateMoneyCategories(){const form=document.getElementById('moneyForm'),flow=form?.querySelector('[name="flow"]:checked')?.value||'expense',select=document.getElementById('moneyCategory');if(!select)return;const current=select.value,categories=flow==='income'?INCOME_CATEGORIES:EXPENSE_CATEGORIES;select.innerHTML=categories.map(c=>`<option ${c===current?'selected':''}>${c}</option>`).join('');}
 
+  const SNAP_PREFIX=STORAGE_KEY+'-snapshot-';
+  function takeSnapshot(){
+    try{
+      const raw=localStorage.getItem(STORAGE_KEY);if(!raw)return;
+      localStorage.setItem(SNAP_PREFIX+Date.now(),raw);
+      const keys=Object.keys(localStorage).filter(k=>k.indexOf(SNAP_PREFIX)===0).sort();
+      while(keys.length>3){localStorage.removeItem(keys.shift());}
+    }catch(e){}
+  }
+  function lastExportAge(){
+    const last=Number(localStorage.getItem('richangji-lastExport')||0);
+    return last?(Date.now()-last)/86400000:Infinity;
+  }
+  function preDestruct(){
+    if(lastExportAge()>7){if(!confirm('距上次导出备份已超过 7 天，建议先在「数据与备份」导出一份。仍要继续执行吗？'))return false;}
+    takeSnapshot();
+    return true;
+  }
+  function renderSettingsPage(){
+    const stamp=document.getElementById('setBackupStamp');
+    if(stamp){const last=Number(localStorage.getItem('richangji-lastExport')||0);stamp.textContent=last?('上次备份：'+new Date(last).toLocaleString()):'还没有备份过';}
+    const sel=document.getElementById('bkFreqSel');
+    if(sel&&!sel.dataset.init){sel.dataset.init='1';sel.value=String(Number(localStorage.getItem('richangji-backup-freq')||14));}
+    const box=document.getElementById('snapList');
+    if(box){
+      const keys=Object.keys(localStorage).filter(k=>k.indexOf(SNAP_PREFIX)===0).sort().reverse();
+      box.innerHTML=keys.length?keys.map(k=>{const ts=Number(k.slice(SNAP_PREFIX.length));return '<div class="snap-row"><span>快照 · '+new Date(ts).toLocaleString()+'</span><button class="wbtn ghostbtn" data-act="snap-restore" data-ts="'+ts+'">从快照恢复</button></div>';}).join(''):'<p class="wempty-task">还没有快照。执行危险操作前会自动生成。</p>';
+    }
+  }
   function exportBackup(){
     try{
       const dump={kind:'richangji-backup-v1',ts:Date.now(),state:JSON.parse(localStorage.getItem(STORAGE_KEY)||'null')||JSON.parse(JSON.stringify(state)),indep:{}};
@@ -2218,6 +2334,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
       try{o=JSON.parse(String(rd.result));}catch(err){toast('文件解析失败，需要本工作台导出的全量备份 JSON');return;}
       if(!o||o.kind!=='richangji-backup-v1'||!o.state){toast('备份格式不正确');return;}
       if(!confirm('导入将覆盖当前全部数据（生活/工作/成长/健身），且无法撤销。确定继续吗？'))return;
+      takeSnapshot();
       try{
         localStorage.setItem(STORAGE_KEY,JSON.stringify(o.state));
         if(o.indep)for(const k in o.indep){if(V13_INDEP.indexOf(k)>=0)localStorage.setItem(k,JSON.stringify(o.indep[k]));}
@@ -2278,10 +2395,12 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
       if(type==='toggle-shopping'){const item=state.records.find(r=>r.id===id&&r.type==='home');if(item){item.data.bought=!item.data.bought;item.data.boughtDate=item.data.bought?isoDate():null;updateRemoteShopping(item);const saved=saveState();renderAll();if(saved&&item.data.bought){celebrate();toast('买到了，已移入完成');}}}
       if(type==='delete-media'){const item=state.mediaItems.find(media=>media.id===id);if(item&&confirm(LANG==='en'?`Remove “${item.name}” from the list?`:`确定从清单中删除“${item.name}”吗？`)){if(item.remoteId)deleteRemoteMedia(item.remoteId);state.mediaItems=state.mediaItems.filter(media=>media.id!==id);const saved=saveState();renderMedia();if(saved)toast('已从书影音清单移除');}}
       if(type==='open-habit-settings')openHabitSettings();if(type==='close-habit-settings')closeHabitSettings();if(type==='open-plan-settings')openPlanSettings();if(type==='close-plan-settings')closePlanSettings();if(type==='open-fitness-profile')openFitnessProfile();if(type==='close-fitness-profile')closeFitnessProfile();
-      if(type==='export-money')exportExcel('money');if(type==='export-fitness')exportExcel('fitness');if(type==='close-brand')closeBrandSettings();if(type==='reset-brand'){state.settings.brand={name:'日常集',avatar:'日',tagline:'生活有迹可循',theme:'plum'};saveState();applyBrand();openBrandSettings();toast('已恢复默认外观');}
+      if(type==='export-money')exportExcel('money');if(type==='export-fitness')exportExcel('fitness');if(type==='close-brand')closeBrandSettings();if(type==='open-brand')openBrandSettings();if(type==='reset-brand'){if(!preDestruct())return;state.settings.brand={name:'日常集',avatar:'日',tagline:'生活有迹可循',theme:'plum'};saveState();applyBrand();closeBrandSettings();toast('已恢复默认外观');}
     });
     document.addEventListener('change',event=>{if(event.target.dataset.action==='habit-number')updateHabit(event.target.dataset.id,'number',event.target.value);});
     document.getElementById('budgetInput').addEventListener('change',e=>{state.settings.budget=Math.max(0,Number(e.target.value||0));const saved=saveState();renderAll();if(saved)toast('月度预算已更新');});
+    const bkFreq=document.getElementById('bkFreqSel');
+    if(bkFreq)bkFreq.addEventListener('change',()=>{try{localStorage.setItem('richangji-backup-freq',bkFreq.value);}catch(e){}renderBackupHint();toast('备份提醒频率已更新');});
     document.getElementById('moneyFilter').addEventListener('change',e=>{state.settings.moneyFilter=e.target.value;saveState();renderMoney();});
     document.getElementById('plannerFilters').addEventListener('click',e=>{const b=e.target.closest('[data-planner-filter]');if(!b)return;state.settings.plannerFilter=b.dataset.plannerFilter;saveState();renderPlanner();});
     document.getElementById('shoppingFilters').addEventListener('click',e=>{const b=e.target.closest('[data-shopping-filter]');if(!b)return;state.settings.shoppingFilter=b.dataset.shoppingFilter;saveState();renderHome();});
@@ -2289,7 +2408,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     document.querySelectorAll('[data-media-view]').forEach(button=>button.addEventListener('click',()=>{state.settings.mediaView=button.dataset.mediaView;saveState();renderMedia();}));
     document.getElementById('mediaStatusFilter').addEventListener('change',e=>{state.settings.mediaStatusFilter=e.target.value;saveState();renderMedia();});
     document.getElementById('mediaRatingFilter').addEventListener('change',e=>{state.settings.mediaRatingFilter=Number(e.target.value);saveState();renderMedia();});
-    document.getElementById('clearSamplesBtn').addEventListener('click',()=>{const recordSamples=state.records.filter(r=>r.sample).length,mediaSamples=state.mediaItems.filter(item=>item.sample).length,sampleCount=recordSamples+mediaSamples;if(!sampleCount&&!state.habits.some(h=>h.sample))return;if(!confirm(`将清空 ${sampleCount} 条示例记录和示例打卡，你自己的内容会保留。是否继续？`))return;state.records=state.records.filter(r=>!r.sample);state.mediaItems=state.mediaItems.filter(item=>!item.sample);state.habits.forEach(h=>{if(h.sample){h.entries={};h.sample=false;}});state.settings.weeklyPlan=DEFAULT_PLAN.map(x=>({...x}));const saved=saveState();renderAll();if(saved)toast('示例内容已清空');});
+    document.getElementById('clearSamplesBtn').addEventListener('click',()=>{const recordSamples=state.records.filter(r=>r.sample).length,mediaSamples=state.mediaItems.filter(item=>item.sample).length,sampleCount=recordSamples+mediaSamples;if(!sampleCount&&!state.habits.some(h=>h.sample))return;if(!confirm(`将清空 ${sampleCount} 条示例记录和示例打卡，你自己的内容会保留。是否继续？`))return;if(!preDestruct())return;state.records=state.records.filter(r=>!r.sample);state.mediaItems=state.mediaItems.filter(item=>!item.sample);state.habits.forEach(h=>{if(h.sample){h.entries={};h.sample=false;}});state.settings.weeklyPlan=DEFAULT_PLAN.map(x=>({...x}));const saved=saveState();renderAll();if(saved)toast('示例内容已清空');});
     window.addEventListener('storage',e=>{if(e.key!==STORAGE_KEY||!e.newValue)return;try{state=normalizeState(JSON.parse(e.newValue));renderAll();toast('另一个页面的数据已同步');}catch{}});
   }
 
