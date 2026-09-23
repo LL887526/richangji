@@ -174,6 +174,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
 .set-danger .dbtn{width:100%;justify-content:center;display:inline-flex;align-items:center;gap:6px;background:transparent;color:#a8402f;border:1px solid #e3c3bd}
 .set-danger .dbtn-solid{width:100%;min-height:44px;border:0;border-radius:12px;background:#a8402f;color:#fff;font-size:13px}
 .danger-body{display:grid;gap:10px;margin-top:10px}
+.danger-body[hidden]{display:none}
 .dgate{display:flex;gap:8px;flex-wrap:wrap}
 .dgate input{flex:1 1 150px;min-height:44px;padding:8px 12px;border:1px solid var(--line);border-radius:12px;background:#fffdfa;color:inherit;font-size:14px}
 .snap-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px;color:var(--muted);padding:8px 0;border-bottom:1px dashed var(--line)}
@@ -221,7 +222,6 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   document.getElementById('gateInput').addEventListener('keydown',function(e){if(e.key==='Enter')check();});
 })();
 </script>
-  <div data-page-node-id="CQDsQx2QyIPWyU2AET1QJH" aria-label="语言 / Language" class="lang-switch" role="group"><button data-page-node-id="qwku7GC8gcBqMLg4aTdPPm" data-lang="zh" type="button"><!--pnid:PxrUGBItlh5AYWdBRBiG7T-->中文</button><span data-page-node-id="AJdyp6CWP6rYQgftB2djk5" aria-hidden="true"><!--pnid:VIsebkCeTRTScO0v28RLht-->/</span><button data-page-node-id="MKlI4lOTUIT07E7gXAaDi9" data-lang="en" type="button"><!--pnid:rnQqlFgyic5QpWpYtKbFuG-->EN</button></div>
   <svg data-page-node-id="hrhqw0y3fthw8UXdD5i1RV" aria-hidden="true" class="svg-sprite">
     <symbol data-page-node-id="ttRJv93RKbvUBgf5F4wumv" id="i-home" viewBox="0 0 24 24"><path data-page-node-id="vJiAYCrTScgXrfDzVHigEb" d="m3 11 9-8 9 8v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></symbol>
     <symbol id="i-settings" viewBox="0 0 24 24" aria-hidden="true"><path d="M19.4 13a7.5 7.5 0 0 0 .1-1 7.5 7.5 0 0 0-.1-1l2.1-1.6a.5.5 0 0 0 .1-.7l-2-3.4a.5.5 0 0 0-.6-.2l-2.5 1a7.7 7.7 0 0 0-1.7-1l-.4-2.6a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 0-.5.4l-.4 2.7a7.7 7.7 0 0 0-1.7 1l-2.5-1a.5.5 0 0 0-.6.2l-2 3.4a.5.5 0 0 0 .1.7L4.5 11a7.5 7.5 0 0 0 0 2l-2.1 1.6a.5.5 0 0 0-.1.7l2 3.4c.1.2.4.3.6.2l2.5-1a7.7 7.7 0 0 0 1.7 1l.4 2.6c0 .3.2.5.5.5h4c.2 0 .4-.2.5-.4l.4-2.7a7.7 7.7 0 0 0 1.7-1l2.5 1c.2.1.5 0 .6-.2l2-3.4a.5.5 0 0 0-.1-.7L19.4 13zM12 15.5A3.5 3.5 0 1 1 12 8.5a3.5 3.5 0 0 1 0 7z"/></symbol>
@@ -482,7 +482,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
         <div class="wsec" id="wsec-collab">
           <article class="wpanel">
             <div class="wpanel-head"><div><p class="eyebrow">对接人与议题</p><h2>协作</h2></div><span class="wnote" id="collabCount"></span></div>
-            <div class="wadd"><input type="text" id="collabInput" maxlength="60" placeholder="对接人 · 议题，如：小林 · 素材粗剪"><button class="wbtn" data-act="addCollab">发起</button></div>
+            <div class="wadd"><input type="text" id="collabInput" maxlength="60" placeholder="对接人 · 议题，如：小林 · 新店素材粗剪"><button class="wbtn" data-act="addCollab">发起</button></div>
             <p class="wnote2">点条目展开写跟进 · 点对勾标记完成</p>
             <div class="wlist" id="collabList"></div>
           </article>
@@ -490,7 +490,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
         <div class="wsec" id="wsec-capture">
           <article class="wpanel">
             <div class="wpanel-head"><div><p class="eyebrow">随手记，别丢</p><h2>灵感捕获</h2></div><span class="wnote" id="capCount"></span></div>
-            <div class="wadd"><input type="text" id="capInput" maxlength="60" placeholder="灵感，如：手工系列第三期"><button class="wbtn" data-act="addCap">捕获</button></div>
+            <div class="wadd"><input type="text" id="capInput" maxlength="60" placeholder="灵感，如：手工系列系列第三期"><button class="wbtn" data-act="addCap">捕获</button></div>
             <div class="wseg" id="capSeg"><button class="on" data-cap="全部">全部</button><button data-cap="工作">工作</button><button data-cap="成长">成长</button><button data-cap="生活">生活</button><button data-cap="通用">通用</button></div>
             <div class="wlist" id="capList"></div>
           </article>
@@ -499,7 +499,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
           <article class="wpanel">
             <div class="wpanel-head"><div><p class="eyebrow">选题池</p><h2>选题库</h2></div><span class="wnote" id="topicCount"></span></div>
             <div class="wadd">
-              <input type="text" id="topicInput" maxlength="60" placeholder="选题标题，如：传统工艺第一视角">
+              <input type="text" id="topicInput" maxlength="60" placeholder="选题标题，如：传统工艺工艺第一视角">
               <select id="topicPlat" class="wsel"><option>视频号</option><option>抖音</option><option>小红书</option><option>公众号</option></select>
               <button class="wbtn" data-act="addTopic">收录</button>
             </div>
@@ -510,7 +510,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
         <div class="wsec" id="wsec-copy">
           <article class="wpanel">
             <div class="wpanel-head"><div><p class="eyebrow">成稿归档</p><h2>文案库</h2></div><span class="wnote" id="copyCount"></span></div>
-            <div class="wadd"><input type="text" id="copyInput" maxlength="60" placeholder="文案标题，如：手艺人 3 分钟口播"><select id="copyTopicSel" class="wsel"></select></div>
+            <div class="wadd"><input type="text" id="copyInput" maxlength="60" placeholder="文案标题，如：传统工艺传承人 3 分钟口播"><select id="copyTopicSel" class="wsel"></select></div>
             <div class="wform"><textarea id="copyBody" placeholder="文案正文……"></textarea><button class="wbtn primary" data-act="addCopy">保存文案</button></div>
             <div class="wlist" id="copyList"></div>
           </article>
@@ -650,11 +650,6 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
             <div class="panel-head"><div><p class="eyebrow">个性化</p><h2>外观</h2></div></div>
             <div class="wmore">
               <button class="wbtn" data-action="open-brand"><svg><use href="#i-settings"/></svg>名称 / 头像 / 副标题 / 主题色</button>
-            </div>
-            <p class="zdesc" style="margin:12px 0 6px">语言 / Language</p>
-            <div class="wmore">
-              <button class="wbtn ghostbtn" data-lang="zh" type="button">中文</button>
-              <button class="wbtn ghostbtn" data-lang="en" type="button">English</button>
             </div>
           </article>
 
@@ -2160,11 +2155,22 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     if(event.target.closest('[data-act="bkImport"]')){document.getElementById('bkFile').click();return;}
     if(event.target.closest('[data-act="dangerToggle"]')){const b=document.getElementById('dangerBody'),t=document.getElementById('dangerToggleBtn');if(b){b.hidden=!b.hidden;if(t)t.textContent=b.hidden?'展开危险操作':'收起危险操作';}return;}
     if(event.target.closest('[data-act="wipeAll"]')){
+      const btn=event.target.closest('[data-act="wipeAll"]');
       const inp=document.getElementById('wipeGateInput');
       if(!inp||inp.value.trim()!=='清除'){toast('请先在输入框输入「清除」再执行');return;}
+      if(btn.dataset.armed!=='1'){
+        btn.dataset.armed='1';btn.disabled=true;let n=10;
+        btn.textContent='倒计时 '+n+' 秒，想清楚（快照会保留）';
+        const tm=setInterval(()=>{n--;
+          if(n>0){btn.textContent='倒计时 '+n+' 秒，想清楚（快照会保留）';}
+          else{clearInterval(tm);btn.disabled=false;btn.textContent='确认清除（本条数据，快照保留）';}
+        },1000);
+        return;
+      }
+      delete btn.dataset.armed;
       if(!preDestruct())return;
-      inp.value='';
-      try{[STORAGE_KEY].concat(V13_INDEP).forEach(k=>localStorage.removeItem(k));['richangji-lastExport','richangji-backup-dismissed'].forEach(k=>localStorage.removeItem(k));}catch(e){}
+      inp.value='';btn.textContent='清除本机全部数据';
+      try{[STORAGE_KEY].concat(V13_INDEP).forEach(k=>localStorage.removeItem(k));['richangji-lastExport','richangji-backup-dismissed','richangji-backup-freq'].forEach(k=>localStorage.removeItem(k));}catch(e){}
       location.reload();return;
     }
     const snapBtn=event.target.closest('[data-act="snap-restore"]');
@@ -2395,7 +2401,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
       if(type==='toggle-shopping'){const item=state.records.find(r=>r.id===id&&r.type==='home');if(item){item.data.bought=!item.data.bought;item.data.boughtDate=item.data.bought?isoDate():null;updateRemoteShopping(item);const saved=saveState();renderAll();if(saved&&item.data.bought){celebrate();toast('买到了，已移入完成');}}}
       if(type==='delete-media'){const item=state.mediaItems.find(media=>media.id===id);if(item&&confirm(LANG==='en'?`Remove “${item.name}” from the list?`:`确定从清单中删除“${item.name}”吗？`)){if(item.remoteId)deleteRemoteMedia(item.remoteId);state.mediaItems=state.mediaItems.filter(media=>media.id!==id);const saved=saveState();renderMedia();if(saved)toast('已从书影音清单移除');}}
       if(type==='open-habit-settings')openHabitSettings();if(type==='close-habit-settings')closeHabitSettings();if(type==='open-plan-settings')openPlanSettings();if(type==='close-plan-settings')closePlanSettings();if(type==='open-fitness-profile')openFitnessProfile();if(type==='close-fitness-profile')closeFitnessProfile();
-      if(type==='export-money')exportExcel('money');if(type==='export-fitness')exportExcel('fitness');if(type==='close-brand')closeBrandSettings();if(type==='open-brand')openBrandSettings();if(type==='reset-brand'){if(!preDestruct())return;state.settings.brand={name:'日常集',avatar:'日',tagline:'生活有迹可循',theme:'plum'};saveState();applyBrand();closeBrandSettings();toast('已恢复默认外观');}
+      if(type==='export-money')exportExcel('money');if(type==='export-fitness')exportExcel('fitness');if(type==='close-brand')closeBrandSettings();if(type==='open-brand')openBrandSettings();if(type==='reset-brand'){if(!preDestruct())return;state.settings.brand={name:'日常集',avatar:'日',tagline:'生活有迹可循',theme:'plum'};saveState();applyBrand();openBrandSettings();toast('已恢复默认外观，可直接调整');}
     });
     document.addEventListener('change',event=>{if(event.target.dataset.action==='habit-number')updateHabit(event.target.dataset.id,'number',event.target.value);});
     document.getElementById('budgetInput').addEventListener('change',e=>{state.settings.budget=Math.max(0,Number(e.target.value||0));const saved=saveState();renderAll();if(saved)toast('月度预算已更新');});
