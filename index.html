@@ -177,6 +177,12 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
 .danger-body[hidden]{display:none}
 .dgate{display:flex;gap:8px;flex-wrap:wrap}
 .dgate input{flex:1 1 150px;min-height:44px;padding:8px 12px;border:1px solid var(--line);border-radius:12px;background:#fffdfa;color:inherit;font-size:14px}
+.ft-today-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin-top:8px;padding:10px 12px;border:1px solid var(--line);border-radius:14px;background:#fffdfa}
+.ft-today-row.done-row{opacity:.6}
+.ft-act-name{border:0;background:none;padding:0;font-weight:600;font-size:14px;color:inherit;cursor:pointer;min-height:38px;text-align:left}
+.ft-day{display:flex;align-items:center;gap:10px;justify-content:space-between;flex-wrap:wrap;width:100%}
+#ftRestBar{display:flex;align-items:center;gap:10px;margin-top:10px;padding:10px 14px;border-radius:12px;background:var(--plum-soft,#e8dfe5);font-size:13px}
+#ftRestBar .wbtn{min-height:32px;padding:4px 12px}
 .snap-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px;color:var(--muted);padding:8px 0;border-bottom:1px dashed var(--line)}
 .snap-row:last-child{border-bottom:0}
 .snap-row .wbtn{min-height:38px;padding:0 14px;font-size:12px;margin-left:auto}
@@ -340,12 +346,19 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
       <section data-page-node-id="kpPnubsun3OlHHydKytZUI" class="view" data-title="减脂健身" id="view-fitness">
         <div data-page-node-id="m50d5EovmStFBFVLv7l2Q9" class="module-alert" id="fitnessAlert"></div>
         <nav class="wspace-tabs" id="ftAnchor" aria-label="健身分区导航">
-          <button data-ftgo="ft-panel-plan">训练计划</button>
+          <button data-ftgo="ft-panel-today">今日训练</button>
+          <button data-ftgo="ft-panel-plan">周计划</button>
           <button data-ftgo="ft-panel-exlib">动作库</button>
           <button data-ftgo="ft-panel-log">训练日志</button>
         </nav>
+        <article class="wpanel" id="ft-panel-today" data-ft="today">
+          <div class="wpanel-head"><div><p class="eyebrow">跟着计划练</p><h2>今日训练</h2></div><span class="wnote" id="ftTodayNote"></span></div>
+          <div id="ftTodayCtrl"></div>
+          <div id="ftRestBar" hidden></div>
+          <div class="wbranch" id="ftTodayList"></div>
+        </article>
         <article class="wpanel" id="ft-panel-plan" data-ft="plan">
-          <div class="wpanel-head"><div><p class="eyebrow">按周几挂部位</p><h2>训练计划</h2></div><span class="wnote" id="ftPlanNote"></span></div>
+          <div class="wpanel-head"><div><p class="eyebrow">全周总览</p><h2>周计划</h2></div><span class="wnote" id="ftPlanNote"></span></div>
           <p class="wnote2">点动作记一组 · 记满自动标完成 · 练满后再点清零</p>
           <div class="wbranch" id="ftPlanList"></div>
         </article>
@@ -1436,6 +1449,81 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   function ftActById(aid){const l=ftLib();for(let i=0;i<l.length;i++)if(l[i].id===aid)return l[i];return{id:aid,name:aid,unit:'次',muscle:'',equipment:''};}
   function ftDoneMap(){const f=state.fitTrain;if(f&&f.today&&f.today.date===isoDate()&&f.today.done&&typeof f.today.done==='object')return f.today.done;return{};}
   function ftSetDone(aid,arr){const t=isoDate();if(!state.fitTrain||typeof state.fitTrain!=='object')state.fitTrain={};if(!state.fitTrain.today||state.fitTrain.today.date!==t)state.fitTrain.today={date:t,startedAt:0,done:{},adj:{}};state.fitTrain.today.done[aid]=arr;saveState();}
+  let ftRestUntil=0,ftRestTimer=null,ftClockTimer=null;
+  function ftElapsedText(from){const m=Math.floor((Date.now()-from)/60000);return m>=60?(Math.floor(m/60)+' 小时 '+(m%60)+' 分钟'):(m+' 分钟');}
+  function ftTodayState(){
+    const dow=String(new Date().getDay());
+    const sched=(state.fitTrain&&state.fitTrain.schedule&&state.fitTrain.schedule[dow]&&state.fitTrain.schedule[dow].parts&&state.fitTrain.schedule[dow].parts.length)?state.fitTrain.schedule[dow]:null;
+    const today=(state.fitTrain&&state.fitTrain.today&&state.fitTrain.today.date===isoDate())?state.fitTrain.today:{date:isoDate(),startedAt:0,done:{},adj:{}};
+    return{sched:sched,today:today,dow:dow};
+  }
+  function ftStartRest(sec){
+    const bar=document.getElementById('ftRestBar');if(!bar||!sec)return;
+    ftRestUntil=Date.now()+sec*1000;
+    bar.innerHTML='组间休息 <b id="ftRestLeft"></b> 秒 <button class="wbtn ghostbtn" data-act="ftRestSkip">跳过</button>';
+    bar.hidden=false;
+    if(ftRestTimer)clearInterval(ftRestTimer);
+    const tick=()=>{const left=Math.max(0,Math.ceil((ftRestUntil-Date.now())/1000)),el=document.getElementById('ftRestLeft');
+      if(left<=0){clearInterval(ftRestTimer);ftRestTimer=null;ftRestUntil=0;bar.hidden=true;toast('休息结束，下一组');return;}
+      if(el)el.textContent=left;};
+    tick();ftRestTimer=setInterval(tick,500);
+  }
+  function finishTraining(){
+    const st=ftTodayState(),sched=st.sched,today=st.today;
+    if(!sched){toast('今天没有安排训练');return;}
+    if(!today.startedAt){toast('还没开始训练');return;}
+    const done=today.done||{};let totalSets=0,didSets=0;
+    sched.parts.forEach(p=>(p.actions||[]).forEach(a=>{totalSets+=a.sets;didSets+=(done[a.aid]||[]).length;}));
+    if(!didSets){toast('一组都还没记，先练起来');return;}
+    if(didSets<totalSets&&!confirm('还有 '+(totalSets-didSets)+' 组没练完，照实记入日志。确定结束吗？'))return;
+    const dur=Math.max(1,Math.round((Date.now()-today.startedAt)/60000));
+    const rec={date:isoDate(),startedAt:today.startedAt,endedAt:Date.now(),durationMin:dur,parts:sched.parts.map(p=>({muscle:p.muscle||'',actions:(p.actions||[]).map(a=>{
+      const meta=ftActById(a.aid);
+      return{aid:a.aid,name:(meta&&meta.name)||a.aid,sets:a.sets,reps:a.reps,weight:Number(a.weight||0),doneSets:(done[a.aid]||[]).map(s=>({weight:Number(s.weight||0),reps:Number(s.reps||0)}))};
+    })}))};
+    let totalReps=0,volume=0;
+    rec.parts.forEach(p=>p.actions.forEach(a=>a.doneSets.forEach(s=>{totalReps+=s.reps;if(s.weight>0)volume+=s.reps*s.weight;})));
+    rec.totalSets=didSets;rec.totalReps=totalReps;rec.volume=volume;
+    if(!state.fitTrain||typeof state.fitTrain!=='object')state.fitTrain={};
+    if(!Array.isArray(state.fitTrain.log))state.fitTrain.log=[];
+    state.fitTrain.log.push(rec);
+    state.fitTrain.today={date:isoDate(),startedAt:0,done:{},adj:{}};
+    if(ftRestTimer){clearInterval(ftRestTimer);ftRestTimer=null;ftRestUntil=0;}
+    const bar=document.getElementById('ftRestBar');if(bar)bar.hidden=true;
+    const ok=saveState();renderFitTrain();
+    if(didSets>=totalSets&&totalSets>0){celebrate();toast('训练完成！'+didSets+' 组 · '+dur+' 分钟');}
+    else toast('已记入训练日志：'+didSets+' 组 · '+dur+' 分钟');
+  }
+  function renderFtToday(){
+    const ctrl=document.getElementById('ftTodayCtrl'),list=document.getElementById('ftTodayList'),note=document.getElementById('ftTodayNote'),rest=document.getElementById('ftRestBar');
+    if(!list)return;
+    if(ftClockTimer){clearInterval(ftClockTimer);ftClockTimer=null;}
+    const st=ftTodayState(),sched=st.sched,today=st.today;
+    if(!sched){note.textContent='休息日';ctrl.innerHTML='';rest.hidden=true;list.innerHTML='<p class="wempty-task">今天没有安排训练。想练的话去「周计划」看看，或让身体好好恢复。</p>';return;}
+    const done=today.done||{};let totalSets=0,didSets=0;
+    sched.parts.forEach(p=>(p.actions||[]).forEach(a=>{totalSets+=a.sets;didSets+=(done[a.aid]||[]).length;}));
+    note.textContent='已记 '+didSets+'/'+totalSets+' 组';
+    if(!today.startedAt){
+      ctrl.innerHTML='<button class="wbtn dbtn-solid" data-act="ftStart" style="width:100%">开始训练</button>';
+      list.innerHTML=sched.parts.map(p=>'<p class="zdesc" style="margin:12px 0 0">'+escapeHtml(p.muscle||'')+'</p>'+(p.actions||[]).map(a=>{
+        const meta=ftActById(a.aid);
+        return '<div class="ft-today-row"><div style="min-width:0"><button class="ft-act-name" data-ft-info="'+escapeHtml(a.aid)+'">'+escapeHtml((meta&&meta.name)||a.aid)+((meta&&meta.gif)?' <span class="wft-g">动图</span>':'')+'</button><p class="wsk-desc">'+escapeHtml(a.sets+'组×'+a.reps+(a.weight?'×'+a.weight+'kg':'')+' · 休息'+a.rest+'s')+'</p></div><span class="wnode" data-s="0">未开始</span></div>';
+      }).join(''));
+      rest.hidden=true;return;
+    }
+    ctrl.innerHTML='<div class="ft-day"><span>开练于 '+new Date(today.startedAt).toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'})+' · 用时 <b id="ftElapsed">'+ftElapsedText(today.startedAt)+'</b></span><button class="wbtn ghostbtn" data-act="ftFinish">'+(didSets>=totalSets&&totalSets>0?'完成训练':'结束训练')+'</button></div>';
+    ftClockTimer=setInterval(()=>{const el=document.getElementById('ftElapsed');if(el)el.textContent=ftElapsedText(today.startedAt);else{clearInterval(ftClockTimer);ftClockTimer=null;}},30000);
+    list.innerHTML=sched.parts.map(p=>'<p class="zdesc" style="margin:12px 0 0">'+escapeHtml(p.muscle||'')+'</p>'+(p.actions||[]).map(a=>{
+      const meta=ftActById(a.aid),arr=done[a.aid]||[],full=arr.length>=a.sets&&a.sets>0;
+      return '<div class="ft-today-row'+(full?' done-row':'')+'">'+
+        '<div style="min-width:0"><button class="ft-act-name" data-ft-info="'+escapeHtml(a.aid)+'">'+escapeHtml((meta&&meta.name)||a.aid)+((meta&&meta.gif)?' <span class="wft-g">动图</span>':'')+'</button>'+
+        '<p class="wsk-desc">'+escapeHtml(a.sets+'组×'+a.reps+(a.weight?'×'+a.weight+'kg':'')+' · 休息'+a.rest+'s')+((meta&&meta.tip)?' · '+escapeHtml(meta.tip):'')+'</p>'+
+        (arr.length?'<p class="wsk-desc">'+escapeHtml(arr.map(s=>((s.weight>0?s.weight+'kg×':'')+s.reps)).join(' / '))+'</p>':'')+
+        '</div>'+
+        '<span class="wnode" data-ft-act="'+escapeHtml(a.aid)+'" data-ft-target="'+a.sets+'" data-ft-w="'+Number(a.weight||0)+'" data-ft-r="'+Number(a.reps||0)+'" data-ft-rest="'+Number(a.rest||60)+'" data-s="'+(full?2:(arr.length?1:0))+'" title="点一下记一组">'+(full?'练满 · 点此重记':'记一组 '+arr.length+'/'+a.sets)+'</span>'+
+        '</div>';
+    }).join('')).join('');
+  }
   function renderFitTrain(){
     const planEl=document.getElementById('ftPlanList');if(!planEl)return;
     const dow=String(new Date().getDay()),hasSched=state.fitTrain&&state.fitTrain.schedule&&Object.keys(state.fitTrain.schedule).length;
@@ -1467,6 +1555,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
       const meta=[r.volume!=null?r.volume+' kg 训练量':'',r.totalSets!=null?r.totalSets+' 组 · '+r.totalReps+' 次':'',r.durationMin!=null?r.durationMin+' 分钟':'',r.kcal!=null?r.kcal+' kcal':''].filter(Boolean).join(' · ');
       return '<div class="wrv" data-ft-log="1"><div class="wrv-date">'+escapeHtml(r.date||'')+(meta?' · '+escapeHtml(meta):'')+'</div><div class="wrv-line" style="cursor:pointer">点开看动作明细</div><div class="ftlog-detail" hidden></div></div>';
     }).join(''):'<p class="wempty-task">还没有训练记录。完成一次训练后自动生成。</p>';
+    renderFtToday();
   }
   function renderFtExGrid(){
     const m=document.getElementById('ftExMuscle').value,e=document.getElementById('ftExEquip').value,q=(document.getElementById('ftExSearch').value||'').trim().toLowerCase();
@@ -2188,12 +2277,21 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     }
     const gifCard=event.target.closest('#ftExGrid [data-ft-ex]');
     if(gifCard){openFtGif(gifCard.dataset.ftEx);return;}
-    const chip=event.target.closest('#ftPlanList [data-ft-act]');
+    if(event.target.closest('[data-act="ftStart"]')){
+      if(!state.fitTrain||typeof state.fitTrain!=='object')state.fitTrain={};
+      if(!state.fitTrain.today||state.fitTrain.today.date!==isoDate())state.fitTrain.today={date:isoDate(),startedAt:0,done:{},adj:{}};
+      state.fitTrain.today.startedAt=Date.now();saveState();renderFitTrain();toast('开练！记一组后休息倒计时自动走');return;
+    }
+    if(event.target.closest('[data-act="ftFinish"]')){finishTraining();return;}
+    if(event.target.closest('[data-act="ftRestSkip"]')){if(ftRestTimer){clearInterval(ftRestTimer);ftRestTimer=null;}ftRestUntil=0;const bar=document.getElementById('ftRestBar');if(bar)bar.hidden=true;toast('休息跳过');return;}
+    const infoBtn=event.target.closest('[data-ft-info]');
+    if(infoBtn){openFtGif(infoBtn.dataset.ftInfo);return;}
+    const chip=event.target.closest('#ftPlanList [data-ft-act], #ftTodayList [data-ft-act]');
     if(chip){
-      const aid=chip.dataset.ftAct,target=Number(chip.dataset.ftTarget||0),pw=Number(chip.dataset.ftW||0),pr=Number(chip.dataset.ftR||0),done=ftDoneMap(),arr=(done[aid]||[]).slice();
+      const aid=chip.dataset.ftAct,target=Number(chip.dataset.ftTarget||0),pw=Number(chip.dataset.ftW||0),pr=Number(chip.dataset.ftR||0),restS=Number(chip.dataset.ftRest||60),done=ftDoneMap(),arr=(done[aid]||[]).slice();
       if(!state.fitTrain||!state.fitTrain.schedule)return;
       if(arr.length>=target)ftSetDone(aid,[]);
-      else{arr.push({weight:pw,reps:pr,ts:Date.now()});ftSetDone(aid,arr);}
+      else{arr.push({weight:pw,reps:pr,ts:Date.now()});ftSetDone(aid,arr);if(arr.length<target)ftStartRest(restS);}
       const nowDone=ftDoneMap(),full=((nowDone[aid]||[]).length)>=target&&target>0;
       renderFitTrain();
       if(full){celebrate();toast('这个动作练满了');}
@@ -2212,7 +2310,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
 
   function openFtGif(id){
     const meta=ftActById(id)||{};
-    if(!meta.gif)return;
+    if(!meta.gif){toast(meta.tip||'这个动作没有动图');return;}
     const mask=document.createElement('div');
     mask.className='ftgif-mask';
     mask.innerHTML='<div class="ftgif-box" role="dialog" aria-modal="true"><img alt="'+escapeHtml(meta.name||'动作')+'" src="'+escapeHtml(meta.gif)+'"><p class="ftgif-name">'+escapeHtml(meta.name||'')+'</p>'+(meta.tip?'<p class="ftgif-tip">'+escapeHtml(meta.tip)+'</p>':'')+'<button class="wbtn" type="button">关闭</button></div>';
