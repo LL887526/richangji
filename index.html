@@ -141,6 +141,11 @@
 .wsk-name{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600}
 .wsk-desc{margin:0;color:var(--muted);font-size:12px;line-height:1.6}
 .wft-g{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:999px;border:1px solid var(--line);color:var(--muted);font-size:10px;vertical-align:1px}
+#ftExGrid{grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:8px}
+#ftExGrid .wsk{padding:10px 12px;gap:4px;border-radius:12px}
+#ftExGrid .wsk-name{font-size:13px;gap:6px;flex-wrap:wrap}
+#ftExGrid .wbadge{padding:2px 8px;font-size:10px}
+#ftExGrid .wsk-desc{font-size:11px}
 .ftgif-mask{position:fixed;inset:0;z-index:120;background:rgba(40,32,26,.45);display:flex;align-items:center;justify-content:center;padding:20px}
 .ftgif-box{background:#fff;border-radius:16px;padding:14px;max-width:320px;width:100%;text-align:center;box-shadow:0 18px 50px rgba(53,41,31,.25)}
 .ftgif-box img{width:100%;border-radius:10px;background:#f4efe8;display:block}
@@ -503,7 +508,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
         <div class="wsec" id="wsec-capture">
           <article class="wpanel">
             <div class="wpanel-head"><div><p class="eyebrow">随手记，别丢</p><h2>灵感捕获</h2></div><span class="wnote" id="capCount"></span></div>
-            <div class="wadd"><input type="text" id="capInput" maxlength="60" placeholder="灵感，如：手工系列系列第三期"><button class="wbtn" data-act="addCap">捕获</button></div>
+            <div class="wadd"><input type="text" id="capInput" maxlength="60" placeholder="灵感，如：手工系列第三期"><button class="wbtn" data-act="addCap">捕获</button></div>
             <div class="wseg" id="capSeg"><button class="on" data-cap="全部">全部</button><button data-cap="工作">工作</button><button data-cap="成长">成长</button><button data-cap="生活">生活</button><button data-cap="通用">通用</button></div>
             <div class="wlist" id="capList"></div>
           </article>
@@ -1560,7 +1565,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   function renderFtExGrid(){
     const m=document.getElementById('ftExMuscle').value,e=document.getElementById('ftExEquip').value,q=(document.getElementById('ftExSearch').value||'').trim().toLowerCase();
     const list=ftLib().filter(x=>(!m||x.muscle===m)&&(!e||x.equipment===e)&&(!q||String(x.name||'').toLowerCase().includes(q)));
-    document.getElementById('ftExGrid').innerHTML=list.length?list.map(x=>'<div class="wsk" data-ft-ex="'+escapeHtml(x.id||'')+'" data-ft-gif="'+escapeHtml(x.gif||'')+'" title="'+escapeHtml(x.tip||'')+'"><div class="wsk-name">'+escapeHtml(x.name||'')+'<span class="wbadge">'+escapeHtml(x.muscle||'未分类')+'</span>'+(x.gif?'<span class="wft-g">动图</span>':'')+'</div><p class="wsk-desc">'+escapeHtml(x.equipment||'自重')+' · '+escapeHtml(x.unit||'次')+'</p></div>').join(''):'<p class="wempty-task">没有匹配的动作</p>';
+    document.getElementById('ftExGrid').innerHTML=list.length?list.map(x=>{const def=(x.equipment||'自重')==='自重'&&(x.unit||'次')==='次';return '<div class="wsk" data-ft-ex="'+escapeHtml(x.id||'')+'" data-ft-gif="'+escapeHtml(x.gif||'')+'" title="'+escapeHtml(x.tip||'')+'"><div class="wsk-name">'+escapeHtml(x.name||'')+'<span class="wbadge">'+escapeHtml(x.muscle||'未分类')+'</span>'+(x.gif?'<span class="wft-g">动图</span>':'')+'</div>'+(def?'':'<p class="wsk-desc">'+escapeHtml(x.equipment||'自重')+' · '+escapeHtml(x.unit||'次')+'</p>')+'</div>';}).join(''):'<p class="wempty-task">没有匹配的动作</p>';
   }
   function ftLogDetailHTML(r){
     if(!r||!Array.isArray(r.parts))return '<p class="wempty">旧格式记录 · 无法展开明细</p>';
