@@ -146,6 +146,31 @@
 #ftExGrid .wsk-name{font-size:13px;gap:6px;flex-wrap:wrap}
 #ftExGrid .wbadge{padding:2px 8px;font-size:10px}
 #ftExGrid .wsk-desc{font-size:11px}
+.ai-fab{position:fixed;right:18px;bottom:24px;width:52px;height:52px;border-radius:50%;border:none;background:#3478f6;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 6px 18px rgba(20,40,80,.22);z-index:60}
+.ai-fab svg{width:24px;height:24px}
+@media(max-width:860px){.ai-fab{bottom:calc(86px + env(safe-area-inset-bottom,0px));right:14px}}
+.ai-log{display:flex;flex-direction:column;gap:10px;max-height:44vh;min-height:120px;overflow-y:auto;padding:4px 2px}
+.ai-msg{max-width:86%;padding:10px 14px;border-radius:14px;font-size:14px;line-height:1.6;white-space:pre-wrap}
+.ai-msg.user{align-self:flex-end;background:#3478f6;color:#fff;border-bottom-right-radius:4px}
+.ai-msg.bot{align-self:flex-start;background:#faf7f2;border:1px solid var(--line);border-bottom-left-radius:4px}
+.ai-draft{align-self:stretch;border:1px solid #c9dcff;background:#f2f7ff;border-radius:14px;padding:12px 14px;font-size:13px}
+.ai-draft p{margin:4px 0 0;color:#3d3830;white-space:pre-wrap}
+.ai-draft-actions{display:flex;gap:8px;margin-top:10px}
+.ai-draft-actions .btn{flex:1;min-height:38px}
+.ai-inputbar{display:flex;gap:8px;margin-top:12px;align-items:stretch}
+.ai-inputbar input{flex:1;min-width:0;min-height:44px;padding:10px 14px;border:1px solid var(--line);border-radius:12px;background:#fffdfa;color:inherit;font-size:14px}
+.ai-inputbar button{min-width:44px;min-height:44px;border:1px solid var(--line);border-radius:12px;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;color:inherit}
+.ai-inputbar button svg{width:20px;height:20px}
+.ai-inputbar .ai-send{background:#3478f6;color:#fff;border-color:#3478f6;min-width:64px;font-weight:600}
+.ai-mic.rec{background:#ffe9e9;border-color:#d98a8a}
+.rem-row{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--line);font-size:14px}
+.rem-row:last-child{border-bottom:none}
+.rem-row .grow{flex:1;min-width:0}
+.rem-row small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.rem-row .wbtn{flex:0 0 auto;min-height:38px}
+.ai-status{display:inline-block;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700}
+.ai-status.on{background:#e3f5e8;color:#2c7a44}
+.ai-status.off{background:#f1ede7;color:#8f8579}
 .ftgif-mask{position:fixed;inset:0;z-index:120;background:rgba(40,32,26,.45);display:flex;align-items:center;justify-content:center;padding:20px}
 .ftgif-box{background:#fff;border-radius:16px;padding:14px;max-width:320px;width:100%;text-align:center;box-shadow:0 18px 50px rgba(53,41,31,.25)}
 .ftgif-box img{width:100%;border-radius:10px;background:#f4efe8;display:block}
@@ -250,6 +275,8 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     <symbol data-page-node-id="rqr65Lqp2cNYMqQjxUaHDp" id="i-check" viewBox="0 0 24 24"><path data-page-node-id="lEGEZxdj5CTe6gz8MhJoZt" d="m5 12 4 4L19 6"/></symbol>
     <symbol data-page-node-id="PfhBIBCC5LUfdpkeTb9eYT" id="i-more" viewBox="0 0 24 24"><circle data-page-node-id="bCMLGfXxowZHVBl2z21M6H" cx="5" cy="12" r="1"/><circle data-page-node-id="XTii40pLvfWKxRk1jFMgzY" cx="12" cy="12" r="1"/><circle data-page-node-id="JrT2PKCzoVFrgEbx5OnWtd" cx="19" cy="12" r="1"/></symbol>
     <symbol data-page-node-id="LEC9aUyTAkSc2a8ILFXyS8" id="i-chart" viewBox="0 0 24 24"><path data-page-node-id="ttfofpZfjVaEp9Ehm1S5bh" d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l2.2 6.8L21 12l-6.8 2.2L12 21l-2.2-6.8L3 12l6.8-2.2z"/><path d="M19 3.5v3M17.5 5h3"/></symbol>
+    <symbol id="i-mic" viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V5a3 3 0 0 1 3-3z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1M12 18v4"/></symbol>
     <symbol data-page-node-id="CCr6zijWi2V8hZuFh7bVqZ" id="i-alert" viewBox="0 0 24 24"><path data-page-node-id="zyz25nPd6VF3M5jzCKRHXP" d="M12 3 2 21h20zM12 9v5M12 18h.01"/></symbol>
     <symbol data-page-node-id="I33YJdwH5U8y4f2FexfHCR" id="i-clock" viewBox="0 0 24 24"><circle data-page-node-id="cmjXYSJG0Y6CLjXssUjUw2" cx="12" cy="12" r="9"/><path data-page-node-id="h5CwG1HcY9lVzLFoTh44LR" d="M12 7v5l3 2"/></symbol>
     <symbol data-page-node-id="pwtVcBq4bXoSXrYQmvmOVu" id="i-list" viewBox="0 0 24 24"><path data-page-node-id="lztB4xaIzgoTJpUk1Hw3Uu" d="M9 6h12M9 12h12M9 18h12M3 6h.01M3 12h.01M3 18h.01"/></symbol>
@@ -665,6 +692,16 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
           </article>
 
           <article class="panel set-zone">
+            <div class="panel-head"><div><p class="eyebrow">智能</p><h2>AI 助理</h2></div><span class="ai-status off" id="aiKeyStatus">未配置</span></div>
+            <p class="zdesc">在平台（platform.deepseek.com）创建 API Key 后粘贴到这里，AI 助理就能听懂自然语言：自动记账、加待买、建日程、设提醒、记体重。Key 只保存在本机浏览器，不进备份文件、不上传。未配置时也能用基础关键词识别。</p>
+            <div class="dgate" style="margin:10px 0 0">
+              <input type="password" id="aiKeyInput" maxlength="80" placeholder="sk-..." autocomplete="off">
+              <button class="wbtn dbtn-solid" data-act="aiKeySave" type="button">保存 Key</button>
+            </div>
+            <button class="wbtn ghostbtn" data-act="aiKeyClear" type="button" style="margin-top:8px">清除已存的 Key</button>
+          </article>
+
+          <article class="panel set-zone">
             <div class="panel-head"><div><p class="eyebrow">个性化</p><h2>外观</h2></div></div>
             <div class="wmore">
               <button class="wbtn" data-action="open-brand"><svg><use href="#i-settings"/></svg>名称 / 头像 / 副标题 / 主题色</button>
@@ -696,6 +733,28 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
         </div>
         <small id="backupStamp" style="display:block;margin-top:8px;color:var(--muted);font-size:12px"></small>
       </div>
+    </section>
+  </div>
+
+  <button class="ai-fab" data-action="open-ai" aria-label="AI 助理"><svg><use href="#i-spark"/></svg></button>
+
+  <div class="settings-backdrop" hidden id="aiSheet">
+    <section class="settings-sheet" role="dialog" aria-modal="true" aria-labelledby="aiTitle">
+      <div class="settings-head"><div><p class="eyebrow">对话即记录</p><h2 id="aiTitle">AI 助理</h2></div><button class="sheet-close" data-action="close-ai" aria-label="关闭">×</button></div>
+      <div class="ai-log" id="aiLog"><div class="ai-msg bot">直接说话就行：记一笔账、想买什么、安排日程、设个提醒、记体重，我来落到对应板块。确认后才会写入。</div></div>
+      <div class="ai-inputbar">
+        <input type="text" id="aiInput" maxlength="200" placeholder="如：抖音月付欠了 484.59">
+        <button id="aiMicBtn" data-action="ai-mic" aria-label="语音输入" hidden><svg><use href="#i-mic"/></svg></button>
+        <button class="ai-send" data-action="ai-send" aria-label="发送">发送</button>
+      </div>
+    </section>
+  </div>
+
+  <div class="settings-backdrop" hidden id="reminderSheet">
+    <section class="settings-sheet" role="dialog" aria-modal="true" aria-labelledby="remTitle">
+      <div class="settings-head"><div><p class="eyebrow">到期跟进</p><h2 id="remTitle">该看一眼了</h2></div><button class="sheet-close" data-action="close-reminders" aria-label="关闭">×</button></div>
+      <div id="remList"></div>
+      <p class="zdesc" style="margin:10px 0 0">顺延的提醒会在明天打开时再次出现。</p>
     </section>
   </div>
 
@@ -1575,6 +1634,87 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     }).join('')+'</div></div>').join('');
   }
 
+  const AI_KEY_NAME='richangji-ai-key',REM_KEY='richangji-reminders-v1';
+  function aiKeyGet(){try{return localStorage.getItem(AI_KEY_NAME)||'';}catch(e){return '';}}
+  function loadReminders(){try{const a=JSON.parse(localStorage.getItem(REM_KEY)||'[]');return Array.isArray(a)?a:[];}catch(e){return [];}}
+  function saveReminders(list){try{localStorage.setItem(REM_KEY,JSON.stringify(list.slice(-80)));}catch(e){}}
+  function addReminder(text,due){const list=loadReminders();list.push({id:uid(),text:String(text||'').slice(0,80),due:due||isoDate(),createdAt:Date.now(),done:false});saveReminders(list);}
+  function renderAiStatus(){const el=document.getElementById('aiKeyStatus');if(!el)return;const has=!!aiKeyGet();el.textContent=has?'已配置':'未配置';el.className='ai-status '+(has?'on':'off');const mic=document.getElementById('aiMicBtn');if(mic)mic.hidden=!(window.SpeechRecognition||window.webkitSpeechRecognition);}
+  function checkDueReminders(){const today=isoDate();const due=loadReminders().filter(r=>!r.done&&r.due<=today);if(!due.length)return;const box=document.getElementById('remList');if(box)box.innerHTML=due.map(r=>'<div class="rem-row" data-rem-id="'+escapeHtml(r.id)+'"><span class="grow">'+escapeHtml(r.text)+'<small>应于 '+escapeHtml(r.due)+' 跟进</small></span><button class="wbtn" data-act="remDone">已办</button><button class="wbtn ghostbtn" data-act="remSnooze">没办，顺延</button></div>').join('');const sheet=document.getElementById('reminderSheet');if(sheet)sheet.hidden=false;}
+  const AI_SYSTEM='你是「日常集」个人工作台的记录助理。把用户输入解析成一个待执行动作，只输出 JSON：{"intent":"...","reply":"给用户看的一句简短中文确认","draft":{...}}。intent 可选：money_expense 支出，draft:{amount:数字,category:"吃饭/交通/购物/娱乐/房租/看病/学习/其他"之一,note,date:"YYYY-MM-DD"}；money_income 收入，draft:{amount,category:"工资/奖金/兼职/理财/其他"之一,note,date}；shopping 待买，draft:{name,quantity,price:数字或null,remind_date:"YYYY-MM-DD"或null}；planner 日程，draft:{title,time:"HH:MM"或"",date,priority:"high/normal/low",note}；task 工作任务，draft:{text,account:"company/own/qjt"之一}；fitness 身体记录，draft:{weight:数字或null,bodyFat:数字或null,calories:数字或null,duration:数字或null,note,date}；reminder 通用提醒，draft:{text,due:"YYYY-MM-DD"}；mood 心情或习惯打卡，draft:{habit:"习惯名",note}；chat 其他，draft:{}。中文数字金额换算成阿拉伯数字（两千九百多→2900）。日期无法确定用今天 '+isoDate()+'。只输出 JSON，不要输出其他文字。';
+  function aiAppendMsg(role,text){const log=document.getElementById('aiLog');if(!log)return null;const div=document.createElement('div');div.className='ai-msg '+(role==='user'?'user':'bot');div.textContent=text;log.appendChild(div);log.scrollTop=log.scrollHeight;return div;}
+  function aiBuildCard(out){
+    const d=out.draft||{},today=isoDate();
+    switch(out.intent){
+      case 'money_expense':{const amt=Number(d.amount)||0;if(!amt)return null;return {label:'记账 · 支出',detail:money(amt)+' · '+(d.category||'其他')+(d.note?' · '+d.note:'')+' · '+(d.date||today),view:'money',exec:()=>addRecord('money',d.date||today,{flow:'expense',amount:amt,category:d.category||'其他',note:String(d.note||'').slice(0,40)})};}
+      case 'money_income':{const amt=Number(d.amount)||0;if(!amt)return null;return {label:'记账 · 收入',detail:money(amt)+' · '+(d.category||'其他')+(d.note?' · '+d.note:'')+' · '+(d.date||today),view:'money',exec:()=>addRecord('money',d.date||today,{flow:'income',amount:amt,category:d.category||'其他',note:String(d.note||'').slice(0,40)})};}
+      case 'shopping':{if(!d.name)return null;const rem=d.remind_date?addReminder('买：'+d.name,d.remind_date):false;return {label:'待买清单',detail:d.name+(d.quantity?' · 数量 '+d.quantity:'')+(d.price?' · 预计 '+money(Number(d.price)):'')+(d.remind_date?' · 到 '+d.remind_date+' 弹窗跟进':''),view:'home',exec:()=>addRecord('home',today,{name:String(d.name).slice(0,40),quantity:String(d.quantity||'1'),category:'未分类',price:Number(d.price)||'',bought:false})};}
+      case 'planner':{if(!d.title)return null;return {label:'日程',detail:d.title+' · '+(d.date||today)+(d.time?' '+d.time:'')+(d.note?' · '+d.note:''),view:'planner',exec:()=>addRecord('planner',d.date||today,{title:String(d.title).slice(0,40),time:d.time||'',priority:d.priority==='high'?'high':d.priority==='low'?'low':'normal',list:'生活',note:String(d.note||'').slice(0,40),remind:false,done:false})};}
+      case 'task':{if(!d.text)return null;const acc=d.account==='own'?'own':d.account==='qjt'?'qjt':'company';return {label:'工作任务 · '+(acc==='company'?'公司号':acc==='own'?'自有号':'品牌号'),detail:String(d.text),view:'work',exec:()=>{state.work.tasks[acc].unshift({id:uid(),text:String(d.text).slice(0,60),stage:'待剪',time:nowStamp(),ts:Date.now()});saveState(true);renderWork();return true;}};}
+      case 'fitness':{const has=d.weight||d.bodyFat||d.calories||d.duration;if(!has)return null;const parts=[];if(d.weight)parts.push('体重 '+d.weight+'kg');if(d.bodyFat)parts.push('体脂 '+d.bodyFat+'%');if(d.calories)parts.push('摄入 '+d.calories+'kcal');if(d.duration)parts.push('运动 '+d.duration+'分钟');if(d.note)parts.push(d.note);return {label:'身体记录',detail:parts.join(' · ')+' · '+(d.date||today),view:'fitness',exec:()=>addRecord('fitness',d.date||today,{weight:d.weight||'',bodyFat:d.bodyFat||'',calories:d.calories||'',duration:d.duration||'',note:String(d.note||'').slice(0,40)})};}
+      case 'reminder':{if(!d.text)return null;return {label:'提醒',detail:String(d.text)+' · '+(d.due||today)+' 弹窗跟进',view:'',exec:()=>{addReminder(d.text,d.due||today);return true;}};}
+      case 'mood':{const key=String(d.habit||'');if(!key)return null;return {label:'习惯打卡',detail:key+(d.note?' · '+d.note:''),view:'habits',exec:()=>{const h=state.habits.find(x=>(x.name||'')&&key.indexOf(x.name)>-1)||state.habits.find(x=>(x.name||'')&&x.name.indexOf(key.slice(0,2))>-1);if(!h){toast('没找到叫「'+key+'」的习惯');return false;}h.entries=h.entries||{};const k=isoDate();h.entries[k]=Number(h.entries[k]||0)+1;saveState(true);renderHabits();return true;}};}
+      default:return null;
+    }
+  }
+  function aiDraftCard(card){
+    const log=document.getElementById('aiLog');if(!log)return;
+    const div=document.createElement('div');div.className='ai-draft';
+    div.innerHTML='<b>'+escapeHtml(card.label)+'</b><p>'+escapeHtml(card.detail)+'</p><div class="ai-draft-actions"><button class="btn primary" data-ai-confirm="1">确认记录</button><button class="btn ghost" data-ai-cancel="1">取消</button></div>';
+    log.appendChild(div);log.scrollTop=log.scrollHeight;
+    div.querySelector('[data-ai-confirm]').addEventListener('click',()=>{const ok=card.exec();div.remove();if(ok===false)return;aiAppendMsg('bot','已记录，可在对应板块查看。');if(card.view)switchView(card.view);});
+    div.querySelector('[data-ai-cancel]').addEventListener('click',()=>{div.remove();aiAppendMsg('bot','已取消，没有写入。');});
+  }
+  function localParse(text){
+    const t=String(text||'').trim(),today=isoDate();
+    const m=t.match(/(\d+(?:\.\d+)?)/),amt=m?Number(m[1]):null;
+    if(/欠|月付|还差/.test(t)&&amt!=null)return{intent:'money_expense',reply:'（本地基础识别）按支出记账准备：',draft:{amount:amt,category:'其他',note:t.slice(0,24),date:today}};
+    if(/工资|进账|到账|发了|收入/.test(t)&&amt!=null)return{intent:'money_income',reply:'（本地基础识别）按收入记账准备：',draft:{amount:amt,category:'其他',note:t.slice(0,24),date:today}};
+    if(/想买|买个|买一|待买|帮我记/.test(t))return{intent:'shopping',reply:'（本地基础识别）加入待买清单：',draft:{name:t.slice(0,16),quantity:'1',price:null,remind_date:null}};
+    if(/提醒|别忘|记得/.test(t))return{intent:'reminder',reply:'（本地基础识别）建提醒：',draft:{text:t.slice(0,30),due:today}};
+    if(/体脂/.test(t)&&amt!=null)return{intent:'fitness',reply:'（本地基础识别）记身体数据：',draft:{bodyFat:amt,date:today}};
+    if(/体重|kg|公斤|斤/.test(t)&&amt!=null)return{intent:'fitness',reply:'（本地基础识别）记身体数据：',draft:{weight:amt,date:today}};
+    return{intent:'chat',reply:'',draft:{}};
+  }
+  function aiAfter(out,fallback){
+    if(out.reply)aiAppendMsg('bot',out.reply);
+    const card=aiBuildCard(out);
+    if(card){aiDraftCard(card);return;}
+    if(!out.reply)aiAppendMsg('bot',fallback?'这句我拿不准。配置 DeepSeek Key 后（设置页 · AI 助理）理解力会大幅提升，什么说法都能听懂。':'这句我没转成记录，就当聊天了。');
+  }
+  function aiSend(){
+    const inp=document.getElementById('aiInput');if(!inp)return;
+    const text=(inp.value||'').trim();if(!text)return;
+    inp.value='';aiAppendMsg('user',text);
+    const key=aiKeyGet();
+    if(!key){aiAfter(localParse(text),true);return;}
+    const thinking=aiAppendMsg('bot','正在想…');
+    fetch('https://api.deepseek.com/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model:'deepseek-chat',messages:[{role:'system',content:AI_SYSTEM},{role:'user',content:text}],response_format:{type:'json_object'},temperature:0.1,max_tokens:400})}).then(r=>r.json()).then(j=>{
+      if(thinking)thinking.remove();
+      let out=null;try{out=JSON.parse(j.choices[0].message.content);}catch(e){}
+      if(!out||!out.intent){aiAppendMsg('bot','没解析出来，换个说法试试？');return;}
+      aiAfter(out,false);
+    }).catch(err=>{
+      if(thinking)thinking.remove();
+      aiAppendMsg('bot','AI 连不上（'+(err&&err.message?err.message:'网络')+'），先用本地识别兜底。');
+      aiAfter(localParse(text),true);
+    });
+  }
+  function aiMic(){
+    const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+    if(!SR){toast('这个浏览器不支持语音识别');return;}
+    const btn=document.getElementById('aiMicBtn');if(!btn)return;
+    try{
+      const rec=new SR();rec.lang='zh-CN';rec.interimResults=false;
+      btn.classList.add('rec');
+      rec.onresult=e=>{const inp=document.getElementById('aiInput');if(inp)inp.value=e.results[0][0].transcript;};
+      rec.onend=()=>btn.classList.remove('rec');
+      rec.onerror=()=>btn.classList.remove('rec');
+      rec.start();
+      toast('在听，请说');
+    }catch(e){btn.classList.remove('rec');toast('语音识别启动失败');}
+  }
+
   function renderBackupHint(){
     const el=document.getElementById('backupHint');if(!el)return;
     const last=Number(localStorage.getItem('richangji-lastExport')||0);
@@ -2121,6 +2261,11 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     if(capf){capFilter=capf.dataset.cap;renderCaps();return;}
     if(event.target.closest('[data-action="open-more"]')){buildMore();document.getElementById('moreSheet').hidden=false;return;}
     if(event.target.closest('[data-action="close-more"]')){document.getElementById('moreSheet').hidden=true;return;}
+    if(event.target.closest('[data-action="open-ai"]')){document.getElementById('aiSheet').hidden=false;renderAiStatus();const inp=document.getElementById('aiInput');if(inp)setTimeout(()=>inp.focus(),80);return;}
+    if(event.target.closest('[data-action="close-ai"]')){document.getElementById('aiSheet').hidden=true;return;}
+    if(event.target.closest('[data-action="ai-send"]')){aiSend();return;}
+    if(event.target.closest('[data-action="ai-mic"]')){aiMic();return;}
+    if(event.target.closest('[data-action="close-reminders"]')){document.getElementById('reminderSheet').hidden=true;return;}
     const ab=event.target.closest('[data-act]');
     if(ab){
       const a=ab.dataset.act;
@@ -2245,6 +2390,26 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   });
   document.addEventListener('click',event=>{
     if(event.target.closest('[data-act="bkExport"]')){exportBackup();return;}
+    if(event.target.closest('[data-act="remDone"]')||event.target.closest('[data-act="remSnooze"]')){
+      const done=event.target.closest('[data-act="remDone"]'),row=event.target.closest('[data-rem-id]'),rid=row?row.dataset.remId:'';
+      const list=loadReminders();const idx=list.findIndex(r=>r.id===rid);
+      if(idx>-1){
+        if(done)list[idx].done=true;else list[idx].due=shiftDate(1);
+        saveReminders(list);
+      }
+      row.remove();
+      const box=document.getElementById('remList');
+      if(box&&!box.querySelector('.rem-row'))document.getElementById('reminderSheet').hidden=true;
+      toast(done?'已办结':'已顺延到明天');
+      return;
+    }
+    if(event.target.closest('[data-act="aiKeySave"]')){
+      const inp=document.getElementById('aiKeyInput');const v=(inp&&inp.value||'').trim();
+      if(!v){toast('先粘贴 Key 再保存');return;}
+      try{localStorage.setItem(AI_KEY_NAME,v);}catch(e){toast('保存失败：存储空间不足');return;}
+      inp.value='';renderAiStatus();toast('Key 已保存（仅本机）');return;
+    }
+    if(event.target.closest('[data-act="aiKeyClear"]')){try{localStorage.removeItem(AI_KEY_NAME);}catch(e){}renderAiStatus();toast('已清除 Key');return;}
     if(event.target.closest('[data-act="bkDismiss"]')){try{localStorage.setItem('richangji-backup-dismissed',new Date().toDateString());}catch(e){}renderBackupHint();return;}
     if(event.target.closest('[data-act="bkImport"]')){document.getElementById('bkFile').click();return;}
     if(event.target.closest('[data-act="dangerToggle"]')){const b=document.getElementById('dangerBody'),t=document.getElementById('dangerToggleBtn');if(b){b.hidden=!b.hidden;if(t)t.textContent=b.hidden?'展开危险操作':'收起危险操作';}return;}
@@ -2521,7 +2686,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     window.addEventListener('storage',e=>{if(e.key!==STORAGE_KEY||!e.newValue)return;try{state=normalizeState(JSON.parse(e.newValue));renderAll();toast('另一个页面的数据已同步');}catch{}});
   }
 
-  function init(){const now=new Date(),weekdays=['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];document.getElementById('todayLabel').textContent=LANG==='en'?new Intl.DateTimeFormat('en-US',{month:'long',day:'numeric',weekday:'long'}).format(now):`${now.getMonth()+1} 月 ${now.getDate()} 日 · ${weekdays[now.getDay()]}`;setDateDefaults();updateMoneyCategories();restoreDrafts();bindForms();bindEvents();renderAll();switchView(document.getElementById(`view-${location.hash.slice(1)}`)?location.hash.slice(1):'dashboard');if(!dataCorrupted)saveState();pullAllRemote(function(ok){ if(ok){ saveState(); renderAll(); } });}
+  function init(){const now=new Date(),weekdays=['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];document.getElementById('todayLabel').textContent=LANG==='en'?new Intl.DateTimeFormat('en-US',{month:'long',day:'numeric',weekday:'long'}).format(now):`${now.getMonth()+1} 月 ${now.getDate()} 日 · ${weekdays[now.getDay()]}`;setDateDefaults();updateMoneyCategories();restoreDrafts();bindForms();bindEvents();renderAll();renderAiStatus();checkDueReminders();var aiInp=document.getElementById('aiInput');if(aiInp)aiInp.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();aiSend();}});switchView(document.getElementById(`view-${location.hash.slice(1)}`)?location.hash.slice(1):'dashboard');if(!dataCorrupted)saveState();pullAllRemote(function(ok){ if(ok){ saveState(); renderAll(); } });}
   startI18n();
   document.addEventListener('DOMContentLoaded',init);
 })();
