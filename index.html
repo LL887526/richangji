@@ -743,7 +743,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
       <div class="settings-head"><div><p class="eyebrow">对话即记录</p><h2 id="aiTitle">AI 助理</h2></div><button class="sheet-close" data-action="close-ai" aria-label="关闭">×</button></div>
       <div class="ai-log" id="aiLog"><div class="ai-msg bot">直接说话就行：记一笔账、想买什么、安排日程、设个提醒、记体重，我来落到对应板块。确认后才会写入。</div></div>
       <div class="ai-inputbar">
-        <input type="text" id="aiInput" maxlength="200" placeholder="如：抖音月付欠了 484.59">
+        <input type="text" id="aiInput" maxlength="200" placeholder="如：午饭花了 25.5">
         <button id="aiMicBtn" data-action="ai-mic" aria-label="语音输入" hidden><svg><use href="#i-mic"/></svg></button>
         <button class="ai-send" data-action="ai-send" aria-label="发送">发送</button>
       </div>
@@ -1702,17 +1702,22 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   }
   function aiMic(){
     const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-    if(!SR){toast('这个浏览器不支持语音识别');return;}
+    if(!SR){toast('这个浏览器不支持语音识别，用打字吧');return;}
     const btn=document.getElementById('aiMicBtn');if(!btn)return;
     try{
       const rec=new SR();rec.lang='zh-CN';rec.interimResults=false;
       btn.classList.add('rec');
-      rec.onresult=e=>{const inp=document.getElementById('aiInput');if(inp)inp.value=e.results[0][0].transcript;};
+      rec.onresult=e=>{const t=e.results&&e.results[0]&&e.results[0][0]?e.results[0][0].transcript:'';const inp=document.getElementById('aiInput');if(inp&&t)inp.value=t;toast('识别好了，看一眼再发送');};
       rec.onend=()=>btn.classList.remove('rec');
-      rec.onerror=()=>btn.classList.remove('rec');
+      rec.onerror=e=>{
+        btn.classList.remove('rec');
+        const code=e&&e.error||'';
+        const msg=code==='not-allowed'||code==='service-not-allowed'?'麦克风权限被拒：在系统设置允许，或用 Safari/Chrome 浏览器打开本页再试（主屏图标模式下语音常被限制）':code==='network'?'语音识别要联网，检查网络后重试':code==='no-speech'?'没听到声音，靠近一点再说一次':code==='aborted'?'已取消':code==='audio-capture'?'没找到麦克风设备':'语音识别出问题（'+(code||'未知')+'），用打字吧';
+        toast(msg);
+      };
       rec.start();
       toast('在听，请说');
-    }catch(e){btn.classList.remove('rec');toast('语音识别启动失败');}
+    }catch(e){btn.classList.remove('rec');toast('语音识别启动失败，用打字吧');}
   }
 
   function renderBackupHint(){
