@@ -167,6 +167,17 @@
 .ai-msg.listening{color:#8f8579}
 .ai-msg.listening::after{content:"";display:inline-block;width:7px;height:12px;margin-left:4px;vertical-align:-1px;background:#3478f6;opacity:.55;animation:aiblink 1s steps(2) infinite}
 @keyframes aiblink{0%{opacity:.55}50%{opacity:.1}100%{opacity:.55}}
+.fin-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.fin-stats>div{padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:#faf7f2}
+.fin-stats span{display:block;color:var(--muted);font-size:12px}
+.fin-stats b{display:block;font-size:19px;margin-top:2px;letter-spacing:-.3px}
+.fin-stats small{display:block;color:var(--muted);font-size:11px;margin-top:3px;line-height:1.5}
+.fin-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px}
+.fin-row:last-child{border-bottom:none}
+.fin-row .grow{flex:1;min-width:0}
+.fin-row small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.fin-row .text-btn{flex:0 0 auto;min-height:34px}
+@media(max-width:860px){.fin-stats b{font-size:17px}}
 .rem-row{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--line);font-size:14px}
 .rem-row:last-child{border-bottom:none}
 .rem-row .grow{flex:1;min-width:0}
@@ -360,6 +371,17 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
           </form></article>
           <div data-page-node-id="WzhPhtlMMzUB501tXxJQyu" class="module-main">
             <div data-page-node-id="7ifSX6RbQMwg9T81bhl2p2" class="metric-row"><article data-page-node-id="98xUf5GMrFYft8zecidGOl" class="metric income"><span data-page-node-id="i7rQt03ZF8iJK2sOo9C0v7"><!--pnid:WM79L2q4RkA310mXCkDllF-->本月收入</span><strong data-page-node-id="Ci3NmUi1Sx5VMSQEuyyabL" id="moneyIncome"><!--pnid:69txuZjefyKCUd5iOzmKb0-->¥0</strong></article><article data-page-node-id="MkVp74c13Xqm0iwPEOa5Oj" class="metric expense"><span data-page-node-id="hz5cNpfKYCx6oiCL1oshup"><!--pnid:Qr00T0IKzrauTyvabYufio-->本月支出</span><strong data-page-node-id="foPApfQh5kWwWkuM0EtsJ1" id="moneyExpense"><!--pnid:10brk7Q3r6aIGkKfuKzRW3-->¥0</strong></article><article data-page-node-id="EUYLsU4BocNDQbflrumgcz" class="metric"><span data-page-node-id="MMADq9EvsXEv8jcNwWzKUO"><!--pnid:jBZcc2wDUcqkkh1jOrzSUX-->本月剩余</span><strong data-page-node-id="y1SopagOHIAECRzEhCFzZb" id="moneyBalance"><!--pnid:WNFHwwdnehvPVcTPPUqppQ-->¥0</strong></article></div>
+            <article class="panel" id="finCard">
+              <div class="panel-head"><div><p class="eyebrow">资产负债</p><h2 id="finNet">净可用 待校准</h2></div><button class="text-btn" data-act="finBalanceBtn">更新余额</button></div>
+              <div class="fin-stats">
+                <div><span>当前余额</span><b id="finBal">未校准</b><small id="finBalNote">对 AI 说「手上还有 2900」即可校准</small></div>
+                <div><span>总负债</span><b id="finDebt">¥0</b><small id="finDebtNote">0 笔欠款</small></div>
+              </div>
+              <div id="finDebtList"></div>
+              <div id="finExpected"></div>
+              <div id="finPlanBox" hidden><p class="eyebrow" style="margin:12px 0 4px">还款与花钱计划</p><p id="finPlanText" style="white-space:pre-wrap;font-size:13px;color:#3d3830;margin:0"></p></div>
+              <div class="wmore" style="margin-top:10px"><button class="wbtn ghostbtn" data-act="finPlan" id="finPlanBtn">生成还款 / 花钱计划</button></div>
+            </article>
             <article data-page-node-id="bn83OJ2LS8ST3bBC7EmVmR" class="panel compare-card"><div data-page-node-id="VHUordHoD4aVN5wbkB4ZmU"><p data-page-node-id="k5CBhds4NSYO9gG1XsfwBh" class="eyebrow"><!--pnid:qkCOv5dxHINUEg5tzDKE6m-->月度对比</p><h2 data-page-node-id="3eiQp2eypLqcBbltderIOj" id="monthCompare"><!--pnid:M3M3EF9G8Oou5GQI6uIUVa-->暂无对比</h2></div><span data-page-node-id="SIyER20rwusuiGqTHdi5bE" id="monthCompareDetail"><!--pnid:kMFZtTb5c35gtcPBBL9OKg-->有了上月数据后，这里会显示变化</span></article>
             <article data-page-node-id="sXDgtJiJHzdRbD9WbUiZsP" class="panel budget-panel"><div data-page-node-id="YrEMV3wMNcOeff31VHQ33n" class="panel-head"><div data-page-node-id="52DZ2R2QXt2TmaGrfA1kxw"><p data-page-node-id="rQd2WFVbp5nZQSZhOS3VgN" class="eyebrow"><!--pnid:kUUF1EwXHUJTzd0YXkvxx7-->月度预算</p><h2 data-page-node-id="epKsAz0E2IRdgah54qAIvg"><!--pnid:j18hGW2ML8YGlQJpRIGaYm-->花得明白，不必紧绷</h2></div><label data-page-node-id="oHLhbDUPpsklVhxrXcXn3A" class="inline-budget"><!--pnid:oBzPKBcIXlIgX85VKpeki2-->预算 ¥<input data-page-node-id="3EQoyiPug40GsG7Dke79Tl" id="budgetInput" min="0" step="100" type="number"></label></div><div data-page-node-id="kbVkUhDSSYSLj4b40jtG9r" class="large-progress"><span data-page-node-id="QeWnqwtAWnn66sfoLvfiZE" id="budgetBar"></span></div><div data-page-node-id="usdwo4NhsIR6wyb6OLEld3" class="progress-label"><span data-page-node-id="rVM7oB232TFhXZWh54z2bZ" id="budgetUsedText"><!--pnid:sA02EyGFBSSm5ogLzYmbjX-->已使用 0%</span><span data-page-node-id="4yDs2h3Fx4W1Va73RL4ri8" id="budgetRemainText"><!--pnid:tSxa2Nj16Fmo7F3LCaQJUa-->剩余 ¥0</span></div></article>
             <div data-page-node-id="KKIV9GFoCvlKbmuApY8P8K" class="split-grid">
@@ -1645,7 +1667,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   function addReminder(text,due){const list=loadReminders();list.push({id:uid(),text:String(text||'').slice(0,80),due:due||isoDate(),createdAt:Date.now(),done:false});saveReminders(list);}
   function renderAiStatus(){const el=document.getElementById('aiKeyStatus');if(!el)return;const has=!!aiKeyGet();el.textContent=has?'已配置':'未配置';el.className='ai-status '+(has?'on':'off');const mic=document.getElementById('aiMicBtn');if(mic)mic.hidden=!(window.SpeechRecognition||window.webkitSpeechRecognition);}
   function checkDueReminders(){const today=isoDate();const due=loadReminders().filter(r=>!r.done&&r.due<=today);if(!due.length)return;const box=document.getElementById('remList');if(box)box.innerHTML=due.map(r=>'<div class="rem-row" data-rem-id="'+escapeHtml(r.id)+'"><span class="grow">'+escapeHtml(r.text)+'<small>应于 '+escapeHtml(r.due)+' 跟进</small></span><button class="wbtn" data-act="remDone">已办</button><button class="wbtn ghostbtn" data-act="remSnooze">没办，顺延</button></div>').join('');const sheet=document.getElementById('reminderSheet');if(sheet)sheet.hidden=false;}
-  const AI_SYSTEM='你是「日常集」个人工作台的记录助理。把用户输入解析成一个待执行动作，只输出 JSON：{"intent":"...","reply":"给用户看的一句简短中文确认","draft":{...}}。intent 可选：money_expense 支出，draft:{amount:数字,category:"吃饭/交通/购物/娱乐/房租/看病/学习/其他"之一,note,date:"YYYY-MM-DD"}；money_income 收入，draft:{amount,category:"工资/奖金/兼职/理财/其他"之一,note,date}；shopping 待买，draft:{name,quantity,price:数字或null,remind_date:"YYYY-MM-DD"或null}；planner 日程，draft:{title,time:"HH:MM"或"",date,priority:"high/normal/low",note}；task 工作任务，draft:{text,account:"company/own/qjt"之一}；fitness 身体记录，draft:{weight:数字或null,bodyFat:数字或null,calories:数字或null,duration:数字或null,note,date}；reminder 通用提醒，draft:{text,due:"YYYY-MM-DD"}；mood 心情或习惯打卡，draft:{habit:"习惯名",note}；chat 其他，draft:{}。中文数字金额换算成阿拉伯数字（两千九百多→2900）。日期无法确定用今天 '+isoDate()+'。只输出 JSON，不要输出其他文字。';
+  const AI_SYSTEM='你是「日常集」个人工作台的记录助理。把用户输入解析成一个待执行动作，只输出 JSON：{"intent":"...","reply":"给用户看的一句简短中文确认","draft":{...}}。intent 可选：money_expense 支出，draft:{amount:数字,category:"吃饭/交通/购物/娱乐/房租/看病/学习/其他"之一,note,date:"YYYY-MM-DD"}；money_income 收入，draft:{amount,category:"工资/奖金/兼职/理财/其他"之一,note,date}；shopping 待买，draft:{name,quantity,price:数字或null,remind_date:"YYYY-MM-DD"或null}；planner 日程，draft:{title,time:"HH:MM"或"",date,priority:"high/normal/low",note}；task 工作任务，draft:{text,account:"company/own/qjt"之一}；fitness 身体记录，draft:{weight:数字或null,bodyFat:数字或null,calories:数字或null,duration:数字或null,note,date}；reminder 通用提醒，draft:{text,due:"YYYY-MM-DD"}；mood 心情或习惯打卡，draft:{habit:"习惯名",note}；debt_update 欠款登记（明确说「欠/月付/还差」的钱，同时记支出账单并计入负债台账；注意：说了「欠」的不要走 money_expense），draft:{name:"平台名",amount:数字}，一句话含多笔欠款则 draft:{items:[{name,amount},...]}；debt_pay 还款（还掉部分欠款，记还款支出并从负债扣减），draft:{name:"平台名",amount:数字}；balance_update 余额校准（用户报当前手头现金总额），draft:{amount:数字}；income_expected 预期收入（未来才到账的钱，如下月工资），draft:{amount:数字,date:"YYYY-MM-DD",label:"工资"}；finance_plan 还款与花钱规划（用户让你规划还款顺序和每天可花多少），draft:{}；chat 其他，draft:{}。中文数字金额换算成阿拉伯数字（两千九百多→2900）。日期无法确定用今天 '+isoDate()+'。只输出 JSON，不要输出其他文字。';
   function aiAppendMsg(role,text){const log=document.getElementById('aiLog');if(!log)return null;const div=document.createElement('div');div.className='ai-msg '+(role==='user'?'user':'bot');div.textContent=text;log.appendChild(div);log.scrollTop=log.scrollHeight;return div;}
   function aiBuildCard(out){
     const d=out.draft||{},today=isoDate();
@@ -1658,6 +1680,11 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
       case 'fitness':{const has=d.weight||d.bodyFat||d.calories||d.duration;if(!has)return null;const parts=[];if(d.weight)parts.push('体重 '+d.weight+'kg');if(d.bodyFat)parts.push('体脂 '+d.bodyFat+'%');if(d.calories)parts.push('摄入 '+d.calories+'kcal');if(d.duration)parts.push('运动 '+d.duration+'分钟');if(d.note)parts.push(d.note);return {label:'身体记录',detail:parts.join(' · ')+' · '+(d.date||today),view:'fitness',exec:()=>addRecord('fitness',d.date||today,{weight:d.weight||'',bodyFat:d.bodyFat||'',calories:d.calories||'',duration:d.duration||'',note:String(d.note||'').slice(0,40)})};}
       case 'reminder':{if(!d.text)return null;return {label:'提醒',detail:String(d.text)+' · '+(d.due||today)+' 弹窗跟进',view:'',exec:()=>{addReminder(d.text,d.due||today);return true;}};}
       case 'mood':{const key=String(d.habit||'');if(!key)return null;return {label:'习惯打卡',detail:key+(d.note?' · '+d.note:''),view:'habits',exec:()=>{const h=state.habits.find(x=>(x.name||'')&&key.indexOf(x.name)>-1)||state.habits.find(x=>(x.name||'')&&x.name.indexOf(key.slice(0,2))>-1);if(!h){toast('没找到叫「'+key+'」的习惯');return false;}h.entries=h.entries||{};const k=isoDate();h.entries[k]=Number(h.entries[k]||0)+1;saveState(true);renderHabits();return true;}};}
+      case 'debt_update':{let items=Array.isArray(d.items)&&d.items.length?d.items:(d.name&&d.amount?[{name:d.name,amount:d.amount}]:[]);items=items.map(x=>({name:String(x.name||'欠款').slice(0,20),amount:Number(x.amount)||0})).filter(x=>x.amount>0);if(!items.length)return null;const total=items.reduce((s,x)=>s+x.amount,0);return {label:'负债登记 · 共 '+money(total),detail:items.map(x=>x.name+' '+money(x.amount)).join('、')+' · 自动算入总欠款，同时各记一笔支出账单',view:'money',exec:()=>{items.forEach(x=>{finUpsertDebt(x.name,x.amount);addRecord('money',today,{flow:'expense',amount:x.amount,category:'其他',note:x.name+' 欠款'});});return true;}};}
+      case 'debt_pay':{const amt=Number(d.amount)||0;if(!amt)return null;const nm=String(d.name||'欠款').slice(0,20);return {label:'还款登记',detail:'还 '+nm+' '+money(amt)+' · 记一笔还款支出并从负债扣减',view:'money',exec:()=>{if(!finReduceDebt(nm,amt)){toast('负债清单里没有「'+nm+'」，先对 AI 说欠款登记');return false;}addRecord('money',today,{flow:'expense',amount:amt,category:'其他',note:'还款 · '+nm});return true;}};}
+      case 'balance_update':{const amt=Number(d.amount)||0;if(!amt&&amt!==0)return null;return {label:'余额校准',detail:'当前余额设为 '+money(amt)+(d.note?' · '+d.note:'')+' · 之后收支自动加减',view:'money',exec:()=>{const fin=loadFin();fin.balance={amount:amt,asOf:Date.now()};saveFin(fin);renderFinanceCard();return true;}};}
+      case 'income_expected':{const amt=Number(d.amount)||0;if(!amt)return null;return {label:'预期收入',detail:'预计 '+(d.date||today)+' 到账 '+money(amt)+(d.label?' · '+d.label:'')+' · 用于还款规划',view:'money',exec:()=>{const fin=loadFin();fin.expected={amount:amt,date:d.date||today,label:String(d.label||'').slice(0,10)};saveFin(fin);renderFinanceCard();return true;}};}
+      case 'finance_plan':{return {label:'还款规划',detail:'结合余额、负债与预期收入，生成还款顺序和发薪前每天可花金额',view:'money',exec:()=>{finPlanAI(function(text){const fin=loadFin();fin.plan={text:text,asOf:Date.now()};saveFin(fin);renderFinanceCard();});return true;}};}
       default:return null;
     }
   }
@@ -1672,12 +1699,16 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   function localParse(text){
     const t=String(text||'').trim(),today=isoDate();
     const m=t.match(/(\d+(?:\.\d+)?)/),amt=m?Number(m[1]):null;
-    if(/欠|月付|还差/.test(t)&&amt!=null)return{intent:'money_expense',reply:'按支出记账准备：',draft:{amount:amt,category:'其他',note:t.slice(0,24),date:today}};
+    if(/还了|还掉|还款/.test(t)&&amt!=null)return{intent:'debt_pay',reply:'登记还款：',draft:{name:'欠款',amount:amt}};
+    if(/余额|身上|手头|手里|手上|还剩/.test(t)&&amt!=null)return{intent:'balance_update',reply:'校准余额：',draft:{amount:amt}};
+    if(amt!=null&&/(工资|发薪|到账)/.test(t)&&/预计|下个?月|下月|多少号|几号/.test(t))return{intent:'income_expected',reply:'登记预期收入：',draft:{amount:amt,date:shiftDate(30),label:'工资'}};
+    if(/欠|月付|还差/.test(t)&&amt!=null)return{intent:'debt_update',reply:'登记欠款（计入总欠款并记账）：',draft:{name:'欠款',amount:amt}};
     if(/工资|进账|到账|发了|收入/.test(t)&&amt!=null)return{intent:'money_income',reply:'按收入记账准备：',draft:{amount:amt,category:'其他',note:t.slice(0,24),date:today}};
     if(/想买|买个|买一|待买|帮我记/.test(t))return{intent:'shopping',reply:'加入待买清单：',draft:{name:t.slice(0,16),quantity:'1',price:null,remind_date:null}};
     if(/提醒|别忘|记得/.test(t))return{intent:'reminder',reply:'建提醒：',draft:{text:t.slice(0,30),due:today}};
     if(/体脂/.test(t)&&amt!=null)return{intent:'fitness',reply:'记身体数据：',draft:{bodyFat:amt,date:today}};
     if(/体重|kg|公斤|斤/.test(t)&&amt!=null)return{intent:'fitness',reply:'记身体数据：',draft:{weight:amt,date:today}};
+    if(/规划|计划|怎么还/.test(t))return{intent:'finance_plan',reply:'',draft:{}};
     return{intent:'chat',reply:'',draft:{}};
   }
   function aiAfter(out,fallback){
@@ -1744,6 +1775,45 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
       };
       rec.start();
     }catch(e){btn.classList.remove('rec');if(aiListenEl){aiListenEl.remove();aiListenEl=null;}toast('语音识别启动失败，用打字吧');}
+  }
+
+  const FIN_KEY='richangji-finance-v1';
+  function loadFin(){try{const o=JSON.parse(localStorage.getItem(FIN_KEY)||'{}');return{balance:o.balance||null,debts:Array.isArray(o.debts)?o.debts:[],expected:o.expected||null,plan:o.plan||null};}catch(e){return{balance:null,debts:[],expected:null,plan:null};}}
+  function saveFin(fin){try{localStorage.setItem(FIN_KEY,JSON.stringify(fin));}catch(e){toast('保存失败：存储空间不足');}}
+  function finDisplayBalance(){const fin=loadFin();if(!fin.balance)return null;let bal=Number(fin.balance.amount)||0;const asOf=Number(fin.balance.asOf)||0;state.records.forEach(r=>{if(r.type!=='money'||(Number(r.createdAt)||0)<=asOf)return;bal+=r.data&&r.data.flow==='income'?Number(r.data.amount||0):-Number(r.data.amount||0);});return bal;}
+  function finUpsertDebt(name,amount){const fin=loadFin();const nm=String(name||'欠款').slice(0,20);const hit=fin.debts.find(d=>d.name===nm||d.name.indexOf(nm)>-1||nm.indexOf(d.name)>-1);if(hit){hit.amount=Math.max(0,(Number(hit.amount)||0)+Number(amount||0));hit.updatedAt=Date.now();}else fin.debts.push({id:uid(),name:nm,amount:Math.max(0,Number(amount)||0),createdAt:Date.now()});saveFin(fin);}
+  function finReduceDebt(name,amount){const fin=loadFin();const nm=String(name||'').slice(0,20);const hit=fin.debts.find(d=>d.name===nm||d.name.indexOf(nm)>-1||nm.indexOf(d.name)>-1);if(!hit)return false;hit.amount=Math.max(0,(Number(hit.amount)||0)-Number(amount||0));hit.updatedAt=Date.now();if(hit.amount===0)fin.debts=fin.debts.filter(d=>d.id!==hit.id);saveFin(fin);return true;}
+  function finPlanLocal(){
+    const fin=loadFin();const bal=finDisplayBalance()||0;const debtTotal=fin.debts.reduce((s,d)=>s+(Number(d.amount)||0),0);
+    if(!fin.debts.length)return '当前没有负债记录，不需要规划还款。';
+    let days=30;if(fin.expected&&fin.expected.date){const diff=Math.round((new Date(fin.expected.date+'T00:00:00')-new Date())/86400000);if(diff>0)days=diff;}
+    const income=fin.expected?Number(fin.expected.amount)||0:0;
+    const lines=['可用余额 '+money(bal)+'，总负债 '+money(debtTotal)+(fin.expected?('，预计 '+fin.expected.date+' 到账 '+money(income)):'')+'。','建议还款顺序（小额优先，先还清有成就感）：'];
+    let pool=Math.max(0,bal+income);
+    fin.debts.slice().sort((a,b)=>(Number(a.amount)||0)-(Number(b.amount)||0)).forEach(d=>{const amt=Number(d.amount)||0;const pay=Math.min(amt,pool);pool-=pay;lines.push('· '+d.name+'：先还 '+money(pay)+(pay>=amt?'（可还清）':'（下期继续还）'));});
+    lines.push('发薪前每天可花约 '+money(Math.max(0,bal)/Math.max(1,days))+'（按 '+days+' 天平摊）。');
+    return lines.join('\n');
+  }
+  function finPlanAI(onDone){
+    const key=aiKeyGet();const localText=finPlanLocal();
+    if(!key){onDone(localText);return;}
+    const fin0=loadFin();const payload=JSON.stringify({可用余额:finDisplayBalance(),负债清单:fin0.debts.map(d=>({name:d.name,amount:d.amount})),预期收入:fin0.expected,今天:isoDate()});
+    fetch('https://api.deepseek.com/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model:'deepseek-chat',messages:[{role:'system',content:'你是财务规划助理。根据用户的可用余额、负债清单和预期收入，输出简短中文计划：先列还款顺序（小额优先、先还清的标注），再算发薪前每天可花金额。不超过 8 行，直接给结论，不要客套。'},{role:'user',content:payload}],temperature:0.3,max_tokens:300})}).then(r=>r.json()).then(j=>{const t=j.choices&&j.choices[0]&&j.choices[0].message?String(j.choices[0].message.content||'').trim():'';onDone(t||localText);}).catch(()=>onDone(localText));
+  }
+  function renderFinanceCard(){
+    const fin=loadFin();const bal=finDisplayBalance();const debtTotal=fin.debts.reduce((s,d)=>s+(Number(d.amount)||0),0);
+    const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+    set('finBal',bal==null?'未校准':money(bal));
+    set('finBalNote',fin.balance?('上次校准 '+new Date(Number(fin.balance.asOf)).toLocaleDateString()+'，之后的收支已自动加减'):'对 AI 说「手上还有 2900」即可校准');
+    set('finDebt',money(debtTotal));
+    set('finDebtNote',fin.debts.length+' 笔欠款');
+    set('finNet',bal==null?'净可用 待校准':'净可用 '+money(bal-debtTotal));
+    const list=document.getElementById('finDebtList');
+    if(list)list.innerHTML=fin.debts.length?fin.debts.map(d=>'<div class="fin-row"><span class="grow">'+escapeHtml(d.name)+'<small>欠 '+money(d.amount)+'</small></span><button class="text-btn" data-act="finDebtClear" data-id="'+escapeHtml(d.id)+'">还清了</button></div>').join(''):'<p class="zdesc" style="margin:6px 0 0">还没有负债记录。对 AI 说「抖音月付欠了 484.59」，会登记负债并自动算总欠款。</p>';
+    const exp=document.getElementById('finExpected');
+    if(exp)exp.innerHTML=fin.expected?'<div class="fin-row" style="margin-top:6px"><span class="grow">预计 '+(fin.expected.date||'')+' 到账 '+money(fin.expected.amount)+(fin.expected.label?' · '+escapeHtml(fin.expected.label):'')+'<small>到账后点「已到账」，再对 AI 说「工资发了 xxx」记收入</small></span><button class="text-btn" data-act="finExpectedDone">已到账</button></div>':'';
+    const box=document.getElementById('finPlanBox'),txt=document.getElementById('finPlanText');
+    if(box&&txt){box.hidden=!fin.plan;txt.textContent=fin.plan?String(fin.plan.text||''):'';}
   }
 
   function renderBackupHint(){
@@ -2271,7 +2341,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     if(type==='delIdea'){if(!confirm('确定删除这条想法吗？删除后无法撤回。'))return;state.grow.ideas=growIdeas().filter(x=>x.id!==id);state.work.ideas=state.grow.ideas;saveState(true);renderWords();}
   }
 
-  function renderAll(){applyBrand();renderDashboard();renderCockpitP5();renderBackupHint();renderMoney();renderHabits();renderFitness();renderFitTrain();renderPlanner();renderHome();renderMedia();renderArchive();renderBackupStatus();renderWork();renderGrow();renderSettingsPage();}
+  function renderAll(){applyBrand();renderDashboard();renderCockpitP5();renderBackupHint();renderMoney();renderFinanceCard();renderHabits();renderFitness();renderFitTrain();renderPlanner();renderHome();renderMedia();renderArchive();renderBackupStatus();renderWork();renderGrow();renderSettingsPage();}
 
   document.addEventListener('click',event=>{
     if(event.target.closest('#view-work textarea,#view-work input,#view-work select,#view-grow textarea,#view-grow input,#view-grow select'))return;
@@ -2441,6 +2511,26 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
       inp.value='';renderAiStatus();toast('Key 已保存（仅本机）');return;
     }
     if(event.target.closest('[data-act="aiKeyClear"]')){try{localStorage.removeItem(AI_KEY_NAME);}catch(e){}renderAiStatus();toast('已清除 Key');return;}
+    if(event.target.closest('[data-act="finDebtClear"]')){
+      const btn=event.target.closest('[data-act="finDebtClear"]'),fin=loadFin(),hit=fin.debts.find(d=>d.id===btn.dataset.id);
+      if(!hit)return;
+      if(!confirm('标记「'+hit.name+'」已还清 '+money(hit.amount)+'？会同时记一笔还款支出。'))return;
+      finReduceDebt(hit.name,hit.amount);
+      addRecord('money',isoDate(),{flow:'expense',amount:hit.amount,category:'其他',note:'还款 · '+hit.name});
+      renderFinanceCard();toast('已还清并记账');
+      return;
+    }
+    if(event.target.closest('[data-act="finExpectedDone"]')){const fin=loadFin();fin.expected=null;saveFin(fin);renderFinanceCard();toast('已标记到账，对 AI 说「工资发了 xxx」记收入');return;}
+    if(event.target.closest('[data-act="finPlan"]')){
+      const b=document.getElementById('finPlanBtn');if(b){b.disabled=true;b.textContent='正在生成…';}
+      finPlanAI(function(text){const fin=loadFin();fin.plan={text:text,asOf:Date.now()};saveFin(fin);renderFinanceCard();const bb=document.getElementById('finPlanBtn');if(bb){bb.disabled=false;bb.textContent='重新生成计划';}});
+      return;
+    }
+    if(event.target.closest('[data-act="finBalanceBtn"]')){
+      document.getElementById('aiSheet').hidden=false;renderAiStatus();
+      const inp=document.getElementById('aiInput');if(inp){inp.value='更新余额为 ';setTimeout(()=>inp.focus(),80);}
+      return;
+    }
     if(event.target.closest('[data-act="bkDismiss"]')){try{localStorage.setItem('richangji-backup-dismissed',new Date().toDateString());}catch(e){}renderBackupHint();return;}
     if(event.target.closest('[data-act="bkImport"]')){document.getElementById('bkFile').click();return;}
     if(event.target.closest('[data-act="dangerToggle"]')){const b=document.getElementById('dangerBody'),t=document.getElementById('dangerToggleBtn');if(b){b.hidden=!b.hidden;if(t)t.textContent=b.hidden?'展开危险操作':'收起危险操作';}return;}
@@ -2717,7 +2807,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     window.addEventListener('storage',e=>{if(e.key!==STORAGE_KEY||!e.newValue)return;try{state=normalizeState(JSON.parse(e.newValue));renderAll();toast('另一个页面的数据已同步');}catch{}});
   }
 
-  function init(){const now=new Date(),weekdays=['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];document.getElementById('todayLabel').textContent=LANG==='en'?new Intl.DateTimeFormat('en-US',{month:'long',day:'numeric',weekday:'long'}).format(now):`${now.getMonth()+1} 月 ${now.getDate()} 日 · ${weekdays[now.getDay()]}`;setDateDefaults();updateMoneyCategories();restoreDrafts();bindForms();bindEvents();renderAll();renderAiStatus();checkDueReminders();var aiInp=document.getElementById('aiInput');if(aiInp)aiInp.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();aiSend();}});switchView(document.getElementById(`view-${location.hash.slice(1)}`)?location.hash.slice(1):'dashboard');if(!dataCorrupted)saveState();pullAllRemote(function(ok){ if(ok){ saveState(); renderAll(); } });}
+  function init(){const now=new Date(),weekdays=['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];document.getElementById('todayLabel').textContent=LANG==='en'?new Intl.DateTimeFormat('en-US',{month:'long',day:'numeric',weekday:'long'}).format(now):`${now.getMonth()+1} 月 ${now.getDate()} 日 · ${weekdays[now.getDay()]}`;setDateDefaults();updateMoneyCategories();restoreDrafts();bindForms();bindEvents();renderAll();renderAiStatus();checkDueReminders();renderFinanceCard();var aiInp=document.getElementById('aiInput');if(aiInp)aiInp.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();aiSend();}});switchView(document.getElementById(`view-${location.hash.slice(1)}`)?location.hash.slice(1):'dashboard');if(!dataCorrupted)saveState();pullAllRemote(function(ok){ if(ok){ saveState(); renderAll(); } });}
   startI18n();
   document.addEventListener('DOMContentLoaded',init);
 })();
