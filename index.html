@@ -1704,9 +1704,11 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     if(/余额|身上|手头|手里|手上|还剩/.test(t)&&amt!=null)return{intent:'balance_update',reply:'校准余额：',draft:{amount:amt}};
     if(amt!=null&&/(工资|发薪|到账)/.test(t)&&/预计|下个?月|下月|多少号|几号/.test(t))return{intent:'income_expected',reply:'登记预期收入：',draft:{amount:amt,date:shiftDate(30),label:'工资'}};
     if(/欠|月付|还差/.test(t)&&amt!=null)return{intent:'debt_update',reply:'登记欠款（计入总欠款并记账）：',draft:{name:'欠款',amount:amt}};
+    if(amt!=null&&/花了|花掉|用了|付了|支付|消费|买了|开销/.test(t)){const cat=/饭|餐|外卖|奶茶|咖啡|早点|宵夜/.test(t)?'吃饭':/打车|地铁|公交|车费|加油|火车|机票/.test(t)?'交通':/衣服|鞋|包|化妆品|淘宝|拼多多|京东/.test(t)?'购物':/电影|游戏|娱乐/.test(t)?'娱乐':'其他';return{intent:'money_expense',reply:'记一笔支出：',draft:{amount:amt,category:cat,note:t.slice(0,24),date:today}};}
     if(/工资|进账|到账|发了|收入/.test(t)&&amt!=null)return{intent:'money_income',reply:'按收入记账准备：',draft:{amount:amt,category:'其他',note:t.slice(0,24),date:today}};
-    if(/想买|买个|买一|待买|帮我记/.test(t))return{intent:'shopping',reply:'加入待买清单：',draft:{name:t.slice(0,16),quantity:'1',price:null,remind_date:null}};
+    if(/想买|买个|买一|待买|帮我记|帮我买|要买|没了|用完了|没有了|该买|缺个|缺一/.test(t))return{intent:'shopping',reply:'加入待买清单：',draft:{name:t.slice(0,16),quantity:'1',price:null,remind_date:null}};
     if(/提醒|别忘|记得/.test(t))return{intent:'reminder',reply:'建提醒：',draft:{text:t.slice(0,30),due:today}};
+    if(/开会|日程|约了|安排在|交稿|面试|体检|复诊|理发/.test(t)||/(明天|后天|今天|周[一二三四五六日末]).{0,10}(\d{1,2}[点:：]|\d{1,2}:\d{2})/.test(t)){let time='';const tm=t.match(/(\d{1,2})\s*[点:：]\s*(\d{1,2})?/);if(tm){let h=Number(tm[1]);if(h<12&&/下午|晚上|傍晚/.test(t))h+=12;time=String(Math.min(23,h)).padStart(2,'0')+':'+String(Math.min(59,Number(tm[2]||0))).padStart(2,'0');}const dt=/后天/.test(t)?shiftDate(2):/明天/.test(t)?shiftDate(1):today;return{intent:'planner',reply:'排进日程：',draft:{title:t.slice(0,16),time:time,date:dt,priority:'normal',note:''}};}
     if(/体脂/.test(t)&&amt!=null)return{intent:'fitness',reply:'记身体数据：',draft:{bodyFat:amt,date:today}};
     if(/体重|kg|公斤|斤/.test(t)&&amt!=null)return{intent:'fitness',reply:'记身体数据：',draft:{weight:amt,date:today}};
     if(/规划|计划|怎么还/.test(t))return{intent:'finance_plan',reply:'',draft:{}};
