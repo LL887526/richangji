@@ -314,6 +314,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
         <button data-page-node-id="uoUlqps81rHb89XyO66Fse" class="nav-item" data-nav="money"><svg data-page-node-id="ryRqgqj4VQlM4Mr4SUwfVK"><use data-page-node-id="SyL69tPHCbfzUlm0GweqfU" href="#i-wallet"/></svg><span data-page-node-id="z1bIIjAwTlRifTBTRykfwF"><!--pnid:A4IoIb9zOCZI9pahA2h0Bh-->记账理财</span></button>
         <button data-page-node-id="bv6gS96sOxzUeQnsm2u47K" class="nav-item" data-nav="habits"><svg data-page-node-id="pOtdvaSYwxqgNyi02RVhBy"><use data-page-node-id="eQODsw3Ab2WcnbvZcY9sDK" href="#i-habit"/></svg><span data-page-node-id="TE3tH6pFFEucg0gmcKQF0N"><!--pnid:o4fXbKzA8j7OfzFkzPCT1A-->习惯健康</span></button>
         <button data-page-node-id="6uZvmnCDQSZwk7lVCKfF0S" class="nav-item" data-nav="fitness"><svg data-page-node-id="dH5yyEZEtdSDRcpy26e4th"><use data-page-node-id="zgqHnB2Wz5OtEmWZDYER90" href="#i-fitness"/></svg><span data-page-node-id="k7AjMECTa1wdjtmkIx3Zvf"><!--pnid:zW1yTMLFpLNETlj0Ucd74Y-->减脂健身</span></button>
+        <button class="nav-item" data-nav="health"><svg><use href="#i-note"/></svg><span>健康档案</span></button>
         <button data-page-node-id="3qYVTOQV8R76ThPMnMJPiW" class="nav-item" data-nav="planner"><svg data-page-node-id="hhAebtcLIda7sGULlte8mW"><use data-page-node-id="jlRNidEOVxQGPNBeSsqT51" href="#i-calendar"/></svg><span data-page-node-id="l6JzBBmfCv3mGX8omMU7tP"><!--pnid:1tMQjWstD9ET08ZaYY2lM2-->日程统筹</span></button>
         <button data-page-node-id="olvaCDwVxP71i2w2BqnHIV" class="nav-item" data-nav="home"><svg data-page-node-id="oQwT7MTNpSyY38KJNR7mHT"><use data-page-node-id="ovtC1Fkv7I6nqQvmDhoZm9" href="#i-cart"/></svg><span data-page-node-id="AAe10SMGju5d1k9jIgcVkM"><!--pnid:bDOkQDooAkjH78M1J6dzP5-->待买清单</span></button>
         <button data-page-node-id="2rtlMmilE1mtm5wisjJVJw" class="nav-item" data-nav="media"><svg data-page-node-id="IINdiN9SIySKGVgd1DRSR1"><use data-page-node-id="IPlzuTFmgQMZAP9f0cHTEo" href="#i-media"/></svg><span data-page-node-id="GhHGubMgH3rEB25STQzSS9"><!--pnid:SrhgJZy0HHlFfnwHMcJlhJ-->书影音</span></button>
@@ -410,16 +411,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
           <button data-ftgo="ft-panel-plan">周计划</button>
           <button data-ftgo="ft-panel-exlib">动作库</button>
           <button data-ftgo="ft-panel-log">训练日志</button>
-          <button data-ftgo="ft-panel-health">健康档案</button>
         </nav>
-        <article class="wpanel" id="ft-panel-health" data-ft="health">
-          <div class="wpanel-head"><div><p class="eyebrow">健康档案</p><h2>身体不适与疾病史</h2></div><span class="wnote" id="healthNote"></span></div>
-          <p class="zdesc" style="margin:0 0 6px">对 AI 助理说「胃不舒服」「我有慢性胃炎」就会记到这里，确认后才写入。</p>
-          <p class="zdesc" style="margin:10px 0 4px;font-weight:600">最近不适</p>
-          <div id="healthIssueList"></div>
-          <p class="zdesc" style="margin:14px 0 4px;font-weight:600">疾病史 / 基础疾病</p>
-          <div id="healthHistoryList"></div>
-        </article>
         <article class="wpanel" id="ft-panel-today" data-ft="today">
           <div class="wpanel-head"><div><p class="eyebrow">跟着计划练</p><h2>今日训练</h2></div><span class="wnote" id="ftTodayNote"></span></div>
           <div id="ftTodayCtrl"></div>
@@ -467,6 +459,17 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
         </div>
       </section>
 
+      <section class="view" data-title="健康档案" id="view-health">
+        <article class="panel" style="max-width:820px">
+          <div class="panel-head"><div><p class="eyebrow">健康档案</p><h2>身体不适与疾病史</h2></div><span class="mini-note" id="healthNote"></span></div>
+          <p class="zdesc" style="margin:0 0 6px">对 AI 助理说「胃不舒服」「我有慢性胃炎」就会记到这里，确认后才写入。</p>
+          <p class="zdesc" style="margin:10px 0 4px;font-weight:600">最近不适</p>
+          <div id="healthIssueList"></div>
+          <p class="zdesc" style="margin:14px 0 4px;font-weight:600">疾病史 / 基础疾病</p>
+          <div id="healthHistoryList"></div>
+        </article>
+        <div class="wmore" style="max-width:820px;margin-top:12px"><button class="wbtn ghostbtn" data-nav="fitness"><svg><use href="#i-fitness"/></svg>去健身页记训练</button></div>
+      </section>
       <section data-page-node-id="wtVHT4ckl1gIvxm2dBxz6z" class="view" data-title="日程统筹" id="view-planner">
         <div data-page-node-id="WvIn3jlZQkyHo0rT70KFgu" class="module-layout">
           <article data-page-node-id="gI8dtL2VlBHlSg9eHo8V5d" class="panel form-panel"><div data-page-node-id="UFDI3qoUvTQM6zvypZqrnZ" class="panel-head"><div data-page-node-id="PyJ70So9TywKsSPuL8zmLF"><p data-page-node-id="dRKlIfhwYfipjLpuSK4kph" class="eyebrow"><!--pnid:mfqMvsNJ55t8HCf3lRsE60-->提醒事项</p><h2 data-page-node-id="5JrZpt9bkoNIHc4ScIzStW"><!--pnid:aUi10M7CblY7nyLHS7Dq95-->添加待办</h2></div><span data-page-node-id="zoRw3oWWbncuMufyG7EdHM" class="draft-status" data-draft-for="plannerForm"><!--pnid:zoues9DTaPUBiYN1DTJUyr-->草稿自动保存</span></div><form data-page-node-id="9ZI6g6htXCfbxQwbRp0joI" data-draft="plannerForm" id="plannerForm">
@@ -1698,8 +1701,8 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
       case 'task':{if(!d.text)return null;const acc=d.account==='own'?'own':d.account==='qjt'?'qjt':'company';return {label:'工作任务 · '+(acc==='company'?'公司号':acc==='own'?'自有号':'品牌号'),detail:String(d.text),view:'work',exec:()=>{state.work.tasks[acc].unshift({id:uid(),text:String(d.text).slice(0,60),stage:'待剪',time:nowStamp(),ts:Date.now()});saveState(true);renderWork();return true;}};}
       case 'fitness':{const has=d.weight||d.bodyFat||d.calories||d.duration;if(!has)return null;const parts=[];if(d.weight)parts.push('体重 '+d.weight+'kg');if(d.bodyFat)parts.push('体脂 '+d.bodyFat+'%');if(d.calories)parts.push('摄入 '+d.calories+'kcal');if(d.duration)parts.push('运动 '+d.duration+'分钟');if(d.note)parts.push(d.note);return {label:'身体记录',detail:parts.join(' · ')+' · '+(d.date||today),view:'fitness',exec:()=>addRecord('fitness',d.date||today,{weight:d.weight||'',bodyFat:d.bodyFat||'',calories:d.calories||'',duration:d.duration||'',note:String(d.note||'').slice(0,40)})};}
       case 'reminder':{if(!d.text)return null;return {label:'提醒',detail:String(d.text)+' · '+(d.due||today)+' 弹窗跟进',view:'',exec:()=>{addReminder(d.text,d.due||today);return true;}};}
-      case 'health_issue':{const part=String(d.part||'身体').slice(0,10);const desc=String(d.desc||'').slice(0,60);return {label:'身体不适',detail:part+(desc?' · '+desc:'')+' · '+(d.date||today),view:'fitness',exec:()=>{healthAddIssue(part,desc,d.date||today);return true;}};}
-      case 'health_history':{const nm=String(d.name||'').slice(0,20);if(!nm)return null;return {label:'疾病史登记',detail:nm+(d.note?' · '+d.note:'')+' · 记入健康档案',view:'fitness',exec:()=>{healthAddHistory(nm,String(d.note||'').slice(0,40));return true;}};}
+      case 'health_issue':{const part=String(d.part||'身体').slice(0,10);const desc=String(d.desc||'').slice(0,60);return {label:'身体不适',detail:part+(desc?' · '+desc:'')+' · '+(d.date||today),view:'health',exec:()=>{healthAddIssue(part,desc,d.date||today);return true;}};}
+      case 'health_history':{const nm=String(d.name||'').slice(0,20);if(!nm)return null;return {label:'疾病史登记',detail:nm+(d.note?' · '+d.note:'')+' · 记入健康档案',view:'health',exec:()=>{healthAddHistory(nm,String(d.note||'').slice(0,40));return true;}};}
       case 'mood':{const key=String(d.habit||'');if(!key)return null;return {label:'习惯打卡',detail:key+(d.note?' · '+d.note:''),view:'habits',exec:()=>{const h=state.habits.find(x=>(x.name||'')&&key.indexOf(x.name)>-1)||state.habits.find(x=>(x.name||'')&&x.name.indexOf(key.slice(0,2))>-1);if(!h){toast('没找到叫「'+key+'」的习惯');return false;}h.entries=h.entries||{};const k=isoDate();h.entries[k]=Number(h.entries[k]||0)+1;saveState(true);renderHabits();return true;}};}
       case 'debt_update':{let items=Array.isArray(d.items)&&d.items.length?d.items:(d.name&&d.amount?[{name:d.name,amount:d.amount}]:[]);items=items.map(x=>({name:String(x.name||'欠款').slice(0,20),amount:Number(x.amount)||0})).filter(x=>x.amount>0);if(!items.length)return null;const total=items.reduce((s,x)=>s+x.amount,0);return {label:'负债登记 · 共 '+money(total),detail:items.map(x=>x.name+' '+money(x.amount)).join('、')+' · 自动算入总欠款，同时各记一笔支出账单',view:'money',exec:()=>{items.forEach(x=>{finUpsertDebt(x.name,x.amount);addRecord('money',today,{flow:'expense',amount:x.amount,category:'其他',note:x.name+' 欠款'});});return true;}};}
       case 'debt_pay':{const amt=Number(d.amount)||0;if(!amt)return null;const nm=String(d.name||'欠款').slice(0,20);return {label:'还款登记',detail:'还 '+nm+' '+money(amt)+' · 记一笔还款支出并从负债扣减',view:'money',exec:()=>{if(!finReduceDebt(nm,amt)){toast('负债清单里没有「'+nm+'」，先对 AI 说欠款登记');return false;}addRecord('money',today,{flow:'expense',amount:amt,category:'其他',note:'还款 · '+nm});return true;}};}
@@ -1969,7 +1972,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   const WSTAGES=['待剪','待发','已发'];
   const WORK_TABS=[['board','i-board','任务看板'],['proj','i-chart','项目'],['collab','i-list','协作'],['capture','i-fire','灵感捕获'],['topic','i-archive','选题库'],['copy','i-note','文案库']];
   const GROW_TABS=[['tree','i-sprout','成长树'],['review','i-note','每日复盘'],['skills','i-list','skill 库'],['mymedia','i-media','我的自媒体'],['words','i-fire','词海']];
-  const ALL_NAV=[['settings','i-settings','全局设置'],['dashboard','i-home','今日总览'],['work','i-briefcase','工作空间'],['grow','i-sprout','成长空间'],['money','i-wallet','记账理财'],['habits','i-habit','习惯健康'],['fitness','i-fitness','减脂健身'],['planner','i-calendar','日程统筹'],['home','i-cart','待买清单'],['media','i-media','书影音'],['archive','i-archive','时光档案']];
+  const ALL_NAV=[['settings','i-settings','全局设置'],['dashboard','i-home','今日总览'],['work','i-briefcase','工作空间'],['grow','i-sprout','成长空间'],['money','i-wallet','记账理财'],['habits','i-habit','习惯健康'],['fitness','i-fitness','减脂健身'],['health','i-note','健康档案'],['planner','i-calendar','日程统筹'],['home','i-cart','待买清单'],['media','i-media','书影音'],['archive','i-archive','时光档案']];
   let activeWorkSec='board',activeGrowSec='review';
   const nowStamp=()=>{const d=new Date();return `${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;};
   const workTasks=()=>state.work.tasks[state.work.account]||[];
