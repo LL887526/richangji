@@ -241,6 +241,20 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   .ftcal-cell.today{box-shadow:inset 0 0 0 2px #7ba05b}
   .ftcal-cell.sel{background:#7ba05b;color:#fff}
   .ftcal-cell.sel small{color:#eaf2e6}
+  .ftwk-wrap{margin-top:16px;border:1px solid var(--line);border-radius:14px;background:#fffdfa;padding:14px}
+  .ftwk-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+  .ftwk{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;align-items:end;margin-top:10px}
+  .ftwk-col{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0}
+  .ftwk-bar{width:100%;max-width:34px;border-radius:6px 6px 2px 2px;background:var(--plum);min-height:3px}
+  .ftwk-bar.zero{background:#e8e0d4}
+  .ftwk-num{font-size:10px;color:var(--muted);white-space:nowrap}
+  .ftwk-lab{font-size:10px;color:var(--muted);white-space:nowrap}
+  .ftwk-col.cur .ftwk-lab{color:var(--plum);font-weight:600}
+  .ft-fav{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;min-height:30px;border:0;border-radius:8px;background:none;color:#c9bfae;cursor:pointer;flex:0 0 auto}
+  .ft-fav.on{color:#d97848}
+  .ft-fav svg{width:15px;height:15px;fill:currentColor}
+  .wsk{position:relative}
+  .wsk .ft-fav{position:absolute;top:4px;right:4px}
   </style>
   <title data-page-node-id="N9uQg0dpiKTsyB4FFPFrxl" data-pnid-children="1t2kuYHDk4UITU5HQoJQo7">日常集 · 生活工作台</title>
 </head>
@@ -301,7 +315,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     <symbol data-page-node-id="LEC9aUyTAkSc2a8ILFXyS8" id="i-chart" viewBox="0 0 24 24"><path data-page-node-id="ttfofpZfjVaEp9Ehm1S5bh" d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></symbol>
     <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l2.2 6.8L21 12l-6.8 2.2L12 21l-2.2-6.8L3 12l6.8-2.2z"/><path d="M19 3.5v3M17.5 5h3"/></symbol>
     <symbol id="i-mic" viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V5a3 3 0 0 1 3-3z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1M12 18v4"/></symbol>
-<symbol id="i-camera" viewBox="0 0 24 24"><path d="M9 3h6l1.6 2.2H20a2 2 0 0 1 2 2V19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7.2a2 2 0 0 1 2-2h3.4z"/><circle cx="12" cy="13" r="3.5"/></symbol>
+<symbol id="i-camera" viewBox="0 0 24 24"><path d="M9 3h6l1.6 2.2H20a2 2 0 0 1 2 2V19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7.2a2 2 0 0 1 2-2h3.4z"/><circle cx="12" cy="13" r="3.5"/></symbol><symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2.5l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.3l-5.8 3.1 1.1-6.5L2.6 9.3l6.5-.9z"/></symbol>
     <symbol data-page-node-id="CCr6zijWi2V8hZuFh7bVqZ" id="i-alert" viewBox="0 0 24 24"><path data-page-node-id="zyz25nPd6VF3M5jzCKRHXP" d="M12 3 2 21h20zM12 9v5M12 18h.01"/></symbol>
     <symbol data-page-node-id="I33YJdwH5U8y4f2FexfHCR" id="i-clock" viewBox="0 0 24 24"><circle data-page-node-id="cmjXYSJG0Y6CLjXssUjUw2" cx="12" cy="12" r="9"/><path data-page-node-id="h5CwG1HcY9lVzLFoTh44LR" d="M12 7v5l3 2"/></symbol>
     <symbol data-page-node-id="pwtVcBq4bXoSXrYQmvmOVu" id="i-list" viewBox="0 0 24 24"><path data-page-node-id="lztB4xaIzgoTJpUk1Hw3Uu" d="M9 6h12M9 12h12M9 18h12M3 6h.01M3 12h.01M3 18h.01"/></symbol>
@@ -439,6 +453,11 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
           <div class="ftcal-grid" id="ftCalGrid"></div>
           <p class="wnote2">练过的日子会亮起来 · 点日子看当天练了什么</p>
           <div class="wlist" id="ftCalDetail" style="margin-top:8px"></div>
+          <div class="ftwk-wrap">
+            <div class="ftwk-head"><span class="eyebrow">近 8 周训练量</span><span class="wnote" id="ftWeekNote"></span></div>
+            <div class="ftwk" id="ftWeekChart"></div>
+            <p class="wnote2">柱子=当周训练量(kg) · 灰=没练 · 连续打卡看右上角</p>
+          </div>
         </article>
         <article class="wpanel" id="ft-panel-plan" data-ft="plan">
           <div class="wpanel-head"><div><p class="eyebrow">全周总览</p><h2>周计划</h2></div><span class="wnote" id="ftPlanNote"></span></div>
@@ -1655,6 +1674,23 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   function ftDoneMap(){const f=state.fitTrain;if(f&&f.today&&f.today.date===isoDate()&&f.today.done&&typeof f.today.done==='object')return f.today.done;return{};}
   function ftSetDone(aid,arr){const t=isoDate();if(!state.fitTrain||typeof state.fitTrain!=='object')state.fitTrain={};if(!state.fitTrain.today||state.fitTrain.today.date!==t)state.fitTrain.today={date:t,startedAt:0,done:{},adj:{}};state.fitTrain.today.done[aid]=arr;saveState();}
   let ftRestUntil=0,ftRestTimer=null,ftClockTimer=null;
+  let ftAudio=null;
+  function ftBeep(){
+    try{
+      const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
+      if(!ftAudio)ftAudio=new AC();
+      if(ftAudio.state==='suspended')ftAudio.resume();
+      const t0=ftAudio.currentTime;
+      [[880,0],[1245,0.16]].forEach(p=>{
+        const o=ftAudio.createOscillator(),g=ftAudio.createGain();
+        o.type='sine';o.frequency.value=p[0];
+        g.gain.setValueAtTime(0.0001,t0+p[1]);
+        g.gain.exponentialRampToValueAtTime(0.22,t0+p[1]+0.02);
+        g.gain.exponentialRampToValueAtTime(0.0001,t0+p[1]+0.15);
+        o.connect(g);g.connect(ftAudio.destination);o.start(t0+p[1]);o.stop(t0+p[1]+0.17);
+      });
+    }catch(e){}
+  }
   function ftElapsedText(from){const m=Math.floor((Date.now()-from)/60000);return m>=60?(Math.floor(m/60)+' 小时 '+(m%60)+' 分钟'):(m+' 分钟');}
   function ftTodayState(){
     const dow=String(new Date().getDay());
@@ -1669,7 +1705,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     bar.hidden=false;
     if(ftRestTimer)clearInterval(ftRestTimer);
     const tick=()=>{const left=Math.max(0,Math.ceil((ftRestUntil-Date.now())/1000)),el=bar.querySelector('#ftRestLeft');
-      if(left<=0){clearInterval(ftRestTimer);ftRestTimer=null;ftRestUntil=0;bar.hidden=true;toast('休息结束，下一组');return;}
+      if(left<=0){clearInterval(ftRestTimer);ftRestTimer=null;ftRestUntil=0;bar.hidden=true;ftBeep();toast('休息结束，下一组');return;}
       if(el)el.textContent=left;};
     tick();ftRestTimer=setInterval(tick,500);
   }
@@ -1764,10 +1800,19 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     renderFtToday();
     renderFitCal();
   }
+  function ftFavs(){return (state.fitTrain&&Array.isArray(state.fitTrain.favs))?state.fitTrain.favs:[];}
+  function ftFavToggle(aid){
+    if(!state.fitTrain||typeof state.fitTrain!=='object')state.fitTrain={};
+    if(!Array.isArray(state.fitTrain.favs))state.fitTrain.favs=[];
+    const i=state.fitTrain.favs.indexOf(aid);
+    if(i>-1)state.fitTrain.favs.splice(i,1);else state.fitTrain.favs.unshift(aid);
+    saveState(true);return state.fitTrain.favs.indexOf(aid)>-1;
+  }
   function renderFtExGrid(){
     const m=document.getElementById('ftExMuscle').value,e=document.getElementById('ftExEquip').value,q=(document.getElementById('ftExSearch').value||'').trim().toLowerCase();
-    const list=ftLib().filter(x=>(!m||x.muscle===m)&&(!e||x.equipment===e)&&(!q||String(x.name||'').toLowerCase().includes(q)));
-    document.getElementById('ftExGrid').innerHTML=list.length?list.map(x=>{const def=(x.equipment||'自重')==='自重'&&(x.unit||'次')==='次';return '<div class="wsk" data-ft-ex="'+escapeHtml(x.id||'')+'" data-ft-gif="'+escapeHtml(x.gif||'')+'" title="'+escapeHtml(x.tip||'')+'"><div class="wsk-name">'+escapeHtml(x.name||'')+'<span class="wbadge">'+escapeHtml(x.muscle||'未分类')+'</span>'+(x.gif?'<span class="wft-g">动图</span>':'')+'</div>'+(def?'':'<p class="wsk-desc">'+escapeHtml(x.equipment||'自重')+' · '+escapeHtml(x.unit||'次')+'</p>')+'</div>';}).join(''):'<p class="wempty-task">没有匹配的动作</p>';
+    const favs=ftFavs();
+    const list=ftLib().filter(x=>(!m||x.muscle===m)&&(!e||x.equipment===e)&&(!q||String(x.name||'').toLowerCase().includes(q))).slice().sort((a,b)=>((favs.indexOf(b.id)>-1)?1:0)-((favs.indexOf(a.id)>-1)?1:0));
+    document.getElementById('ftExGrid').innerHTML=list.length?list.map(x=>{const def=(x.equipment||'自重')==='自重'&&(x.unit||'次')==='次';const fav=favs.indexOf(x.id)>-1;return '<div class="wsk" data-ft-ex="'+escapeHtml(x.id||'')+'" data-ft-gif="'+escapeHtml(x.gif||'')+'" title="'+escapeHtml(x.tip||'')+'"><button class="ft-fav'+(fav?' on':'')+'" data-act="ftFav" data-aid="'+escapeHtml(x.id||'')+'" title="收藏" aria-label="收藏"><svg aria-hidden="true"><use href="#i-star"/></svg></button><div class="wsk-name">'+escapeHtml(x.name||'')+'<span class="wbadge">'+escapeHtml(x.muscle||'未分类')+'</span>'+(x.gif?'<span class="wft-g">动图</span>':'')+'</div>'+(def?'':'<p class="wsk-desc">'+escapeHtml(x.equipment||'自重')+' · '+escapeHtml(x.unit||'次')+'</p>')+'</div>';}).join(''):'<p class="wempty-task">没有匹配的动作</p>';
   }
   function ftLogDetailHTML(r){
     if(!r||!Array.isArray(r.parts))return '<p class="wempty">旧格式记录 · 无法展开明细</p>';
@@ -1803,6 +1848,38 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     const mLog=ftLogAll().filter(r=>(r.date||'').slice(0,7)===mKey);
     document.getElementById('ftCalNote').textContent=mLog.length?(mLog.length+' 次训练 · 共 '+mLog.reduce((s,r)=>s+(Number(r.durationMin)||0),0)+' 分钟'):'本月还没有训练记录';
     renderFitCalDetail();
+    renderFtWeeks();
+  }
+  function ftStreak(){
+    const pd=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    const days=new Set(ftLogAll().map(r=>r.date).filter(Boolean));
+    if(!days.size)return 0;
+    const d=new Date();
+    if(!days.has(pd(d)))d.setDate(d.getDate()-1);
+    let n=0;
+    while(days.has(pd(d))){n++;d.setDate(d.getDate()-1);}
+    return n;
+  }
+  function ftWeekStats(){
+    const pd=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    const now=new Date(),mon=new Date(now.getFullYear(),now.getMonth(),now.getDate()-((now.getDay()+6)%7));
+    const out=[];
+    for(let w=7;w>=0;w--){
+      const s=new Date(mon);s.setDate(mon.getDate()-w*7);
+      const e=new Date(s);e.setDate(s.getDate()+7);
+      const wk=ftLogAll().filter(r=>{const d=new Date((r.date||'')+'T00:00:00');return r.date&&d>=s&&d<e;});
+      out.push({label:(s.getMonth()+1)+'/'+s.getDate(),vol:wk.reduce((x,r)=>x+(Number(r.volume)||0),0),sets:wk.reduce((x,r)=>x+(Number(r.totalSets)||0),0),cur:w===0});
+    }
+    return out;
+  }
+  function renderFtWeeks(){
+    const box=document.getElementById('ftWeekChart');if(!box)return;
+    const ws=ftWeekStats(),max=Math.max.apply(null,ws.map(w=>w.vol).concat([1]));
+    document.getElementById('ftWeekNote').textContent='连续 '+ftStreak()+' 天';
+    box.innerHTML=ws.map(w=>{
+      const h=w.vol>0?Math.max(8,Math.round(w.vol/max*72)):3;
+      return '<div class="ftwk-col'+(w.cur?' cur':'')+'"><span class="ftwk-num">'+(w.vol>0?(w.vol>=1000?(w.vol/1000).toFixed(1)+'k':String(Math.round(w.vol))):'')+'</span><div class="ftwk-bar'+(w.vol>0?'':' zero')+'" style="height:'+h+'px" title="'+(w.vol>0?w.label+' 那周 · '+Math.round(w.vol)+'kg · '+w.sets+' 组':'没练')+'"></div><span class="ftwk-lab">'+w.label+'</span></div>';
+    }).join('');
   }
   function renderFitCalDetail(){
     const box=document.getElementById('ftCalDetail');if(!box)return;
@@ -2806,6 +2883,8 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
       if(preDestruct()&&confirm('恢复默认动作库？当前导入的库会被覆盖。')){state.fitTrain.lib=JSON.parse(JSON.stringify(FT_LIB_DEFAULT));saveState(true);renderFitTrain();toast('已恢复默认动作库');}
       return;
     }
+    const favBtn=event.target.closest('#ftExGrid [data-act="ftFav"]');
+    if(favBtn){const on=ftFavToggle(favBtn.dataset.aid);renderFtExGrid();toast(on?'已收藏，会排在前面':'已取消收藏');return;}
     const gifCard=event.target.closest('#ftExGrid [data-ft-ex]');
     if(gifCard){openFtGif(gifCard.dataset.ftEx);return;}
     if(event.target.closest('[data-act="ftStart"], [data-act="trOpen"]')){openTrainSheet();return;}
@@ -2971,7 +3050,8 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     box.innerHTML=[0,1,2,3,4,5,6].map(d=>'<button type="button" data-pdow="'+d+'"'+(String(d)===planEditDow?' class="on"':'')+'>'+PDOW[d]+'</button>').join('');
   }
   function planActRow(a,pi,ai,lib){
-    const opts=lib.map(x=>'<option value="'+escapeHtml(x.id)+'"'+(x.id===a.aid?' selected':'')+'>'+escapeHtml(x.name)+'</option>').join('');
+    const favs=ftFavs();
+    const opts=lib.map(x=>'<option value="'+escapeHtml(x.id)+'"'+(x.id===a.aid?' selected':'')+'>'+((favs.indexOf(x.id)>-1)?'★ ':'')+escapeHtml(x.name)+'</option>').join('');
     return '<div class="plan-act" data-part="'+pi+'" data-ai="'+ai+'">'+
       '<select data-pf="aid" data-part="'+pi+'" data-ai="'+ai+'">'+opts+'</select>'+
       '<div class="pa-grid">'+
