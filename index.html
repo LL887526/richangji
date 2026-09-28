@@ -158,7 +158,7 @@
 .ai-draft-actions{display:flex;gap:8px;margin-top:10px}
 .ai-draft-actions .btn{flex:1;min-height:38px}
 .ai-inputbar{display:flex;gap:8px;margin-top:12px;align-items:stretch}
-.ai-inputbar input{flex:1;min-width:0;min-height:44px;padding:10px 14px;border:1px solid var(--line);border-radius:12px;background:#fffdfa;color:inherit;font-size:14px}
+.ai-inputbar input{flex:1;min-width:0;min-height:44px;padding:10px 14px;border:1px solid var(--line);border-radius:12px;background:#fffdfa;color:inherit;font-size:16px}
 .ai-inputbar button{min-width:44px;min-height:44px;border:1px solid var(--line);border-radius:12px;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;color:inherit}
 .ai-inputbar button svg{width:20px;height:20px}
 .ai-inputbar .ai-send{background:#3478f6;color:#fff;border-color:#3478f6;min-width:64px;font-weight:600}
@@ -292,6 +292,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     <symbol data-page-node-id="LEC9aUyTAkSc2a8ILFXyS8" id="i-chart" viewBox="0 0 24 24"><path data-page-node-id="ttfofpZfjVaEp9Ehm1S5bh" d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></symbol>
     <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l2.2 6.8L21 12l-6.8 2.2L12 21l-2.2-6.8L3 12l6.8-2.2z"/><path d="M19 3.5v3M17.5 5h3"/></symbol>
     <symbol id="i-mic" viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V5a3 3 0 0 1 3-3z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1M12 18v4"/></symbol>
+<symbol id="i-camera" viewBox="0 0 24 24"><path d="M9 3h6l1.6 2.2H20a2 2 0 0 1 2 2V19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7.2a2 2 0 0 1 2-2h3.4z"/><circle cx="12" cy="13" r="3.5"/></symbol>
     <symbol data-page-node-id="CCr6zijWi2V8hZuFh7bVqZ" id="i-alert" viewBox="0 0 24 24"><path data-page-node-id="zyz25nPd6VF3M5jzCKRHXP" d="M12 3 2 21h20zM12 9v5M12 18h.01"/></symbol>
     <symbol data-page-node-id="I33YJdwH5U8y4f2FexfHCR" id="i-clock" viewBox="0 0 24 24"><circle data-page-node-id="cmjXYSJG0Y6CLjXssUjUw2" cx="12" cy="12" r="9"/><path data-page-node-id="h5CwG1HcY9lVzLFoTh44LR" d="M12 7v5l3 2"/></symbol>
     <symbol data-page-node-id="pwtVcBq4bXoSXrYQmvmOVu" id="i-list" viewBox="0 0 24 24"><path data-page-node-id="lztB4xaIzgoTJpUk1Hw3Uu" d="M9 6h12M9 12h12M9 18h12M3 6h.01M3 12h.01M3 18h.01"/></symbol>
@@ -409,7 +410,16 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
           <button data-ftgo="ft-panel-plan">周计划</button>
           <button data-ftgo="ft-panel-exlib">动作库</button>
           <button data-ftgo="ft-panel-log">训练日志</button>
+          <button data-ftgo="ft-panel-health">健康档案</button>
         </nav>
+        <article class="wpanel" id="ft-panel-health" data-ft="health">
+          <div class="wpanel-head"><div><p class="eyebrow">健康档案</p><h2>身体不适与疾病史</h2></div><span class="wnote" id="healthNote"></span></div>
+          <p class="zdesc" style="margin:0 0 6px">对 AI 助理说「胃不舒服」「我有慢性胃炎」就会记到这里，确认后才写入。</p>
+          <p class="zdesc" style="margin:10px 0 4px;font-weight:600">最近不适</p>
+          <div id="healthIssueList"></div>
+          <p class="zdesc" style="margin:14px 0 4px;font-weight:600">疾病史 / 基础疾病</p>
+          <div id="healthHistoryList"></div>
+        </article>
         <article class="wpanel" id="ft-panel-today" data-ft="today">
           <div class="wpanel-head"><div><p class="eyebrow">跟着计划练</p><h2>今日训练</h2></div><span class="wnote" id="ftTodayNote"></span></div>
           <div id="ftTodayCtrl"></div>
@@ -726,6 +736,12 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
               <button class="wbtn dbtn-solid" data-act="aiKeySave" type="button">保存 Key</button>
             </div>
             <button class="wbtn ghostbtn" data-act="aiKeyClear" type="button" style="margin-top:8px">清除已存的 Key</button>
+            <p class="zdesc" style="margin:14px 0 0">拍照识图：DeepSeek 不支持图片，识图走智谱免费视觉模型（open.bigmodel.cn 手机号注册即有 Key，GLM-4V-Flash 完全免费，不消耗 DeepSeek 额度）。Key 同样只存本机。</p>
+            <div class="dgate" style="margin:8px 0 0">
+              <input type="password" id="visionKeyInput" maxlength="80" placeholder="智谱 Key" autocomplete="off">
+              <button class="wbtn dbtn-solid" data-act="visionKeySave" type="button">保存</button>
+            </div>
+            <button class="wbtn ghostbtn" data-act="visionKeyClear" type="button" style="margin-top:8px">清除识图 Key</button>
           </article>
 
           <article class="panel set-zone">
@@ -770,6 +786,8 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
       <div class="settings-head"><div><p class="eyebrow">对话即记录</p><h2 id="aiTitle">AI 助理</h2></div><button class="sheet-close" data-action="close-ai" aria-label="关闭">×</button></div>
       <div class="ai-log" id="aiLog"><div class="ai-msg bot">直接说话就行：记一笔账、想买什么、安排日程、设个提醒、记体重，我来落到对应板块。确认后才会写入。</div></div>
       <div class="ai-inputbar">
+        <button id="aiCamBtn" data-action="ai-cam" aria-label="拍照识图"><svg><use href="#i-camera"/></svg></button>
+        <input type="file" id="aiCamFile" accept="image/*" hidden>
         <input type="text" id="aiInput" maxlength="200" placeholder="如：午饭花了 25.5">
         <button id="aiMicBtn" data-action="ai-mic" aria-label="语音输入" hidden><svg><use href="#i-mic"/></svg></button>
         <button class="ai-send" data-action="ai-send" aria-label="发送">发送</button>
@@ -1668,7 +1686,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   function addReminder(text,due){const list=loadReminders();list.push({id:uid(),text:String(text||'').slice(0,80),due:due||isoDate(),createdAt:Date.now(),done:false});saveReminders(list);}
   function renderAiStatus(){const el=document.getElementById('aiKeyStatus');if(!el)return;const has=!!aiKeyGet();el.textContent=has?'已配置':'未配置';el.className='ai-status '+(has?'on':'off');const mic=document.getElementById('aiMicBtn');if(mic)mic.hidden=!(window.SpeechRecognition||window.webkitSpeechRecognition);}
   function checkDueReminders(){const today=isoDate();const due=loadReminders().filter(r=>!r.done&&r.due<=today);if(!due.length)return;const box=document.getElementById('remList');if(box)box.innerHTML=due.map(r=>'<div class="rem-row" data-rem-id="'+escapeHtml(r.id)+'"><span class="grow">'+escapeHtml(r.text)+'<small>应于 '+escapeHtml(r.due)+' 跟进</small></span><button class="wbtn" data-act="remDone">已办</button><button class="wbtn ghostbtn" data-act="remSnooze">没办，顺延</button></div>').join('');const sheet=document.getElementById('reminderSheet');if(sheet)sheet.hidden=false;}
-  const AI_SYSTEM='你是「日常集」个人工作台的记录助理。把用户输入解析成一个待执行动作，只输出 JSON：{"intent":"...","reply":"给用户看的一句简短中文确认","draft":{...}}。intent 可选：money_expense 支出，draft:{amount:数字,category:"吃饭/交通/购物/娱乐/房租/看病/学习/其他"之一,note,date:"YYYY-MM-DD"}；money_income 收入，draft:{amount,category:"工资/奖金/兼职/理财/其他"之一,note,date}；shopping 待买，draft:{name,quantity,price:数字或null,remind_date:"YYYY-MM-DD"或null}；planner 日程，draft:{title,time:"HH:MM"或"",date,priority:"high/normal/low",note}；task 工作任务，draft:{text,account:"company/own/qjt"之一}；fitness 身体记录，draft:{weight:数字或null,bodyFat:数字或null,calories:数字或null,duration:数字或null,note,date}；reminder 通用提醒，draft:{text,due:"YYYY-MM-DD"}；mood 心情或习惯打卡，draft:{habit:"习惯名",note}；debt_update 欠款登记（明确说「欠/月付/还差」的钱，同时记支出账单并计入负债台账；注意：说了「欠」的不要走 money_expense），draft:{name:"平台名",amount:数字}，一句话含多笔欠款则 draft:{items:[{name,amount},...]}；debt_pay 还款（还掉部分欠款，记还款支出并从负债扣减），draft:{name:"平台名",amount:数字}；balance_update 余额校准（用户报当前手头现金总额），draft:{amount:数字}；income_expected 预期收入（未来才到账的钱，如下月工资），draft:{amount:数字,date:"YYYY-MM-DD",label:"工资"}；finance_plan 还款与花钱规划（用户让你规划还款顺序和每天可花多少），draft:{}；chat 其他，draft:{}。中文数字金额换算成阿拉伯数字（两千九百多→2900）。日期无法确定用今天 '+isoDate()+'。只输出 JSON，不要输出其他文字。';
+  const AI_SYSTEM='你是「日常集」个人工作台的记录助理。把用户输入解析成一个待执行动作，只输出 JSON：{"intent":"...","reply":"给用户看的一句简短中文确认","draft":{...}}。intent 可选：money_expense 支出，draft:{amount:数字,category:"吃饭/交通/购物/娱乐/房租/看病/学习/其他"之一,note,date:"YYYY-MM-DD"}；money_income 收入，draft:{amount,category:"工资/奖金/兼职/理财/其他"之一,note,date}；shopping 待买，draft:{name,quantity,price:数字或null,remind_date:"YYYY-MM-DD"或null}；planner 日程，draft:{title,time:"HH:MM"或"",date,priority:"high/normal/low",note}；task 工作任务，draft:{text,account:"company/own/qjt"之一}；fitness 身体记录，draft:{weight:数字或null,bodyFat:数字或null,calories:数字或null,duration:数字或null,note,date}；reminder 通用提醒，draft:{text,due:"YYYY-MM-DD"}；health_issue 身体不适记录（今天哪里不舒服），draft:{part:"部位如胃/头/肚子/喉咙/腰",desc:"一句话症状描述"}；health_history 疾病史登记（已确诊的基础疾病或既往病史），draft:{name:"疾病名",note:"确诊时间或情况备注"}；mood 心情或习惯打卡，draft:{habit:"习惯名",note}；debt_update 欠款登记（明确说「欠/月付/还差」的钱，同时记支出账单并计入负债台账；注意：说了「欠」的不要走 money_expense），draft:{name:"平台名",amount:数字}，一句话含多笔欠款则 draft:{items:[{name,amount},...]}；debt_pay 还款（还掉部分欠款，记还款支出并从负债扣减），draft:{name:"平台名",amount:数字}；balance_update 余额校准（用户报当前手头现金总额），draft:{amount:数字}；income_expected 预期收入（未来才到账的钱，如下月工资），draft:{amount:数字,date:"YYYY-MM-DD",label:"工资"}；finance_plan 还款与花钱规划（用户让你规划还款顺序和每天可花多少），draft:{}；chat 其他，draft:{}。中文数字金额换算成阿拉伯数字（两千九百多→2900）。日期无法确定用今天 '+isoDate()+'。只输出 JSON，不要输出其他文字。';
   function aiAppendMsg(role,text){const log=document.getElementById('aiLog');if(!log)return null;const div=document.createElement('div');div.className='ai-msg '+(role==='user'?'user':'bot');div.textContent=text;log.appendChild(div);log.scrollTop=log.scrollHeight;return div;}
   function aiBuildCard(out){
     const d=out.draft||{},today=isoDate();
@@ -1680,6 +1698,8 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
       case 'task':{if(!d.text)return null;const acc=d.account==='own'?'own':d.account==='qjt'?'qjt':'company';return {label:'工作任务 · '+(acc==='company'?'公司号':acc==='own'?'自有号':'品牌号'),detail:String(d.text),view:'work',exec:()=>{state.work.tasks[acc].unshift({id:uid(),text:String(d.text).slice(0,60),stage:'待剪',time:nowStamp(),ts:Date.now()});saveState(true);renderWork();return true;}};}
       case 'fitness':{const has=d.weight||d.bodyFat||d.calories||d.duration;if(!has)return null;const parts=[];if(d.weight)parts.push('体重 '+d.weight+'kg');if(d.bodyFat)parts.push('体脂 '+d.bodyFat+'%');if(d.calories)parts.push('摄入 '+d.calories+'kcal');if(d.duration)parts.push('运动 '+d.duration+'分钟');if(d.note)parts.push(d.note);return {label:'身体记录',detail:parts.join(' · ')+' · '+(d.date||today),view:'fitness',exec:()=>addRecord('fitness',d.date||today,{weight:d.weight||'',bodyFat:d.bodyFat||'',calories:d.calories||'',duration:d.duration||'',note:String(d.note||'').slice(0,40)})};}
       case 'reminder':{if(!d.text)return null;return {label:'提醒',detail:String(d.text)+' · '+(d.due||today)+' 弹窗跟进',view:'',exec:()=>{addReminder(d.text,d.due||today);return true;}};}
+      case 'health_issue':{const part=String(d.part||'身体').slice(0,10);const desc=String(d.desc||'').slice(0,60);return {label:'身体不适',detail:part+(desc?' · '+desc:'')+' · '+(d.date||today),view:'fitness',exec:()=>{healthAddIssue(part,desc,d.date||today);return true;}};}
+      case 'health_history':{const nm=String(d.name||'').slice(0,20);if(!nm)return null;return {label:'疾病史登记',detail:nm+(d.note?' · '+d.note:'')+' · 记入健康档案',view:'fitness',exec:()=>{healthAddHistory(nm,String(d.note||'').slice(0,40));return true;}};}
       case 'mood':{const key=String(d.habit||'');if(!key)return null;return {label:'习惯打卡',detail:key+(d.note?' · '+d.note:''),view:'habits',exec:()=>{const h=state.habits.find(x=>(x.name||'')&&key.indexOf(x.name)>-1)||state.habits.find(x=>(x.name||'')&&x.name.indexOf(key.slice(0,2))>-1);if(!h){toast('没找到叫「'+key+'」的习惯');return false;}h.entries=h.entries||{};const k=isoDate();h.entries[k]=Number(h.entries[k]||0)+1;saveState(true);renderHabits();return true;}};}
       case 'debt_update':{let items=Array.isArray(d.items)&&d.items.length?d.items:(d.name&&d.amount?[{name:d.name,amount:d.amount}]:[]);items=items.map(x=>({name:String(x.name||'欠款').slice(0,20),amount:Number(x.amount)||0})).filter(x=>x.amount>0);if(!items.length)return null;const total=items.reduce((s,x)=>s+x.amount,0);return {label:'负债登记 · 共 '+money(total),detail:items.map(x=>x.name+' '+money(x.amount)).join('、')+' · 自动算入总欠款，同时各记一笔支出账单',view:'money',exec:()=>{items.forEach(x=>{finUpsertDebt(x.name,x.amount);addRecord('money',today,{flow:'expense',amount:x.amount,category:'其他',note:x.name+' 欠款'});});return true;}};}
       case 'debt_pay':{const amt=Number(d.amount)||0;if(!amt)return null;const nm=String(d.name||'欠款').slice(0,20);return {label:'还款登记',detail:'还 '+nm+' '+money(amt)+' · 记一笔还款支出并从负债扣减',view:'money',exec:()=>{if(!finReduceDebt(nm,amt)){toast('负债清单里没有「'+nm+'」，先对 AI 说欠款登记');return false;}addRecord('money',today,{flow:'expense',amount:amt,category:'其他',note:'还款 · '+nm});return true;}};}
@@ -1700,6 +1720,8 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   function localParse(text){
     const t=String(text||'').trim(),today=isoDate();
     const m=t.match(/(\d+(?:\.\d+)?)/),amt=m?Number(m[1]):null;
+    if(/确诊|病史|既往|我有.{0,10}(炎|结节|结石|高血压|糖尿病|贫血|过敏)/.test(t))return{intent:'health_history',reply:'记入疾病史：',draft:{name:(t.match(/[\u4e00-\u9fa5]{2,10}(?:炎|结节|结石|综合征|高血压|糖尿病|贫血)/)||[''])[0]||t.slice(0,10),note:t.slice(0,30)}};
+    if(amt==null&&/不舒服|不太舒服|不大舒服|不怎么舒服|不太对劲|难受|疼|痛|酸|胀|痒|感冒|发烧|发热|拉肚子|腹泻|便秘|失眠|头晕|恶心|过敏|鼻塞|咳嗽|没胃口|反胃/.test(t))return{intent:'health_issue',reply:'记身体不适：',draft:{part:(t.match(/胃|头|肚子|喉咙|嗓子|牙|腰|背|肩|脖子|腿|膝盖|眼|耳|皮肤|心口|肋|腹|鼻|手|脚/)||['身体'])[0],desc:t.slice(0,40)}};
     if(/还了|还掉|还款/.test(t)&&amt!=null)return{intent:'debt_pay',reply:'登记还款：',draft:{name:'欠款',amount:amt}};
     if(/余额|身上|手头|手里|手上|还剩/.test(t)&&amt!=null)return{intent:'balance_update',reply:'校准余额：',draft:{amount:amt}};
     if(amt!=null&&/(工资|发薪|到账)/.test(t)&&/预计|下个?月|下月|多少号|几号/.test(t))return{intent:'income_expected',reply:'登记预期收入：',draft:{amount:amt,date:shiftDate(30),label:'工资'}};
@@ -1744,6 +1766,39 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     });
   }
   let aiListenEl=null;
+  const VISION_KEY_NAME='richangji-vision-key';
+  function aiVisionKeyGet(){try{return localStorage.getItem(VISION_KEY_NAME)||'';}catch(e){return '';}}
+  const AI_VISION_PROMPT='你是「日常集」个人工作台的记录助理。看图判断要记录什么，只输出 JSON：{"intent":"...","reply":"一句简短中文确认","draft":{...}}。intent 只能选：money_expense 支出（外卖单/购物小票/打车发票，draft:{amount:数字,category:"吃饭/交通/购物/娱乐/房租/看病/学习/其他",note:"商家或摘要"}）、debt_update 欠款账单（draft:{name,amount}）、fitness 体重秤读数（draft:{weight:数字}）、health_issue 药盒/诊断单/化验单（draft:{part:"相关部位",desc:"一句话"}）、chat 其他。金额只认图里明确可读的数字，看不清或不是以上内容就输出 chat。只输出 JSON。';
+  function aiCam(file){
+    if(!file)return;
+    const vk=aiVisionKeyGet();
+    if(!vk){toast('先在设置页粘贴智谱识图 Key（免费）');return;}
+    aiAppendMsg('user','〔拍照〕'+(file.name||'图片'));
+    const thinking=aiAppendMsg('bot','正在看图…');
+    const rd=new FileReader();
+    rd.onload=()=>{
+      const img=new Image();
+      img.onload=()=>{
+        try{
+          const max=720,scale=Math.min(1,max/Math.max(img.width,img.height));
+          const cv=document.createElement('canvas');cv.width=Math.max(1,Math.round(img.width*scale));cv.height=Math.max(1,Math.round(img.height*scale));
+          cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);
+          const b64=cv.toDataURL('image/jpeg',0.7).split(',')[1];
+          fetch('https://open.bigmodel.cn/api/paas/v4/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+vk},body:JSON.stringify({model:'glm-4v-flash',messages:[{role:'user',content:[{type:'text',text:AI_VISION_PROMPT},{type:'image_url',image_url:{url:'data:image/jpeg;base64,'+b64}}]}],temperature:0.1,max_tokens:300})})
+          .then(r=>r.json()).then(j=>{
+            if(thinking)thinking.remove();
+            let out=null;try{out=JSON.parse(j.choices[0].message.content);}catch(e){}
+            if(!out||!out.intent){aiAppendMsg('bot','这张图没看出能记什么，换个清晰点的试试。');return;}
+            aiAfter(out,false);
+          }).catch(err=>{if(thinking)thinking.remove();aiAppendMsg('bot','识图连不上（'+(err&&err.message?err.message:'网络')+'）');});
+        }catch(e){if(thinking)thinking.remove();aiAppendMsg('bot','图片处理失败，换一张试试。');}
+      };
+      img.onerror=()=>{if(thinking)thinking.remove();aiAppendMsg('bot','图片读不出来，换一张试试。');};
+      img.src=rd.result;
+    };
+    rd.readAsDataURL(file);
+  }
+  (function(){const cf=document.getElementById('aiCamFile');if(cf)cf.addEventListener('change',function(e){const f=e.target.files&&e.target.files[0];e.target.value='';aiCam(f);});})();
   function aiMic(){
     const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
     if(!SR){toast('这个浏览器不支持语音识别，用打字吧');return;}
@@ -1819,6 +1874,19 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     if(box&&txt){box.hidden=!fin.plan;txt.textContent=fin.plan?String(fin.plan.text||''):'';}
     set('dashFinNet',bal==null?'--':money(bal-debtTotal));
     set('dashFinNote',bal==null?'待校准':(fin.debts.length?('总欠款 '+money(debtTotal)+' · '+fin.debts.length+' 笔'):'无负债'));
+  }
+  const HEALTH_KEY='richangji-health-v1';
+  function loadHealth(){try{const v=JSON.parse(localStorage.getItem(HEALTH_KEY)||'{}');return{issues:Array.isArray(v.issues)?v.issues:[],history:Array.isArray(v.history)?v.history:[]};}catch(e){return{issues:[],history:[]};}}
+  function saveHealth(h){try{localStorage.setItem(HEALTH_KEY,JSON.stringify(h));}catch(e){}}
+  function healthAddIssue(part,desc,date){const h=loadHealth();h.issues.unshift({id:uid(),date:date||isoDate(),part:String(part||'身体').slice(0,10),desc:String(desc||'').slice(0,60),status:'open'});if(h.issues.length>60)h.issues.length=60;saveHealth(h);renderHealth();}
+  function healthAddHistory(name,note){const h=loadHealth();h.history.unshift({id:uid(),name:String(name||'').slice(0,20),note:String(note||'').slice(0,40)});saveHealth(h);renderHealth();}
+  function renderHealth(){
+    const h=loadHealth();
+    const il=document.getElementById('healthIssueList');
+    if(il)il.innerHTML=h.issues.length?h.issues.map(x=>'<div class="fin-row"><span class="grow">'+escapeHtml(x.part)+'<small>'+escapeHtml(x.date)+(x.desc?' · '+escapeHtml(x.desc):'')+'</small></span>'+(x.status==='ok'?'<small>已好转</small>':'<button class="text-btn" data-act="healthOk" data-id="'+escapeHtml(x.id)+'">好了</button>')+'</div>').join(''):'<p class="zdesc" style="margin:6px 0 0">还没有不适记录。今天哪里不对劲，直接对 AI 助理说。</p>';
+    const hl=document.getElementById('healthHistoryList');
+    if(hl)hl.innerHTML=h.history.length?h.history.map(x=>'<div class="fin-row"><span class="grow">'+escapeHtml(x.name)+(x.note?'<small>'+escapeHtml(x.note)+'</small>':'')+'</span><button class="text-btn" data-act="healthHisDel" data-id="'+escapeHtml(x.id)+'">删除</button></div>').join(''):'<p class="zdesc" style="margin:6px 0 0">登记已确诊的疾病，方便就医时说明情况。</p>';
+    const note=document.getElementById('healthNote');if(note)note.textContent=h.history.length?('既往 '+h.history.length+' 项'):'';
   }
 
   function renderBackupHint(){
@@ -2346,7 +2414,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     if(type==='delIdea'){if(!confirm('确定删除这条想法吗？删除后无法撤回。'))return;state.grow.ideas=growIdeas().filter(x=>x.id!==id);state.work.ideas=state.grow.ideas;saveState(true);renderWords();}
   }
 
-  function renderAll(){applyBrand();renderDashboard();renderCockpitP5();renderBackupHint();renderMoney();renderFinanceCard();renderHabits();renderFitness();renderFitTrain();renderPlanner();renderHome();renderMedia();renderArchive();renderBackupStatus();renderWork();renderGrow();renderSettingsPage();}
+  function renderAll(){applyBrand();renderDashboard();renderCockpitP5();renderBackupHint();renderMoney();renderFinanceCard();renderHabits();renderFitness();renderFitTrain();renderHealth();renderPlanner();renderHome();renderMedia();renderArchive();renderBackupStatus();renderWork();renderGrow();renderSettingsPage();}
 
   document.addEventListener('click',event=>{
     if(event.target.closest('#view-work textarea,#view-work input,#view-work select,#view-grow textarea,#view-grow input,#view-grow select'))return;
@@ -2371,6 +2439,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     if(event.target.closest('[data-action="close-ai"]')){document.getElementById('aiSheet').hidden=true;return;}
     if(event.target.closest('[data-action="ai-send"]')){aiSend();return;}
     if(event.target.closest('[data-action="ai-mic"]')){aiMic();return;}
+    if(event.target.closest('[data-action="ai-cam"]')){document.getElementById('aiCamFile').click();return;}
     if(event.target.closest('[data-action="close-reminders"]')){document.getElementById('reminderSheet').hidden=true;return;}
     const ab=event.target.closest('[data-act]');
     if(ab){
@@ -2516,6 +2585,14 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
       inp.value='';renderAiStatus();toast('Key 已保存（仅本机）');return;
     }
     if(event.target.closest('[data-act="aiKeyClear"]')){try{localStorage.removeItem(AI_KEY_NAME);}catch(e){}renderAiStatus();toast('已清除 Key');return;}
+    if(event.target.closest('[data-act="visionKeySave"]')){
+      const inp=document.getElementById('visionKeyInput');if(!inp)return;
+      const v=(inp.value||'').trim();
+      if(!v){toast('先粘贴智谱 Key 再保存');return;}
+      try{localStorage.setItem(VISION_KEY_NAME,v);}catch(e){toast('保存失败：存储空间不足');return;}
+      inp.value='';toast('识图 Key 已保存（仅本机）');return;
+    }
+    if(event.target.closest('[data-act="visionKeyClear"]')){try{localStorage.removeItem(VISION_KEY_NAME);}catch(e){}toast('已清除识图 Key');return;}
     if(event.target.closest('[data-act="finDebtClear"]')){
       const btn=event.target.closest('[data-act="finDebtClear"]'),fin=loadFin(),hit=fin.debts.find(d=>d.id===btn.dataset.id);
       if(!hit)return;
@@ -2526,6 +2603,8 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
       return;
     }
     if(event.target.closest('[data-act="finExpectedDone"]')){const fin=loadFin();fin.expected=null;saveFin(fin);renderFinanceCard();toast('已标记到账，对 AI 说「工资发了 xxx」记收入');return;}
+    if(event.target.closest('[data-act="healthOk"]')){const b=event.target.closest('[data-act="healthOk"]'),h=loadHealth(),it=h.issues.find(x=>x.id===b.dataset.id);if(it){it.status='ok';saveHealth(h);renderHealth();toast('记好了，注意休息');}return;}
+    if(event.target.closest('[data-act="healthHisDel"]')){const b=event.target.closest('[data-act="healthHisDel"]');if(!confirm('删除这条疾病史记录？'))return;const h=loadHealth();h.history=h.history.filter(x=>x.id!==b.dataset.id);saveHealth(h);renderHealth();return;}
     if(event.target.closest('[data-act="finPlan"]')){
       const b=document.getElementById('finPlanBtn');if(b){b.disabled=true;b.textContent='正在生成…';}
       finPlanAI(function(text){const fin=loadFin();fin.plan={text:text,asOf:Date.now()};saveFin(fin);renderFinanceCard();const bb=document.getElementById('finPlanBtn');if(bb){bb.disabled=false;bb.textContent='重新生成计划';}});
