@@ -232,6 +232,15 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
 .snap-row:last-child{border-bottom:0}
 .snap-row .wbtn{min-height:38px;padding:0 14px;font-size:12px;margin-left:auto}
 @media(max-width:860px){.wnote{display:none}.wpanel{padding:17px;border-radius:19px}.wmore{grid-template-columns:1fr}.wadd{flex-wrap:wrap}.wadd input{flex:1 1 100%}.wsel{flex:1 1 40%}.wtree-stage{flex-direction:column;align-items:stretch;gap:14px}.wtree-gamify{min-width:0;width:100%}.wsk-grid{grid-template-columns:1fr}.wword-grid{grid-template-columns:1fr}.wb-name{flex:0 0 100%}.wb-nodes{gap:6px}.wm-row .wsel{flex:1 1 28%}}
+  .ftcal-head{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin:10px 0 4px;font-size:11px;color:#9a9186;text-align:center}
+  .ftcal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+  .ftcal-cell{position:relative;min-height:46px;border-radius:10px;background:#f7f2ea;font-size:13px;color:#6b6357;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border:0;cursor:default;padding:2px}
+  .ftcal-cell.dim{opacity:.3}
+  .ftcal-cell.has{background:#e4efe2;color:#3e5c3f;cursor:pointer;font-weight:600}
+  .ftcal-cell.has small{font-size:9px;font-weight:400;line-height:1.15;text-align:center;color:#5d7a54}
+  .ftcal-cell.today{box-shadow:inset 0 0 0 2px #7ba05b}
+  .ftcal-cell.sel{background:#7ba05b;color:#fff}
+  .ftcal-cell.sel small{color:#eaf2e6}
   </style>
   <title data-page-node-id="N9uQg0dpiKTsyB4FFPFrxl" data-pnid-children="1t2kuYHDk4UITU5HQoJQo7">日常集 · 生活工作台</title>
 </head>
@@ -407,8 +416,9 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
       <section data-page-node-id="kpPnubsun3OlHHydKytZUI" class="view" data-title="减脂健身" id="view-fitness">
         <div data-page-node-id="m50d5EovmStFBFVLv7l2Q9" class="module-alert" id="fitnessAlert"></div>
         <nav class="wspace-tabs" id="ftAnchor" aria-label="健身分区导航">
-          <button data-ftgo="ft-panel-today">今日训练</button>
-          <button data-ftgo="ft-panel-plan">周计划</button>
+          <button data-ftgo="ft-panel-today">训练</button>
+          <button data-ftgo="ft-panel-cal">训练日历</button>
+          <button data-ftgo="ft-panel-plan">计划设置</button>
           <button data-ftgo="ft-panel-exlib">动作库</button>
           <button data-ftgo="ft-panel-log">训练日志</button>
         </nav>
@@ -417,6 +427,18 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
           <div id="ftTodayCtrl"></div>
           <div id="ftRestBar" hidden></div>
           <div class="wbranch" id="ftTodayList"></div>
+        </article>
+        <article class="wpanel" id="ft-panel-cal" data-ft="cal">
+          <div class="wpanel-head"><div><p class="eyebrow">坚持的痕迹</p><h2>训练日历</h2></div><span class="wnote" id="ftCalNote"></span></div>
+          <div class="wadd" style="align-items:center">
+            <button class="wbtn ghostbtn" data-ftcal="prev" type="button" style="min-width:44px" aria-label="上个月">‹</button>
+            <b id="ftCalTitle" style="flex:1;text-align:center;font-size:15px"></b>
+            <button class="wbtn ghostbtn" data-ftcal="next" type="button" style="min-width:44px" aria-label="下个月">›</button>
+          </div>
+          <div class="ftcal-head"><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span></div>
+          <div class="ftcal-grid" id="ftCalGrid"></div>
+          <p class="wnote2">练过的日子会亮起来 · 点日子看当天练了什么</p>
+          <div class="wlist" id="ftCalDetail" style="margin-top:8px"></div>
         </article>
         <article class="wpanel" id="ft-panel-plan" data-ft="plan">
           <div class="wpanel-head"><div><p class="eyebrow">全周总览</p><h2>周计划</h2></div><span class="wnote" id="ftPlanNote"></span></div>
@@ -1685,6 +1707,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
       return '<div class="wrv" data-ft-log="1"><div class="wrv-date">'+escapeHtml(r.date||'')+(meta?' · '+escapeHtml(meta):'')+'</div><div class="wrv-line" style="cursor:pointer">点开看动作明细</div><div class="ftlog-detail" hidden></div></div>';
     }).join(''):'<p class="wempty-task">还没有训练记录。完成一次训练后自动生成。</p>';
     renderFtToday();
+    renderFitCal();
   }
   function renderFtExGrid(){
     const m=document.getElementById('ftExMuscle').value,e=document.getElementById('ftExEquip').value,q=(document.getElementById('ftExSearch').value||'').trim().toLowerCase();
@@ -1697,6 +1720,40 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
       const sets=(a.doneSets||[]).map(s=>((s.weight>0?s.weight+'kg×':'')+s.reps+'次')).join(' / ');
       return '<span class="wnode" data-s="1">'+escapeHtml(a.name||ftActById(a.aid).name)+' '+escapeHtml(sets||'无完成组')+'</span>';
     }).join('')+'</div></div>').join('');
+  }
+  let ftCalY=0,ftCalM=0,ftCalSel='';
+  function ftLogAll(){return (state.fitTrain&&Array.isArray(state.fitTrain.log))?state.fitTrain.log:[];}
+  function renderFitCal(){
+    const grid=document.getElementById('ftCalGrid');if(!grid)return;
+    const now=new Date();
+    if(!ftCalY){ftCalY=now.getFullYear();ftCalM=now.getMonth();}
+    document.getElementById('ftCalTitle').textContent=ftCalY+' 年 '+(ftCalM+1)+' 月';
+    const byDate={};
+    ftLogAll().forEach(r=>{if(r.date){(byDate[r.date]=byDate[r.date]||[]).push(r);}});
+    const first=new Date(ftCalY,ftCalM,1);
+    let startDow=first.getDay()-1;if(startDow<0)startDow=6;
+    const days=new Date(ftCalY,ftCalM+1,0).getDate();
+    const todayStr=isoDate();
+    let html='';
+    for(let i=0;i<startDow;i++)html+='<span class="ftcal-cell dim"></span>';
+    for(let d=1;d<=days;d++){
+      const ds=ftCalY+'-'+String(ftCalM+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+      const recs=byDate[ds]||[];
+      const parts=[...new Set(recs.flatMap(r=>(r.parts||[]).map(p=>p.muscle)))].filter(Boolean);
+      const cls='ftcal-cell'+(recs.length?' has':'')+(ds===todayStr?' today':'')+(ftCalSel===ds?' sel':'');
+      html+='<button type="button" class="'+cls+'" '+(recs.length?'data-ftcal-day="'+ds+'"':'disabled')+'><span>'+d+'</span>'+(recs.length?'<small>'+parts.slice(0,2).map(x=>String(x).slice(0,2)).join(' ')+(parts.length>2?'…':'')+'</small>':'')+'</button>';
+    }
+    grid.innerHTML=html;
+    const mKey=ftCalY+'-'+String(ftCalM+1).padStart(2,'0');
+    const mLog=ftLogAll().filter(r=>(r.date||'').slice(0,7)===mKey);
+    document.getElementById('ftCalNote').textContent=mLog.length?(mLog.length+' 次训练 · 共 '+mLog.reduce((s,r)=>s+(Number(r.durationMin)||0),0)+' 分钟'):'本月还没有训练记录';
+    renderFitCalDetail();
+  }
+  function renderFitCalDetail(){
+    const box=document.getElementById('ftCalDetail');if(!box)return;
+    if(!ftCalSel){box.innerHTML='';return;}
+    const recs=ftLogAll().filter(r=>r.date===ftCalSel).sort((a,b)=>(b.startedAt||0)-(a.startedAt||0));
+    box.innerHTML=recs.length?('<p class="zdesc" style="margin:0 0 4px;font-weight:600">'+escapeHtml(ftCalSel)+' 的训练</p>'+recs.map(r=>'<div class="wrv"><div class="wrv-date">'+[r.volume!=null?r.volume+' kg 训练量':'',r.totalSets!=null?r.totalSets+' 组 · '+r.totalReps+' 次':'',r.durationMin!=null?r.durationMin+' 分钟':'',r.kcal!=null?r.kcal+' kcal':''].filter(Boolean).join(' · ')+'</div><div class="ftlog-detail">'+ftLogDetailHTML(r)+'</div></div>').join('')):'<p class="wempty-task">这天没有训练记录</p>';
   }
 
   const AI_KEY_NAME='richangji-ai-key',REM_KEY='richangji-reminders-v1';
@@ -2716,6 +2773,10 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
       if(full){celebrate();toast('这个动作练满了');}
       return;
     }
+    const ftCalBtn=event.target.closest('[data-ftcal]');
+    if(ftCalBtn){if(ftCalBtn.dataset.ftcal==='prev'){ftCalM--;if(ftCalM<0){ftCalM=11;ftCalY--;}}else{ftCalM++;if(ftCalM>11){ftCalM=0;ftCalY++;}}ftCalSel='';renderFitCal();return;}
+    const ftCalDay=event.target.closest('[data-ftcal-day]');
+    if(ftCalDay){ftCalSel=ftCalDay.dataset.ftcalDay;renderFitCal();return;}
     const logItem=event.target.closest('#ftLogList [data-ft-log]');
     if(logItem){
       const det=logItem.querySelector('.ftlog-detail');if(!det)return;
