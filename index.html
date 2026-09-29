@@ -267,7 +267,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   .ft-fav svg{width:15px;height:15px;fill:currentColor}
   .wsk{position:relative}
   .wsk .ft-fav{position:absolute;top:4px;right:4px}
-  .dashboard-grid{align-items:start}
+  @media(min-width:861px){.dashboard-grid{align-items:start}}
   .ex-filters input[type=text]{flex:1 1 100%}
   .ex-filters .wsel{flex:1 1 96px}
   .ex-filters .ex-giftoggle{flex:0 0 auto;white-space:nowrap;min-height:38px}
@@ -279,6 +279,12 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     .lang-switch button{min-width:38px;height:38px}
     .counter-control button{width:38px;height:38px}
   }
+  #bodyMap .boutline{fill:#f2ebdf;stroke:#c9bfae;stroke-width:2;pointer-events:none}
+  #bodyMap .bzone{fill:rgba(0,0,0,0);stroke:none;cursor:pointer;transition:fill .15s}
+  #bodyMap .bzone:hover{fill:rgba(180,95,60,.10)}
+  #bodyMap .bzone.sel{fill:rgba(180,95,60,.18)}
+  #bodyMap .bzone.on{fill:rgba(217,120,72,.20)}
+  @media(max-width:860px){#bodyMapLegend{padding-top:2px!important}}
   </style>
   <title data-page-node-id="N9uQg0dpiKTsyB4FFPFrxl" data-pnid-children="1t2kuYHDk4UITU5HQoJQo7">日常集 · 生活工作台</title>
 </head>
@@ -557,17 +563,36 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
           <div class="panel-head"><div><p class="eyebrow">健康档案</p><h2>身体不适与疾病史</h2></div><span class="mini-note" id="healthNote"></span></div>
           <p class="zdesc" style="margin:0 0 6px">对 AI 助理说「胃不舒服」「我有慢性胃炎」就会记到这里，确认后才写入。点人体部位也能直接记。</p>
           <div style="display:flex;gap:22px;align-items:flex-start;flex-wrap:wrap;margin:8px 0 4px">
-            <svg id="bodyMap" viewBox="14 8 144 304" aria-label="人体健康图" style="width:min(240px,60vw);flex:0 0 auto;display:block">
-              <g fill="none" stroke="#c9bfae" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="80" cy="36" r="24"/>
-                <path d="M72 60h16v12h-16z"/>
-                <rect x="50" y="72" width="60" height="112" rx="14"/>
-                <path d="M50 86q-22 6-26 34l-5 52q-1 9 7 10 8 1 9-8l8-50"/>
-                <path d="M110 86q22 6 26 34l5 52q1 9-7 10-8 1-9-8l-8-50"/>
-                <rect x="56" y="186" width="18" height="98" rx="9"/>
-                <rect x="86" y="186" width="18" height="98" rx="9"/>
-                <path d="M50 284h26v14q0 8-9 8h-8q-9 0-9-8z"/>
-                <path d="M84 284h26v14q0 8-9 8h-8q-9 0-9-8z"/>
+            <svg id="bodyMap" viewBox="0 0 200 392" aria-label="人体健康图" style="width:min(320px,74vw);height:auto;aspect-ratio:200/392;flex:0 0 auto;display:block">
+              <g class="boutline">
+                <ellipse cx="100" cy="36" rx="25" ry="29"/>
+                <path d="M74 84 Q100 70 126 84 L131 138 Q129 186 120 198 L80 198 Q71 186 69 138 Z"/>
+                <rect x="79" y="194" width="42" height="24" rx="11"/>
+                <rect x="48" y="88" width="18" height="118" rx="9"/>
+                <circle cx="57" cy="212" r="8"/>
+                <rect x="134" y="88" width="18" height="118" rx="9"/>
+                <circle cx="143" cy="212" r="8"/>
+                <rect x="80" y="216" width="17" height="136" rx="8.5"/>
+                <rect x="103" y="216" width="17" height="136" rx="8.5"/>
+                <path d="M77 352h21v14q0 8-10 8h-3q-8 0-8-8z"/>
+                <path d="M102 352h21v14q0 8-10 8h-3q-8 0-8-8z"/>
+              </g>
+              <g id="bodyMapZones">
+                <ellipse class="bzone" data-body="head" cx="100" cy="36" rx="25" ry="29"/>
+                <rect class="bzone" data-body="throat" x="90" y="62" width="20" height="18" rx="6"/>
+                <ellipse class="bzone" data-body="shoulder" cx="72" cy="88" rx="14" ry="10"/>
+                <ellipse class="bzone" data-body="shoulder" cx="128" cy="88" rx="14" ry="10"/>
+                <path class="bzone" data-body="chest" d="M77 90 Q100 82 123 90 L123 116 Q100 124 77 116 Z"/>
+                <path class="bzone" data-body="belly" d="M77 120 Q100 130 123 120 L123 148 Q100 158 77 148 Z"/>
+                <path class="bzone" data-body="waist" d="M78 152 Q100 162 122 152 L119 186 Q100 194 81 186 Z"/>
+                <rect class="bzone" data-body="arm" x="48" y="88" width="18" height="118" rx="9"/>
+                <circle class="bzone" data-body="arm" cx="57" cy="212" r="8"/>
+                <rect class="bzone" data-body="arm" x="134" y="88" width="18" height="118" rx="9"/>
+                <circle class="bzone" data-body="arm" cx="143" cy="212" r="8"/>
+                <rect class="bzone" data-body="leg" x="80" y="216" width="17" height="136" rx="8.5"/>
+                <rect class="bzone" data-body="leg" x="103" y="216" width="17" height="136" rx="8.5"/>
+                <path class="bzone" data-body="foot" d="M77 352h21v14q0 8-10 8h-3q-8 0-8-8z"/>
+                <path class="bzone" data-body="foot" d="M102 352h21v14q0 8-10 8h-3q-8 0-8-8z"/>
               </g>
               <g id="bodyMapDots"></g>
             </svg>
@@ -2239,25 +2264,44 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   function healthAddIssue(part,desc,date){const h=loadHealth();h.issues.unshift({id:uid(),date:date||isoDate(),part:String(part||'身体').slice(0,10),desc:String(desc||'').slice(0,60),status:'open'});if(h.issues.length>60)h.issues.length=60;saveHealth(h);renderHealth();}
   function healthAddHistory(name,note){const h=loadHealth();h.history.unshift({id:uid(),name:String(name||'').slice(0,20),note:String(note||'').slice(0,40)});saveHealth(h);renderHealth();}
   const BODY_MAP=[
-    {key:'head',label:'头',parts:['头','眼','耳','鼻','牙','脸'],x:80,y:36},
-    {key:'throat',label:'喉咙',parts:['喉咙','嗓子','脖子'],x:80,y:70},
-    {key:'shoulder',label:'肩',parts:['肩'],x:50,y:88,x2:110},
-    {key:'chest',label:'胸口',parts:['心口','肋'],x:80,y:98},
-    {key:'belly',label:'胃',parts:['胃','肚子','腹'],x:80,y:128},
-    {key:'back',label:'腰',parts:['腰','背'],x:80,y:162},
-    {key:'arm',label:'手臂',parts:['手'],x:34,y:142,x2:126},
-    {key:'leg',label:'腿',parts:['腿','膝盖'],x:65,y:222,x2:95},
-    {key:'foot',label:'脚',parts:['脚'],x:63,y:292,x2:97},
-    {key:'skin',label:'皮肤',parts:['皮肤'],x:140,y:60,skin:true}
+    {key:'head',label:'头',parts:['头','眼','耳','鼻','牙','脸'],x:100,y:36,base:'睡眠、压力、用眼最常反映在这里'},
+    {key:'throat',label:'喉咙',parts:['喉咙','嗓子','脖子'],x:100,y:70,base:'感冒上火常从喉咙先有感觉'},
+    {key:'shoulder',label:'肩',parts:['肩'],x:72,y:88,x2:128,base:'久坐伏案的劳损高发区'},
+    {key:'chest',label:'胸口',parts:['心口','肋','胸闷'],x:100,y:105,base:'心肺区，运动强度看这里的感受'},
+    {key:'belly',label:'胃腹',parts:['胃','肚子','腹'],x:100,y:138,base:'消化吸收区，饮食刺激先到胃'},
+    {key:'waist',label:'腰背',parts:['腰','背'],x:100,y:172,base:'承重枢纽，久坐搬重后留意酸胀'},
+    {key:'arm',label:'手臂',parts:['手','手臂','腕'],x:57,y:140,x2:143,base:'提重物与劳损高发'},
+    {key:'leg',label:'腿膝',parts:['腿','膝盖','小腿'],x:88,y:290,x2:112,base:'运动后酸胀正常，持续刺痛要记'},
+    {key:'foot',label:'脚踝',parts:['脚','脚踝'],x:87,y:366,x2:112,base:'承重与鞋合脚度，磨脚先看这里'},
+    {key:'skin',label:'皮肤',parts:['皮肤'],legendOnly:true,base:'湿热、过敏常先反映在皮肤'}
   ];
+  let bodySel='';
   function bodyMapRender(h){
-    const dots=document.getElementById('bodyMapDots');if(!dots)return;
+    const svg=document.getElementById('bodyMap');if(!svg)return;
     const open=h.issues.filter(x=>x.status!=='ok');
-    const dotAt=(b,x,y)=>'<circle cx="'+x+'" cy="'+y+'" r="13" fill="transparent" style="cursor:pointer" data-body="'+b.key+'">'+(b.skin?'<title>皮肤</title>':'')+'</circle>'+
-      (open.filter(x=>b.parts.indexOf(x.part)>-1).length?'<circle cx="'+x+'" cy="'+y+'" r="8" fill="#d97848" pointer-events="none"/><text x="'+x+'" y="'+(y+3.5)+'" text-anchor="middle" font-size="10" fill="#fff" pointer-events="none">'+(open.filter(x=>b.parts.indexOf(x.part)>-1).length>9?'9+':open.filter(x=>b.parts.indexOf(x.part)>-1).length)+'</text>':'<circle cx="'+x+'" cy="'+y+'" r="5" fill="none" stroke="#c9bfae" stroke-width="1.5" pointer-events="none"/>');
-    dots.innerHTML=BODY_MAP.map(b=>dotAt(b,b.x,b.y)+(b.x2!=null?dotAt(b,b.x2,b.y):'')).join('');
+    svg.querySelectorAll('.bzone').forEach(z=>{
+      const b=BODY_MAP.find(x=>x.key===z.dataset.body);
+      z.classList.toggle('on',!!(b&&open.some(x=>b.parts.indexOf(x.part)>-1)));
+      z.classList.toggle('sel',bodySel===z.dataset.body);
+    });
+    const dots=document.getElementById('bodyMapDots');
+    if(dots)dots.innerHTML=BODY_MAP.filter(b=>!b.legendOnly).map(b=>{
+      const n=open.filter(x=>b.parts.indexOf(x.part)>-1).length;
+      const one=(x,y)=>n?'<circle cx="'+x+'" cy="'+y+'" r="8" fill="#d97848" pointer-events="none"/><text x="'+x+'" y="'+(y+3.5)+'" text-anchor="middle" font-size="10" fill="#fff" pointer-events="none">'+(n>9?'9+':n)+'</text>':'';
+      return one(b.x,b.y)+(b.x2!=null?one(b.x2,b.y):'');
+    }).join('');
     const lg=document.getElementById('bodyMapLegend');
-    if(lg)lg.innerHTML=open.length?('<b>当前不适</b><br>'+open.map(x=>escapeHtml(x.part)+'<small style="color:#9a9186"> '+escapeHtml((x.date||'').slice(5))+(x.desc?' · '+escapeHtml(x.desc):'')+'</small>').join('<br>')):'身体没有在记录的不适。<br><small style="color:#9a9186">点人体上的部位直接记，或对 AI 助理说。</small>';
+    if(!lg)return;
+    if(bodySel){
+      const b=BODY_MAP.find(x=>x.key===bodySel);
+      const mine=open.filter(x=>b.parts.indexOf(x.part)>-1);
+      lg.innerHTML='<b>'+escapeHtml(b.label)+'</b><small style="display:block;color:#9a9186;margin:2px 0 6px">常人参考：'+escapeHtml(b.base)+'</small>'
+        +(mine.length?mine.map(x=>'· '+escapeHtml(x.part)+'<small style="color:#9a9186"> '+escapeHtml((x.date||'').slice(5))+(x.desc?' · '+escapeHtml(x.desc):'')+'</small>').join('<br>')+'<br>':'这一区你还没有记录。<br>')
+        +'<button class="btn ghost compact bm-rec" data-body-rec="'+escapeHtml(b.label)+'" type="button" style="margin-top:8px">记这里的不适</button>';
+    }else{
+      lg.innerHTML=(open.length?('当前不适 '+open.length+' 项：'+open.map(x=>escapeHtml(x.part)).join('、')):'身体没有在记录的不适。')
+        +'<br><small style="color:#9a9186">点人体上的分区查看、直接记。皮肤问题点这里：<button class="text-btn" data-body="skin" type="button">皮肤</button></small>';
+    }
   }
   function renderHealth(){
     const h=loadHealth();
@@ -3028,8 +3072,10 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     if(event.target.closest('[data-act="finExpectedDone"]')){const fin=loadFin();fin.expected=null;saveFin(fin);renderFinanceCard();toast('已标记到账，对 AI 说「工资发了 xxx」记收入');return;}
     if(event.target.closest('[data-act="healthOk"]')){const b=event.target.closest('[data-act="healthOk"]'),h=loadHealth(),it=h.issues.find(x=>x.id===b.dataset.id);if(it){it.status='ok';saveHealth(h);renderHealth();toast('记好了，注意休息');}return;}
     if(event.target.closest('[data-act="healthHisDel"]')){const b=event.target.closest('[data-act="healthHisDel"]');if(!confirm('删除这条疾病史记录？'))return;const h=loadHealth();h.history=h.history.filter(x=>x.id!==b.dataset.id);saveHealth(h);renderHealth();return;}
+    const bmRec=event.target.closest('[data-body-rec]');
+    if(bmRec){document.getElementById('aiSheet').hidden=false;renderAiStatus();const ai=document.getElementById('aiInput');if(ai){ai.value='我的'+bmRec.dataset.bodyRec+'不太舒服';setTimeout(()=>ai.focus(),80);}return;}
     const bmHit=event.target.closest('[data-body]');
-    if(bmHit){const b=BODY_MAP.find(x=>x.key===bmHit.dataset.body||x.x2!=null&&bmHit.dataset.body===x.key);if(b){document.getElementById('aiSheet').hidden=false;renderAiStatus();const ai=document.getElementById('aiInput');if(ai){ai.value='我的'+b.label+'不太舒服';setTimeout(()=>ai.focus(),80);}return;}}
+    if(bmHit){bodySel=(bodySel===bmHit.dataset.body)?'':bmHit.dataset.body;bodyMapRender(loadHealth());return;}
     if(event.target.closest('[data-act="finPlan"]')){
       const b=document.getElementById('finPlanBtn');if(b){b.disabled=true;b.textContent='正在生成…';}
       finPlanAI(function(text){const fin=loadFin();fin.plan={text:text,asOf:Date.now()};saveFin(fin);renderFinanceCard();const bb=document.getElementById('finPlanBtn');if(bb){bb.disabled=false;bb.textContent='重新生成计划';}});
