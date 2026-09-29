@@ -75,6 +75,7 @@
 .wform textarea{min-height:62px;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:var(--paper);color:var(--ink);font:inherit;font-size:14px;resize:vertical}
 .wform .wbtn{min-height:46px}
 .wempty{margin:0;color:var(--muted);font-size:13px;line-height:1.7}
+.v13bar[hidden]{display:none!important}
 .v13bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 16px;margin:0 0 14px;border:1px solid var(--line);border-radius:16px;background:var(--card)}
 .v13bar b{font-size:13.5px;color:var(--ink)}
 .v13bar small{font-size:12px;color:var(--muted);line-height:1.6}
@@ -3334,6 +3335,8 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   function renderV13Bar(){
     const bar=document.getElementById('v13bar'),info=document.getElementById('v13info');
     if(!bar||!info)return;
+    const btn=bar.querySelector('[data-act="v13Dismiss"]');
+    if(btn&&!btn.dataset.bound){btn.dataset.bound='1';btn.addEventListener('click',function(ev){ev.preventDefault();ev.stopPropagation();try{localStorage.setItem('richangji-v13bar-dismissed','1');}catch(e){}bar.hidden=true;toast('已收起，之后想迁移可去「全局设置」');});}
     if(localStorage.getItem('richangji-v13bar-dismissed')){bar.hidden=true;return;}
     const m=(state.migrated&&state.migrated.v13)?state.migrated:null;
     bar.hidden=false;
