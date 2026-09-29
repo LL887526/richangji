@@ -158,11 +158,6 @@
 .wsk-name{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600}
 .wsk-desc{margin:0;color:var(--muted);font-size:12px;line-height:1.6}
 .wft-g{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:999px;border:1px solid var(--line);color:var(--muted);font-size:10px;vertical-align:1px}
-#ftExGrid{grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:8px}
-#ftExGrid .wsk{padding:10px 12px;gap:4px;border-radius:12px}
-#ftExGrid .wsk-name{font-size:13px;gap:6px;flex-wrap:wrap}
-#ftExGrid .wbadge{padding:2px 8px;font-size:10px}
-#ftExGrid .wsk-desc{font-size:11px}
 .ai-fab{position:fixed;right:18px;bottom:24px;width:52px;height:52px;border-radius:50%;border:none;background:#3478f6;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 6px 18px rgba(20,40,80,.22);z-index:60}
 .ai-fab svg{width:24px;height:24px}
 @media(max-width:860px){.ai-fab{bottom:calc(86px + env(safe-area-inset-bottom,0px));right:14px}}
@@ -451,7 +446,6 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
           <button data-ftgo="ft-panel-cal">训练日历</button>
           <button data-ftgo="ft-panel-plan">计划设置</button>
           <button data-ftgo="ft-panel-log">训练日志</button>
-          <button data-ftgo="ft-panel-exlib">动作库</button>
         </nav>
         <article class="wpanel" id="ft-panel-today" data-ft="today">
           <div class="wpanel-head"><div><p class="eyebrow">跟着计划练</p><h2>今日训练</h2></div><span class="wnote" id="ftTodayNote"></span></div>
@@ -478,25 +472,13 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
         </article>
         <article class="wpanel" id="ft-panel-plan" data-ft="plan">
           <div class="wpanel-head"><div><p class="eyebrow">全周总览</p><h2>周计划</h2></div><span class="wnote" id="ftPlanNote"></span></div>
-          <div class="wadd" style="margin-top:10px"><button class="wbtn dbtn-solid" data-act="ftPlanEdit" type="button" style="width:100%">编辑周计划</button></div>
+          <div class="wadd" style="margin-top:10px"><button class="wbtn dbtn-solid" data-act="ftPlanEdit" type="button" style="width:100%">编辑周计划</button><button class="wbtn ghostbtn" data-nav="exlib" type="button" style="width:100%;margin-top:8px">浏览动作库（含动图演示）</button></div>
           <p class="wnote2">点动作记一组 · 记满自动标完成 · 练满后再点清零</p>
           <div class="wbranch" id="ftPlanList"></div>
         </article>
         <article class="wpanel" id="ft-panel-log" data-ft="log">
           <div class="wpanel-head"><div><p class="eyebrow">训练历史</p><h2>训练日志</h2></div><span class="wnote" id="ftLogCount"></span></div>
           <div class="wlist" id="ftLogList"></div>
-        </article>
-        <article class="wpanel" id="ft-panel-exlib" data-ft="exlib">
-          <div class="wpanel-head"><div><p class="eyebrow">训练动作</p><h2>动作库</h2></div><span class="wnote" id="ftExCount"></span></div>
-          <div class="wadd">
-            <select id="ftExMuscle" class="wsel"><option value="">全部肌群</option></select>
-            <select id="ftExEquip" class="wsel"><option value="">全部器械</option></select>
-            <input type="text" id="ftExSearch" placeholder="搜索动作名">
-          </div>
-          <div class="wadd">
-            <input type="file" id="ftLibFile" accept=".json,application/json" hidden>
-          </div>
-          <div class="wsk-grid" id="ftExGrid"></div>
         </article>
         <div data-page-node-id="ZssjtlC0J5BNS4GIwby1xv" class="section-actions"><button data-page-node-id="5Y0OKDprkEsSdi8rjP0CSF" class="btn ghost" data-action="open-fitness-profile"><svg data-page-node-id="xRjG8rJmQqKTCviEfopTGo"><use data-page-node-id="D6U5s1vvg5607v0x2ecRY7" href="#i-fitness"/></svg><!--pnid:fakZ4RgZBRDYt3e8BBXYMz-->目标设置</button><button data-page-node-id="Pn50LbSy0k09JTKGOthaZ2" class="btn ghost" data-action="export-fitness"><svg data-page-node-id="BijLEJi5DZCsAG36eQAVke"><use data-page-node-id="gjCpnSZm6jCPctuutVufXi" href="#i-chart"/></svg><!--pnid:js0G2IznGqovnDWQNaxcWZ-->导出 Excel</button></div>
         <div data-page-node-id="bWXemncylOltwfVQGAFQNu" class="module-layout">
@@ -536,6 +518,25 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
           <div class="mp-group">
             <button class="mp-row" data-nav="settings"><span class="mp-ic mp-ic-grey"><svg><use href="#i-settings"/></svg></span><span class="mp-rt"><b>全局设置</b><small>品牌、偏好与数据备份</small></span><span class="mp-badge mp-dim" id="mpBackup"><span class="v">—</span><span class="k">上次备份</span></span></button>
           </div>
+        </div>
+      </section>
+      <section class="view" data-title="动作库" id="view-exlib">
+        <div class="view-inner">
+          <div class="ex-page-head">
+            <div><p class="eyebrow">资料库</p><h1>动作库</h1></div>
+            <span class="wnote" id="ftExCount"></span>
+          </div>
+          <p class="wnote2" style="margin:2px 0 10px">带「动图」角标的为精选演示动作，已优先展示；点卡片看完整动图与要点。星标收藏后，设置计划时同样优先。</p>
+          <div class="wadd ex-filters">
+            <input type="text" id="ftExSearch" placeholder="搜索动作名">
+            <select id="ftExMuscle" class="wsel"><option value="">全部肌群</option></select>
+            <select id="ftExEquip" class="wsel"><option value="">全部器械</option></select>
+            <label class="ex-giftoggle"><input type="checkbox" id="ftExGif"><span>只看有动图</span></label>
+          </div>
+          <div class="wadd">
+            <input type="file" id="ftLibFile" accept=".json,application/json" hidden>
+          </div>
+          <div class="ex-grid" id="exPageGrid"></div>
         </div>
       </section>
       <section class="view" data-title="健康档案" id="view-health">
@@ -942,13 +943,39 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   .tr-curbox .tr-curmain{min-width:0;flex:1}
   .tr-gif{flex:0 0 auto;width:76px;height:76px;border:1px solid var(--line);border-radius:14px;overflow:hidden;padding:0;background:#fff;cursor:pointer}
   .tr-gif img{width:100%;height:100%;object-fit:cover;display:block}
-  .ap-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
-  .ap-item{position:relative;display:flex;flex-wrap:wrap;align-items:center;gap:6px;min-height:48px;padding:8px 34px 8px 12px;border:1px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink);font-size:14px;text-align:left;cursor:pointer}
-  .ap-item b{font-weight:600}
-  .ap-item.on{border-color:var(--plum);background:rgba(105,74,84,.08)}
-  .ap-item .ap-check{position:absolute;top:50%;right:10px;width:18px;height:18px;margin-top:-9px;border:1.5px solid var(--line);border-radius:6px;background:#fff}
-  .ap-item.on .ap-check{background:var(--plum);border-color:var(--plum)}
-  .ap-item.on .ap-check:after{content:'';position:absolute;left:5px;top:2px;width:4px;height:8px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+  .tr-swapbtn{flex:0 0 auto;min-height:38px;min-width:44px;padding:0 12px;font-size:13px}
+  .exd-backdrop{position:fixed;inset:0;z-index:110;background:rgba(43,32,26,.42);display:flex;align-items:flex-end;justify-content:center}
+  .exd-sheet{display:flex;flex-direction:column;width:min(560px,100%);height:62%;background:var(--paper);border:1px solid var(--line);border-bottom:none;border-radius:20px 20px 0 0;box-shadow:0 -14px 40px rgba(53,41,31,.2)}
+  .exd-sheet.high{height:96%}
+  .exd-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px 6px}
+  .exd-head h2{font-size:18px;margin:2px 0 0}
+  .exd-headbtns{display:flex;align-items:center;gap:8px}
+  .exd-headbtns .wbtn{min-height:34px;padding:0 12px;font-size:12px}
+  .ex-filters{display:flex;flex-wrap:wrap;gap:8px;padding:0 16px 10px}
+  .ex-filters input[type=text]{flex:1 1 150px;min-width:0}
+  .ex-filters .wsel{flex:1 1 110px;min-width:0}
+  .ex-giftoggle{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);cursor:pointer;min-height:38px}
+  .ex-giftoggle input{width:16px;height:16px;accent-color:var(--plum)}
+  .exd-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:4px 16px 12px}
+  .exd-foot{display:flex;gap:10px;padding:10px 16px calc(12px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:var(--paper);border-radius:0 0 0 0}
+  .exd-foot .btn{flex:1;min-height:42px}
+  .ex-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+  .ex-card{position:relative;display:flex;flex-direction:column;gap:6px;padding:0 0 8px;border:1px solid var(--line);border-radius:14px;background:var(--card);overflow:hidden;cursor:pointer;text-align:left;min-height:38px}
+  .ex-card.on{border-color:var(--plum);box-shadow:0 0 0 1.5px var(--plum)}
+  .ex-thumb{position:relative;width:100%;aspect-ratio:4/3;background:#fff;border-bottom:1px solid var(--line);overflow:hidden}
+  .ex-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+  .ex-thumb .wft-g{position:absolute;top:6px;right:6px}
+  .ex-thumb.ex-noimg{display:flex;align-items:center;justify-content:center;background:repeating-linear-gradient(45deg,var(--paper),var(--paper) 8px,#f3ece2 8px,#f3ece2 16px);border-bottom-style:dashed}
+  .ex-thumb.ex-noimg svg{width:34px;height:34px;stroke:var(--line);fill:none;opacity:.8}
+  .ex-name{display:flex;flex-wrap:wrap;align-items:center;gap:5px;padding:0 10px;font-size:13px;font-weight:600;color:var(--ink)}
+  .ex-sub{padding:0 10px;font-size:11px;color:var(--muted)}
+  .ex-card .ft-fav{position:absolute;top:6px;left:6px;z-index:2}
+  .ex-check{position:absolute;top:6px;right:6px;z-index:2;width:20px;height:20px;border:1.5px solid var(--line);border-radius:6px;background:#fff}
+  .ex-card.on .ex-check{background:var(--plum);border-color:var(--plum)}
+  .ex-card.on .ex-check:after{content:'';position:absolute;left:6px;top:2px;width:5px;height:9px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+  .ex-page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin-bottom:4px}
+  .ex-page-head h1{font-size:22px;margin:2px 0 0}
+  @media(min-width:900px){.ex-grid{grid-template-columns:repeat(4,1fr)}}
   input,select,textarea{font-size:16px!important}
   </style>
   <div class="trainsheet" hidden id="trainSheet" role="dialog" aria-modal="true" aria-label="训练进行中">
@@ -968,13 +995,24 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
       <div class="sheet-actions"><button class="btn ghost" data-action="close-plan-sheet" type="button">取消</button><button class="btn primary" data-act="planSave" type="button">保存计划</button></div>
     </section>
   </div>
-  <div class="settings-backdrop" hidden id="actPicker" role="dialog" aria-modal="true" aria-labelledby="actPickTitle">
-    <section class="settings-sheet">
-      <div class="settings-head"><div><p class="eyebrow">添加动作</p><h2 id="actPickTitle">勾选要加入的动作</h2></div><button class="sheet-close" data-action="close-act-picker" aria-label="关闭">×</button></div>
-      <div class="wadd"><input type="text" id="apSearch" placeholder="搜索动作名"></div>
-      <div class="ap-grid" id="apGrid"></div>
-      <div class="sheet-actions"><button class="btn ghost" data-action="close-act-picker" type="button">取消</button><button class="btn primary" data-act="apConfirm" type="button" id="apConfirmBtn">加入 0 个动作</button></div>
-    </section>
+  <div class="exd-backdrop" hidden id="exDrawer" role="dialog" aria-modal="true" aria-labelledby="exdTitle">
+    <div class="exd-sheet" id="exdSheet">
+      <div class="exd-head">
+        <div><p class="eyebrow" id="exdSub">从动作库勾选</p><h2 id="exdTitle">添加动作</h2></div>
+        <div class="exd-headbtns">
+          <button class="wbtn ghostbtn" data-act="exdHeight" type="button" id="exdHeightBtn" aria-label="切换高度">全屏</button>
+          <button class="sheet-close" data-action="close-ex-drawer" aria-label="关闭">×</button>
+        </div>
+      </div>
+      <div class="wadd ex-filters">
+        <input type="text" id="exdSearch" placeholder="搜索动作名">
+        <select id="exdMuscle" class="wsel"><option value="">全部肌群</option></select>
+        <select id="exdEquip" class="wsel"><option value="">全部器械</option></select>
+        <label class="ex-giftoggle"><input type="checkbox" id="exdGif"><span>有图优先</span></label>
+      </div>
+      <div class="exd-body ex-grid" id="exdGrid"></div>
+      <div class="exd-foot" id="exdFoot"><button class="btn ghost" data-action="close-ex-drawer" type="button">取消</button><button class="btn primary" data-act="exdConfirm" type="button" id="exdConfirmBtn">加入 0 个动作</button></div>
+    </div>
   </div>
   <nav data-page-node-id="VwzOEjLyy6ItvtySript3L" aria-label="手机导航" class="mobile-nav"><button data-page-node-id="LverHdKAggMy2sGSSHPu7N" class="active" data-nav="dashboard"><svg data-page-node-id="3k3zt3H8ZcE15Mcji6qXXu"><use data-page-node-id="gY3CBUNJhWnTOQyqBJwhuh" href="#i-home"/></svg><span data-page-node-id="Njn6PY6ug2MBHCP4a6KYUL"><!--pnid:l9TPUtQ9BnZDwA7VN3kOc1-->今天</span></button><button data-page-node-id="2ECgQfsfQCeZTUWsfxJENc" data-nav="work"><svg data-page-node-id="hSlkgWH5Scq9vletFJQ9G7"><use data-page-node-id="14UTQeIobuVF53EgfU5CJd" href="#i-briefcase"/></svg><span data-page-node-id="ZXSU2XdHkHgdxUUczTF2N8">工作</span></button><button data-page-node-id="XQrnJOCqk2zs6qBRTyhgAi" data-nav="grow"><svg data-page-node-id="6CB43Bo2cyDvgeFzWupv1O"><use data-page-node-id="oeP63t9wNZPEA19Z9UfWya" href="#i-sprout"/></svg><span data-page-node-id="oH0QhywHzuVdw8zQiB0uVx">成长</span></button><button data-nav="fitness"><svg><use href="#i-fitness"/></svg><span>健身</span></button><button data-page-node-id="mNRdsjnf2OsQ0CaZl7rWL0" data-nav="money"><svg data-page-node-id="ReNlA1GcKp4DXl30fcPTYX"><use data-page-node-id="dWY01pvPQLKpXY6WnPmaQF" href="#i-wallet"/></svg><span data-page-node-id="s6Id2O7F9RiHlN3LQQg5Ii">生活</span></button><button data-page-node-id="ytkVZ2rureDokbk3tp4bGo" data-nav="more"><svg data-page-node-id="Ajy5qWjVojEhBuWpujSPWC"><use data-page-node-id="QfYDFiLbXY02BqMcsGuf9X" href="#i-grid"/></svg><span data-page-node-id="S4puiDiqHnjB8cUYm6XH0h">更多</span></button></nav>
   <div data-page-node-id="js3J8Y3JqDrvK2yBB598Ai" class="settings-backdrop" hidden id="habitSettings">
@@ -1578,7 +1616,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     return true;
   }
   function deleteRecord(id){const target=state.records.find(r=>r.id===id);if(!target||!confirm(LANG==='en'?`Delete “${titleFor(target)}”? This cannot be undone.`:`确定删除“${titleFor(target)}”吗？删除后无法撤回。`))return;if(target.remoteId){if(target.type==='money')deleteRemoteMoney(target.remoteId);if(target.type==='planner')deleteRemotePlan(target.remoteId);if(target.type==='fitness')deleteRemoteFitness(target.remoteId);if(target.type==='home')deleteRemoteShopping(target.remoteId);}state.records=state.records.filter(r=>r.id!==id);const saved=saveState();renderAll();if(saved)toast('记录已删除');}
-  function switchView(view){const target=document.getElementById(`view-${view}`);if(!target)return;if(view==='more'&&typeof renderMorePage==='function')renderMorePage();document.querySelectorAll('.view').forEach(el=>el.classList.toggle('active',el===target));document.querySelectorAll('[data-nav]').forEach(el=>el.classList.toggle('active',el.dataset.nav===view));document.getElementById('viewTitle').textContent=target.dataset.title||'日常集';if(location.hash!==`#${view}`)history.replaceState(null,'',`#${view}`);scrollTo({top:0,behavior:'smooth'});}
+  function switchView(view){const target=document.getElementById(`view-${view}`);if(!target)return;if(view==='more'&&typeof renderMorePage==='function')renderMorePage();if(view==='exlib'&&typeof renderFtExGrid==='function'){exdFillFilters(document.getElementById('ftExMuscle'),document.getElementById('ftExEquip'));renderFtExGrid();}document.querySelectorAll('.view').forEach(el=>el.classList.toggle('active',el===target));document.querySelectorAll('[data-nav]').forEach(el=>el.classList.toggle('active',el.dataset.nav===view));document.getElementById('viewTitle').textContent=target.dataset.title||'日常集';if(location.hash!==`#${view}`)history.replaceState(null,'',`#${view}`);scrollTo({top:0,behavior:'smooth'});}
   function formatDateHeading(value){if(value===isoDate())return t('今天');if(value===shiftDate(-1))return t('昨天');const date=new Date(`${value}T00:00:00`);return LANG==='en'?new Intl.DateTimeFormat('en-US',{month:'short',day:'numeric'}).format(date):`${date.getMonth()+1} 月 ${date.getDate()} 日`;}
   function titleFor(record){const d=record.data||{},local=value=>record.sample?translateText(value):value;if(record.type==='money')return d.note?local(d.note):t(d.category||'一笔收支');if(record.type==='planner')return d.title?local(d.title):t('一项日程');if(record.type==='fitness')return d.note?local(d.note):t('身体记录');if(record.type==='home')return d.name?local(d.name):t('待买物品');return t('生活记录');}
   function detailFor(record){const d=record.data||{};if(record.type==='money')return`${t(d.category||'其他')} · ${t(d.flow==='income'?'收入':'支出')}`;if(record.type==='planner')return`${t(d.list||'生活')} · ${d.time||t('全天')} · ${t(d.done?'已完成':'待完成')}`;if(record.type==='fitness')return`${d.bodyFat?`${LANG==='en'?'Body fat':'体脂'} ${d.bodyFat}% · `:''}${d.duration||0} ${LANG==='en'?'min exercise':'分钟运动'}`;if(record.type==='home')return`${record.sample?translateText(d.quantity||'数量未填'):(d.quantity||t('数量未填'))} · ${t(d.category||'未分类')} · ${t(d.bought?'已买':'待买')}`;return'';}
@@ -1912,10 +1950,15 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     saveState(true);return state.fitTrain.favs.indexOf(aid)>-1;
   }
   function renderFtExGrid(){
-    const m=document.getElementById('ftExMuscle').value,e=document.getElementById('ftExEquip').value,q=(document.getElementById('ftExSearch').value||'').trim().toLowerCase();
-    const favs=ftFavs();
-    const list=ftLib().filter(x=>(!m||x.muscle===m)&&(!e||x.equipment===e)&&(!q||String(x.name||'').toLowerCase().includes(q))).slice().sort((a,b)=>((favs.indexOf(b.id)>-1)?1:0)-((favs.indexOf(a.id)>-1)?1:0));
-    document.getElementById('ftExGrid').innerHTML=list.length?list.map(x=>{const def=(x.equipment||'自重')==='自重'&&(x.unit||'次')==='次';const fav=favs.indexOf(x.id)>-1;return '<div class="wsk" data-ft-ex="'+escapeHtml(x.id||'')+'" data-ft-gif="'+escapeHtml(x.gif||'')+'" title="'+escapeHtml(x.tip||'')+'"><button class="ft-fav'+(fav?' on':'')+'" data-act="ftFav" data-aid="'+escapeHtml(x.id||'')+'" title="收藏" aria-label="收藏"><svg aria-hidden="true"><use href="#i-star"/></svg></button><div class="wsk-name">'+escapeHtml(x.name||'')+'<span class="wbadge">'+escapeHtml(x.muscle||'未分类')+'</span>'+(x.gif?'<span class="wft-g">动图</span>':'')+'</div>'+(def?'':'<p class="wsk-desc">'+escapeHtml(x.equipment||'自重')+' · '+escapeHtml(x.unit||'次')+'</p>')+'</div>';}).join(''):'<p class="wempty-task">没有匹配的动作</p>';
+    const gEl=document.getElementById('ftExGif');
+    const list=exFilterList({
+      q:(document.getElementById('ftExSearch').value||'').trim().toLowerCase(),
+      muscle:document.getElementById('ftExMuscle').value,
+      equip:document.getElementById('ftExEquip').value,
+      gifOnly:!!(gEl&&gEl.checked),
+      gifFirst:true
+    });
+    document.getElementById('exPageGrid').innerHTML=list.length?list.map(x=>exCardHTML(x,'view',false)).join(''):'<p class="wempty-task">没有匹配的动作</p>';
   }
   function ftLogDetailHTML(r){
     if(!r||!Array.isArray(r.parts))return '<p class="wempty">旧格式记录 · 无法展开明细</p>';
@@ -2922,7 +2965,11 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   document.getElementById('ftExMuscle').addEventListener('change',renderFtExGrid);
   document.getElementById('ftExEquip').addEventListener('change',renderFtExGrid);
   document.getElementById('ftExSearch').addEventListener('input',renderFtExGrid);
-  const apSearchEl=document.getElementById('apSearch');if(apSearchEl)apSearchEl.addEventListener('input',renderActPicker);
+  document.getElementById('ftExGif').addEventListener('change',renderFtExGrid);
+  document.getElementById('exdSearch').addEventListener('input',renderExdGrid);
+  document.getElementById('exdMuscle').addEventListener('change',renderExdGrid);
+  document.getElementById('exdEquip').addEventListener('change',renderExdGrid);
+  document.getElementById('exdGif').addEventListener('change',renderExdGrid);
   document.getElementById('ftLibFile').addEventListener('change',e=>{
     const f=e.target.files&&e.target.files[0];if(!f)return;
     const rd=new FileReader();
@@ -3026,14 +3073,15 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
       if(preDestruct()&&confirm('恢复默认动作库？当前导入的库会被覆盖。')){state.fitTrain.lib=JSON.parse(JSON.stringify(FT_LIB_DEFAULT));saveState(true);renderFitTrain();toast('已恢复默认动作库');}
       return;
     }
-    const favBtn=event.target.closest('#ftExGrid [data-act="ftFav"]');
+    const favBtn=event.target.closest('[data-act="ftFav"]');
     if(favBtn){const on=ftFavToggle(favBtn.dataset.aid);renderFtExGrid();toast(on?'已收藏，会排在前面':'已取消收藏');return;}
-    const gifCard=event.target.closest('#ftExGrid [data-ft-ex]');
+    const gifCard=event.target.closest('[data-ft-ex]');
     if(gifCard){openFtGif(gifCard.dataset.ftEx);return;}
     if(event.target.closest('[data-act="ftStart"], [data-act="trOpen"]')){openTrainSheet();return;}
     if(event.target.closest('[data-act="ftFinish"]')){finishTraining();return;}
     if(event.target.closest('[data-act="trHide"]')){closeTrainSheet();toast('训练继续计时，回健身页点「跟练页」回来');return;}
     if(event.target.closest('[data-act="trEnd"]')){const rec=finishTraining();if(rec)showTrainDone(rec);return;}
+    if(event.target.closest('[data-act="trSwap"]')){const cur=trCurTarget();if(!cur){toast('当前没有待练动作');return;}openExDrawer('swap',{act:cur.act});return;}
     if(event.target.closest('[data-act="trClose"]')){closeTrainSheet();return;}
     if(event.target.closest('[data-act="ftRestSkip"]')){if(ftRestTimer){clearInterval(ftRestTimer);ftRestTimer=null;}ftRestUntil=0;['ftRestBar','trRest'].forEach(id=>{const b=document.getElementById(id);if(b)b.hidden=true;});toast('休息跳过');return;}
     if(event.target.closest('[data-act="ftRestAdd"]')){ftRestUntil+=20000;toast('加 20 秒');return;}
@@ -3075,11 +3123,17 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     if(event.target.closest('[data-act="quoteNext"]')){lifeQuoteNext();return;}
     if(event.target.closest('[data-act="lifeDetail"]')){lifeDetailToast();return;}
     if(event.target.closest('[data-act="v13Dismiss"]')){try{localStorage.setItem('richangji-v13bar-dismissed','1');}catch(e){}const vb=document.getElementById('v13bar');if(vb)vb.hidden=true;toast('已收起，之后想迁移可去「全局设置」');return;}
-    if(event.target.closest('[data-act="actPick"]')){openActPicker(event.target.closest('[data-act="actPick"]').dataset.part);return;}
-    if(event.target.closest('[data-action="close-act-picker"]')){document.getElementById('actPicker').hidden=true;apPart=-1;apPicked={};return;}
-    if(event.target.closest('[data-act="apConfirm"]')){apConfirm();return;}
-    const apItem=event.target.closest('#apGrid [data-ap-act]');
-    if(apItem){if(apItem.dataset.apAct&&apPicked[apItem.dataset.apAct])delete apPicked[apItem.dataset.apAct];else if(apItem.dataset.apAct)apPicked[apItem.dataset.apAct]=true;renderActPicker();return;}
+    if(event.target.closest('[data-act="actPick"]')){openExDrawer('multi',event.target.closest('[data-act="actPick"]').dataset.part);return;}
+    if(event.target.closest('[data-action="close-ex-drawer"]')){closeExDrawer();return;}
+    if(event.target.closest('[data-act="exdConfirm"]')){exdConfirm();return;}
+    if(event.target.closest('[data-act="exdHeight"]')){const sh=document.getElementById('exdSheet'),hb=document.getElementById('exdHeightBtn');const high=sh.classList.toggle('high');hb.textContent=high?'半屏':'全屏';return;}
+    if(event.target.closest('#exDrawer .exd-head,#exDrawer .exd-filters')&&!event.target.closest('[data-act]'))return;
+    const exPick=event.target.closest('#exdGrid [data-expick]');
+    if(exPick){
+      if(exdMode==='multi'){const id=exPick.dataset.expick;if(exdPicked[id])delete exdPicked[id];else exdPicked[id]=true;renderExdGrid();}
+      else if(exdMode==='swap'){exdSwapTo(exPick.dataset.expick);}
+      return;
+    }
     const infoBtn=event.target.closest('[data-ft-info]');
     if(infoBtn){openFtGif(infoBtn.dataset.ftInfo);return;}
     const chip=event.target.closest('#ftPlanList [data-ft-act], #ftTodayList [data-ft-act]');
@@ -3152,7 +3206,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     if(cur){
       const meta=ftActById(cur.act.aid),arr=done[cur.act.aid]||[];
       curBox.innerHTML='<div class="tr-curbox">'+((meta&&meta.gif)?'<button class="tr-gif" data-ft-info="'+escapeHtml(cur.act.aid)+'" title="看完整动图"><img alt="动作演示" src="'+escapeHtml(meta.gif)+'"></button>':'')+'<div class="tr-curmain"><p class="train-curname">'+escapeHtml((meta&&meta.name)||cur.act.aid)+((cur.part.muscle||'')?' <span class="wnote">· '+escapeHtml(cur.part.muscle)+'</span>':'')+'</p>'+
-        '<p class="train-cursub">目标 '+cur.act.sets+'组×'+cur.act.reps+(cur.act.weight?'×'+cur.act.weight+'kg':'')+(arr.length?' · 已完成 '+arr.length+'/'+cur.act.sets:'')+(meta&&meta.tip?' · '+escapeHtml(meta.tip):'')+'</p></div></div>'+
+        '<p class="train-cursub">目标 '+cur.act.sets+'组×'+cur.act.reps+(cur.act.weight?'×'+cur.act.weight+'kg':'')+(arr.length?' · 已完成 '+arr.length+'/'+cur.act.sets:'')+(meta&&meta.tip?' · '+escapeHtml(meta.tip):'')+'</p></div><button class="wbtn ghostbtn tr-swapbtn" data-act="trSwap" type="button" aria-label="换动作">换</button></div>'+
         '<button class="wbtn dbtn-solid tr-bigbtn" data-act="trDoneSet" data-aid="'+escapeHtml(cur.act.aid)+'" data-target="'+cur.act.sets+'" data-w="'+Number(cur.act.weight||0)+'" data-r="'+Number(cur.act.reps||0)+'" data-rest="'+Number(cur.act.rest||60)+'">完成第 '+(arr.length+1)+' 组'+(cur.act.weight?' · '+cur.act.weight+'kg×'+cur.act.reps:'')+'</button>';
     }else{
       curBox.innerHTML='<p class="train-curname">全部练满了</p><button class="wbtn dbtn-solid tr-bigbtn" data-act="trEnd">完成训练</button>';
@@ -3254,36 +3308,96 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     document.getElementById('planSheet').hidden=true;
     toast('周计划已保存');
   }
-  let apPart=-1,apPicked={};
-  function openActPicker(pi){
-    apPart=Number(pi);apPicked={};
-    const s=document.getElementById('apSearch');if(s)s.value='';
-    document.getElementById('actPicker').hidden=false;
-    renderActPicker();
+  function exFilterList(o){
+    const favs=ftFavs();
+    let list=ftLib().filter(x=>(!o.muscle||x.muscle===o.muscle)&&(!o.equip||x.equipment===o.equip)&&(!o.q||String(x.name||'').toLowerCase().includes(o.q)));
+    if(o.gifOnly)list=list.filter(x=>x.gif);
+    return list.slice().sort((a,b)=>{
+      const fa=favs.indexOf(a.id)>-1,fb=favs.indexOf(b.id)>-1;
+      if(fa!==fb)return fa?-1:1;
+      if(o.gifFirst){const ga=!!a.gif,gb=!!b.gif;if(ga!==gb)return ga?-1:1;}
+      return 0;
+    });
   }
-  function renderActPicker(){
-    const box=document.getElementById('apGrid');if(!box)return;
-    const q=(document.getElementById('apSearch').value||'').trim().toLowerCase(),favs=ftFavs();
-    const list=ftLib().filter(x=>!q||String(x.name||'').toLowerCase().includes(q)).slice().sort((a,b)=>((favs.indexOf(b.id)>-1)?1:0)-((favs.indexOf(a.id)>-1)?1:0));
-    box.innerHTML=list.length?list.map(x=>{
-      const on=!!apPicked[x.id];
-      return '<button type="button" class="ap-item'+(on?' on':'')+'" data-ap-act="'+escapeHtml(x.id)+'"><b>'+escapeHtml(x.name||'')+'</b><span class="wbadge">'+escapeHtml(x.muscle||'')+'</span><span class="ap-check"></span></button>';
-    }).join(''):'<p class="wempty-task">没有匹配的动作</p>';
-    const n=Object.keys(apPicked).length;
-    document.getElementById('apConfirmBtn').textContent='加入 '+(n||'0')+' 个动作';
+  function exCardHTML(x,mode,on){
+    const fav=ftFavs().indexOf(x.id)>-1;
+    const def=(x.equipment||'自重')==='自重'&&(x.unit||'次')==='次';
+    const img=x.gif?'<div class="ex-thumb"><img loading="lazy" alt="动作演示" src="'+escapeHtml(x.gif)+'"><span class="wft-g">动图</span></div>'
+      :'<div class="ex-thumb ex-noimg"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-fitness"/></svg></div>';
+    const corner=mode==='view'
+      ?'<span class="ft-fav'+(fav?' on':'')+'" data-act="ftFav" data-aid="'+escapeHtml(x.id)+'" title="收藏" aria-label="收藏"><svg aria-hidden="true"><use href="#i-star"/></svg></span>'
+      :'<span class="ex-check"></span>';
+    const data=mode==='view'?'data-ft-ex="'+escapeHtml(x.id)+'" data-ft-gif="'+escapeHtml(x.gif||'')+'"':'data-expick="'+escapeHtml(x.id)+'"';
+    return '<div class="ex-card'+(on?' on':'')+'" '+data+' title="'+escapeHtml(x.tip||'')+'">'+img+corner+'<span class="ex-name">'+escapeHtml(x.name||'')+'<span class="wbadge">'+escapeHtml(x.muscle||'未分类')+'</span></span>'+(def?'':'<span class="ex-sub">'+escapeHtml(x.equipment||'自重')+' · '+escapeHtml(x.unit||'次')+'</span>')+'</div>';
   }
-  function apConfirm(){
-    if(apPart<0)return;
+  let exdMode=null,exdPart=-1,exdPicked={},exdSwapRef=null;
+  function exdFillFilters(mSel,eSel){
+    const lib=ftLib();if(!mSel||!eSel)return;
+    const mv=mSel.value,ev=eSel.value;
+    const muscles=[...new Set(lib.map(x=>x.muscle).filter(Boolean))],equips=[...new Set(lib.map(x=>x.equipment).filter(Boolean))];
+    mSel.innerHTML='<option value="">全部肌群</option>'+muscles.map(m=>'<option'+(m===mv?' selected':'')+'>'+escapeHtml(m)+'</option>').join('');
+    eSel.innerHTML='<option value="">全部器械</option>'+equips.map(x=>'<option'+(x===ev?' selected':'')+'>'+escapeHtml(x)+'</option>').join('');
+  }
+  function openExDrawer(mode,ctx){
+    const d=document.getElementById('exDrawer');if(!d)return;
+    exdMode=mode;exdPart=-1;exdPicked={};exdSwapRef=null;
+    const sheet=document.getElementById('exdSheet');
+    sheet.classList.remove('high');
+    document.getElementById('exdHeightBtn').textContent='全屏';
+    document.getElementById('exdSearch').value='';
+    const g=document.getElementById('exdGif');g.checked=(mode==='multi');
+    document.getElementById('exdMuscle').value='';document.getElementById('exdEquip').value='';
+    const foot=document.getElementById('exdFoot'),btn=document.getElementById('exdConfirmBtn');
+    if(mode==='multi'){
+      exdPart=Number(ctx);
+      document.getElementById('exdSub').textContent='从动作库勾选 · 有图动作已排前';
+      document.getElementById('exdTitle').textContent='添加动作';
+      btn.textContent='加入 0 个动作';
+      foot.style.display='flex';
+    }else if(mode==='swap'){
+      exdSwapRef=ctx||null;
+      document.getElementById('exdSub').textContent='点一个动作替换当前动作 · 组数休息不变';
+      document.getElementById('exdTitle').textContent='换动作';
+      foot.style.display='none';
+    }
+    exdFillFilters(document.getElementById('exdMuscle'),document.getElementById('exdEquip'));
+    d.hidden=false;
+    renderExdGrid();
+  }
+  function closeExDrawer(){const d=document.getElementById('exDrawer');if(d)d.hidden=true;exdMode=null;exdPart=-1;exdPicked={};exdSwapRef=null;}
+  function renderExdGrid(){
+    const box=document.getElementById('exdGrid');if(!box)return;
+    const list=exFilterList({
+      q:(document.getElementById('exdSearch').value||'').trim().toLowerCase(),
+      muscle:document.getElementById('exdMuscle').value,
+      equip:document.getElementById('exdEquip').value,
+      gifOnly:false,
+      gifFirst:document.getElementById('exdGif').checked
+    });
+    box.innerHTML=list.length?list.map(x=>exCardHTML(x,'pick',exdMode==='multi'&&!!exdPicked[x.id])).join(''):'<p class="wempty-task">没有匹配的动作</p>';
+    if(exdMode==='multi'){const n=Object.keys(exdPicked).length;document.getElementById('exdConfirmBtn').textContent='加入 '+(n||'0')+' 个动作';}
+  }
+  function exdConfirm(){
+    if(exdMode!=='multi'||exdPart<0)return;
     syncPlanDraft();
     const parts=planDay();if(!parts)return;
-    const p=parts[apPart];if(!p)return;
+    const p=parts[exdPart];if(!p)return;
     p.actions=p.actions||[];
-    const ids=Object.keys(apPicked);
+    const ids=Object.keys(exdPicked);
     ids.forEach(aid=>p.actions.push({aid:aid,sets:3,reps:10,weight:0,rest:60}));
-    document.getElementById('actPicker').hidden=true;
-    apPart=-1;apPicked={};
+    closeExDrawer();
     renderPlanDay();
     toast('已加入 '+ids.length+' 个动作');
+  }
+  function exdSwapTo(aid){
+    if(!exdSwapRef||!exdSwapRef.act)return;
+    exdSwapRef.act.aid=aid;
+    const meta=ftActById(aid);
+    saveState(true);
+    closeExDrawer();
+    renderTrainSheet();
+    renderFitTrain();
+    toast('已换成「'+(meta.name||aid)+'」');
   }
 
   const V13_INDEP=["wb_todayGoals","wb_dailyTasks","wb_dailyTaskLog","wb_dailyTaskTotal","wb_lastActive","wb_workoutSchedule","wb_workoutLib","wb_workoutPlans","wb_workoutLog","wb_workoutToday","wb_bodyWeight"];
