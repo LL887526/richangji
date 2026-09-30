@@ -279,12 +279,55 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     .lang-switch button{min-width:38px;height:38px}
     .counter-control button{width:38px;height:38px}
   }
-  #bodyMap .boutline{fill:#f2ebdf;stroke:#c9bfae;stroke-width:2;pointer-events:none}
-  #bodyMap .bzone{fill:rgba(0,0,0,0);stroke:none;cursor:pointer;transition:fill .15s}
-  #bodyMap .bzone:hover{fill:rgba(180,95,60,.10)}
-  #bodyMap .bzone.sel{fill:rgba(180,95,60,.18)}
-  #bodyMap .bzone.on{fill:rgba(217,120,72,.20)}
-  @media(max-width:860px){#bodyMapLegend{padding-top:2px!important}}
+  /* ===== 人体建模（健康档案） ===== */
+  #bmCard{display:flex;gap:22px;align-items:flex-start;flex-wrap:wrap;margin:8px 0 4px}
+  #bmStageBox{flex:0 0 auto;width:min(300px,72vw)}
+  .bm-seg{display:inline-flex;background:#f1ece4;border-radius:10px;padding:3px;flex-shrink:0}
+  .bm-seg button{border:0;background:transparent;color:var(--muted);font:inherit;font-size:13px;padding:6px 12px;border-radius:8px;cursor:pointer;min-height:32px;transition:background .16s,color .16s}
+  .bm-seg button.on{background:#fffdfa;color:var(--ink);box-shadow:0 1px 2px rgba(63,48,36,.10);font-weight:600}
+  .bm-seg.wide{display:flex;width:100%}
+  .bm-seg.wide button{flex:1;min-height:38px}
+  #bmStage{display:flex;justify-content:center;padding:6px 0 0;transition:opacity .15s ease}
+  #bmStage.sw{opacity:0}
+  #bodyMap{width:min(228px,56vw);height:auto;aspect-ratio:128/420;display:block;overflow:visible}
+  #bodyMap .part{stroke:#e2d7c8;stroke-width:.9;transition:fill .18s ease,stroke .18s ease,opacity .18s ease}
+  #bodyMap .part.na{fill:#f1ece4}
+  #bodyMap .part.t0{fill:#ede7dd}
+  #bodyMap .part.t1{fill:#e7d3bd}
+  #bodyMap .part.t2{fill:#d9ab84}
+  #bodyMap .part.t3{fill:#c8814f;stroke:#b4733f}
+  #bodyMap .part.t4{fill:#b65f42;stroke:#9c4d33}
+  #bodyMap .part.h0{fill:#ede7dd}
+  #bodyMap .part.h1{fill:#b65f42;stroke:#9c4d33}
+  #bodyMap .part.hov{stroke:#b65f42;stroke-width:1.8}
+  #bodyMap .part.sel{stroke:#29251f;stroke-width:2.1}
+  #bodyMap .part.dim{opacity:.26}
+  #bmDet path{fill:none;stroke:rgba(63,48,36,.17);stroke-width:.85;stroke-linecap:round;pointer-events:none}
+  #bmHit .hp{fill:transparent;stroke:transparent;stroke-width:18;pointer-events:all;cursor:pointer}
+  #bmHit .hp:hover{fill:rgba(182,95,66,.12)}
+  .bm-sum{display:flex;gap:16px;margin:12px 0 0;padding-top:11px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted);flex-wrap:wrap}
+  .bm-sum b{color:var(--ink);font-weight:600}
+  .bm-sum .warn{color:var(--terra)}
+  .bm-lg{margin-top:12px;padding-top:11px;border-top:1px solid var(--line)}
+  .bm-lgrow{display:flex;align-items:center;gap:7px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+  .bm-lgrow+.bm-lgrow{margin-top:9px}
+  .bm-sw{width:16px;height:16px;border-radius:5px;border:1px solid #e2d7c8;flex-shrink:0}
+  .bm-chip{border:1px solid var(--line);background:#fffdfa;color:var(--ink);font:inherit;font-size:12.5px;padding:7px 11px;border-radius:10px;cursor:pointer;min-height:38px;display:inline-flex;align-items:center;gap:6px}
+  .bm-chip.on{border-color:var(--terra);color:var(--terra);background:#faf1ec}
+  .bm-hint{font-size:11.5px;color:var(--muted);margin:10px 2px 0;line-height:1.6}
+  #bmSheet{position:fixed;left:calc(var(--sidebar) + 12px);right:12px;bottom:12px;max-width:496px;margin:0 auto;background:#fffdfa;border:1px solid var(--line);border-radius:18px;padding:14px;transform:translateY(calc(100% + 24px));transition:transform .28s cubic-bezier(.32,.72,0,1);box-shadow:0 12px 34px rgba(63,48,36,.18);z-index:36;max-height:52vh;overflow:auto;visibility:hidden}
+  #bmSheet.on{transform:none;visibility:visible}
+  #bmSheet .sh-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+  #bmSheet .sh-t{font-size:16px;font-weight:600;letter-spacing:-.01em}
+  #bmSheet .sh-s{font-size:12px;color:var(--muted)}
+  #bmSheet .sh-x{border:0;background:#f1ece4;color:var(--muted);width:32px;height:32px;border-radius:10px;font-size:16px;line-height:1;cursor:pointer;flex-shrink:0}
+  #bmSheet .sh-b{font-size:12.5px;color:var(--muted);margin:8px 0 0;line-height:1.6}
+  #bmSheet .kv{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:13px}
+  #bmSheet .kv:last-of-type{border-bottom:0}
+  #bmSheet .kv span{color:var(--muted);flex-shrink:0}
+  #bmSheet .kv b{font-weight:600;text-align:right}
+  #bmSheet .tagline{display:inline-block;font-size:11.5px;color:var(--terra);background:#faf1ec;border-radius:7px;padding:2px 7px;margin-left:6px}
+  @media(max-width:860px){#bmCard{gap:14px}#bmSheet{bottom:calc(82px + env(safe-area-inset-bottom))}}
   </style>
   <title data-page-node-id="N9uQg0dpiKTsyB4FFPFrxl" data-pnid-children="1t2kuYHDk4UITU5HQoJQo7">日常集 · 生活工作台</title>
 </head>
@@ -562,47 +605,42 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
         <article class="panel" style="max-width:820px">
           <div class="panel-head"><div><p class="eyebrow">健康档案</p><h2>身体不适与疾病史</h2></div><span class="mini-note" id="healthNote"></span></div>
           <p class="zdesc" style="margin:0 0 6px">对 AI 助理说「胃不舒服」「我有慢性胃炎」就会记到这里，确认后才写入。点人体部位也能直接记。</p>
-          <div style="display:flex;gap:22px;align-items:flex-start;flex-wrap:wrap;margin:8px 0 4px">
-            <svg id="bodyMap" viewBox="0 0 200 392" aria-label="人体健康图" style="width:min(320px,74vw);height:auto;aspect-ratio:200/392;flex:0 0 auto;display:block">
-              <g class="boutline">
-                <ellipse cx="100" cy="36" rx="25" ry="29"/>
-                <path d="M74 84 Q100 70 126 84 L131 138 Q129 186 120 198 L80 198 Q71 186 69 138 Z"/>
-                <rect x="79" y="194" width="42" height="24" rx="11"/>
-                <rect x="48" y="88" width="18" height="118" rx="9"/>
-                <circle cx="57" cy="212" r="8"/>
-                <rect x="134" y="88" width="18" height="118" rx="9"/>
-                <circle cx="143" cy="212" r="8"/>
-                <rect x="80" y="216" width="17" height="136" rx="8.5"/>
-                <rect x="103" y="216" width="17" height="136" rx="8.5"/>
-                <path d="M77 352h21v14q0 8-10 8h-3q-8 0-8-8z"/>
-                <path d="M102 352h21v14q0 8-10 8h-3q-8 0-8-8z"/>
-              </g>
-              <g id="bodyMapZones">
-                <ellipse class="bzone" data-body="head" cx="100" cy="36" rx="25" ry="29"/>
-                <rect class="bzone" data-body="throat" x="90" y="62" width="20" height="18" rx="6"/>
-                <ellipse class="bzone" data-body="shoulder" cx="72" cy="88" rx="14" ry="10"/>
-                <ellipse class="bzone" data-body="shoulder" cx="128" cy="88" rx="14" ry="10"/>
-                <path class="bzone" data-body="chest" d="M77 90 Q100 82 123 90 L123 116 Q100 124 77 116 Z"/>
-                <path class="bzone" data-body="belly" d="M77 120 Q100 130 123 120 L123 148 Q100 158 77 148 Z"/>
-                <path class="bzone" data-body="waist" d="M78 152 Q100 162 122 152 L119 186 Q100 194 81 186 Z"/>
-                <rect class="bzone" data-body="arm" x="48" y="88" width="18" height="118" rx="9"/>
-                <circle class="bzone" data-body="arm" cx="57" cy="212" r="8"/>
-                <rect class="bzone" data-body="arm" x="134" y="88" width="18" height="118" rx="9"/>
-                <circle class="bzone" data-body="arm" cx="143" cy="212" r="8"/>
-                <rect class="bzone" data-body="leg" x="80" y="216" width="17" height="136" rx="8.5"/>
-                <rect class="bzone" data-body="leg" x="103" y="216" width="17" height="136" rx="8.5"/>
-                <path class="bzone" data-body="foot" d="M77 352h21v14q0 8-10 8h-3q-8 0-8-8z"/>
-                <path class="bzone" data-body="foot" d="M102 352h21v14q0 8-10 8h-3q-8 0-8-8z"/>
-              </g>
-              <g id="bodyMapDots"></g>
-            </svg>
-            <div id="bodyMapLegend" style="flex:1;min-width:210px;font-size:13px;color:#3d3830;line-height:1.8;padding-top:10px"></div>
+          <div id="bmCard">
+            <div id="bmStageBox">
+              <div class="bm-seg wide" id="bmSideSeg">
+                <button data-bm-side="front" class="on" type="button">正面</button>
+                <button data-bm-side="back" type="button">背面</button>
+              </div>
+              <div id="bmStage">
+                <svg id="bodyMap" viewBox="36 0 128 420" aria-label="人体健康图" style="width:min(228px,56vw);height:auto;aspect-ratio:128/420;display:block;overflow:visible">
+                  <g id="bmVis"></g>
+                  <g id="bmDet"></g>
+                  <g id="bmHit"></g>
+                </svg>
+              </div>
+            </div>
+            <div id="bmSide" style="flex:1;min-width:210px">
+              <div class="bm-seg wide" id="bmModeSeg">
+                <button data-bm-mode="train" class="on" type="button">训练覆盖</button>
+                <button data-bm-mode="health" type="button">健康状态</button>
+              </div>
+              <div class="bm-sum" id="bmSum"></div>
+              <div class="bm-lg"><div class="bm-lgrow" id="bmLgSw"></div><div class="bm-lgrow" id="bmLgChip"></div></div>
+            </div>
           </div>
+          <p class="bm-hint" id="bmHint"></p>
           <p class="zdesc" style="margin:10px 0 4px;font-weight:600">最近不适</p>
           <div id="healthIssueList"></div>
           <p class="zdesc" style="margin:14px 0 4px;font-weight:600">疾病史 / 基础疾病</p>
           <div id="healthHistoryList"></div>
         </article>
+        <div id="bmSheet">
+          <div class="sh-head">
+            <div><div class="sh-t" id="bmSheetT">人体互动</div><div class="sh-s" id="bmSheetS">点一下身上的任意位置</div></div>
+            <button class="sh-x" id="bmSheetX" type="button" aria-label="收起">×</button>
+          </div>
+          <div id="bmSheetB"></div>
+        </div>
         <div class="wmore" style="max-width:820px;margin-top:12px"><button class="wbtn ghostbtn" data-nav="fitness"><svg><use href="#i-fitness"/></svg>去健身页记训练</button></div>
       </section>
       <section data-page-node-id="wtVHT4ckl1gIvxm2dBxz6z" class="view" data-title="日程统筹" id="view-planner">
@@ -2275,33 +2313,256 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     {key:'foot',label:'脚踝',parts:['脚','脚踝'],x:87,y:366,x2:112,base:'承重与鞋合脚度，磨脚先看这里'},
     {key:'skin',label:'皮肤',parts:['皮肤'],legendOnly:true,base:'湿热、过敏常先反映在皮肤'}
   ];
-  let bodySel='';
-  function bodyMapRender(h){
-    const svg=document.getElementById('bodyMap');if(!svg)return;
-    const open=h.issues.filter(x=>x.status!=='ok');
-    svg.querySelectorAll('.bzone').forEach(z=>{
-      const b=BODY_MAP.find(x=>x.key===z.dataset.body);
-      z.classList.toggle('on',!!(b&&open.some(x=>b.parts.indexOf(x.part)>-1)));
-      z.classList.toggle('sel',bodySel===z.dataset.body);
+  /* ===== 人体建模：几何（左半定义，右半镜像；viewBox 36 0 128 420） ===== */
+  const BM_P_FRONT=[
+    {k:'head',n:'头',tr:null,hk:'head',c:[100,34],
+     d:'M100 8 C110.5 8 119 18 119 30 C119 42 114 53 106.5 58.5 C104 60.3 102 61 100 61 C98 61 96 60.3 93.5 58.5 C86 53 81 42 81 30 C81 18 89.5 8 100 8 Z'},
+    {k:'neck',n:'颈部',tr:null,hk:'throat',c:[100,66],
+     d:'M92 52 L108 52 L109 79 C103 82.5 97 82.5 91 79 Z'},
+    {k:'shoulder',n:'肩',tr:'肩',hk:'shoulder',c:[61,93],m:1,
+     d:'M71 78 C63 80 56 85 54 92 C52 99 54 107 58 113 L66 109 C63 100 64 88 71 81 Z'},
+    {k:'chest',n:'胸',tr:'胸',hk:'chest',c:[87,102],m:1,
+     d:'M71 79 C80 75 90 73 100 73 L100 132 L78 132 C73 124 70 110 70 96 C70 87 70 82 71 79 Z'},
+    {k:'core',n:'核心',tr:'核心',hk:'belly',c:[100,184],
+     d:'M78 134 C77 152 75.5 170 75.5 188 C75.5 206 76 222 77 236 L123 236 C124 222 124.5 206 124.5 188 C124.5 170 123 152 122 134 Z'},
+    {k:'arm',n:'手臂',tr:'手臂',hk:'arm',c:[51,182],m:1,
+     d:'M57 96 C50 132 46 164 46 198 C46 222 45 244 44 262 L55 264 C56 244 57 222 57 198 C57 164 60 132 68 98 Z'},
+    {k:'hand',n:'手',tr:'手臂',hk:'arm',c:[50,279],m:1,
+     d:'M50 266 C54.5 266 57.5 271 57.5 278 C57.5 286 54 291 50 291 C46 291 42.5 286 42.5 278 C42.5 271 45.5 266 50 266 Z'},
+    {k:'thigh',n:'大腿',tr:'腿',hk:'leg',c:[87,276],m:1,
+     d:'M74 234 L100 234 C99 262 97 290 96 318 L76 318 C75 290 73 262 74 234 Z'},
+    {k:'calf',n:'小腿',tr:'小腿',hk:'leg',c:[85,352],m:1,
+     d:'M76 320 C74 336 73 350 74 362 C75 372 76 380 76 384 L94 384 C94 378 95 366 96 356 C97 344 96 332 96 320 Z'},
+    {k:'foot',n:'脚踝',tr:null,hk:'foot',c:[85,396],m:1,
+     d:'M77 386 L93 386 C94 390 95 396 94.5 400 C94.2 403 93 405 91 405 L80 405 C78 405 77 403 76.5 400 C76 396 76.5 390 77 386 Z'}
+  ];
+  const BM_P_BACK=[
+    BM_P_FRONT[0],BM_P_FRONT[1],
+    {k:'shoulder',n:'肩',tr:'肩',hk:'shoulder',c:[61,93],m:1,d:BM_P_FRONT[2].d},
+    {k:'backUpper',n:'上背',tr:'背',hk:'waist',c:[100,116],
+     d:'M71 79 C80 75 90 73 100 73 C110 73 120 75 129 79 C131 90 131 108 130 126 C129 144 127 154 125 160 L75 160 C73 154 71 144 70 126 C69 108 69 90 71 79 Z'},
+    {k:'lowerBack',n:'下背',tr:'核心',hk:'waist',c:[100,181],
+     d:'M76 162 L124 162 L125 200 L75 200 C75 188 75 174 76 162 Z'},
+    {k:'glute',n:'臀',tr:'腿',hk:'waist',c:[100,219],
+     d:'M76 202 C74 214 74 228 76 238 L124 238 C126 228 126 214 124 202 Z'},
+    {k:'arm',n:'手臂',tr:'手臂',hk:'arm',c:[50,190],m:1,d:BM_P_FRONT[5].d},
+    {k:'hand',n:'手',tr:'手臂',hk:'arm',c:[47.5,297],m:1,d:BM_P_FRONT[6].d},
+    {k:'thigh',n:'大腿',tr:'腿',hk:'leg',c:[87,276],m:1,d:BM_P_FRONT[7].d},
+    BM_P_FRONT[8],BM_P_FRONT[9]
+  ];
+  const BM_DET_FRONT=
+    '<path d="M100 136 L100 234"/><path d="M88 138 L88 234"/><path d="M112 138 L112 234"/>'+
+    '<path d="M80 158 L120 158"/><path d="M80 182 L120 182"/><path d="M79 206 L121 206"/><path d="M79 228 L121 228"/>'+
+    '<path d="M100 74 L100 130"/><path d="M72 116 C82 127 92 131 100 131"/><path d="M128 116 C118 127 108 131 100 131"/>'+
+    '<path d="M78 82 C86 78 94 76 100 76"/><path d="M122 82 C114 78 106 76 100 76"/>'+
+    '<path d="M57 92 C62 87 67 84 73 83"/><path d="M143 92 C138 87 133 84 127 83"/>'+
+    '<path d="M46 198 L57 198"/><path d="M143 198 L154 198"/>'+
+    '<path d="M76 316 L97 316"/><path d="M103 316 L124 316"/>';
+  const BM_DET_BACK=
+    '<path d="M100 80 L100 236"/>'+
+    '<path d="M80 96 C76 108 76 122 80 132 C87 136 92 134 94 130"/>'+
+    '<path d="M120 96 C124 108 124 122 120 132 C113 136 108 134 106 130"/>'+
+    '<path d="M78 142 C82 156 86 166 92 173"/><path d="M122 142 C118 156 114 166 108 173"/>'+
+    '<path d="M100 202 L100 238"/><path d="M78 235 C88 241 112 241 122 235"/>'+
+    '<path d="M46 198 L57 198"/><path d="M143 198 L154 198"/>'+
+    '<path d="M76 316 L97 316"/><path d="M103 316 L124 316"/>';
+  const BM_Z={core:1,backUpper:1,lowerBack:1,glute:1,chest:2,head:3,thigh:4,neck:5,shoulder:6,calf:7,foot:8,arm:9,hand:10};
+  let bmView='front',bmMode='train',bmSel='',bmTD=null;
+  function bmList(){
+    const src=bmView==='front'?BM_P_FRONT:BM_P_BACK,out=[];
+    src.forEach(p=>{
+      if(p.m){
+        out.push({k:p.k,n:p.n,tr:p.tr,hk:p.hk,cx:p.c[0],cy:p.c[1],d:p.d,side:1});
+        out.push({k:p.k,n:p.n,tr:p.tr,hk:p.hk,cx:200-p.c[0],cy:p.c[1],d:p.d,side:2});
+      }else out.push({k:p.k,n:p.n,tr:p.tr,hk:p.hk,cx:p.c[0],cy:p.c[1],d:p.d,side:0});
     });
-    const dots=document.getElementById('bodyMapDots');
-    if(dots)dots.innerHTML=BODY_MAP.filter(b=>!b.legendOnly).map(b=>{
-      const n=open.filter(x=>b.parts.indexOf(x.part)>-1).length;
-      const one=(x,y)=>n?'<circle cx="'+x+'" cy="'+y+'" r="8" fill="#d97848" pointer-events="none"/><text x="'+x+'" y="'+(y+3.5)+'" text-anchor="middle" font-size="10" fill="#fff" pointer-events="none">'+(n>9?'9+':n)+'</text>':'';
-      return one(b.x,b.y)+(b.x2!=null?one(b.x2,b.y):'');
-    }).join('');
-    const lg=document.getElementById('bodyMapLegend');
-    if(!lg)return;
-    if(bodySel){
-      const b=BODY_MAP.find(x=>x.key===bodySel);
-      const mine=open.filter(x=>b.parts.indexOf(x.part)>-1);
-      lg.innerHTML='<b>'+escapeHtml(b.label)+'</b><small style="display:block;color:#9a9186;margin:2px 0 6px">常人参考：'+escapeHtml(b.base)+'</small>'
-        +(mine.length?mine.map(x=>'· '+escapeHtml(x.part)+'<small style="color:#9a9186"> '+escapeHtml((x.date||'').slice(5))+(x.desc?' · '+escapeHtml(x.desc):'')+'</small>').join('<br>')+'<br>':'这一区你还没有记录。<br>')
-        +'<button class="btn ghost compact bm-rec" data-body-rec="'+escapeHtml(b.label)+'" type="button" style="margin-top:8px">记这里的不适</button>';
+    return out;
+  }
+  function bmMeta(k){
+    if(k==='__skin')return{k:'__skin',n:'皮肤',tr:null,hk:'skin'};
+    if(k==='__cardio')return{k:'__cardio',n:'有氧',tr:'有氧',hk:null};
+    return bmList().find(p=>p.k===k)||null;
+  }
+  function bmZone(hk){return hk?(BODY_MAP.find(x=>x.key===hk)||null):null;}
+  function bmZoneParts(hk){const z=bmZone(hk);return z?z.parts:[];}
+  function bmOpenIssues(){return loadHealth().issues.filter(x=>x.status!=='ok');}
+  function bmIssuesOf(hk){
+    const ps=bmZoneParts(hk);if(!ps.length)return[];
+    return bmOpenIssues().filter(x=>ps.indexOf(x.part)>-1);
+  }
+  function bmTrainData(){
+    const log=(state.fitTrain&&Array.isArray(state.fitTrain.log))?state.fitTrain.log:[];
+    const since=Date.now()-7*86400000,week={},last={},acts={};
+    log.forEach(rec=>{
+      const d=String(rec.date||'');if(!d)return;
+      const t=new Date(d+'T00:00:00').getTime();
+      (rec.parts||[]).forEach(p=>(p.actions||[]).forEach(a=>{
+        const meta=ftActById(a.aid),mg=(meta&&meta.muscle)||p.muscle||'';
+        if(!mg)return;
+        if(t>=since){const ns=(a.doneSets&&a.doneSets.length)?a.doneSets.length:Number(a.sets||0);week[mg]=(week[mg]||0)+ns;}
+        if(!last[mg]||d>last[mg])last[mg]=d;
+        const nm=(meta&&meta.name)||a.name||a.aid;
+        if(!acts[mg])acts[mg]=[];
+        if(acts[mg].indexOf(nm)<0)acts[mg].push(nm);
+      }));
+    });
+    return {week:week,last:last,acts:acts};
+  }
+  function bmCls(p){
+    let c;
+    if(bmMode==='train'){
+      if(!p.tr)c='na';
+      else{const v=(bmTD?bmTD.week:{}).hasOwnProperty(p.tr)?bmTD.week[p.tr]:0;c=v===0?'t0':v<=3?'t1':v<=7?'t2':v<=11?'t3':'t4';}
     }else{
-      lg.innerHTML=(open.length?('当前不适 '+open.length+' 项：'+open.map(x=>escapeHtml(x.part)).join('、')):'身体没有在记录的不适。')
-        +'<br><small style="color:#9a9186">点人体上的分区查看、直接记。皮肤问题点这里：<button class="text-btn" data-body="skin" type="button">皮肤</button></small>';
+      if(!p.hk)c='na';else c=bmIssuesOf(p.hk).length?'h1':'h0';
     }
+    if(bmSel)c+=(bmSel===p.k?' sel':' dim');
+    return c;
+  }
+  function bmRender(){
+    const svg=document.getElementById('bodyMap');if(!svg)return;
+    const vis=document.getElementById('bmVis'),hit=document.getElementById('bmHit'),det=document.getElementById('bmDet');
+    if(!vis||!hit||!det)return;
+    bmTD=bmTrainData();
+    const L=bmList(),mir=p=>p.side===2?' transform="translate(200,0) scale(-1,1)"':'';
+    vis.innerHTML=L.map(p=>'<path class="part" data-bmk="'+p.k+'" d="'+p.d+'"'+mir(p)+'/>').join('');
+    const HL=L.slice().sort((a,b)=>(BM_Z[a.k]||5)-(BM_Z[b.k]||5));
+    hit.innerHTML=HL.map(p=>'<path class="hp" data-bmk="'+p.k+'" d="'+p.d+'"'+mir(p)+'/>').join('');
+    det.innerHTML=(bmView==='front'?BM_DET_FRONT:BM_DET_BACK);
+    bmPaint();
+  }
+  function bmPaint(){
+    const svg=document.getElementById('bodyMap');if(!svg)return;
+    if(!bmTD)bmTD=bmTrainData();
+    const map={};bmList().forEach(p=>{map[p.k]=p;});
+    svg.querySelectorAll('#bmVis .part').forEach(el=>{
+      const p=map[el.getAttribute('data-bmk')];
+      el.setAttribute('class','part '+(p?bmCls(p):''));
+    });
+    bmSum();bmLg();bmHint();
+    const sh=document.getElementById('bmSheet');
+    if(bmSel)bmSheet(bmSel);
+    else if(sh&&!sh.classList.contains('on'))bmIdle();
+  }
+  function bmFill(c){
+    const M={t0:'#ede7dd',t1:'#e7d3bd',t2:'#d9ab84',t3:'#c8814f',t4:'#b65f42',h0:'#ede7dd',h1:'#b65f42',na:'#f1ece4'};
+    return M[c]||'#ede7dd';
+  }
+  function bmSum(){
+    const el=document.getElementById('bmSum');if(!el)return;
+    if(bmMode==='train'){
+      const td=bmTD||(bmTD=bmTrainData()),wk=td.week;
+      const tr=['胸','背','肩','手臂','核心','腿','小腿'];
+      const done=tr.filter(x=>(wk[x]||0)>=8),blind=tr.filter(x=>(wk[x]||0)<4);
+      const empty=!Object.keys(wk).length;
+      el.innerHTML='<div>本周已练 <b>'+done.length+'/'+tr.length+'</b></div><div>盲区 <b class="warn">'+(blind.join('、')||'无')+'</b></div>'
+        +(empty?'<div style="flex:1 1 100%">健身页还没有训练日志。练完一次点「结束训练」，这里就会亮起来。</div>':'');
+    }else{
+      const op=bmOpenIssues();
+      const keys=['head','throat','shoulder','chest','belly','waist','arm','leg','foot','skin'];
+      const has=keys.filter(k=>bmZoneParts(k).some(p=>op.some(x=>x.part===p)));
+      el.innerHTML='<div>有记录部位 <b>'+has.length+'/'+keys.length+'</b></div><div>当前不适 <b>'+(op.length||0)+'</b> 项</div>';
+    }
+  }
+  function bmLg(){
+    const sw=document.getElementById('bmLgSw'),cp=document.getElementById('bmLgChip');
+    if(!sw||!cp)return;
+    if(bmMode==='train'){
+      sw.innerHTML='<span style="margin-right:2px">组数</span>'+[['t0','0'],['t1','1-3'],['t2','4-7'],['t3','8-11'],['t4','12+']]
+        .map(x=>'<span class="bm-sw" style="background:'+bmFill(x[0])+'"></span>'+x[1]).join(' ');
+      cp.innerHTML='<button class="bm-chip'+(bmSel==='__cardio'?' on':'')+'" data-bmk="__cardio" type="button">有氧（不在身上）</button>';
+    }else{
+      sw.innerHTML='<span style="margin-right:2px">状态</span><span class="bm-sw" style="background:'+bmFill('h0')+'"></span>正常'
+        +'<span class="bm-sw" style="background:'+bmFill('h1')+'"></span>有记录';
+      cp.innerHTML='<button class="bm-chip'+(bmSel==='__skin'?' on':'')+'" data-bmk="__skin" type="button">皮肤（全身）</button>';
+    }
+  }
+  function bmHint(){
+    const el=document.getElementById('bmHint');if(!el)return;
+    el.textContent=bmMode==='train'
+      ?'训练图读的是健身页的训练日志，按最近 7 天每个肌群累计的组数着色。有氧不属于任何部位，用左边按钮单独看。'
+      :'健康图按 10 个分区着色，有记录的分区才会变深。点身上的任意位置——离手指最近的那一区会被选中。';
+  }
+  function bmKv(a,b){return '<div class="kv"><span>'+a+'</span><b>'+b+'</b></div>';}
+  function bmIdle(){
+    const t=document.getElementById('bmSheetT'),s=document.getElementById('bmSheetS'),b=document.getElementById('bmSheetB');
+    if(!t||!s||!b)return;
+    t.textContent='人体互动';s.textContent='点一下身上的任意位置';
+    b.innerHTML='<p class="sh-b">点不准也没关系，离你手指最近的那一区会被选中。'
+      +(bmMode==='train'?'训练模式下颜色越深，最近 7 天练得越多。':'健康模式下颜色变深的位置，就是你有记录的位置。')+'</p>';
+  }
+  function bmSheet(k){
+    const t=document.getElementById('bmSheetT'),s=document.getElementById('bmSheetS'),b=document.getElementById('bmSheetB');
+    const m=bmMeta(k);if(!m||!t||!s||!b)return;
+    if(bmMode==='train'){
+      if(!m.tr){
+        t.textContent=m.n;s.textContent='没有对应的肌群标签';
+        b.innerHTML='<p class="sh-b">动作库里的肌群只有 8 个：胸、背、肩、手臂、核心、腿、小腿、有氧。这一区不在其中，所以训练模式下它是灰的。</p>';
+        return;
+      }
+      const td=bmTD||(bmTD=bmTrainData()),v=td.week[m.tr]||0,ld=td.last[m.tr]||'',acts=td.acts[m.tr]||[];
+      t.innerHTML=escapeHtml(m.n)+'<span class="tagline">'+escapeHtml(m.tr)+'</span>';
+      s.textContent='最近 7 天训练覆盖';
+      b.innerHTML=bmKv('本周组数',v+' 组')
+        +bmKv('上次训练',ld?(ld.slice(5).replace('-','/')):'还没记录')
+        +bmKv('涉及动作',acts.length+' 个')
+        +(acts.length?'<p class="sh-b">'+acts.slice(0,8).map(escapeHtml).join('、')+'</p>':'')
+        +'<button class="btn ghost compact" data-bm-go="exlib" data-bm-muscle="'+escapeHtml(m.tr)+'" type="button" style="margin-top:10px">去动作库看「'+escapeHtml(m.tr)+'」</button>';
+    }else{
+      const z=bmZone(m.hk),mine=z?bmIssuesOf(m.hk):[];
+      t.textContent=m.n;
+      s.textContent='常人参考 + 你的记录';
+      b.innerHTML=bmKv('常人参考','')
+        +'<p class="sh-b" style="margin-top:-4px">'+escapeHtml((z&&z.base)||'暂无参考说明')+'</p>'
+        +(z?bmKv('你的记录',mine.length?(mine.length+' 项'):'暂无'):'')
+        +(mine.length?'<p class="sh-b" style="margin-top:-4px">'+mine.slice(0,5).map(x=>escapeHtml((x.date||'').slice(5))+' · '+escapeHtml(x.part)+(x.desc?' · '+escapeHtml(x.desc):'')).join('<br>')+'</p>':'')
+        +(z?'<button class="btn ghost compact" data-body-rec="'+escapeHtml(z.label)+'" type="button" style="margin-top:10px">记「'+escapeHtml(z.label)+'」的不适</button>':'');
+    }
+  }
+  function bmSelect(k){
+    const sh=document.getElementById('bmSheet');
+    if(!k||bmSel===k){bmDeselect();return;}
+    bmSel=k;bmPaint();
+    if(sh)sh.classList.add('on');
+    bmSheet(k);
+  }
+  function bmDeselect(){
+    bmSel='';
+    const sh=document.getElementById('bmSheet');
+    if(sh)sh.classList.remove('on');
+    bmPaint();bmIdle();
+  }
+  function bmSide(v){
+    if(v===bmView)return;
+    document.querySelectorAll('#bmSideSeg button').forEach(b=>b.classList.toggle('on',b.getAttribute('data-bm-side')===v));
+    const st=document.getElementById('bmStage');
+    if(st)st.classList.add('sw');
+    setTimeout(()=>{
+      bmView=v;
+      if(bmSel&&!bmMeta(bmSel)){
+        bmSel='';
+        const sh=document.getElementById('bmSheet');if(sh)sh.classList.remove('on');
+      }
+      bmRender();
+      if(st)st.classList.remove('sw');
+    },150);
+  }
+  function bmModeSet(v){
+    if(v===bmMode)return;
+    document.querySelectorAll('#bmModeSeg button').forEach(b=>b.classList.toggle('on',b.getAttribute('data-bm-mode')===v));
+    bmMode=v;bmRender();
+    const sh=document.getElementById('bmSheet');
+    if(!bmSel&&sh&&sh.classList.contains('on'))sh.classList.remove('on');
+  }
+  function bmNearest(evt){
+    const svg=document.getElementById('bodyMap');
+    if(!svg||!svg.createSVGPoint)return '';
+    const pt=svg.createSVGPoint();pt.x=evt.clientX;pt.y=evt.clientY;
+    const m=svg.getScreenCTM();if(!m)return '';
+    const p=pt.matrixTransform(m.inverse());
+    let best='',bd=1e9;
+    bmList().forEach(x=>{const dx=x.cx-p.x,dy=x.cy-p.y,d=Math.sqrt(dx*dx+dy*dy);if(d<bd){bd=d;best=x.k;}});
+    return bd<=34?best:'';
   }
   function renderHealth(){
     const h=loadHealth();
@@ -2309,7 +2570,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     if(il)il.innerHTML=h.issues.length?h.issues.map(x=>'<div class="fin-row"><span class="grow">'+escapeHtml(x.part)+'<small>'+escapeHtml(x.date)+(x.desc?' · '+escapeHtml(x.desc):'')+'</small></span>'+(x.status==='ok'?'<small>已好转</small>':'<button class="text-btn" data-act="healthOk" data-id="'+escapeHtml(x.id)+'">好了</button>')+'</div>').join(''):'<p class="zdesc" style="margin:6px 0 0">还没有不适记录。今天哪里不对劲，直接对 AI 助理说。</p>';
     const hl=document.getElementById('healthHistoryList');
     if(hl)hl.innerHTML=h.history.length?h.history.map(x=>'<div class="fin-row"><span class="grow">'+escapeHtml(x.name)+(x.note?'<small>'+escapeHtml(x.note)+'</small>':'')+'</span><button class="text-btn" data-act="healthHisDel" data-id="'+escapeHtml(x.id)+'">删除</button></div>').join(''):'<p class="zdesc" style="margin:6px 0 0">登记已确诊的疾病，方便就医时说明情况。</p>';
-    bodyMapRender(h);
+    bmRender();
     const note=document.getElementById('healthNote');if(note)note.textContent=h.history.length?('既往 '+h.history.length+' 项'):'';
   }
 
@@ -3074,8 +3335,29 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     if(event.target.closest('[data-act="healthHisDel"]')){const b=event.target.closest('[data-act="healthHisDel"]');if(!confirm('删除这条疾病史记录？'))return;const h=loadHealth();h.history=h.history.filter(x=>x.id!==b.dataset.id);saveHealth(h);renderHealth();return;}
     const bmRec=event.target.closest('[data-body-rec]');
     if(bmRec){document.getElementById('aiSheet').hidden=false;renderAiStatus();const ai=document.getElementById('aiInput');if(ai){ai.value='我的'+bmRec.dataset.bodyRec+'不太舒服';setTimeout(()=>ai.focus(),80);}return;}
-    const bmHit=event.target.closest('[data-body]');
-    if(bmHit){bodySel=(bodySel===bmHit.dataset.body)?'':bmHit.dataset.body;bodyMapRender(loadHealth());return;}
+    const bmSideBtn=event.target.closest('[data-bm-side]');
+    if(bmSideBtn){bmSide(bmSideBtn.getAttribute('data-bm-side'));return;}
+    const bmModeBtn=event.target.closest('[data-bm-mode]');
+    if(bmModeBtn){bmModeSet(bmModeBtn.getAttribute('data-bm-mode'));return;}
+    const bmGoBtn=event.target.closest('[data-bm-go]');
+    if(bmGoBtn){
+      const mg=bmGoBtn.getAttribute('data-bm-muscle')||'';
+      const ms=document.getElementById('ftExMuscle');if(ms)ms.value=mg;
+      const ins=document.getElementById('ftExSearch');if(ins)ins.value='';
+      const eq=document.getElementById('ftExEquip');if(eq)eq.value='';
+      const gf=document.getElementById('ftExGif');if(gf)gf.checked=false;
+      exPageShow=60;switchView('exlib');renderFtExGrid();
+      return;
+    }
+    if(event.target.closest('#bmSheetX')){bmDeselect();return;}
+    const bmChip=event.target.closest('[data-bmk]');
+    const bmSvg=event.target.closest('#bodyMap');
+    if(bmChip||bmSvg){
+      let k=bmChip?bmChip.getAttribute('data-bmk'):'';
+      if(!k&&bmSvg)k=bmNearest(event);
+      bmSelect(k);
+      return;
+    }
     if(event.target.closest('[data-act="finPlan"]')){
       const b=document.getElementById('finPlanBtn');if(b){b.disabled=true;b.textContent='正在生成…';}
       finPlanAI(function(text){const fin=loadFin();fin.plan={text:text,asOf:Date.now()};saveFin(fin);renderFinanceCard();const bb=document.getElementById('finPlanBtn');if(bb){bb.disabled=false;bb.textContent='重新生成计划';}});
