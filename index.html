@@ -929,7 +929,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
               <button class="wbtn dbtn-solid" data-act="imgTokenSave" type="button">保存 Token</button>
             </div>
             <button class="wbtn ghostbtn" data-act="imgTokenClear" type="button" style="margin-top:8px">清除图床 Token</button>
-            <p class="zdesc" style="margin:14px 0 6px">上传 png / jpg / gif / webp，单个 5MB 以内。传完约 1 分钟生效，链接可复制到任何地方用。</p>
+            <p class="zdesc" style="margin:14px 0 6px">上传 png / jpg / gif / webp，单个 5MB 以内。传完约 1-3 分钟生效，链接可复制到任何地方用。</p>
             <div class="wmore" style="margin:0">
               <button class="wbtn" data-act="imgUpload" type="button"><svg><use href="#i-download"/></svg>选择图片上传</button>
             </div>
@@ -2267,7 +2267,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
         fetch('https://api.github.com/repos/'+IMG_REPO+'/contents/'+IMG_DIR+'/'+name,{method:'PUT',headers:{'Content-Type':'application/json','Accept':'application/vnd.github+json','Authorization':'Bearer '+imgTokenGet()},body:JSON.stringify({message:'img: 上传 '+name,content:rd.result.split(',')[1],branch:IMG_BRANCH})})
         .then(function(r){return r.json().then(function(j){return {ok:r.ok,j:j};});})
         .then(function(o){
-          if(o.ok){imgUpAdd(file.name,IMG_BASE+name);imgUpStatus('上传完成，约 1 分钟后链接生效');toast(file.name+' 已上传');}
+          if(o.ok){imgUpAdd(file.name,IMG_BASE+name);imgUpStatus('上传完成，约 1-3 分钟后链接生效');toast(file.name+' 已上传');}
           else if(o.j&&o.j.status===401){imgUpStatus('Token 无效或过期（401），去 GitHub 重新生成一个');toast('上传失败：Token 无效');}
           else if(o.j&&o.j.status===403){imgUpStatus('Token 权限不够（403）：确认勾选了 richangji 仓库 Contents 读写');toast('上传失败：权限不够');}
           else{imgUpStatus('上传失败：'+((o.j&&o.j.message)||('HTTP '+(o.j&&o.j.status||'?'))));}
