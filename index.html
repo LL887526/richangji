@@ -922,6 +922,23 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
           </article>
 
           <article class="panel set-zone">
+            <div class="panel-head"><div><p class="eyebrow">智能</p><h2>图床</h2></div><span class="ai-status off" id="imgKeyStatus">未配置</span></div>
+            <p class="zdesc">图片传到你自己的 GitHub 仓库（richangji/img/），零成本。先在 GitHub 生成 Token：Settings → Developer settings → Fine-grained tokens → 新建，只勾选 richangji 仓库的 Contents 读写权限，生成后粘贴到这里。Token 只存本机。</p>
+            <div class="dgate" style="margin:10px 0 0">
+              <input type="password" id="imgTokenInput" maxlength="100" placeholder="github_pat_... 或 ghp_..." autocomplete="off">
+              <button class="wbtn dbtn-solid" data-act="imgTokenSave" type="button">保存 Token</button>
+            </div>
+            <button class="wbtn ghostbtn" data-act="imgTokenClear" type="button" style="margin-top:8px">清除图床 Token</button>
+            <p class="zdesc" style="margin:14px 0 6px">上传 png / jpg / gif / webp，单个 5MB 以内。传完约 1 分钟生效，链接可复制到任何地方用。</p>
+            <div class="wmore" style="margin:0">
+              <button class="wbtn" data-act="imgUpload" type="button"><svg><use href="#i-download"/></svg>选择图片上传</button>
+            </div>
+            <input type="file" id="imgFile" accept="image/png,image/jpeg,image/gif,image/webp" multiple hidden>
+            <p class="zdesc" id="imgUpStatus" style="margin:8px 0 0" hidden></p>
+            <div id="imgUpList" style="margin-top:4px"></div>
+          </article>
+
+          <article class="panel set-zone">
             <div class="panel-head"><div><p class="eyebrow">个性化</p><h2>外观</h2></div></div>
             <div class="wmore">
               <button class="wbtn" data-action="open-brand"><svg><use href="#i-settings"/></svg>名称 / 头像 / 副标题 / 主题色</button>
@@ -2220,6 +2237,56 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     rd.readAsDataURL(file);
   }
   (function(){const cf=document.getElementById('aiCamFile');if(cf)cf.addEventListener('change',function(e){const f=e.target.files&&e.target.files[0];e.target.value='';aiCam(f);});})();
+  const IMG_TOKEN_NAME='richangji-img-token',IMG_REPO='LL887526/richangji',IMG_BRANCH='main',IMG_DIR='img',IMG_BASE='https://ll887526.github.io/richangji/img/';
+  function imgTokenGet(){try{return localStorage.getItem(IMG_TOKEN_NAME)||'';}catch(e){return '';}}
+  function renderImgStatus(){
+    const el=document.getElementById('imgKeyStatus');if(!el)return;
+    const has=!!imgTokenGet();
+    el.textContent=has?'已配置':'未配置';
+    el.classList.toggle('off',!has);
+  }
+  function imgUpStatus(msg){const el=document.getElementById('imgUpStatus');if(!el)return;if(msg){el.textContent=msg;el.hidden=false;}else{el.hidden=true;}}
+  function imgUpAdd(name,url){
+    const list=document.getElementById('imgUpList');if(!list)return;
+    const row=document.createElement('div');row.className='dgate';row.style.cssText='margin:6px 0 0;align-items:center';
+    const span=document.createElement('span');span.className='zdesc';span.style.cssText='margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1';span.textContent=name+'　'+url;
+    const btn=document.createElement('button');btn.type='button';btn.className='wbtn ghostbtn';btn.style.cssText='flex:0 0 auto;min-height:34px';btn.textContent='复制链接';
+    btn.addEventListener('click',function(){copyTextOut(url);toast('链接已复制');});
+    row.appendChild(span);row.appendChild(btn);list.insertBefore(row,list.firstChild);
+  }
+  function imgUploadFile(file){
+    const okExt=['png','jpg','jpeg','gif','webp'];
+    const ext=(file.name.split('.').pop()||'').toLowerCase();
+    if(okExt.indexOf(ext)<0){imgUpStatus('跳过 '+file.name+'：只支持 png/jpg/gif/webp');return Promise.resolve();}
+    if(file.size>5*1024*1024){imgUpStatus('跳过 '+file.name+'：超过 5MB');return Promise.resolve();}
+    imgUpStatus('正在上传 '+file.name+'…');
+    return new Promise(function(res){
+      const rd=new FileReader();
+      rd.onload=function(){
+        const name=Date.now()+'-'+Math.random().toString(36).slice(2,6)+'.'+ext;
+        fetch('https://api.github.com/repos/'+IMG_REPO+'/contents/'+IMG_DIR+'/'+name,{method:'PUT',headers:{'Content-Type':'application/json','Accept':'application/vnd.github+json','Authorization':'Bearer '+imgTokenGet()},body:JSON.stringify({message:'img: 上传 '+name,content:rd.result.split(',')[1],branch:IMG_BRANCH})})
+        .then(function(r){return r.json().then(function(j){return {ok:r.ok,j:j};});})
+        .then(function(o){
+          if(o.ok){imgUpAdd(file.name,IMG_BASE+name);imgUpStatus('上传完成，约 1 分钟后链接生效');toast(file.name+' 已上传');}
+          else if(o.j&&o.j.status===401){imgUpStatus('Token 无效或过期（401），去 GitHub 重新生成一个');toast('上传失败：Token 无效');}
+          else if(o.j&&o.j.status===403){imgUpStatus('Token 权限不够（403）：确认勾选了 richangji 仓库 Contents 读写');toast('上传失败：权限不够');}
+          else{imgUpStatus('上传失败：'+((o.j&&o.j.message)||('HTTP '+(o.j&&o.j.status||'?'))));}
+          res();
+        })
+        .catch(function(err){imgUpStatus('上传失败：网络连不上 GitHub（'+(err&&err.message||'网络')+'）');res();});
+      };
+      rd.onerror=function(){imgUpStatus('读取 '+file.name+' 失败');res();};
+      rd.readAsDataURL(file);
+    });
+  }
+  function imgUploadFiles(files){
+    if(!imgTokenGet()){toast('先在上方粘贴并保存图床 Token');return;}
+    if(!files||!files.length)return;
+    let chain=Promise.resolve();
+    Array.prototype.forEach.call(files,function(f){chain=chain.then(function(){return imgUploadFile(f);});});
+  }
+  (function(){const inf=document.getElementById('imgFile');if(inf)inf.addEventListener('change',function(e){const fs=e.target.files;e.target.value='';imgUploadFiles(fs);});})();
+  renderImgStatus();
   function aiMic(){
     const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
     if(!SR){toast('这个浏览器不支持语音识别，用打字吧');return;}
@@ -3321,6 +3388,15 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
       inp.value='';toast('识图 Key 已保存（仅本机）');return;
     }
     if(event.target.closest('[data-act="visionKeyClear"]')){try{localStorage.removeItem(VISION_KEY_NAME);}catch(e){}toast('已清除识图 Key');return;}
+    if(event.target.closest('[data-act="imgTokenSave"]')){
+      const inp=document.getElementById('imgTokenInput');if(!inp)return;
+      const v=(inp.value||'').trim();
+      if(!v){toast('先粘贴图床 Token 再保存');return;}
+      try{localStorage.setItem(IMG_TOKEN_NAME,v);}catch(e){toast('保存失败：存储空间不足');return;}
+      inp.value='';renderImgStatus();toast('Token 已保存（仅本机）');return;
+    }
+    if(event.target.closest('[data-act="imgTokenClear"]')){try{localStorage.removeItem(IMG_TOKEN_NAME);}catch(e){}renderImgStatus();toast('已清除图床 Token');return;}
+    if(event.target.closest('[data-act="imgUpload"]')){const inf=document.getElementById('imgFile');if(inf)inf.click();return;}
     if(event.target.closest('[data-act="finDebtClear"]')){
       const btn=event.target.closest('[data-act="finDebtClear"]'),fin=loadFin(),hit=fin.debts.find(d=>d.id===btn.dataset.id);
       if(!hit)return;
