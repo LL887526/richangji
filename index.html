@@ -913,7 +913,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
               <button class="wbtn dbtn-solid" data-act="aiKeySave" type="button">保存 Key</button>
             </div>
             <button class="wbtn ghostbtn" data-act="aiKeyClear" type="button" style="margin-top:8px">清除已存的 Key</button>
-            <p class="zdesc" style="margin:14px 0 0">拍照识图：DeepSeek 不支持图片，识图走智谱免费视觉模型（open.bigmodel.cn 手机号注册即有 Key，GLM-4V-Flash 完全免费，不消耗 DeepSeek 额度）。Key 同样只存本机。</p>
+            <p class="zdesc" style="margin:14px 0 0">拍照识图：DeepSeek 不支持图片，识图走智谱免费视觉模型（open.bigmodel.cn 手机号注册即有 Key，GLM-4V-Flash 完全免费，不消耗 DeepSeek 额度）。识图是通用的：小票发票自动记账，体重秤记身体数据，药盒化验单记健康，截图文档提取文字，任意图片都能描述。Key 同样只存本机。</p>
             <div class="dgate" style="margin:8px 0 0">
               <input type="password" id="visionKeyInput" maxlength="80" placeholder="智谱 Key" autocomplete="off">
               <button class="wbtn dbtn-solid" data-act="visionKeySave" type="button">保存</button>
@@ -1487,7 +1487,8 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   const CATEGORY_COLORS = ['#b65f42','#627a67','#7d5b75','#a57c45','#5f7188','#c58d69','#879a75','#8e8478'];
   const TYPE_META = {
     money:{label:'财务',icon:'i-wallet',tone:'terracotta'},fitness:{label:'健康',icon:'i-fitness',tone:'sage'},
-    planner:{label:'日程',icon:'i-calendar',tone:'plum'},home:{label:'待买',icon:'i-cart',tone:'sand'}
+    planner:{label:'日程',icon:'i-calendar',tone:'plum'},home:{label:'待买',icon:'i-cart',tone:'sand'},
+    vision:{label:'识图',icon:'i-camera',tone:'sand'}
   };
   const HABIT_DEFS = [
     {key:'water',name:'喝水',nameEn:'Drink water',type:'counter',target:8,unit:'杯',unitEn:'cups',tone:'sage'},
@@ -1699,8 +1700,8 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   function deleteRecord(id){const target=state.records.find(r=>r.id===id);if(!target||!confirm(LANG==='en'?`Delete “${titleFor(target)}”? This cannot be undone.`:`确定删除“${titleFor(target)}”吗？删除后无法撤回。`))return;if(target.remoteId){if(target.type==='money')deleteRemoteMoney(target.remoteId);if(target.type==='planner')deleteRemotePlan(target.remoteId);if(target.type==='fitness')deleteRemoteFitness(target.remoteId);if(target.type==='home')deleteRemoteShopping(target.remoteId);}state.records=state.records.filter(r=>r.id!==id);const saved=saveState();renderAll();if(saved)toast('记录已删除');}
   function switchView(view){const target=document.getElementById(`view-${view}`);if(!target)return;if(view==='more'&&typeof renderMorePage==='function')renderMorePage();if(view==='exlib'&&typeof renderFtExGrid==='function'){exdFillFilters(document.getElementById('ftExMuscle'),document.getElementById('ftExEquip'));renderFtExGrid();}document.querySelectorAll('.view').forEach(el=>el.classList.toggle('active',el===target));document.querySelectorAll('[data-nav]').forEach(el=>el.classList.toggle('active',el.dataset.nav===view));document.getElementById('viewTitle').textContent=target.dataset.title||'日常集';if(location.hash!==`#${view}`)history.replaceState(null,'',`#${view}`);scrollTo({top:0,behavior:'smooth'});}
   function formatDateHeading(value){if(value===isoDate())return t('今天');if(value===shiftDate(-1))return t('昨天');const date=new Date(`${value}T00:00:00`);return LANG==='en'?new Intl.DateTimeFormat('en-US',{month:'short',day:'numeric'}).format(date):`${date.getMonth()+1} 月 ${date.getDate()} 日`;}
-  function titleFor(record){const d=record.data||{},local=value=>record.sample?translateText(value):value;if(record.type==='money')return d.note?local(d.note):t(d.category||'一笔收支');if(record.type==='planner')return d.title?local(d.title):t('一项日程');if(record.type==='fitness')return d.note?local(d.note):t('身体记录');if(record.type==='home')return d.name?local(d.name):t('待买物品');return t('生活记录');}
-  function detailFor(record){const d=record.data||{};if(record.type==='money')return`${t(d.category||'其他')} · ${t(d.flow==='income'?'收入':'支出')}`;if(record.type==='planner')return`${t(d.list||'生活')} · ${d.time||t('全天')} · ${t(d.done?'已完成':'待完成')}`;if(record.type==='fitness')return`${d.bodyFat?`${LANG==='en'?'Body fat':'体脂'} ${d.bodyFat}% · `:''}${d.duration||0} ${LANG==='en'?'min exercise':'分钟运动'}`;if(record.type==='home')return`${record.sample?translateText(d.quantity||'数量未填'):(d.quantity||t('数量未填'))} · ${t(d.category||'未分类')} · ${t(d.bought?'已买':'待买')}`;return'';}
+  function titleFor(record){const d=record.data||{},local=value=>record.sample?translateText(value):value;if(record.type==='money')return d.note?local(d.note):t(d.category||'一笔收支');if(record.type==='planner')return d.title?local(d.title):t('一项日程');if(record.type==='fitness')return d.note?local(d.note):t('身体记录');if(record.type==='home')return d.name?local(d.name):t('待买物品');if(record.type==='vision')return d.text?String(d.text).slice(0,18):(d.kind==='text'?'图片文字':'图片识别');return t('生活记录');}
+  function detailFor(record){const d=record.data||{};if(record.type==='money')return`${t(d.category||'其他')} · ${t(d.flow==='income'?'收入':'支出')}`;if(record.type==='planner')return`${t(d.list||'生活')} · ${d.time||t('全天')} · ${t(d.done?'已完成':'待完成')}`;if(record.type==='fitness')return`${d.bodyFat?`${LANG==='en'?'Body fat':'体脂'} ${d.bodyFat}% · `:''}${d.duration||0} ${LANG==='en'?'min exercise':'分钟运动'}`;if(record.type==='home')return`${record.sample?translateText(d.quantity||'数量未填'):(d.quantity||t('数量未填'))} · ${t(d.category||'未分类')} · ${t(d.bought?'已买':'待买')}`;if(record.type==='vision')return d.kind==='text'?'拍照提取的文字 · 点击查看全文':'AI 看图描述';return'';}
   function valueFor(record){const d=record.data||{};if(record.type==='money')return`${d.flow==='income'?'+':'-'}${money(d.amount)}`;if(record.type==='fitness'&&d.weight)return`${d.weight} kg`;if(record.type==='planner')return d.time||'';if(record.type==='home')return d.price?money(d.price):'';return'';}
   function recordDetailHtml(record){if(record.type!=='home')return escapeHtml(detailFor(record));const d=record.data||{},quantity=record.sample?localizedHtml(d.quantity||'数量未填'):userHtml(d.quantity||t('数量未填'));return`${quantity} · ${localizedHtml(d.category||'未分类')} · ${t(d.bought?'已买':'待买')}`;}
   function recordTitleHtml(record){if(record.sample)return localizedHtml(titleFor(record));const raw=titleFor(record);const translated=translateText(raw);return translated!==raw?translated:userHtml(raw);}
@@ -2144,14 +2145,17 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
       case 'balance_update':{const amt=Number(d.amount)||0;if(!amt&&amt!==0)return null;return {label:'余额校准',detail:'当前余额设为 '+money(amt)+(d.note?' · '+d.note:'')+' · 之后收支自动加减',view:'money',exec:()=>{const fin=loadFin();fin.balance={amount:amt,asOf:Date.now()};saveFin(fin);renderFinanceCard();return true;}};}
       case 'income_expected':{const amt=Number(d.amount)||0;if(!amt)return null;return {label:'预期收入',detail:'预计 '+(d.date||today)+' 到账 '+money(amt)+(d.label?' · '+d.label:'')+' · 用于还款规划',view:'money',exec:()=>{const fin=loadFin();fin.expected={amount:amt,date:d.date||today,label:String(d.label||'').slice(0,10)};saveFin(fin);renderFinanceCard();return true;}};}
       case 'finance_plan':{return {label:'还款规划',detail:'结合余额、负债与预期收入，生成还款顺序和发薪前每天可花金额',view:'money',exec:()=>{finPlanAI(function(text){const fin=loadFin();fin.plan={text:text,asOf:Date.now()};saveFin(fin);renderFinanceCard();});return true;}};}
+      case 'text_extract':{const txt=String(d.text||'').trim();if(!txt)return null;return {label:'图片文字提取',detail:txt.slice(0,300),copy:txt,view:'archive',exec:()=>addRecord('vision',today,{kind:'text',text:txt.slice(0,600)})};}
+      case 'describe':{const txt=String(d.text||'').trim();if(!txt)return null;return {label:'图片识别',detail:txt.slice(0,300),copy:txt,view:'archive',exec:()=>addRecord('vision',today,{kind:'desc',text:txt.slice(0,600)})};}
       default:return null;
     }
   }
   function aiDraftCard(card){
     const log=document.getElementById('aiLog');if(!log)return;
     const div=document.createElement('div');div.className='ai-draft';
-    div.innerHTML='<b>'+escapeHtml(card.label)+'</b><p>'+escapeHtml(card.detail)+'</p><div class="ai-draft-actions"><button class="btn primary" data-ai-confirm="1">确认记录</button><button class="btn ghost" data-ai-cancel="1">取消</button></div>';
+    div.innerHTML='<b>'+escapeHtml(card.label)+'</b><p>'+escapeHtml(card.detail)+'</p><div class="ai-draft-actions"><button class="btn primary" data-ai-confirm="1">确认记录</button>'+(card.copy?'<button class="btn ghost" data-ai-copy="1">复制文字</button>':'')+'<button class="btn ghost" data-ai-cancel="1">取消</button></div>';
     log.appendChild(div);log.scrollTop=log.scrollHeight;
+    if(card.copy)div.querySelector('[data-ai-copy]').addEventListener('click',()=>{copyTextOut(card.copy);toast('文字已复制');});
     div.querySelector('[data-ai-confirm]').addEventListener('click',()=>{const ok=card.exec();div.remove();if(ok===false)return;aiAppendMsg('bot','已记录，可在对应板块查看。');if(card.view)switchView(card.view);});
     div.querySelector('[data-ai-cancel]').addEventListener('click',()=>{div.remove();aiAppendMsg('bot','已取消，没有写入。');});
   }
@@ -2206,7 +2210,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   let aiListenEl=null;
   const VISION_KEY_NAME='richangji-vision-key';
   function aiVisionKeyGet(){try{return localStorage.getItem(VISION_KEY_NAME)||'';}catch(e){return '';}}
-  const AI_VISION_PROMPT='你是「日常集」个人工作台的记录助理。看图判断要记录什么，只输出 JSON：{"intent":"...","reply":"一句简短中文确认","draft":{...}}。intent 只能选：money_expense 支出（外卖单/购物小票/打车发票，draft:{amount:数字,category:"吃饭/交通/购物/娱乐/房租/看病/学习/其他",note:"商家或摘要"}）、debt_update 欠款账单（draft:{name,amount}）、fitness 体重秤读数（draft:{weight:数字}）、health_issue 药盒/诊断单/化验单（draft:{part:"相关部位",desc:"一句话"}）、chat 其他。金额只认图里明确可读的数字，看不清或不是以上内容就输出 chat。只输出 JSON。';
+  const AI_VISION_PROMPT='你是「日常集」个人工作台的看图助理，任何图片都要给出有用的结果。只输出 JSON：{"intent":"...","reply":"一句简短中文确认","draft":{...}}。intent 判定规则：①图里主要是文字（截图/文档/告示/菜单/表格/聊天记录/手写等）→ intent=text_extract，draft.text=完整提取的文字，保持原有换行；②图中可辨认出待记事项（外卖单/购物小票/打车发票）→ intent=money_expense，draft:{amount:数字,category:"吃饭/交通/购物/娱乐/房租/看病/学习/其他",note:"商家或摘要"}；③体重秤读数 → intent=fitness，draft:{weight:数字}；④药盒/诊断单/化验单 → intent=health_issue，draft:{part:"相关部位",desc:"一句话"}；⑤以上都不是（风景/物品/人/状态等）→ intent=describe，draft.text=一段准确的中文描述，说清物体、数量、状态、场景里对用户有用的信息。金额只认图里明确可读的数字。reply 要按 intent 分别写：text_extract 用「提取到这些文字：」、describe 用「看图结果：」、money_expense 用「记一笔支出：」、fitness 用「记身体数据：」、health_issue 用「记身体不适：」。只输出 JSON。';
   function aiCam(file){
     if(!file)return;
     const vk=aiVisionKeyGet();
