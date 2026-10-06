@@ -179,6 +179,17 @@
 .ai-msg.listening{color:#8f8579}
 .ai-msg.listening::after{content:"";display:inline-block;width:7px;height:12px;margin-left:4px;vertical-align:-1px;background:#3478f6;opacity:.55;animation:none}
 @keyframes aiblink{0%{opacity:.55}50%{opacity:.1}100%{opacity:.55}}
+/* AI 助理 B 案：全屏对话页（仅作用域 #aiSheet，其余面板不受影响） */
+#aiSheet{padding:0;place-items:stretch;background:var(--card);backdrop-filter:none}
+#aiSheet .settings-sheet{width:100%;max-height:none;height:var(--ai-vh,100dvh);display:flex;flex-direction:column;padding:0;border:0;border-radius:0;box-shadow:none;overflow:hidden}
+#aiSheet .settings-head{align-items:center;margin-bottom:0;padding:calc(10px + env(safe-area-inset-top,0px)) 14px 10px;border-bottom:1px solid var(--line);background:#fffdfa;flex:0 0 auto}
+#aiSheet .settings-head h2{font-size:17px}
+#aiSheet .settings-head .eyebrow{font-size:9px}
+#aiSheet .sheet-close{flex:0 0 auto}
+#aiSheet .ai-log{flex:1 1 auto;max-height:none;min-height:0;padding:14px 14px 10px}
+#aiSheet .ai-inputbar{flex:0 0 auto;margin-top:0;padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line);background:#fffdfa}
+#aiSheet .ai-inputbar input{font-size:16px}
+@media(min-width:861px){#aiSheet{padding:20px;place-items:center;background:rgba(31,26,22,.38);backdrop-filter:blur(6px)}#aiSheet .settings-sheet{width:min(520px,100%);height:min(680px,calc(var(--ai-vh,100vh) - 40px));border:1px solid rgba(255,255,255,.5);border-radius:24px;box-shadow:0 28px 80px rgba(36,26,22,.24)}#aiSheet .settings-head{padding:16px 20px 12px;border-radius:24px 24px 0 0}#aiSheet .ai-inputbar{padding:12px 16px 16px;border-radius:0 0 24px 24px}}
 .fin-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
 .fin-stats>div{padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:#faf7f2}
 .fin-stats span{display:block;color:var(--muted);font-size:12px}
@@ -4016,5 +4027,51 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
 })();
 
   </script>
+<script>
+/* AI 助理 B 案行为层：锁位 / 键盘 / 下滑关闭（挂载式，不改原有开合逻辑） */
+(function(){
+  var sheet=document.getElementById('aiSheet');
+  if(!sheet)return;
+  var lockY=0;
+  function aiLockOn(){
+    if(document.body.dataset.aiLock==='1')return;
+    lockY=window.scrollY||document.documentElement.scrollTop||0;
+    document.body.dataset.aiLock='1';
+    document.body.style.position='fixed';
+    document.body.style.top=(-lockY)+'px';
+    document.body.style.left='0';
+    document.body.style.right='0';
+    document.body.style.width='100%';
+  }
+  function aiLockOff(){
+    if(document.body.dataset.aiLock!=='1')return;
+    delete document.body.dataset.aiLock;
+    document.body.style.position='';
+    document.body.style.top='';
+    document.body.style.left='';
+    document.body.style.right='';
+    document.body.style.width='';
+    window.scrollTo({top:lockY,behavior:'instant'});
+  }
+  function aiVh(){
+    if(sheet.hidden)return;
+    var vv=window.visualViewport;
+    if(vv)sheet.style.setProperty('--ai-vh',vv.height+'px');
+  }
+  new MutationObserver(function(){
+    if(sheet.hidden){aiLockOff();}
+    else{aiLockOn();aiVh();}
+  }).observe(sheet,{attributes:true,attributeFilter:['hidden']});
+  if(window.visualViewport)visualViewport.addEventListener('resize',aiVh);
+  var head=sheet.querySelector('.settings-head');
+  if(head){
+    head.dataset.aiGesture='1';
+    var sy=0,dy=0,drag=false,body=null;
+    head.addEventListener('touchstart',function(e){sy=e.touches[0].clientY;dy=0;drag=true;body=sheet.querySelector('.settings-sheet');},{passive:true});
+    head.addEventListener('touchmove',function(e){if(!drag||!body)return;dy=Math.max(0,e.touches[0].clientY-sy);body.style.transition='none';body.style.transform=dy>0?('translateY('+dy+'px)'):'';},{passive:true});
+    head.addEventListener('touchend',function(){if(!drag)return;drag=false;if(body){body.style.transition='';body.style.transform='';}if(dy>80)sheet.hidden=true;dy=0;},{passive:true});
+  }
+})();
+</script>
 </body>
 </html>
