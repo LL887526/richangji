@@ -180,7 +180,7 @@
 .ai-msg.listening::after{content:"";display:inline-block;width:7px;height:12px;margin-left:4px;vertical-align:-1px;background:#3478f6;opacity:.55;animation:none}
 @keyframes aiblink{0%{opacity:.55}50%{opacity:.1}100%{opacity:.55}}
 /* AI 助理 B 案：全屏对话页（仅作用域 #aiSheet，其余面板不受影响） */
-#aiSheet{padding:0;place-items:stretch;background:var(--card);backdrop-filter:none}
+#aiSheet{padding:0;place-items:stretch;background:var(--card);backdrop-filter:none;top:var(--ai-vt,0);height:var(--ai-vh,100dvh);bottom:auto}
 #aiSheet .settings-sheet{width:100%;max-height:none;height:var(--ai-vh,100dvh);display:flex;flex-direction:column;padding:0;border:0;border-radius:0;box-shadow:none;overflow:hidden}
 #aiSheet .settings-head{align-items:center;margin-bottom:0;padding:calc(10px + env(safe-area-inset-top,0px)) 14px 10px;border-bottom:1px solid var(--line);background:#fffdfa;flex:0 0 auto}
 #aiSheet .settings-head h2{font-size:17px}
@@ -4056,13 +4056,16 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   function aiVh(){
     if(sheet.hidden)return;
     var vv=window.visualViewport;
-    if(vv)sheet.style.setProperty('--ai-vh',vv.height+'px');
+    if(!vv)return;
+    sheet.style.setProperty('--ai-vh',vv.height+'px');
+    sheet.style.setProperty('--ai-vt',(vv.offsetTop||0)+'px');
   }
   new MutationObserver(function(){
     if(sheet.hidden){aiLockOff();}
     else{aiLockOn();aiVh();}
   }).observe(sheet,{attributes:true,attributeFilter:['hidden']});
   if(window.visualViewport)visualViewport.addEventListener('resize',aiVh);
+  if(window.visualViewport)visualViewport.addEventListener('scroll',aiVh);
   var head=sheet.querySelector('.settings-head');
   if(head){
     head.dataset.aiGesture='1';
