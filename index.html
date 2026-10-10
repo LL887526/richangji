@@ -4223,7 +4223,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   function aiVh(){
     if(sheet.hidden)return;
     var vv=window.visualViewport;
-    if(!vv)return;
+    if(!vv||!(vv.height>80))return;
     sheet.style.setProperty('--ai-vh',vv.height+'px');
     sheet.style.setProperty('--ai-vt',(vv.offsetTop||0)+'px');
   }
@@ -4233,6 +4233,12 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   }).observe(sheet,{attributes:true,attributeFilter:['hidden']});
   if(window.visualViewport)visualViewport.addEventListener('resize',aiVh);
   if(window.visualViewport)visualViewport.addEventListener('scroll',aiVh);
+  sheet.addEventListener('click',function(e){if(e.target===sheet)sheet.hidden=true;});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!sheet.hidden)sheet.hidden=true;});
+  function aiWatch(){if(sheet.hidden&&document.body.dataset.aiLock==='1')aiLockOff();}
+  setInterval(aiWatch,1500);
+  window.addEventListener('pageshow',aiWatch);
+  document.addEventListener('visibilitychange',function(){if(!document.hidden)aiWatch();});
   var head=sheet.querySelector('.settings-head');
   if(head){
     head.dataset.aiGesture='1';
