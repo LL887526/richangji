@@ -169,6 +169,18 @@
 .ai-draft p{margin:4px 0 0;color:#3d3830;white-space:pre-wrap}
 .ai-draft-actions{display:flex;gap:8px;margin-top:10px}
 .ai-draft-actions .btn{flex:1;min-height:38px}
+.ai-draft.blocked{border-color:var(--line);background:#faf7f2}
+.ai-draft.blocked b{color:#8f8579}
+.ai-done{align-self:stretch;display:flex;align-items:center;gap:10px;border:1px solid #cfe6d4;background:#f3faf5;border-radius:14px;padding:10px 14px;font-size:13px;color:#3d3830}
+.ai-done .grow{flex:1;min-width:0}
+.ai-done .adot{width:7px;height:7px;border-radius:50%;background:var(--green);flex:0 0 auto}
+.ai-done .text-btn{min-height:38px}
+.ai-caps{border-top:1px solid var(--line);margin-top:6px}
+.ai-cap-row{display:grid;grid-template-columns:1fr auto;gap:3px 10px;align-items:baseline;padding:9px 0;border-top:1px solid var(--line);font-size:13px;color:#3d3830}
+.ai-cap-row:first-child{border-top:0}
+.ai-cap-row small{grid-column:1/-1;color:#8f8579;line-height:1.5}
+.ai-cap-ok{font-size:12px;font-weight:700;color:var(--green)}
+.ai-cap-no{font-size:12px;font-weight:700;color:#8f8579}
 .ai-inputbar{display:flex;gap:8px;margin-top:12px;align-items:stretch}
 .ai-inputbar input{flex:1;min-width:0;min-height:44px;padding:10px 14px;border:1px solid var(--line);border-radius:12px;background:#fffdfa;color:inherit;font-size:16px}
 .ai-inputbar button{min-width:44px;min-height:44px;border:1px solid var(--line);border-radius:12px;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;color:inherit}
@@ -924,6 +936,13 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
               <button class="wbtn dbtn-solid" data-act="aiKeySave" type="button">保存 Key</button>
             </div>
             <button class="wbtn ghostbtn" data-act="aiKeyClear" type="button" style="margin-top:8px">清除已存的 Key</button>
+            <div class="wmore" style="margin:10px 0 0">
+              <button class="wbtn" data-act="aiKeyTest" type="button"><svg><use href="#i-spark"/></svg>测试连接</button>
+            </div>
+            <p class="zdesc" id="aiTestResult" style="margin:8px 0 0" hidden></p>
+            <label class="switch-row" style="margin-top:12px"><input type="checkbox" id="aiAutoExec" data-act="aiAutoExec"><span>能做的直接执行，不用每次点确认（执行后可撤销）</span></label>
+            <p class="zdesc" style="margin:16px 0 0">AI 能力范围（做不到的会直说，不会再假装完成）：</p>
+            <div class="ai-caps" id="aiCapsList"></div>
             <p class="zdesc" style="margin:14px 0 0">拍照识图：DeepSeek 不支持图片，识图走智谱免费视觉模型（open.bigmodel.cn 手机号注册即有 Key，GLM-4V-Flash 完全免费，不消耗 DeepSeek 额度）。识图是通用的：小票发票自动记账，体重秤记身体数据，药盒化验单记健康，截图文档提取文字，任意图片都能描述。Key 同样只存本机。</p>
             <div class="dgate" style="margin:8px 0 0">
               <input type="password" id="visionKeyInput" maxlength="80" placeholder="智谱 Key" autocomplete="off">
@@ -2129,14 +2148,46 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     box.innerHTML=recs.length?('<p class="zdesc" style="margin:0 0 4px;font-weight:600">'+escapeHtml(ftCalSel)+' 的训练</p>'+recs.map(r=>'<div class="wrv"><div class="wrv-date">'+[r.volume!=null?r.volume+' kg 训练量':'',r.totalSets!=null?r.totalSets+' 组 · '+r.totalReps+' 次':'',r.durationMin!=null?r.durationMin+' 分钟':'',r.kcal!=null?r.kcal+' kcal':''].filter(Boolean).join(' · ')+'</div><div class="ftlog-detail">'+ftLogDetailHTML(r)+'</div></div>').join('')):'<p class="wempty-task">这天没有训练记录</p>';
   }
 
-  const AI_KEY_NAME='richangji-ai-key',REM_KEY='richangji-reminders-v1';
+  const AI_KEY_NAME='richangji-ai-key',REM_KEY='richangji-reminders-v1',AI_AUTOEXEC_KEY='richangji-ai-autoexec';
   function aiKeyGet(){try{return localStorage.getItem(AI_KEY_NAME)||'';}catch(e){return '';}}
   function loadReminders(){try{const a=JSON.parse(localStorage.getItem(REM_KEY)||'[]');return Array.isArray(a)?a:[];}catch(e){return [];}}
   function saveReminders(list){try{localStorage.setItem(REM_KEY,JSON.stringify(list.slice(-80)));}catch(e){}}
   function addReminder(text,due){const list=loadReminders();list.push({id:uid(),text:String(text||'').slice(0,80),due:due||isoDate(),createdAt:Date.now(),done:false});saveReminders(list);}
-  function renderAiStatus(){const el=document.getElementById('aiKeyStatus');if(!el)return;const has=!!aiKeyGet();el.textContent=has?'已配置':'未配置';el.className='ai-status '+(has?'on':'off');const mic=document.getElementById('aiMicBtn');if(mic)mic.hidden=!(window.SpeechRecognition||window.webkitSpeechRecognition);}
+  function renderAiStatus(){const el=document.getElementById('aiKeyStatus');if(!el)return;const has=!!aiKeyGet();el.textContent=has?'已配置':'未配置';el.className='ai-status '+(has?'on':'off');const mic=document.getElementById('aiMicBtn');if(mic)mic.hidden=!(window.SpeechRecognition||window.webkitSpeechRecognition);const cb=document.getElementById('aiAutoExec');if(cb)cb.checked=aiAutoExecOn();renderAiCaps();}
+  function aiSayTest(txt,tone){const el=document.getElementById('aiTestResult');if(!el)return;el.hidden=false;el.textContent=txt;el.style.color=tone==='bad'?'var(--red)':tone==='ok'?'var(--green)':'#8f8579';}
+  function aiTestConn(){
+    const key=aiKeyGet();
+    if(!key){aiSayTest('还没保存 DeepSeek Key，AI 只能做本地关键词识别。','bad');return;}
+    aiSayTest('正在测试…','');
+    fetch('https://api.deepseek.com/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model:'deepseek-chat',messages:[{role:'user',content:'ping'}],max_tokens:1})}).then(r=>r.json().then(j=>({s:r.status,j:j}))).then(res=>{
+      const s=res.s,j=res.j||{};
+      if(s===200&&j.choices&&j.choices[0])aiSayTest('连接正常，AI 可用。','ok');
+      else if(s===401)aiSayTest('失败 401：Key 无效或已失效，去 platform.deepseek.com 重新生成再粘贴。','bad');
+      else if(s===402)aiSayTest('失败 402：DeepSeek 账户余额不足，充值后 AI 才能工作。','bad');
+      else if(s===429)aiSayTest('失败 429：限流或额度用尽，稍后再试。','bad');
+      else if(s===400)aiSayTest('失败 400：请求被拒（账号状态或模型名问题），原文：'+((j.error&&j.error.message)||''),'bad');
+      else aiSayTest('失败 '+s+'：'+((j.error&&j.error.message)||'未知原因'),'bad');
+    }).catch(e=>aiSayTest('连不上：'+((e&&e.message)||'网络错误')+'。检查网络或代理。','bad'));
+  }
+  function renderAiCaps(){
+    const box=document.getElementById('aiCapsList');if(!box)return;
+    const hasKey=!!aiKeyGet(),hasVis=!!aiVisionKeyGet(),hasImg=!!imgTokenGet();
+    const mark=ok=>ok?'<span class="ai-cap-ok">可用</span>':'<span class="ai-cap-no">未配置</span>';
+    const rows=[
+      ['记账与负债','记支出收入、登记与校准欠款、登记还款、改数或删除最近一笔、校准余额、预期收入',hasKey],
+      ['还款方案','按平台类型排优先级，算本期可还额度和清空期数',hasKey],
+      ['日程 / 待买 / 提醒','一句话排日程、加待买、设提醒',hasKey],
+      ['工作任务','按公司号 / 自有号 / 品牌号加任务',hasKey],
+      ['身体与心情','体重体脂、身体不适、疾病史、习惯打卡',hasKey],
+      ['拍照识图','小票记账、体重秤、药盒化验单、截图提字、任意图片描述',hasVis],
+      ['图片上传','传到自己的 GitHub 仓库，拿可分享的链接',hasImg]
+    ];
+    box.innerHTML=rows.map(r=>'<div class="ai-cap-row"><b>'+escapeHtml(r[0])+'</b>'+mark(r[2])+'<small>'+escapeHtml(r[1])+'</small></div>').join('')
+      +'<div class="ai-cap-row"><b>外面的事</b><span class="ai-cap-no">做不到</span><small>发帖发布、付款转账、联系他人、操作其他 App、查实时行情天气、读微信或相册 —— 这类会明确说做不到并指到对应设置，不会假装完成</small></div>'
+      +'<div class="ai-cap-row"><b>本地兜底</b><span class="ai-cap-no">'+(hasKey?'备用':'仅此')+'</span><small>没配 DeepSeek Key 时只有本地关键词识别，只认「吃饭花了 30」这类短句，识别不到会直说没听懂</small></div>';
+  }
   function checkDueReminders(){const today=isoDate();const due=loadReminders().filter(r=>!r.done&&r.due<=today);if(!due.length)return;const box=document.getElementById('remList');if(box)box.innerHTML=due.map(r=>'<div class="rem-row" data-rem-id="'+escapeHtml(r.id)+'"><span class="grow">'+escapeHtml(r.text)+'<small>应于 '+escapeHtml(r.due)+' 跟进</small></span><button class="wbtn" data-act="remDone">已办</button><button class="wbtn ghostbtn" data-act="remSnooze">没办，顺延</button></div>').join('');const sheet=document.getElementById('reminderSheet');if(sheet)sheet.hidden=false;}
-  const AI_SYSTEM='你是「日常集」个人工作台的记录助理。把用户输入解析成一个待执行动作，只输出 JSON：{"intent":"...","reply":"给用户看的一句简短中文确认","draft":{...}}。intent 可选：money_expense 支出，draft:{amount:数字,category:"吃饭/交通/购物/娱乐/房租/看病/学习/其他"之一,note,date:"YYYY-MM-DD"}；money_income 收入，draft:{amount,category:"工资/奖金/兼职/理财/其他"之一,note,date}；shopping 待买，draft:{name,quantity,price:数字或null,remind_date:"YYYY-MM-DD"或null}；planner 日程，draft:{title,time:"HH:MM"或"",date,priority:"high/normal/low",note}；task 工作任务，draft:{text,account:"company/own/qjt"之一}；fitness 身体记录，draft:{weight:数字或null,bodyFat:数字或null,calories:数字或null,duration:数字或null,note,date}；reminder 通用提醒，draft:{text,due:"YYYY-MM-DD"}；health_issue 身体不适记录（今天哪里不舒服），draft:{part:"部位如胃/头/肚子/喉咙/腰",desc:"一句话症状描述"}；health_history 疾病史登记（已确诊的基础疾病或既往病史），draft:{name:"疾病名",note:"确诊时间或情况备注"}；mood 心情或习惯打卡，draft:{habit:"习惯名",note}；debt_update 欠款登记（明确说「欠/月付/还差」的钱，计入负债台账，不计入本月支出；注意：说了「欠」的不要走 money_expense），draft:{name:"平台名",amount:数字}，一句话含多笔欠款则 draft:{items:[{name,amount},...]}；debt_pay 还款（还掉部分欠款，记还款支出并从负债扣减），draft:{name:"平台名",amount:数字}；debt_exclude 把已经记成支出的欠款改成负债（用户说「负债不计入支出」），draft:{}；debt_set 校准某平台负债金额（用户说「花呗欠款改成 2000」），draft:{name:"平台名",amount:数字}；money_fix 修改最近一笔记账的金额或分类，draft:{amount:数字或null,text:"用户原话"}；money_remove 删除最近一笔记账，draft:{}；balance_update 余额校准（用户报当前手头现金总额），draft:{amount:数字}；income_expected 预期收入（未来才到账的钱，如下月工资），draft:{amount:数字,date:"YYYY-MM-DD",label:"工资"}；finance_plan 还款与花钱规划（用户让你规划还款顺序和每天可花多少），draft:{}；chat 其他，draft:{}。中文数字金额换算成阿拉伯数字（两千九百多→2900）。日期无法确定用今天 '+isoDate()+'。只输出 JSON，不要输出其他文字。';
+  const AI_SYSTEM='你是「日常集」个人工作台的记录助理。把用户输入解析成一个待执行动作，只输出 JSON：{"intent":"...","reply":"一句话说明你打算做什么","draft":{...}}。reply 措辞铁律：只描述「将要做的事」，绝对不许出现「已完成、已记录、已经帮你、记好了、搞定了、OK了」这类完成态说法，真正的写入由界面在用户确认后才发生，不由你宣告。intent 可选：money_expense 支出，draft:{amount:数字,category:"吃饭/交通/购物/娱乐/房租/看病/学习/其他"之一,note,date:"YYYY-MM-DD"}；money_income 收入，draft:{amount,category:"工资/奖金/兼职/理财/其他"之一,note,date}；shopping 待买，draft:{name,quantity,price:数字或null,remind_date:"YYYY-MM-DD"或null}；planner 日程，draft:{title,time:"HH:MM"或"",date,priority:"high/normal/low",note}；task 工作任务，draft:{text,account:"company/own/qjt"之一}；fitness 身体记录，draft:{weight:数字或null,bodyFat:数字或null,calories:数字或null,duration:数字或null,note,date}；reminder 通用提醒，draft:{text,due:"YYYY-MM-DD"}；health_issue 身体不适记录（今天哪里不舒服），draft:{part:"部位如胃/头/肚子/喉咙/腰",desc:"一句话症状描述"}；health_history 疾病史登记（已确诊的基础疾病或既往病史），draft:{name:"疾病名",note:"确诊时间或情况备注"}；mood 心情或习惯打卡，draft:{habit:"习惯名",note}；debt_update 欠款登记（明确说「欠/月付/还差」的钱，计入负债台账，不计入本月支出；注意：说了「欠」的不要走 money_expense），draft:{name:"平台名",amount:数字}，一句话含多笔欠款则 draft:{items:[{name,amount},...]}；debt_pay 还款（还掉部分欠款，记还款支出并从负债扣减），draft:{name:"平台名",amount:数字}；debt_exclude 把已经记成支出的欠款改成负债（用户说「负债不计入支出」），draft:{}；debt_set 校准某平台负债金额（用户说「花呗欠款改成 2000」），draft:{name:"平台名",amount:数字}；money_fix 修改最近一笔记账的金额或分类，draft:{amount:数字或null,text:"用户原话"}；money_remove 删除最近一笔记账，draft:{}；balance_update 余额校准（用户报当前手头现金总额），draft:{amount:数字}；income_expected 预期收入（未来才到账的钱，如下月工资），draft:{amount:数字,date:"YYYY-MM-DD",label:"工资"}；finance_plan 还款与花钱规划（用户让你规划还款顺序和每天可花多少），draft:{}；chat 纯聊天、问工作台里的数据或闲聊，draft:{}；unsupported 工作台做不到的事（发帖发布、付款转账、联系他人、操作其他 App、查实时行情或天气、读微信相册、联网搜索等），draft:{need:"缺的能力或权限，一句短话"}。拿不准是哪一个时用 chat 或 unsupported，不要硬凑成记账类意图。中文数字金额换算成阿拉伯数字（两千九百多→2900）。日期无法确定用今天 '+isoDate()+'。只输出 JSON，不要输出其他文字。';
   function aiAppendMsg(role,text){const log=document.getElementById('aiLog');if(!log)return null;const div=document.createElement('div');div.className='ai-msg '+(role==='user'?'user':'bot');div.textContent=text;log.appendChild(div);log.scrollTop=log.scrollHeight;return div;}
   function aiBuildCard(out){
     const d=out.draft||{},today=isoDate();
@@ -2162,17 +2213,52 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
       case 'debt_set':{const amt=Number(d.amount)||0;if(!amt)return null;const nm=String(d.name||'').slice(0,20);const fin=loadFin();const hit=fin.debts.find(x=>!nm||x.name===nm||x.name.indexOf(nm)>-1||nm.indexOf(x.name)>-1);if(!hit)return {label:'负债金额校准',detail:'负债清单里没有「'+(nm||'该平台')+'」，先在设置页或对 AI 说欠款登记',view:'money',exec:()=>{toast('负债清单里没有「'+(nm||'该平台')+'」');return false;}};const old=Number(hit.amount)||0;return {label:'负债金额校准',detail:hit.name+' '+money(old)+' 改为 '+money(amt)+'，不计入本月支出',view:'money',exec:()=>{hit.amount=amt;hit.updatedAt=Date.now();saveFin(fin);const rec=state.records.filter(r=>r.type==='money'&&/欠款$/.test(String(r.data.note||''))&&String(r.data.note||'').indexOf(hit.name)>-1).sort((a,b)=>(Number(b.createdAt)||0)-(Number(a.createdAt)||0))[0];if(rec)rec.data.amount=amt;saveState(true);renderAll();return true;}};}
       case 'text_extract':{const txt=String(d.text||'').trim();if(!txt)return null;return {label:'图片文字提取',detail:txt.slice(0,300),copy:txt,view:'archive',exec:()=>addRecord('vision',today,{kind:'text',text:txt.slice(0,600)})};}
       case 'describe':{const txt=String(d.text||'').trim();if(!txt)return null;return {label:'图片识别',detail:txt.slice(0,300),copy:txt,view:'archive',exec:()=>addRecord('vision',today,{kind:'desc',text:txt.slice(0,600)})};}
+      case 'unsupported':{const need=String(d.need||'').slice(0,60);const why=String(out.reply||'').trim().slice(0,90);return {blocked:true,label:'这件事我现在做不到',detail:(why||'这个动作超出了工作台的范围')+(need?'（需要：'+need+'）':'')+'，没有写入任何内容',view:'settings'};}
       default:return null;
     }
   }
+  const AI_ADDONLY=/^(money_expense|money_income|shopping|planner|task|fitness|reminder|health_issue|health_history|mood|debt_update|text_extract|describe)$/;
+  function aiAutoExecOn(){try{return localStorage.getItem(AI_AUTOEXEC_KEY)==='1';}catch(e){return false;}}
   function aiDraftCard(card){
     const log=document.getElementById('aiLog');if(!log)return;
-    const div=document.createElement('div');div.className='ai-draft';
+    const div=document.createElement('div');div.className='ai-draft'+(card.blocked?' blocked':'');
+    if(card.blocked){
+      div.innerHTML='<b>'+escapeHtml(card.label)+'</b><p>'+escapeHtml(card.detail)+'</p><div class="ai-draft-actions"><button class="btn primary" data-ai-goto="1">去设置页看看</button><button class="btn ghost" data-ai-cancel="1">知道了</button></div>';
+      log.appendChild(div);log.scrollTop=log.scrollHeight;
+      div.querySelector('[data-ai-goto]').addEventListener('click',()=>{div.remove();if(card.view)switchView(card.view);});
+      div.querySelector('[data-ai-cancel]').addEventListener('click',()=>{div.remove();});
+      return;
+    }
     div.innerHTML='<b>'+escapeHtml(card.label)+'</b><p>'+escapeHtml(card.detail)+'</p><div class="ai-draft-actions"><button class="btn primary" data-ai-confirm="1">确认记录</button>'+(card.copy?'<button class="btn ghost" data-ai-copy="1">复制文字</button>':'')+'<button class="btn ghost" data-ai-cancel="1">取消</button></div>';
     log.appendChild(div);log.scrollTop=log.scrollHeight;
     if(card.copy)div.querySelector('[data-ai-copy]').addEventListener('click',()=>{copyTextOut(card.copy);toast('文字已复制');});
-    div.querySelector('[data-ai-confirm]').addEventListener('click',()=>{const ok=card.exec();div.remove();if(ok===false)return;aiAppendMsg('bot','已记录，可在对应板块查看。');if(card.view)switchView(card.view);});
     div.querySelector('[data-ai-cancel]').addEventListener('click',()=>{div.remove();aiAppendMsg('bot','已取消，没有写入。');});
+    div.querySelector('[data-ai-confirm]').addEventListener('click',()=>aiRunCard(card,div,false));
+    if(aiAutoExecOn()){const btn=div.querySelector('[data-ai-confirm]');if(btn)btn.textContent='已自动执行';aiRunCard(card,div,true);}
+  }
+  function aiRunCard(card,div,auto){
+    if(!div||div.dataset.ran)return;div.dataset.ran='1';
+    const undoable=!!(card._intent&&AI_ADDONLY.test(card._intent));
+    let seen=null;
+    if(undoable){seen={};state.records.forEach(r=>seen[r.id]=1);}
+    const ok=card.exec();
+    if(ok===false){div.remove();return;}
+    let added=[];
+    if(seen)added=state.records.filter(r=>!seen[r.id]);
+    const done=document.createElement('div');done.className='ai-done';
+    done.innerHTML='<span class="adot"></span><span class="grow">'+escapeHtml(card.label)+' · 已写入</span>'+(added.length?'<button class="text-btn" data-ai-undo="1">撤销</button>':'');
+    div.replaceWith(done);
+    if(added.length){
+      done.querySelector('[data-ai-undo]').addEventListener('click',()=>{
+        const kill={};added.forEach(r=>kill[r.id]=1);
+        state.records=state.records.filter(r=>!kill[r.id]);
+        saveState(true);renderAll();
+        done.innerHTML='<span class="adot"></span><span class="grow">已撤销，没有留下记录</span>';
+      });
+    }
+    if(auto)return;
+    aiAppendMsg('bot','已写入，可在对应板块查看。');
+    if(card.view)switchView(card.view);
   }
   function localParse(text){
     const t=String(text||'').trim(),today=isoDate();
@@ -2200,16 +2286,46 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     if(/规划|计划|怎么还|还款优化|优化还款/.test(t))return{intent:'finance_plan',reply:'',draft:{}};
     return{intent:'chat',reply:'',draft:{}};
   }
+  const AI_INTENT_META={
+    money_expense:{name:'记一笔支出',need:'金额',ex:'吃饭花了 38'},
+    money_income:{name:'记一笔收入',need:'金额',ex:'工资到账 6325'},
+    shopping:{name:'加待买',need:'东西的名字',ex:'待买 洗衣液'},
+    planner:{name:'排日程',need:'做什么、几点',ex:'明天下午三点开会'},
+    task:{name:'加工作任务',need:'任务内容',ex:'加工作：剪 8 号片'},
+    fitness:{name:'记身体数据',need:'具体数字',ex:'体重 68.5'},
+    reminder:{name:'设提醒',need:'提醒什么事',ex:'提醒我明天交房租'},
+    health_issue:{name:'记身体不适',need:'哪里不舒服',ex:'胃不舒服'},
+    health_history:{name:'登记疾病史',need:'疾病名',ex:'我有慢性胃炎'},
+    mood:{name:'习惯打卡',need:'习惯名',ex:'打卡 早睡'},
+    debt_update:{name:'登记欠款',need:'平台和金额',ex:'抖音月付欠了 484.59'},
+    debt_pay:{name:'登记还款',need:'平台和金额',ex:'还了花呗 500'},
+    debt_set:{name:'校准负债金额',need:'平台和新金额',ex:'花呗欠款改成 2000'},
+    debt_exclude:{name:'把欠款移出支出',need:'一句话确认',ex:'负债不计入本月支出'},
+    balance_update:{name:'校准余额',need:'金额',ex:'手上还有 2900'},
+    income_expected:{name:'登记预期收入',need:'金额和到账日',ex:'下月 15 号发 6325'},
+    money_fix:{name:'修改最近一笔记账',need:'改成多少或什么分类',ex:'把刚才那笔改成 100'},
+    money_remove:{name:'删除最近一笔记账',need:'一句话确认',ex:'删掉最近一笔记账'},
+    finance_plan:{name:'生成还款方案',need:'欠款和余额的数据',ex:'还款优化方案'},
+    text_extract:{name:'提取图片文字',need:'一张更清晰的图',ex:''},
+    describe:{name:'看图',need:'一张更清晰的图',ex:''}
+  };
   function aiAfter(out,fallback){
-    if(out.reply)aiAppendMsg('bot',out.reply);
+    if(!out||!out.intent){aiAppendMsg('bot','这句我没解析出来，没有写入任何内容。换个说法试试。');return;}
     const card=aiBuildCard(out);
-    if(card){aiDraftCard(card);return;}
-    if(!out.reply){
+    if(card){card._intent=out.intent;if(!card.blocked&&out.reply)aiAppendMsg('bot',out.reply);aiDraftCard(card);return;}
+    if(out.intent==='chat'){
+      if(out.reply){aiAppendMsg('bot',out.reply);return;}
       let m='这句我拿不准，换个说法试试。';
       if(fallback){let hinted='';try{hinted=localStorage.getItem('richangji-ai-hinted');}catch(e){}
         if(!hinted){m='这句我拿不准。在设置页配一个 DeepSeek Key，我就能听懂所有说法（此提示只出现这一次）。';try{localStorage.setItem('richangji-ai-hinted','1');}catch(e){}}}
-      aiAppendMsg('bot',m);
+      aiAppendMsg('bot',m);return;
     }
+    const meta=AI_INTENT_META[out.intent];
+    if(meta){
+      aiAppendMsg('bot','我听懂是「'+meta.name+'」，但'+(meta.need||'信息')+'没给全，所以没有写入任何内容。补一句就行，比如「'+(meta.ex||meta.need||'')+'」。');
+      return;
+    }
+    aiAppendMsg('bot','这个动作我做不了，也没有写入任何内容。去设置页可以看 AI 现在支持哪些事、缺哪项权限。');
   }
   function aiSend(){
     const inp=document.getElementById('aiInput');if(!inp)return;
@@ -2218,14 +2334,27 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     const key=aiKeyGet();
     if(!key){aiAfter(localParse(text),true);return;}
     const thinking=aiAppendMsg('bot','正在想…');
-    fetch('https://api.deepseek.com/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model:'deepseek-chat',messages:[{role:'system',content:AI_SYSTEM},{role:'user',content:text}],response_format:{type:'json_object'},temperature:0.1,max_tokens:400})}).then(r=>r.json()).then(j=>{
+    fetch('https://api.deepseek.com/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model:'deepseek-chat',messages:[{role:'system',content:AI_SYSTEM},{role:'user',content:text}],response_format:{type:'json_object'},temperature:0.1,max_tokens:700})}).then(r=>r.json().then(j=>({status:r.status,body:j}))).then(res=>{
       if(thinking)thinking.remove();
-      let out=null;try{out=JSON.parse(j.choices[0].message.content);}catch(e){}
-      if(!out||!out.intent){aiAppendMsg('bot','没解析出来，换个说法试试？');return;}
+      const status=res.status,body=res.body||{};
+      if(status!==200){
+        const msg=(body.error&&body.error.message)||('HTTP '+status);
+        let hint='';
+        if(status===401)hint='Key 无效或已失效，去设置页重新粘贴一个。';
+        else if(status===402)hint='DeepSeek 账户余额不足，需要充值后 AI 才能工作。';
+        else if(status===429)hint='请求太频繁或额度用尽，等一会儿再说。';
+        else if(status===400)hint='请求被拒，可能是账号状态或模型名问题。';
+        aiAppendMsg('bot','调用 AI 失败（'+status+'）：'+msg+(hint?'。'+hint:''));
+        aiAppendMsg('bot','下面是本地关键词识别的兜底结果，能力有限，可能不准：');
+        aiAfter(localParse(text),true);return;
+      }
+      let out=null;
+      try{out=JSON.parse(body.choices&&body.choices[0]&&body.choices[0].message?body.choices[0].message.content:'');}catch(e){}
+      if(!out||!out.intent){aiAppendMsg('bot','AI 回了内容但没能解析成动作，这次没有写入任何内容。换个说法再试一次。');return;}
       aiAfter(out,false);
     }).catch(err=>{
       if(thinking)thinking.remove();
-      aiAppendMsg('bot','AI 连不上（'+(err&&err.message?err.message:'网络')+'），先用本地识别兜底。');
+      aiAppendMsg('bot','连不上 AI（'+(err&&err.message?err.message:'网络错误')+'）。检查网络后再试，下面是本地识别的兜底结果：');
       aiAfter(localParse(text),true);
     });
   }
@@ -3431,6 +3560,8 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
       inp.value='';renderAiStatus();toast('Key 已保存（仅本机）');return;
     }
     if(event.target.closest('[data-act="aiKeyClear"]')){try{localStorage.removeItem(AI_KEY_NAME);}catch(e){}renderAiStatus();toast('已清除 Key');return;}
+    if(event.target.closest('[data-act="aiKeyTest"]')){aiTestConn();return;}
+    if(event.target.closest('[data-act="aiAutoExec"]')){const cb=document.getElementById('aiAutoExec');try{localStorage.setItem(AI_AUTOEXEC_KEY,cb&&cb.checked?'1':'0');}catch(e){}toast(cb&&cb.checked?'已开：能做的直接执行，执行后可撤销':'已关：每次都要点确认');return;}
     if(event.target.closest('[data-act="visionKeySave"]')){
       const inp=document.getElementById('visionKeyInput');if(!inp)return;
       const v=(inp.value||'').trim();
