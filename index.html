@@ -994,10 +994,10 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   <div class="settings-backdrop" hidden id="aiSheet">
     <section class="settings-sheet" role="dialog" aria-modal="true" aria-labelledby="aiTitle">
       <div class="settings-head"><div><p class="eyebrow">对话即记录</p><h2 id="aiTitle">AI 助理</h2></div><button class="sheet-close" data-action="close-ai" aria-label="关闭">×</button></div>
-      <div class="ai-log" id="aiLog"><div class="ai-msg bot">直接说话就行：记一笔账、想买什么、安排日程、设个提醒、记体重，我来落到对应板块。确认后才会写入。</div></div>
+      <div class="ai-log" id="aiLog"><div class="ai-msg bot">直接说话就行：记一笔账、想买什么、安排日程、设个提醒、记体重，我来落到对应板块。确认后才会写入。也可以点左边的相机按钮，选一个备份 JSON 文件导入。</div></div>
       <div class="ai-inputbar">
-        <button id="aiCamBtn" data-action="ai-cam" aria-label="拍照识图"><svg><use href="#i-camera"/></svg></button>
-        <input type="file" id="aiCamFile" accept="image/*" hidden>
+        <button id="aiCamBtn" data-action="ai-cam" aria-label="拍照识图或选备份文件"><svg><use href="#i-camera"/></svg></button>
+        <input type="file" id="aiCamFile" accept="image/*,.json,application/json" hidden>
         <input type="text" id="aiInput" maxlength="200" placeholder="如：午饭花了 25.5">
         <button id="aiMicBtn" data-action="ai-mic" aria-label="语音输入" hidden><svg><use href="#i-mic"/></svg></button>
         <button class="ai-send" data-action="ai-send" aria-label="发送">发送</button>
@@ -2180,7 +2180,8 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
       ['工作任务','按公司号 / 自有号 / 品牌号加任务',hasKey],
       ['身体与心情','体重体脂、身体不适、疾病史、习惯打卡',hasKey],
       ['拍照识图','小票记账、体重秤、药盒化验单、截图提字、任意图片描述',hasVis],
-      ['图片上传','传到自己的 GitHub 仓库，拿可分享的链接',hasImg]
+      ['图片上传','传到自己的 GitHub 仓库，拿可分享的链接',hasImg],
+      ['导入备份文件','点相机按钮选一个备份 JSON，确认后覆盖导入本机',true]
     ];
     box.innerHTML=rows.map(r=>'<div class="ai-cap-row"><b>'+escapeHtml(r[0])+'</b>'+mark(r[2])+'<small>'+escapeHtml(r[1])+'</small></div>').join('')
       +'<div class="ai-cap-row"><b>外面的事</b><span class="ai-cap-no">做不到</span><small>发帖发布、付款转账、联系他人、操作其他 App、查实时行情天气、读微信或相册 —— 这类会明确说做不到并指到对应设置，不会假装完成</small></div>'
@@ -2192,6 +2193,27 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   function aiBuildCard(out){
     const d=out.draft||{},today=isoDate();
     switch(out.intent){
+      case 'backup_import':{
+        let bo=null;try{bo=JSON.parse(String(d.raw||''));}catch(e){}
+        if(!bo||bo.kind!=='richangji-backup-v1'||!bo.state)return {label:'这个文件不能导入',detail:'它缺少工作台备份的标记（kind=richangji-backup-v1）。请用「设置 → 数据与备份 → 导出备份 JSON」生成的文件再试。',blocked:true,view:'settings'};
+        const bRecs=Array.isArray(bo.state.records)?bo.state.records.length:0;
+        const bHab=Array.isArray(bo.state.habits)?bo.state.habits.length:0;
+        let bDn=0,bDt=0;
+        try{const bf=(bo.keys&&bo.keys['richangji-finance-v1'])?JSON.parse(bo.keys['richangji-finance-v1']):bo.fin;if(bf&&Array.isArray(bf.debts)){bDn=bf.debts.length;bDt=bf.debts.reduce((s,x)=>s+(Number(x.amount)||0),0);}}catch(e){}
+        const bWhen=(function(){const tt=Number(bo.ts)||0;if(!tt)return '时间未知';const dd=new Date(tt);return (dd.getMonth()+1)+'月'+dd.getDate()+'日 '+String(dd.getHours()).padStart(2,'0')+':'+String(dd.getMinutes()).padStart(2,'0');})();
+        return {label:'导入备份 · 覆盖本机数据',detail:'备份时间 '+bWhen+'，含 '+bRecs+' 条记录、'+bHab+' 个习惯'+(bDn?('、负债 '+bDn+' 笔共 '+money(bDt)):'')+'。确认后覆盖本机现有数据并自动刷新；覆盖前会自动留一份快照，可在设置页恢复。',view:'money',exec:()=>{
+          try{
+            takeSnapshot();
+            localStorage.setItem(STORAGE_KEY,JSON.stringify(bo.state));
+            if(bo.indep)for(const k in bo.indep){if(V13_INDEP.indexOf(k)>=0)localStorage.setItem(k,JSON.stringify(bo.indep[k]));}
+            if(bo.keys)for(const k in bo.keys){if(BK_KEYS.indexOf(k)>=0&&typeof bo.keys[k]==='string'&&bo.keys[k])localStorage.setItem(k,bo.keys[k]);}
+            if(bo.fin)localStorage.setItem(FIN_KEY,JSON.stringify(bo.fin));
+            localStorage.setItem('richangji-lastExport',String(Date.now()));
+          }catch(err){return false;}
+          setTimeout(function(){location.reload();},1200);
+          return true;
+        }};
+      }
       case 'money_expense':{const amt=Number(d.amount)||0;if(!amt)return null;return {label:'记账 · 支出',detail:money(amt)+' · '+(d.category||'其他')+(d.note?' · '+d.note:'')+' · '+(d.date||today),view:'money',exec:()=>addRecord('money',d.date||today,{flow:'expense',amount:amt,category:d.category||'其他',note:String(d.note||'').slice(0,40)})};}
       case 'money_income':{const amt=Number(d.amount)||0;if(!amt)return null;return {label:'记账 · 收入',detail:money(amt)+' · '+(d.category||'其他')+(d.note?' · '+d.note:'')+' · '+(d.date||today),view:'money',exec:()=>addRecord('money',d.date||today,{flow:'income',amount:amt,category:d.category||'其他',note:String(d.note||'').slice(0,40)})};}
       case 'shopping':{if(!d.name)return null;const rem=d.remind_date?addReminder('买：'+d.name,d.remind_date):false;return {label:'待买清单',detail:d.name+(d.quantity?' · 数量 '+d.quantity:'')+(d.price?' · 预计 '+money(Number(d.price)):'')+(d.remind_date?' · 到 '+d.remind_date+' 弹窗跟进':''),view:'home',exec:()=>addRecord('home',today,{name:String(d.name).slice(0,40),quantity:String(d.quantity||'1'),category:'未分类',price:Number(d.price)||'',bought:false})};}
@@ -2364,6 +2386,8 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   const AI_VISION_PROMPT='你是「日常集」个人工作台的看图助理，任何图片都要给出有用的结果。只输出 JSON：{"intent":"...","reply":"一句简短中文确认","draft":{...}}。intent 判定规则：①图里主要是文字（截图/文档/告示/菜单/表格/聊天记录/手写等）→ intent=text_extract，draft.text=完整提取的文字，保持原有换行；②图中可辨认出待记事项（外卖单/购物小票/打车发票）→ intent=money_expense，draft:{amount:数字,category:"吃饭/交通/购物/娱乐/房租/看病/学习/其他",note:"商家或摘要"}；③体重秤读数 → intent=fitness，draft:{weight:数字}；④药盒/诊断单/化验单 → intent=health_issue，draft:{part:"相关部位",desc:"一句话"}；⑤以上都不是（风景/物品/人/状态等）→ intent=describe，draft.text=一段准确的中文描述，说清物体、数量、状态、场景里对用户有用的信息。金额只认图里明确可读的数字。reply 要按 intent 分别写：text_extract 用「提取到这些文字：」、describe 用「看图结果：」、money_expense 用「记一笔支出：」、fitness 用「记身体数据：」、health_issue 用「记身体不适：」。只输出 JSON。';
   function aiCam(file){
     if(!file)return;
+    const nm=String(file.name||''),tp=String(file.type||'');
+    if(/\.json$/i.test(nm)||tp.indexOf('json')>-1){aiImportBackup(file);return;}
     const vk=aiVisionKeyGet();
     if(!vk){toast('先在设置页粘贴智谱识图 Key（免费）');return;}
     aiAppendMsg('user','〔拍照〕'+(file.name||'图片'));
@@ -2390,6 +2414,20 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
       img.src=rd.result;
     };
     rd.readAsDataURL(file);
+  }
+  function aiImportBackup(file){
+    aiAppendMsg('user','〔备份文件〕'+(file.name||'backup.json'));
+    const thinking=aiAppendMsg('bot','正在读这份备份…');
+    const rd=new FileReader();
+    rd.onload=()=>{
+      if(thinking)thinking.remove();
+      let o=null;
+      try{o=JSON.parse(String(rd.result));}catch(e){aiAppendMsg('bot','这个文件不是 JSON，读不出来。请用设置页「导出备份 JSON」生成的文件。');return;}
+      if(!o||typeof o!=='object'){aiAppendMsg('bot','文件内容读不出来，不是有效的备份。');return;}
+      aiAfter({intent:'backup_import',reply:'',draft:{raw:JSON.stringify(o)}},false);
+    };
+    rd.onerror=()=>{if(thinking)thinking.remove();aiAppendMsg('bot','文件读取失败，再选一次试试。');};
+    rd.readAsText(file);
   }
   (function(){const cf=document.getElementById('aiCamFile');if(cf)cf.addEventListener('change',function(e){const f=e.target.files&&e.target.files[0];e.target.value='';aiCam(f);});})();
   const IMG_TOKEN_NAME='richangji-img-token',IMG_REPO='LL887526/richangji',IMG_BRANCH='main',IMG_DIR='img',IMG_BASE='https://ll887526.github.io/richangji/img/';
