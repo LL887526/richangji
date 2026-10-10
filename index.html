@@ -3990,6 +3990,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
 
   const V13_INDEP=["wb_todayGoals","wb_dailyTasks","wb_dailyTaskLog","wb_dailyTaskTotal","wb_lastActive","wb_workoutSchedule","wb_workoutLib","wb_workoutPlans","wb_workoutLog","wb_workoutToday","wb_bodyWeight"];
   const V13_MAPPED=["tasks","todos","projects","collab","ideas","caps","topics","copy","reviews","skills","materials","mstats","goals","overdue","tree","nodeOverride","workout","workoutSets","meals"];
+  const BK_KEYS=["richangji-finance-v1","richangji-health-v1","richangji-reminders-v1"];
   function scanV13(){
     const out={state:null,indep:{},found:0};
     try{const r=localStorage.getItem('wb_workbench_v3');if(r){out.state=JSON.parse(r);out.found++;}}catch(e){}
@@ -4096,6 +4097,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     try{
       const dump={kind:'richangji-backup-v1',ts:Date.now(),state:JSON.parse(localStorage.getItem(STORAGE_KEY)||'null')||JSON.parse(JSON.stringify(state)),indep:{}};
       V13_INDEP.forEach(k=>{const v=localStorage.getItem(k);if(v!==null){try{dump.indep[k]=JSON.parse(v);}catch(e2){}}});
+      dump.keys={};BK_KEYS.forEach(k=>{try{const v=localStorage.getItem(k);if(v!==null&&v!=='')dump.keys[k]=v;}catch(e3){}});
       downloadBlob(JSON.stringify(dump),'application/json','richangji-backup-'+isoDate()+'.json');
       try{localStorage.setItem('richangji-lastExport',String(Date.now()));}catch(e2){}
       renderBackupHint();toast('备份已导出到下载');
@@ -4109,11 +4111,13 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
       let o=null;
       try{o=JSON.parse(String(rd.result));}catch(err){toast('文件解析失败，需要本工作台导出的全量备份 JSON');return;}
       if(!o||o.kind!=='richangji-backup-v1'||!o.state){toast('备份格式不正确');return;}
-      if(!confirm('导入将覆盖当前全部数据（生活/工作/成长/健身），且无法撤销。确定继续吗？'))return;
+      if(!confirm('导入将覆盖当前全部数据（生活/工作/成长/健身/记账与负债台账），且无法撤销。确定继续吗？'))return;
       takeSnapshot();
       try{
         localStorage.setItem(STORAGE_KEY,JSON.stringify(o.state));
         if(o.indep)for(const k in o.indep){if(V13_INDEP.indexOf(k)>=0)localStorage.setItem(k,JSON.stringify(o.indep[k]));}
+        if(o.keys)for(const k in o.keys){if(BK_KEYS.indexOf(k)>=0&&typeof o.keys[k]==='string'&&o.keys[k])try{localStorage.setItem(k,o.keys[k]);}catch(e3){}}
+        if(o.fin)try{localStorage.setItem(FIN_KEY,JSON.stringify(o.fin));}catch(e3){}
         try{localStorage.setItem('richangji-lastExport',String(Date.now()));}catch(e2){}
         location.reload();
       }catch(err){toast('导入未完成：存储空间不足');}
