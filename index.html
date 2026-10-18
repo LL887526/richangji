@@ -217,6 +217,15 @@
 .foldArt .foldPad{padding:0 18px}
 .foldBar{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;min-height:48px;padding:0 16px;border:0;border-radius:16px;background:var(--plum);color:#fff;font:inherit;font-size:13px;font-weight:700;cursor:pointer;text-align:left}
 .foldBar em{font-style:normal;font-size:11px;opacity:.85}
+.acc-seg{flex-wrap:wrap}
+.acc-add-chip{display:flex;align-items:center;justify-content:center;flex:0 0 auto;min-height:40px;min-width:40px;padding:0 12px;border:1px dashed var(--line);border-radius:999px;background:transparent;color:var(--muted);cursor:pointer}
+.acc-add-chip svg{width:14px;height:14px}
+.acc-manage{margin:0 0 12px;padding:10px 12px;border:1px dashed var(--line);border-radius:14px;background:#fbf8f3}
+.acc-mrow{display:flex;align-items:center;gap:6px;min-height:44px;padding:4px 0;border-bottom:1px solid #eee7de}
+.acc-mrow:last-child{border-bottom:0}
+.acc-mrow .grow{flex:1;min-width:0;font-size:13px;font-weight:700;color:var(--ink)}
+.acc-mrow .grow small{display:block;font-size:11px;font-weight:400;color:#94887a}
+@media(max-width:560px){.mp-group{display:grid;grid-template-columns:1fr 1fr}.mp-group .mp-row{flex-direction:column;align-items:flex-start;gap:6px;min-height:0;padding:11px 12px;border-right:1px solid #eee7de}.mp-group .mp-row:nth-child(even){border-right:0}.mp-group .mp-badge{flex-direction:row;align-items:baseline;gap:5px;min-width:0;margin-left:47px}}
 /* 还款计划·甲案（数字优先） */
 .pA-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
 .pA-cell{padding:10px 6px;border:1px solid var(--line);border-radius:12px;background:#faf7f2;text-align:center}
@@ -767,9 +776,8 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
         <div class="wsec on" id="wsec-board">
           <article class="wpanel">
             <div class="wpanel-head"><div><p class="eyebrow">三账号流水线</p><h2>任务看板</h2></div><span class="wnote">点徽章切换 待剪 / 待发 / 已发</span></div>
-            <div class="wseg" id="accSeg">
-              <button class="on" data-acc="company">公司号</button><button data-acc="own">自有号</button><button data-acc="qjt">秋锦唐</button>
-            </div>
+            <div class="wseg acc-seg" id="accSeg"></div>
+            <div class="acc-manage" id="accManage" hidden><div class="wadd"><input type="text" id="accNameInput" maxlength="10" placeholder="新账号名，如：秋霞号"><button class="wbtn" data-act="accAdd">添加</button></div><div class="wlist" id="accManageList"></div></div>
             <div class="wadd"><input type="text" id="taskInput" maxlength="60" placeholder="新任务，回车确认"><button class="wbtn" data-act="addTask">添加</button></div>
             <div class="wlist" id="taskList"></div>
           </article>
@@ -1675,7 +1683,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     const mediaItems=(Array.isArray(candidate.mediaItems)?candidate.mediaItems:defaults.mediaItems).filter(item=>item&&item.name).map(item=>({id:item.id||uid(),name:String(item.name),type:['电影','剧','书','番'].includes(item.type)?item.type:'电影',status:['想看','在看','看完','弃了'].includes(item.status)?item.status:'想看',rating:clamp(Number(item.rating||0),0,5),review:String(item.review||''),date:/^\d{4}-\d{2}-\d{2}$/.test(item.date||'')?item.date:isoDate(),cover:typeof item.cover==='string'?item.cover:'',sample:Boolean(item.sample)}));
     const workSrc=(candidate.work&&typeof candidate.work==='object')?candidate.work:{};
     const workTasks=(workSrc.tasks&&typeof workSrc.tasks==='object')?workSrc.tasks:{};
-    const work={...workSrc,account:['company','own','qjt'].indexOf(workSrc.account)>=0?workSrc.account:'company',tasks:{company:Array.isArray(workTasks.company)?workTasks.company:[],own:Array.isArray(workTasks.own)?workTasks.own:[],qjt:Array.isArray(workTasks.qjt)?workTasks.qjt:[]},todos:Array.isArray(workSrc.todos)?workSrc.todos:[]};
+    const work={...workSrc,account:workSrc.account,tasks:Object.keys(workTasks).reduce((t,k)=>{if(Array.isArray(workTasks[k]))t[k]=workTasks[k];return t;},{}),todos:Array.isArray(workSrc.todos)?workSrc.todos:[]};
     const growSrc=(candidate.grow&&typeof candidate.grow==='object')?candidate.grow:{};
     const grow={...growSrc,reviews:Array.isArray(growSrc.reviews)?growSrc.reviews:[]};
     return {
@@ -1711,8 +1719,9 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   let state=loadState();
   state.work=state.work||{account:'company',tasks:{company:[],own:[],qjt:[]},todos:[]};
   if(!state.work.tasks||typeof state.work.tasks!=='object')state.work.tasks={};
-  ['company','own','qjt'].forEach(k=>{if(!Array.isArray(state.work.tasks[k]))state.work.tasks[k]=[];});
-  if(!['company','own','qjt'].includes(state.work.account))state.work.account='company';
+  if(!Array.isArray(state.work.accList)||!state.work.accList.length)state.work.accList=[{id:'company',name:'公司号'},{id:'own',name:'自有号'},{id:'qjt',name:'秋锦唐'}];
+  state.work.accList.forEach(a=>{if(!Array.isArray(state.work.tasks[a.id]))state.work.tasks[a.id]=[];});
+  if(!state.work.accList.some(a=>a.id===state.work.account))state.work.account=state.work.accList[0].id;
   if(!Array.isArray(state.work.todos))state.work.todos=[];
   ['projects','collab','caps','topics','copy','ideas'].forEach(k=>{if(!Array.isArray(state.work[k]))state.work[k]=[];});
   state.grow=state.grow||{};
@@ -2211,7 +2220,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
       ['记账与负债','记支出收入、登记与校准欠款、登记还款、改数或删除最近一笔、校准余额、预期收入',hasKey],
       ['还款方案','按平台类型排优先级，算本期可还额度和清空期数',hasKey],
       ['日程 / 待买 / 提醒','一句话排日程、加待买、设提醒',hasKey],
-      ['工作任务','按公司号 / 自有号 / 品牌号加任务',hasKey],
+      ['工作任务','按任意已设账号加任务（说账号名即可）',hasKey],
       ['身体与心情','体重体脂、身体不适、疾病史、习惯打卡',hasKey],
       ['拍照识图','小票记账、体重秤、药盒化验单、截图提字、任意图片描述',hasVis],
       ['图片上传','传到自己的 GitHub 仓库，拿可分享的链接',hasImg],
@@ -2252,7 +2261,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
       case 'money_income':{const amt=Number(d.amount)||0;if(!amt)return null;return {label:'记账 · 收入',detail:money(amt)+' · '+(d.category||'其他')+(d.note?' · '+d.note:'')+' · '+(d.date||today),view:'money',exec:()=>addRecord('money',d.date||today,{flow:'income',amount:amt,category:d.category||'其他',note:String(d.note||'').slice(0,40)})};}
       case 'shopping':{if(!d.name)return null;const rem=d.remind_date?addReminder('买：'+d.name,d.remind_date):false;return {label:'待买清单',detail:d.name+(d.quantity?' · 数量 '+d.quantity:'')+(d.price?' · 预计 '+money(Number(d.price)):'')+(d.remind_date?' · 到 '+d.remind_date+' 弹窗跟进':''),view:'home',exec:()=>addRecord('home',today,{name:String(d.name).slice(0,40),quantity:String(d.quantity||'1'),category:'未分类',price:Number(d.price)||'',bought:false})};}
       case 'planner':{if(!d.title)return null;return {label:'日程',detail:d.title+' · '+(d.date||today)+(d.time?' '+d.time:'')+(d.note?' · '+d.note:''),view:'planner',exec:()=>addRecord('planner',d.date||today,{title:String(d.title).slice(0,40),time:d.time||'',priority:d.priority==='high'?'high':d.priority==='low'?'low':'normal',list:'生活',note:String(d.note||'').slice(0,40),remind:false,done:false})};}
-      case 'task':{if(!d.text)return null;const acc=d.account==='own'?'own':d.account==='qjt'?'qjt':'company';return {label:'工作任务 · '+(acc==='company'?'公司号':acc==='own'?'自有号':'品牌号'),detail:String(d.text),view:'work',exec:()=>{state.work.tasks[acc].unshift({id:uid(),text:String(d.text).slice(0,60),stage:'待剪',time:nowStamp(),ts:Date.now()});saveState(true);renderWork();return true;}};}
+      case 'task':{if(!d.text)return null;const al=Array.isArray(state.work.accList)&&state.work.accList.length?state.work.accList:[{id:'company',name:'公司号'}];const hit=al.find(x=>x.id===d.account)||al.find(x=>x.name===d.account)||al.find(x=>String(d.account||'').indexOf(x.name)>-1);const acc=hit?hit.id:state.work.account;const accName=hit?hit.name:((al.find(x=>x.id===acc)||{}).name||'当前账号');return {label:'工作任务 · '+accName,detail:String(d.text),view:'work',exec:()=>{if(!Array.isArray(state.work.tasks[acc]))state.work.tasks[acc]=[];state.work.tasks[acc].unshift({id:uid(),text:String(d.text).slice(0,60),stage:'待剪',time:nowStamp(),ts:Date.now()});saveState(true);renderWork();return true;}};}
       case 'fitness':{const has=d.weight||d.bodyFat||d.calories||d.duration;if(!has)return null;const parts=[];if(d.weight)parts.push('体重 '+d.weight+'kg');if(d.bodyFat)parts.push('体脂 '+d.bodyFat+'%');if(d.calories)parts.push('摄入 '+d.calories+'kcal');if(d.duration)parts.push('运动 '+d.duration+'分钟');if(d.note)parts.push(d.note);return {label:'身体记录',detail:parts.join(' · ')+' · '+(d.date||today),view:'fitness',exec:()=>addRecord('fitness',d.date||today,{weight:d.weight||'',bodyFat:d.bodyFat||'',calories:d.calories||'',duration:d.duration||'',note:String(d.note||'').slice(0,40)})};}
       case 'reminder':{if(!d.text)return null;return {label:'提醒',detail:String(d.text)+' · '+(d.due||today)+' 弹窗跟进',view:'',exec:()=>{addReminder(d.text,d.due||today);return true;}};}
       case 'health_issue':{const part=String(d.part||'身体').slice(0,10);const desc=String(d.desc||'').slice(0,60);return {label:'身体不适',detail:part+(desc?' · '+desc:'')+' · '+(d.date||today),view:'health',exec:()=>{healthAddIssue(part,desc,d.date||today);return true;}};}
@@ -3080,6 +3089,14 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   const nowStamp=()=>{const d=new Date();return `${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;};
   const workTasks=()=>state.work.tasks[state.work.account]||[];
 
+  function renderAccSeg(){
+    const seg=document.getElementById('accSeg');if(!seg)return;
+    const list=state.work.accList||[];
+    seg.innerHTML=list.map(a=>'<button type="button" data-acc="'+escapeHtml(a.id)+'"'+(a.id===state.work.account?' class="on"':'')+'>'+escapeHtml(a.name)+'</button>').join('')
+      +'<button type="button" class="acc-add-chip" data-act="accManage" aria-label="管理账号"><svg aria-hidden="true"><use href="#i-plus"/></svg></button>';
+    const mg=document.getElementById('accManageList');
+    if(mg)mg.innerHTML=list.map(a=>'<div class="acc-mrow"><span class="grow">'+escapeHtml(a.name)+'<small>'+((state.work.tasks[a.id]||[]).length)+' 条任务</small></span><button class="text-btn" data-act="accRename" data-id="'+escapeHtml(a.id)+'">重命名</button><button class="text-btn" data-act="accDel" data-id="'+escapeHtml(a.id)+'"'+(list.length<=1?' disabled':'')+'>删除</button></div>').join('');
+  }
   function renderBoard(){
     const box=document.getElementById('taskList');if(!box)return;
     const list=workTasks();
@@ -3201,6 +3218,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   function renderWork(){
     document.querySelectorAll('#workTabs [data-wsec]').forEach(b=>b.classList.toggle('on',b.dataset.wsec===activeWorkSec));
     document.querySelectorAll('[id^="wsec-"]').forEach(el=>el.classList.toggle('on',el.id===`wsec-${activeWorkSec}`));
+    renderAccSeg();
     document.querySelectorAll('#accSeg [data-acc]').forEach(b=>b.classList.toggle('on',b.dataset.acc===state.work.account));
     if(activeWorkSec==='board'){renderBoard();renderTodos();}
     if(activeWorkSec==='proj')renderProjects();
@@ -3547,6 +3565,10 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     const ab=event.target.closest('[data-act]');
     if(ab){
       const a=ab.dataset.act;
+      if(a==='accManage'){const m=document.getElementById('accManage');if(m)m.hidden=!m.hidden;return;}
+      if(a==='accAdd'){const i=document.getElementById('accNameInput');const v=(i.value||'').trim();if(!v){toast('先填账号名');return;}const id='a'+Date.now().toString(36);state.work.accList.push({id:id,name:v.slice(0,10)});state.work.tasks[id]=[];state.work.account=id;saveState(true);renderWork();toast('账号已添加');return;}
+      if(a==='accRename'){const b=event.target.closest('[data-id]');if(!b)return;const acc=state.work.accList.find(x=>x.id===b.dataset.id);if(!acc)return;const n=prompt('账号改成什么名字？',acc.name);if(n&&n.trim()){acc.name=n.trim().slice(0,10);saveState(true);renderWork();}return;}
+      if(a==='accDel'){const b=event.target.closest('[data-id]');if(!b)return;if(state.work.accList.length<=1){toast('至少保留一个账号');return;}const acc=state.work.accList.find(x=>x.id===b.dataset.id);if(!acc)return;if(!confirm('删除「'+acc.name+'」？只隐藏账号，任务数据保留在本地。'))return;state.work.accList=state.work.accList.filter(x=>x.id!==acc.id);if(state.work.account===acc.id)state.work.account=state.work.accList[0].id;saveState(true);renderWork();return;}
       if(a==='addTask'){const i=document.getElementById('taskInput');const v=i.value.trim();if(v){addWorkTask(v);i.value='';}}
       if(a==='addTodo'){const i=document.getElementById('todoInput');const v=i.value.trim();if(v){state.work.todos.unshift({id:uid(),text:v,done:false,date:isoDate(),ts:Date.now()});saveState(true);renderTodos();i.value='';}}
       if(a==='saveReview')saveReview();
