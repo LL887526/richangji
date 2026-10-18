@@ -213,6 +213,29 @@
 .fin-row small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
 .fin-row .text-btn{flex:0 0 auto;min-height:34px}
 @media(max-width:860px){.fin-stats b{font-size:17px}}
+/* 还款计划·甲案（数字优先） */
+.pA-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+.pA-cell{padding:10px 6px;border:1px solid var(--line);border-radius:12px;background:#faf7f2;text-align:center}
+.pA-cell span{display:block;color:var(--muted);font-size:10.5px}
+.pA-cell b{display:block;font-size:16.5px;margin-top:3px;letter-spacing:-.3px}
+.pA-cell small{display:block;color:var(--muted);font-size:9.5px;margin-top:2px}
+.pA-bar{height:10px;border-radius:20px;background:#eee7df;overflow:hidden;margin-top:10px}
+.pA-bar i{display:block;height:100%;border-radius:inherit;background:var(--terra)}
+.pA-barnote{margin:5px 0 0;font-size:10.5px;color:var(--muted)}
+.pA-tgl{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:44px;padding:0 2px;border:0;background:none;font:inherit;font-size:13px;font-weight:700;color:var(--ink);cursor:pointer}
+.pA-tgl em{font-style:normal;color:var(--terra);font-size:12px;font-weight:700}
+.pA-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--line);font-size:12.5px}
+.pA-row:last-child{border-bottom:none}
+.pA-row i{font-style:normal;flex:0 0 18px;height:18px;border-radius:50%;background:var(--plum-soft);color:var(--plum);font-size:10.5px;font-weight:750;display:flex;align-items:center;justify-content:center}
+.pA-nm{flex:1;min-width:0;font-weight:600}
+.pA-nm small{display:block;color:var(--muted);font-size:10.5px;font-weight:400;margin-top:1px}
+.pA-pay{text-align:right;white-space:nowrap}
+.pA-pay b{font-size:12.5px}
+.pA-chip{display:inline-block;margin-left:5px;padding:1.5px 7px;border-radius:8px;font-size:10px;font-weight:700;font-style:normal;vertical-align:1px}
+.pA-chip.sage{background:var(--sage-soft);color:var(--sage)}
+.pA-chip.sand{background:var(--sand-soft);color:var(--sand)}
+.pA-chip.mute{background:#efe9e0;color:var(--muted)}
+.pA-uncal{margin-top:6px;padding:10px 12px;border-radius:12px;background:var(--sand-soft);color:var(--sand);font-size:12.5px;line-height:1.6}
 .rem-row{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--line);font-size:14px}
 .rem-row:last-child{border-bottom:none}
 .rem-row .grow{flex:1;min-width:0}
@@ -501,7 +524,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
               </div>
               <div id="finDebtList"></div>
               <div id="finExpected"></div>
-              <div id="finPlanBox" hidden><p class="eyebrow" style="margin:12px 0 4px">还款与花钱计划</p><p id="finPlanText" style="white-space:pre-wrap;font-size:13px;color:#3d3830;margin:0"></p></div>
+              <div id="finPlanBox" hidden><p class="eyebrow" style="margin:12px 0 4px">还款与花钱计划</p><div id="finPlanText" style="white-space:pre-wrap;font-size:13px;color:#3d3830;margin:0"></div></div>
               <div class="wmore" style="margin-top:10px"><button class="wbtn ghostbtn" data-act="finPlan" id="finPlanBtn">生成还款 / 花钱计划</button></div>
             </article>
             <article data-page-node-id="bn83OJ2LS8ST3bBC7EmVmR" class="panel compare-card"><div data-page-node-id="VHUordHoD4aVN5wbkB4ZmU"><p data-page-node-id="k5CBhds4NSYO9gG1XsfwBh" class="eyebrow"><!--pnid:qkCOv5dxHINUEg5tzDKE6m-->月度对比</p><h2 data-page-node-id="3eiQp2eypLqcBbltderIOj" id="monthCompare"><!--pnid:M3M3EF9G8Oou5GQI6uIUVa-->暂无对比</h2></div><span data-page-node-id="SIyER20rwusuiGqTHdi5bE" id="monthCompareDetail"><!--pnid:kMFZtTb5c35gtcPBBL9OKg-->有了上月数据后，这里会显示变化</span></article>
@@ -2564,6 +2587,50 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     const fin0=loadFin();const payload=JSON.stringify({可用余额:finDisplayBalance(),负债清单:fin0.debts.map(d=>({name:d.name,amount:d.amount})),预期收入:fin0.expected,今天:isoDate()});
     fetch('https://api.deepseek.com/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model:'deepseek-chat',messages:[{role:'system',content:'你是财务规划助理。根据用户的可用余额、负债清单和预期收入，输出简短中文计划：先列还款顺序（小额优先、先还清的标注），再算发薪前每天可花金额。不超过 8 行，直接给结论，不要客套。'},{role:'user',content:payload}],temperature:0.3,max_tokens:300})}).then(r=>r.json()).then(j=>{const t=j.choices&&j.choices[0]&&j.choices[0].message?String(j.choices[0].message.content||'').trim():'';onDone(t||localText);}).catch(()=>onDone(localText));
   }
+  function parsePlanText(text){
+    try{
+      const lines=String(text||'').split('\n');const out={items:[],meta:{}};
+      lines.forEach(l=>{
+        let m=l.match(/^·\s*(\d+)\.\s*(.+?)\s+¥([\d,.]+)，本期还\s+¥([\d,.]+)（(.+?)）$/);
+        if(m){out.items.push({idx:+m[1],name:m[2].trim(),amount:Number(m[3].replace(/,/g,'')),pay:Number(m[4].replace(/,/g,'')),status:m[5]});return;}
+        let mm;
+        if(mm=l.match(/^总负债\s+¥([\d,.]+)（(\d+)\s*笔），可用余额\s+¥([\d,.]+)(?:，预计\s+(\S+)\s+到账\s+¥([\d,.]+))?。?$/)){
+          out.meta.debtTotal=Number(mm[1].replace(/,/g,''));out.meta.count=+mm[2];out.meta.bal=Number(mm[3].replace(/,/g,''));
+          if(mm[4]){out.meta.expDate=mm[4];out.meta.expAmt=Number(mm[5].replace(/,/g,''));}
+        }
+        if(mm=l.match(/^本期可还约\s+¥([\d,.]+)/))out.meta.canPay=Number(mm[1].replace(/,/g,''));
+        if(mm=l.match(/约\s+(\d+)\s*期清空/))out.meta.mClear=+mm[1];
+        if(mm=l.match(/^发薪前每天可花约\s+¥([\d,.]+)（按\s+(\d+)\s*天/)){out.meta.daily=Number(mm[1].replace(/,/g,''));out.meta.days=+mm[2];}
+      });
+      if(!out.items.length)return null;
+      return {debtTotal:out.meta.debtTotal||0,count:out.meta.count||out.items.length,canPay:out.meta.canPay||0,
+        mClear:out.meta.mClear||0,daily:out.meta.daily||0,days:out.meta.days||30,expDate:out.meta.expDate||null,items:out.items};
+    }catch(e){return null;}
+  }
+  function renderFinPlanText(txt,fin){
+    const text=fin.plan?String(fin.plan.text||''):'';
+    const P=text?parsePlanText(text):null;
+    if(!P||P.canPay<=0){txt.textContent=text;return;}
+    const pct=P.debtTotal>0?Math.min(100,Math.round(P.canPay/P.debtTotal*100)):0;
+    const chipCls=s=>s.indexOf('可清')>-1?'sage':(s.indexOf('下期')>-1?'sand':'mute');
+    let h='<div class="pA-grid">'
+      +'<div class="pA-cell"><span>本期可还</span><b>'+money(P.canPay)+'</b>'+(P.expDate?'<small>'+escapeHtml(P.expDate)+' 到账后</small>':'')+'</div>'
+      +'<div class="pA-cell"><span>清空期数</span><b>'+(P.mClear?('约 '+P.mClear+' 期'):'--')+'</b>'+(P.mClear?'<small>不算新增消费</small>':'')+'</div>'
+      +'<div class="pA-cell"><span>每天可花</span><b>'+money(P.daily)+'</b><small>按 '+P.days+' 天平摊</small></div>'
+      +'</div>';
+    h+='<div class="pA-bar"><i style="width:'+pct+'%"></i></div>';
+    h+='<p class="pA-barnote">本期可覆盖 '+money(P.canPay)+' / 总负债 '+money(P.debtTotal)+'（'+pct+'%）</p>';
+    h+='<button type="button" class="pA-tgl" data-ptgl="1">还款顺序（'+P.items.length+' 笔）<em>展开</em></button>';
+    h+='<div class="pA-list" hidden>';
+    P.items.forEach(d=>{
+      h+='<div class="pA-row"><i>'+d.idx+'</i><span class="pA-nm">'+escapeHtml(d.name)+'<small>欠 '+money(d.amount)+'</small></span>'
+        +'<span class="pA-pay">本期还 <b>'+money(d.pay)+'</b><em class="pA-chip '+chipCls(d.status)+'">'+escapeHtml(d.status)+'</em></span></div>';
+    });
+    h+='</div>';
+    txt.innerHTML=h;
+    const tgl=txt.querySelector('[data-ptgl]');
+    if(tgl)tgl.addEventListener('click',()=>{const li=txt.querySelector('.pA-list');const open=li.hidden;li.hidden=!open;tgl.querySelector('em').textContent=open?'收起':'展开';});
+  }
   function renderFinanceCard(){
     const fin=loadFin();const bal=finDisplayBalance();const debtTotal=fin.debts.reduce((s,d)=>s+(Number(d.amount)||0),0);
     const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
@@ -2577,7 +2644,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     const exp=document.getElementById('finExpected');
     if(exp)exp.innerHTML=fin.expected?'<div class="fin-row" style="margin-top:6px"><span class="grow">预计 '+(fin.expected.date||'')+' 到账 '+money(fin.expected.amount)+(fin.expected.label?' · '+escapeHtml(fin.expected.label):'')+'<small>到账后点「已到账」，再对 AI 说「工资发了 xxx」记收入</small></span><button class="text-btn" data-act="finExpectedDone">已到账</button></div>':'';
     const box=document.getElementById('finPlanBox'),txt=document.getElementById('finPlanText');
-    if(box&&txt){box.hidden=!fin.plan;txt.textContent=fin.plan?String(fin.plan.text||''):'';}
+    if(box&&txt){box.hidden=!fin.plan;renderFinPlanText(txt,fin);}
     set('dashFinNet',bal==null?'--':money(bal-debtTotal));
     set('dashFinNote',bal==null?'待校准':(fin.debts.length?('总欠款 '+money(debtTotal)+' · '+fin.debts.length+' 笔'):'无负债'));
   }
