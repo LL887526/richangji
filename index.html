@@ -39,7 +39,7 @@
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
 .lang-switch{position:fixed;right:18px;bottom:18px;z-index:90;display:flex;align-items:center;gap:5px;padding:5px 7px;border:1px solid rgba(85,69,55,.14);border-radius:999px;background:rgba(255,253,250,.94);box-shadow:0 8px 24px rgba(53,41,31,.12);backdrop-filter:blur(12px)}.lang-switch button{min-width:34px;height:28px;padding:0 8px;border:0;border-radius:999px;background:transparent;color:var(--muted);font-size:11px;font-weight:700}.lang-switch button.active{background:var(--plum);color:#fff}.lang-switch span{color:#b2a89d;font-size:11px}.lang-switch button:focus-visible{outline:2px solid var(--terra);outline-offset:2px}@media(max-width:860px){.lang-switch{right:14px;bottom:calc(82px + env(safe-area-inset-bottom))}}
 
-.wspace-tabs{display:flex;gap:8px;overflow:auto;flex-wrap:nowrap;padding:2px 0 16px}
+.wspace-tabs{display:flex;gap:8px;overflow:auto;flex-wrap:wrap;padding:2px 0 16px}
 .wspace-tabs button{flex:0 0 auto;display:flex;align-items:center;gap:6px;min-height:40px;padding:0 15px;border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--muted);font-size:13px}
 .wspace-tabs button svg{width:16px;height:16px}
 .wspace-tabs button.on{background:var(--plum);border-color:var(--plum);color:#fff}
@@ -76,9 +76,9 @@
 .wform .wbtn{min-height:46px}
 .wempty{margin:0;color:var(--muted);font-size:13px;line-height:1.7}
 .v13bar[hidden]{display:none!important}
-.v13bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 16px;margin:0 0 14px;border:1px solid var(--line);border-radius:16px;background:var(--card)}
+.v13bar{display:flex;align-items:center;gap:10px;flex-wrap:nowrap;padding:10px 14px;margin:0 0 14px;border:1px solid var(--line);border-radius:16px;background:var(--card)}
 .v13bar b{font-size:13.5px;color:var(--ink)}
-.v13bar small{font-size:12px;color:var(--muted);line-height:1.6}
+.v13bar small{font-size:12px;color:var(--muted);line-height:1.6;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .v13bar .grow{flex:1;min-width:100px}
 .v13bar .wbtn{min-height:38px;padding:0 14px}
 .v13bar .wbtn.ghostbtn{background:transparent;color:var(--plum);border:1px solid var(--line)}
@@ -840,11 +840,14 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
         <div class="wsec on" id="gsec-review">
           <article class="wpanel">
             <div class="wpanel-head"><div><p class="eyebrow">今天的一次回看</p><h2>每日复盘</h2></div><span class="wnote" id="reviewCount"></span></div>
+            <button class="foldBar" type="button" data-fold="review"><span id="rvFoldTxt">今天的复盘还没写</span><em>展开</em></button>
+            <div class="foldBody" hidden>
             <div class="wform">
               <textarea id="rvDone" placeholder="今天完成了什么？"></textarea>
               <textarea id="rvStuck" placeholder="卡在哪？"></textarea>
               <textarea id="rvNext" placeholder="明天第一件事？"></textarea>
               <button class="wbtn primary" data-act="saveReview">保存今天的复盘</button>
+            </div>
             </div>
             <div class="wlist" id="rvList"></div>
           </article>
@@ -3096,6 +3099,8 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     const box=document.getElementById('rvList');if(!box)return;
     const list=state.grow.reviews;
     const cnt=document.getElementById('reviewCount');if(cnt)cnt.textContent=`${list.length} 篇`;
+    const rvFold=document.getElementById('rvFoldTxt');
+    if(rvFold)rvFold.textContent=list.length?('上次复盘 '+list[list.length-1].date+' · 共 '+list.length+' 篇'):'今天的复盘还没写';
     if(!list.length){box.innerHTML='<p class="wempty-task">还没有复盘，写下第一篇</p>';return;}
     box.innerHTML=list.slice().reverse().map(r=>`<div class="wrv"><span class="wrv-date">${escapeHtml(r.date)}</span>${r.done?`<div class="wrv-line"><b>完成</b>${escapeHtml(r.done)}</div>`:''}${r.stuck?`<div class="wrv-line"><b>卡点</b>${escapeHtml(r.stuck)}</div>`:''}${r.next?`<div class="wrv-line"><b>明天</b>${escapeHtml(r.next)}</div>`:''}<button class="wdel" data-wact="delReview" data-id="${r.id}" aria-label="删除">${icon('i-trash')}</button></div>`).join('');
   }
@@ -4383,6 +4388,16 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
 })();
 (function(){/* 手机端折叠仪式区：今日灵感（指数+轻提醒）默认收起 */
   var bar=document.querySelector('.foldBar[data-fold="life"]');
+  if(!bar)return;
+  bar.addEventListener('click',function(){
+    var body=bar.parentElement.querySelector('.foldBody');
+    if(!body)return;
+    body.hidden=!body.hidden;
+    var em=bar.querySelector('em');if(em)em.textContent=body.hidden?'展开':'收起';
+  });
+})();
+(function(){/* 成长页：每日复盘默认收起，摘要前置 */
+  var bar=document.querySelector('.foldBar[data-fold="review"]');
   if(!bar)return;
   bar.addEventListener('click',function(){
     var body=bar.parentElement.querySelector('.foldBody');
