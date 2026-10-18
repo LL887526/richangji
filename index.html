@@ -227,6 +227,9 @@
 .pA-bar i{display:block;height:100%;border-radius:inherit;background:var(--terra)}
 .pA-barnote{margin:5px 0 0;font-size:10.5px;color:var(--muted)}
 .pA-tgl{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:44px;padding:0 2px;border:0;background:none;font:inherit;font-size:13px;font-weight:700;color:var(--ink);cursor:pointer}
+.pA-guide{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-top:10px}
+.pA-guide>span{font-size:11px;color:#8a7f70}
+.pA-gbtn{min-height:38px;padding:0 14px;border:0;border-radius:12px;background:var(--terra);color:#fff;font:inherit;font-size:12px;font-weight:700;cursor:pointer}
 .pA-tgl em{font-style:normal;color:var(--terra);font-size:12px;font-weight:700}
 .pA-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--line);font-size:12.5px}
 .pA-row:last-child{border-bottom:none}
@@ -2615,7 +2618,23 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   function renderFinPlanText(txt,fin){
     const text=fin.plan?String(fin.plan.text||''):'';
     const P=text?parsePlanText(text):null;
-    if(!P||P.canPay<=0){txt.textContent=text;return;}
+    if(!P||P.canPay<=0){
+      txt.textContent=text;
+      if(text&&(!fin.balance||!fin.expected)){
+        const g=document.createElement('div');
+        g.className='pA-guide';
+        g.innerHTML='<span>补两笔数就能出数字格：</span>'
+          +'<button type="button" class="pA-gbtn" data-pg="bal">校准余额</button>'
+          +'<button type="button" class="pA-gbtn" data-pg="sal">登记工资</button>';
+        txt.appendChild(g);
+        g.querySelectorAll('.pA-gbtn').forEach(b=>b.addEventListener('click',()=>{
+          const sheet=document.getElementById('aiSheet');const inp=document.getElementById('aiInput');
+          if(sheet)sheet.hidden=false;if(typeof renderAiStatus==='function')renderAiStatus();
+          if(inp){inp.value=b.getAttribute('data-pg')==='bal'?'手上还有 ':'下月 15 号发工资 ';setTimeout(()=>inp.focus(),80);}
+        }));
+      }
+      return;
+    }
     const pct=P.debtTotal>0?Math.min(100,Math.round(P.canPay/P.debtTotal*100)):0;
     const chipCls=s=>s.indexOf('可清')>-1?'sage':(s.indexOf('下期')>-1?'sand':'mute');
     let h='<div class="pA-grid">'
