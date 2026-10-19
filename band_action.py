@@ -25,7 +25,7 @@ SID = "miothealth"
 TZ8 = timezone(timedelta(hours=8))
 
 STATE_ENC = Path("band-state.enc")
-DATA_FILE = Path(os.environ.get("BAND_DATA_FILE", "data/band-data.json"))
+DATA_FILE = Path(os.environ.get("BAND_DATA_FILE", "data/band-466d8dc5ea4412240954eb35.json"))
 
 
 def parse_mi(text: str) -> dict:
