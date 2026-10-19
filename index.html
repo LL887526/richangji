@@ -4325,6 +4325,28 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     document.getElementById('fitnessProfileForm').addEventListener('submit',e=>{e.preventDefault();const data=Object.fromEntries(new FormData(e.currentTarget));state.settings.fitnessProfile={...state.settings.fitnessProfile,height:Number(data.height),target:Number(data.target),age:Number(data.age),sex:data.sex,activity:Number(data.activity)};const saved=saveState();renderFitness();closeFitnessProfile();if(saved)toast('目标设置已更新');});
   }
 
+  
+  const BAND_DATA_URL='https://ll887526.github.io/richangji/data/band-466d8dc5ea4412240954eb35.json';
+  let bandSyncing=false;
+  async function bandSyncApply(manual){
+    if(bandSyncing)return;bandSyncing=true;
+    try{
+      const r=await fetch(BAND_DATA_URL,{cache:'no-store'});
+      if(!r.ok)return;
+      const j=await r.json();
+      if(j.err==='need_relogin'){if(manual)toast('手环授权过期，喊小暖重新扫码');return;}
+      if(j.err||!j.h){if(manual)toast('手环暂无数据');return;}
+      const h=state.habits.find(x=>x.key==='sleep')||state.habits.find(x=>x.type==='number'&&/睡眠|睡觉|sleep/i.test((x.name||'')+(x.nameEn||'')));
+      if(!h)return;
+      const today=isoDate();
+      const cur=Number(h.entries[today]||0);
+      if(cur>0){if(manual)toast('今日睡眠已有记录，不覆盖');return;}
+      if(j.d&&j.d!==today){if(manual)toast('手环暂无昨夜数据');return;}
+      updateHabit(h.id,'number',j.h);
+      toast('手环已同步昨晚睡眠 '+j.h+' 小时');
+    }catch(e){/* file:// 或离线时静默 */}
+    finally{bandSyncing=false;}
+  }
   function updateHabit(id,operation,value){const h=state.habits.find(x=>x.id===id);if(!h)return;const today=isoDate(),current=Number(h.entries[today]||0);if(operation==='plus')h.entries[today]=current+1;if(operation==='minus')h.entries[today]=Math.max(0,current-1);if(operation==='toggle')h.entries[today]=habitDone(h)?0:1;if(operation==='quick')h.entries[today]=habitDone(h)?0:Number(h.target||1);if(operation==='number')h.entries[today]=clamp(Number(value||0),0,9999);pushHabit(h,today);const justDone=habitDone(h),saved=saveState();renderAll();if(saved&&justDone){celebrate();const name=HABIT_DEFS.some(def=>def.key===h.key)||h.sample?translateText(h.name):h.name;toast(LANG==='en'?`${name} completed — nicely done`:`${h.name}，完成得漂亮`);}}
   function toggleTask(id){const task=state.records.find(r=>r.id===id&&r.type==='planner');if(!task)return;task.data.done=!task.data.done;updateRemotePlan(task);const saved=saveState();renderAll();if(saved&&task.data.done){celebrate();toast('完成一项，心里轻一点');}}
 
@@ -4415,7 +4437,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     const target=document.getElementById('view-dashboard');
     if(target&&window.MutationObserver)new MutationObserver(sync).observe(target,{attributes:true,attributeFilter:['class']});
   }
-  function init(){const now=new Date(),weekdays=['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];document.getElementById('todayLabel').textContent=LANG==='en'?new Intl.DateTimeFormat('en-US',{month:'long',day:'numeric',weekday:'long'}).format(now):`${now.getMonth()+1} 月 ${now.getDate()} 日 · ${weekdays[now.getDay()]}`;setDateDefaults();updateMoneyCategories();restoreDrafts();bindForms();bindEvents();dashApplyOrder();dashWatchView();const debtFixed=migrateDebtFlow();renderAll();renderAiStatus();checkDueReminders();renderFinanceCard();if(debtFixed)setTimeout(function(){toast('已把 '+debtFixed+' 笔「欠款」从支出改为负债，不再计入本月支出');},600);var aiInp=document.getElementById('aiInput');if(aiInp)aiInp.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();aiSend();}});switchView(document.getElementById(`view-${location.hash.slice(1)}`)?location.hash.slice(1):'dashboard');if(!dataCorrupted)saveState();pullAllRemote(function(ok){ if(ok){ saveState(); renderAll(); } });}
+  function init(){const now=new Date(),weekdays=['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];document.getElementById('todayLabel').textContent=LANG==='en'?new Intl.DateTimeFormat('en-US',{month:'long',day:'numeric',weekday:'long'}).format(now):`${now.getMonth()+1} 月 ${now.getDate()} 日 · ${weekdays[now.getDay()]}`;setDateDefaults();updateMoneyCategories();restoreDrafts();bindForms();bindEvents();dashApplyOrder();dashWatchView();bandSyncApply(false);setInterval(()=>bandSyncApply(false),30*60*1000);const debtFixed=migrateDebtFlow();renderAll();renderAiStatus();checkDueReminders();renderFinanceCard();if(debtFixed)setTimeout(function(){toast('已把 '+debtFixed+' 笔「欠款」从支出改为负债，不再计入本月支出');},600);var aiInp=document.getElementById('aiInput');if(aiInp)aiInp.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();aiSend();}});switchView(document.getElementById(`view-${location.hash.slice(1)}`)?location.hash.slice(1):'dashboard');if(!dataCorrupted)saveState();pullAllRemote(function(ok){ if(ok){ saveState(); renderAll(); } });}
   startI18n();
   document.addEventListener('DOMContentLoaded',init);
 })();
