@@ -4376,7 +4376,8 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   function bandSubNote(h){
     if(!bandSleep(h)||!bandLast)return '';
     const info=bandTodayInfo(h);
-    return info.today?' · 手环同步':` · 最近一晚 ${bandNum(info.v)}h（${String(info.date||'').slice(5)}）`;
+    if(info.today){const nv=Number((bandLast.nights&&bandLast.nights[info.date]&&bandLast.nights[info.date].h)||0);return Math.abs(nv-info.v)<0.05?' · 手环同步':'';}
+    return ` · 最近一晚 ${bandNum(info.v)}h（${String(info.date||'').slice(5)}）`;
   }
   function bandNumberControl(h,value,unit){
     if(!bandSleep(h)||!bandLast||bandManualFor===h.id)
