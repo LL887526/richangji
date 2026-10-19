@@ -120,9 +120,10 @@ def refresh_by_passtoken(creds: dict) -> dict:
     return new
 
 
-def fetch_sleep(creds: dict) -> dict:
+def fetch_nights(creds: dict, days: int = 9) -> tuple[dict, dict]:
+    """拉最近 N 天睡眠，按起床日(UTC+8)归档，同日多段取时长最长的一段。"""
     end = int(time.time())
-    start = end - 40 * 3600
+    start = end - days * 86400
     form = build_form(SLEEP_PATH, {"start_time": start, "end_time": end, "key": "sleep"}, creds["ssecurity"])
     resp = requests.post(
         HEALTH_API_BASE + SLEEP_PATH,
@@ -138,7 +139,8 @@ def fetch_sleep(creds: dict) -> dict:
     body = decrypt_result(creds["ssecurity"], form["_nonce"], resp.text.strip())
     if body.get("code") != 0:
         raise RuntimeError(f"api code {body.get('code')}: {body.get('message', '')}")
-    best = None
+    nights: dict[str, dict] = {}
+    latest = None
     for item in (body.get("result") or {}).get("data_list") or []:
         v = item.get("value", "{}")
         if isinstance(v, str):
@@ -146,12 +148,24 @@ def fetch_sleep(creds: dict) -> dict:
                 v = json.loads(v)
             except json.JSONDecodeError:
                 continue
-        et = int(v.get("device_wake_up_time") or v.get("end_time") or item.get("time") or 0)
-        if best is None or et > best[0]:
-            best = (et, v)
-    if best is None:
+        minutes = int(v.get("duration") or 0)
+        if minutes <= 0:
+            continue
+        end_ts = int(v.get("device_wake_up_time") or v.get("end_time") or item.get("time") or 0)
+        bed_ts = int(v.get("bedtime") or v.get("device_bedtime") or 0)
+        if not end_ts:
+            continue
+        day = datetime.fromtimestamp(end_ts, TZ8).strftime("%Y-%m-%d")
+        span = round((end_ts - bed_ts) / 60) if end_ts > bed_ts else minutes
+        rec = {"h": round(minutes / 60 * 10) / 10, "hd": round(span / 60 * 10) / 10, "end": end_ts}
+        # 同日取最长一段（排除零星小睡覆盖主睡眠）
+        if day not in nights or rec["h"] > nights[day]["h"]:
+            nights[day] = rec
+        if latest is None or end_ts > latest[0]:
+            latest = (end_ts, day, rec)
+    if latest is None:
         raise RuntimeError("no sleep data in window")
-    return best[1]
+    return nights, {"d": latest[1], **latest[2]}
 
 
 # ---------- 加密状态 ----------
@@ -181,28 +195,25 @@ def save_creds(creds: dict) -> None:
 def main() -> None:
     creds = load_creds()
     try:
-        value = fetch_sleep(creds)
+        nights, latest = fetch_nights(creds)
     except RuntimeError as e:
         if str(e) == "TOKEN_EXPIRED" and creds.get("passToken"):
             creds = refresh_by_passtoken(creds)
-            value = fetch_sleep(creds)
+            nights, latest = fetch_nights(creds)
         else:
             raise
     save_creds(creds)
 
-    minutes = int(value.get("duration") or 0)
-    end_ts = int(value.get("device_wake_up_time") or value.get("end_time") or 0)
-    bed_ts = int(value.get("bedtime") or value.get("device_bedtime") or 0)
-    span = round((end_ts - bed_ts) / 60) if end_ts > bed_ts else minutes
     out = {
-        "h": round(minutes / 60 * 10) / 10,
-        "hd": round(span / 60 * 10) / 10,
-        "d": datetime.fromtimestamp(end_ts, TZ8).strftime("%Y-%m-%d"),
+        "h": latest["h"],
+        "hd": latest["hd"],
+        "d": latest["d"],
+        "nights": {k: {"h": v["h"], "hd": v["hd"]} for k, v in sorted(nights.items())},
         "t": int(time.time()),
     }
     DATA_FILE.parent.mkdir(parents=True, exist_ok=True)
-    DATA_FILE.write_text(json.dumps(out, separators=(",", ":")), encoding="utf-8")
-    print("BAND_SYNC_OK", json.dumps(out))
+    DATA_FILE.write_text(json.dumps(out, separators=(",", ":"), ensure_ascii=False), encoding="utf-8")
+    print("BAND_SYNC_OK", json.dumps({"latest": out["d"], "nights": len(out["nights"])}))
 
 
 if __name__ == "__main__":
