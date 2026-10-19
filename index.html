@@ -1826,7 +1826,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     document.getElementById('taskProgress').textContent=`${todayTasks.filter(r=>!r.data.done).length} 件`;
     document.getElementById('taskHint').textContent=doneTasks?`已经完成 ${doneTasks} 件`:'节奏刚刚好';
     document.getElementById('dashboardTasks').innerHTML=todayTasks.length?todayTasks.slice(0,4).map(r=>taskRow(r)).join(''):empty('今天还没有待办，给自己留点空间');
-    document.getElementById('dashboardHabits').innerHTML=state.habits.length?state.habits.map(h=>{const value=Number(h.entries?.[isoDate()]||0),isDone=habitDone(h),isBuiltIn=HABIT_DEFS.some(def=>def.key===h.key)||h.sample,hdef=HABIT_DEFS.find(d=>d.key===h.key),unit=h.type==='check'?localizedHtml('次'):hdef?escapeHtml(resolveHabitUnit(hdef)):isBuiltIn?localizedHtml(h.unit):userHtml(h.unit);let control='';if(h.type==='counter')control=`<div class="counter-control"><button data-action="habit-minus" data-id="${h.id}">${icon('i-minus')}</button><strong>${value}</strong><button data-action="habit-plus" data-id="${h.id}">${icon('i-plus')}</button></div>`;else if(h.type==='number')control=`<div class="sleep-control"><input data-action="habit-number" data-id="${h.id}" type="number" min="0" max="9999" step="0.1" value="${value||''}" placeholder="0"><span>${unit}</span></div>`;else control=`<button class="habit-check ${isDone?'checked':''}" data-action="habit-toggle" data-id="${h.id}" aria-label="${escapeHtml(h.name)}">${isDone?icon('i-check'):''}</button>`;return `<div class="dh-row"><span class="dh-info"><strong>${habitNameHtml(h)}</strong><small>${isDone?t('已完成'):t('待打卡')} · 连续 ${habitStreak(h)} 天</small></span><span class="habit-action">${control}</span></div>`;}).join(''):empty('还没有习惯，点右上「管理」去新增');
+    document.getElementById('dashboardHabits').innerHTML=state.habits.length?state.habits.map(h=>{const value=Number(h.entries?.[isoDate()]||0),isDone=habitDone(h),isBuiltIn=HABIT_DEFS.some(def=>def.key===h.key)||h.sample,hdef=HABIT_DEFS.find(d=>d.key===h.key),unit=h.type==='check'?localizedHtml('次'):hdef?escapeHtml(resolveHabitUnit(hdef)):isBuiltIn?localizedHtml(h.unit):userHtml(h.unit);let control='';if(h.type==='counter')control=`<div class="counter-control"><button data-action="habit-minus" data-id="${h.id}">${icon('i-minus')}</button><strong>${value}</strong><button data-action="habit-plus" data-id="${h.id}">${icon('i-plus')}</button></div>`;else if(h.type==='number')control=`<div class="sleep-control"><input data-action="habit-number" data-id="${h.id}" type="number" min="0" max="9999" step="0.1" value="${value||''}" placeholder="0"><span>${unit}</span></div>`;else control=`<button class="habit-check ${isDone?'checked':''}" data-action="habit-toggle" data-id="${h.id}" aria-label="${escapeHtml(h.name)}">${isDone?icon('i-check'):''}</button>`;return `<div class="dh-row"><span class="dh-info"><strong>${habitNameHtml(h)}</strong><small>${isDone?t('已完成'):t('待打卡')} · 连续 ${habitStreak(h)} 天${(h.key==='sleep'&&bandLast)?' · 手环 '+bandLast.h+'h（'+String(bandLast.d||'').slice(5)+'）':''}</small></span><span class="habit-action">${control}</span></div>`;}).join(''):empty('还没有习惯，点右上「管理」去新增');
     const recent=sortedRecords().slice(0,5);document.getElementById('recentRecords').innerHTML=recent.length?recent.map(r=>{const meta=TYPE_META[r.type]||TYPE_META.home;return`<div class="timeline-item"><span class="record-icon ${meta.tone}">${icon(meta.icon)}</span><span><strong>${recordTitleHtml(r)}</strong><small>${escapeHtml(formatDateHeading(r.date))} · ${t(meta.label)}</small></span><span class="record-value">${escapeHtml(valueFor(r))}</span></div>`;}).join(''):empty('第一条记录，会从这里开始');
     document.getElementById('insightText').textContent=completed?'你不是在追赶完美，而是在让好习惯慢慢变得自然。':'规律不是把每天塞满，而是知道什么值得留下。';
   }
@@ -1904,7 +1904,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     const dates=Array.from({length:30},(_,i)=>shiftDate(i-29));let completedCells=0;
     state.habits.forEach(h=>dates.forEach(d=>{if(habitDone(h,d))completedCells++;}));
     document.getElementById('habitsDone').textContent=`${done} / ${state.habits.length}`;document.getElementById('habitsStreak').textContent=`${maxStreak} 天`;document.getElementById('habitRate').textContent=state.habits.length?`${Math.round(completedCells/(state.habits.length*30)*100)}%`:'0%';
-    document.getElementById('dailyHabitList').innerHTML=state.habits.map(h=>{const value=Number(h.entries?.[today]||0),isDone=habitDone(h),pulse=!isDone&&new Date().getHours()>=20,isBuiltIn=HABIT_DEFS.some(def=>def.key===h.key)||h.sample,hdef=HABIT_DEFS.find(d=>d.key===h.key),unit=h.type==='check'?localizedHtml('次'):hdef?escapeHtml(resolveHabitUnit(hdef)):isBuiltIn?localizedHtml(h.unit):userHtml(h.unit);let control='';if(h.type==='counter')control=`<div class="counter-control"><button data-action="habit-minus" data-id="${h.id}">${icon('i-minus')}</button><strong>${value}</strong><button data-action="habit-plus" data-id="${h.id}">${icon('i-plus')}</button></div>`;else if(h.type==='number')control=`<div class="sleep-control"><input data-action="habit-number" data-id="${h.id}" type="number" min="0" max="9999" step="0.1" value="${value||''}" placeholder="0"><span>${unit}</span></div>`;else control=`<button class="habit-check ${isDone?'checked':''}" data-action="habit-toggle" data-id="${h.id}">${isDone?icon('i-check'):''}</button>`;return`<div class="daily-habit ${isDone?'done':''} ${pulse?'pulse':''}"><button class="habit-card-delete" data-action="delete-habit-custom" data-id="${h.id}" aria-label="${t('删除习惯')}">${icon('i-trash')}</button><div><h3>${habitNameHtml(h)}</h3><p>${LANG==='en'?`Target ${h.target} ${unit} · ${habitStreak(h)}-day streak`:`目标 ${h.target} ${unit} · 连续 ${habitStreak(h)} 天`}</p></div><div class="habit-action"><span class="habit-state">${t(isDone?'已完成':'待完成')}</span>${control}</div></div>`;}).join('');
+    document.getElementById('dailyHabitList').innerHTML=state.habits.map(h=>{const value=Number(h.entries?.[today]||0),isDone=habitDone(h),pulse=!isDone&&new Date().getHours()>=20,isBuiltIn=HABIT_DEFS.some(def=>def.key===h.key)||h.sample,hdef=HABIT_DEFS.find(d=>d.key===h.key),unit=h.type==='check'?localizedHtml('次'):hdef?escapeHtml(resolveHabitUnit(hdef)):isBuiltIn?localizedHtml(h.unit):userHtml(h.unit);let control='';if(h.type==='counter')control=`<div class="counter-control"><button data-action="habit-minus" data-id="${h.id}">${icon('i-minus')}</button><strong>${value}</strong><button data-action="habit-plus" data-id="${h.id}">${icon('i-plus')}</button></div>`;else if(h.type==='number')control=`<div class="sleep-control"><input data-action="habit-number" data-id="${h.id}" type="number" min="0" max="9999" step="0.1" value="${value||''}" placeholder="0"><span>${unit}</span></div>`;else control=`<button class="habit-check ${isDone?'checked':''}" data-action="habit-toggle" data-id="${h.id}">${isDone?icon('i-check'):''}</button>`;return`<div class="daily-habit ${isDone?'done':''} ${pulse?'pulse':''}"><button class="habit-card-delete" data-action="delete-habit-custom" data-id="${h.id}" aria-label="${t('删除习惯')}">${icon('i-trash')}</button><div><h3>${habitNameHtml(h)}</h3><p>${LANG==='en'?`Target ${h.target} ${unit} · ${habitStreak(h)}-day streak`:`目标 ${h.target} ${unit} · 连续 ${habitStreak(h)} 天`}${(h.key==='sleep'&&bandLast)?' · 手环 '+bandLast.h+'h（'+String(bandLast.d||'').slice(5)+'）':''}</p></div><div class="habit-action"><span class="habit-state">${t(isDone?'已完成':'待完成')}</span>${control}</div></div>`;}).join('');
     const header=`<div class="heatmap-header"><span></span>${dates.map((d,i)=>`<span>${i%5===0?new Date(`${d}T00:00:00`).getDate():''}</span>`).join('')}</div>`;
     document.getElementById('habitHeatmap').innerHTML=header+state.habits.map(h=>`<div class="heatmap-row"><span class="heatmap-name">${habitNameHtml(h)}<i class="streak-badge">${LANG==='en'?`${habitStreak(h)} days`:`${habitStreak(h)} 天`}</i></span>${dates.map(date=>{const value=Number(h.entries?.[date]||0);return`<span class="heat-cell ${habitDone(h,date)?'done':value?'partial':''}" title="${date}${LANG==='en'?': ':'：'}${value||t('未完成')}"></span>`;}).join('')}</div>`).join('');
   }
@@ -4327,7 +4327,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
 
   
   const BAND_DATA_URL='https://ll887526.github.io/richangji/data/band-466d8dc5ea4412240954eb35.json';
-  let bandSyncing=false;
+  let bandSyncing=false,bandLast=null;
   async function bandSyncApply(manual){
     if(bandSyncing)return;bandSyncing=true;
     try{
@@ -4336,18 +4336,19 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
       const j=await r.json();
       if(j.err==='need_relogin'){if(manual)toast('手环授权过期，喊小暖重新扫码');return;}
       if(j.err||!j.h){if(manual)toast('手环暂无数据');return;}
+      bandLast={h:j.h,d:j.d,hd:j.hd};
       const h=state.habits.find(x=>x.key==='sleep')||state.habits.find(x=>x.type==='number'&&/睡眠|睡觉|sleep/i.test((x.name||'')+(x.nameEn||'')));
-      if(!h)return;
-      const today=isoDate();
-      const cur=Number(h.entries[today]||0);
-      if(cur>0){if(manual)toast('今日睡眠已有记录，不覆盖');return;}
-      if(j.d&&j.d!==today){
-        if(!sessionStorage.getItem('band_seen')){sessionStorage.setItem('band_seen','1');toast('手环已连接 · 最近一次睡眠 '+j.h+' 小时（'+j.d+'）');}
-        else if(manual)toast('手环已连接，暂无昨夜数据');
-        return;
-      }
-      updateHabit(h.id,'number',j.h);
-      toast('手环已同步昨晚睡眠 '+j.h+' 小时');
+      if(!h){renderAll();return;}
+      const nights=(j.nights&&typeof j.nights==='object')?j.nights:{[j.d]:{h:j.h,hd:j.hd}};
+      let filled=0;
+      Object.keys(nights).forEach(d=>{
+        const v=Number(nights[d]&&nights[d].h||0);
+        if(!v)return;
+        if(Number(h.entries[d]||0)>0)return;   // 已有记录（手动填过）一律不覆盖
+        h.entries[d]=v;pushHabit(h,d);filled++;
+      });
+      if(filled){const saved=saveState();renderAll();if(saved)toast('手环已同步 '+filled+' 晚睡眠记录');}
+      else{renderAll();if(manual)toast('手环数据已是最新，无需写入');}
     }catch(e){/* file:// 或离线时静默 */}
     finally{bandSyncing=false;}
   }
