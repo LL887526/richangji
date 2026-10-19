@@ -155,6 +155,11 @@ def fetch_sleep(creds: dict) -> dict:
 
 
 # ---------- 加密状态 ----------
+def _aesgcm():
+    from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+    return AESGCM(key32())
+
+
 def key32() -> bytes:
     return hashlib.sha256(os.environ["BAND_KEY"].encode()).digest()
 
