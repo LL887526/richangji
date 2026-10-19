@@ -4341,7 +4341,11 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
       const today=isoDate();
       const cur=Number(h.entries[today]||0);
       if(cur>0){if(manual)toast('今日睡眠已有记录，不覆盖');return;}
-      if(j.d&&j.d!==today){if(manual)toast('手环暂无昨夜数据');return;}
+      if(j.d&&j.d!==today){
+        if(!sessionStorage.getItem('band_seen')){sessionStorage.setItem('band_seen','1');toast('手环已连接 · 最近一次睡眠 '+j.h+' 小时（'+j.d+'）');}
+        else if(manual)toast('手环已连接，暂无昨夜数据');
+        return;
+      }
       updateHabit(h.id,'number',j.h);
       toast('手环已同步昨晚睡眠 '+j.h+' 小时');
     }catch(e){/* file:// 或离线时静默 */}
