@@ -3746,7 +3746,8 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     const vals=keys.map(k=>Number(nights[k]&&nights[k].h||0)).filter(v=>v>0);
     if(!vals.length){el.textContent='';return;}
     const avg=vals.reduce((a,b)=>a+b,0)/vals.length;
-    el.textContent=`昨夜 ${bandNum(bandLast.h)}h · 近 7 晚均 ${bandNum(avg)}h`;
+    const d=bandLast.d||'',label=d===isoDate()?'昨夜':d===shiftDate(-1)?'上一晚':(d.slice(5)||'最近');
+    el.textContent=`${label} ${bandNum(bandLast.h)}h · 近 7 晚均 ${bandNum(avg)}h`;
   }
   function renderAll(){applyBrand();renderDashboard();renderCockpitP5();renderBackupHint();renderMoney();renderFinanceCard();renderHabits();renderMemos();renderDashMemo();renderSleepNote();renderFitness();renderFitTrain();renderHealth();renderPlanner();renderHome();renderMedia();renderArchive();renderMorePage();renderBackupStatus();renderWork();renderGrow();renderSettingsPage();}
 
@@ -4556,7 +4557,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     if(!bandSleep(h)||!bandLast)return '';
     const info=bandTodayInfo(h);
     if(info.today){const nv=Number((bandLast.nights&&bandLast.nights[info.date]&&bandLast.nights[info.date].h)||0);return Math.abs(nv-info.v)<0.05?' · 手环同步':'';}
-    return ` · 最近一晚 ${bandNum(info.v)}h（${String(info.date||'').slice(5)}）`;
+    return ` · 上一晚 ${bandNum(info.v)}h`;
   }
   function bandNumberControl(h,value,unit){
     if(!bandSleep(h)||!bandLast||bandManualFor===h.id)
