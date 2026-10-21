@@ -1,0 +1,249 @@
+{
+ "sleep": {
+  "code": 0,
+  "msg": "ok",
+  "n": 3,
+  "fields": [
+   "avg_hr",
+   "avg_spo2",
+   "awake_count",
+   "bedtime",
+   "breath_quality",
+   "device_bedtime",
+   "device_wake_up_time",
+   "duration",
+   "has_rem",
+   "has_stage",
+   "is_uncomplete",
+   "items",
+   "max_hr",
+   "max_spo2",
+   "min_hr",
+   "min_spo2",
+   "sleep_algorithm_version",
+   "sleep_awake_duration",
+   "sleep_deep_duration",
+   "sleep_light_duration",
+   "sleep_rem_duration",
+   "timezone",
+   "version",
+   "wake_up_time"
+  ]
+ },
+ "steps": {
+  "code": 0,
+  "msg": "ok",
+  "n": 304,
+  "fields": [
+   "calories",
+   "distance",
+   "steps",
+   "time"
+  ]
+ },
+ "step": {
+  "code": 0,
+  "msg": "ok",
+  "n": 0,
+  "fields": []
+ },
+ "walk": {
+  "code": 0,
+  "msg": "ok",
+  "n": 0,
+  "fields": []
+ },
+ "run": {
+  "code": 0,
+  "msg": "ok",
+  "n": 0,
+  "fields": []
+ },
+ "heart_rate": {
+  "code": 0,
+  "msg": "ok",
+  "n": 181,
+  "fields": [
+   "bpm",
+   "time",
+   "type"
+  ]
+ },
+ "heartrate": {
+  "code": 0,
+  "msg": "ok",
+  "n": 0,
+  "fields": []
+ },
+ "hr": {
+  "code": 0,
+  "msg": "ok",
+  "n": 0,
+  "fields": []
+ },
+ "stress": {
+  "code": 0,
+  "msg": "ok",
+  "n": 106,
+  "fields": [
+   "stress",
+   "time"
+  ]
+ },
+ "pressure": {
+  "code": 0,
+  "msg": "ok",
+  "n": 0,
+  "fields": []
+ },
+ "emotion": {
+  "code": 0,
+  "msg": "ok",
+  "n": 0,
+  "fields": []
+ },
+ "mood": {
+  "code": 0,
+  "msg": "ok",
+  "n": 0,
+  "fields": []
+ },
+ "emotion_record": {
+  "code": 0,
+  "msg": "ok",
+  "n": 0,
+  "fields": []
+ },
+ "spo2": {
+  "code": 0,
+  "msg": "ok",
+  "n": 192,
+  "fields": [
+   "spo2",
+   "time"
+  ]
+ },
+ "blood_oxygen": {
+  "code": 0,
+  "msg": "ok",
+  "n": 0,
+  "fields": []
+ },
+ "oxygen": {
+  "code": 0,
+  "msg": "ok",
+  "n": 0,
+  "fields": []
+ },
+ "weight": {
+  "code": 0,
+  "msg": "ok",
+  "n": 0,
+  "fields": []
+ },
+ "body_fat": {
+  "code": 0,
+  "msg": "ok",
+  "n": 0,
+  "fields": []
+ },
+ "calories": {
+  "code": 0,
+  "msg": "ok",
+  "n": 673,
+  "fields": [
+   "calories",
+   "time"
+  ]
+ },
+ "calorie": {
+  "code": 0,
+  "msg": "ok",
+  "n": 0,
+  "fields": []
+ },
+ "distance": {
+  "code": 0,
+  "msg": "ok",
+  "n": 0,
+  "fields": []
+ },
+ "stand": {
+  "code": 0,
+  "msg": "ok",
+  "n": 0,
+  "fields": []
+ },
+ "stand_hour": {
+  "code": 0,
+  "msg": "ok",
+  "n": 0,
+  "fields": []
+ },
+ "sedentary": {
+  "code": 0,
+  "msg": "ok",
+  "n": 0,
+  "fields": []
+ },
+ "activity": {
+  "code": 0,
+  "msg": "ok",
+  "n": 0,
+  "fields": []
+ },
+ "activity_intensity": {
+  "code": 0,
+  "msg": "ok",
+  "n": 0,
+  "fields": []
+ },
+ "pai": {
+  "code": 0,
+  "msg": "ok",
+  "n": 0,
+  "fields": []
+ },
+ "vitality": {
+  "code": 0,
+  "msg": "ok",
+  "n": 0,
+  "fields": []
+ },
+ "sleep_quality": {
+  "code": 0,
+  "msg": "ok",
+  "n": 0,
+  "fields": []
+ },
+ "workout": {
+  "code": 0,
+  "msg": "ok",
+  "n": 0,
+  "fields": []
+ },
+ "sport": {
+  "code": 0,
+  "msg": "ok",
+  "n": 0,
+  "fields": []
+ },
+ "exercise": {
+  "code": 0,
+  "msg": "ok",
+  "n": 0,
+  "fields": []
+ },
+ "skin_temperature": {
+  "code": 0,
+  "msg": "ok",
+  "n": 0,
+  "fields": []
+ },
+ "temperature": {
+  "code": 0,
+  "msg": "ok",
+  "n": 0,
+  "fields": []
+ }
+}
