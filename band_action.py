@@ -192,8 +192,21 @@ def save_creds(creds: dict) -> None:
     STATE_ENC.write_text(json.dumps({"n": b64e(nonce), "c": b64e(ct)}))
 
 
+def _maybe_probe() -> None:
+    """一次性探测端点支持哪些数据项；产出 data/_band_probe.json 后不再执行。"""
+    marker = DATA_FILE.parent / "_band_probe.json"
+    if marker.exists():
+        return
+    try:
+        import band_probe
+        band_probe.main()
+    except Exception as e:
+        print("PROBE_SKIP", repr(e)[:120])
+
+
 def main() -> None:
     creds = load_creds()
+    _maybe_probe()
     try:
         nights, latest = fetch_nights(creds)
     except RuntimeError as e:
