@@ -194,7 +194,7 @@ def save_creds(creds: dict) -> None:
 
 def _maybe_probe() -> None:
     """一次性探测端点支持哪些数据项；产出 data/_band_probe.json 后不再执行。"""
-    marker = DATA_FILE.parent / "_band_probe.json"
+    marker = DATA_FILE.parent / "_band_probe2.json"
     if marker.exists():
         return
     try:
