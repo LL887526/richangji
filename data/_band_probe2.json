@@ -1,0 +1,290 @@
+{
+ "emotion": {
+  "code": 0,
+  "n": 0,
+  "fields": [],
+  "sample": null
+ },
+ "emotions": {
+  "code": 0,
+  "n": 0,
+  "fields": [],
+  "sample": null
+ },
+ "mood": {
+  "code": 0,
+  "n": 0,
+  "fields": [],
+  "sample": null
+ },
+ "mood_score": {
+  "code": 0,
+  "n": 0,
+  "fields": [],
+  "sample": null
+ },
+ "emotion_score": {
+  "code": 0,
+  "n": 0,
+  "fields": [],
+  "sample": null
+ },
+ "emotion_type": {
+  "code": 0,
+  "n": 0,
+  "fields": [],
+  "sample": null
+ },
+ "emotion_record": {
+  "code": 0,
+  "n": 0,
+  "fields": [],
+  "sample": null
+ },
+ "emotion_state": {
+  "code": 0,
+  "n": 0,
+  "fields": [],
+  "sample": null
+ },
+ "emotion_tag": {
+  "code": 0,
+  "n": 0,
+  "fields": [],
+  "sample": null
+ },
+ "mood_tag": {
+  "code": 0,
+  "n": 0,
+  "fields": [],
+  "sample": null
+ },
+ "emotion_monitor": {
+  "code": 0,
+  "n": 0,
+  "fields": [],
+  "sample": null
+ },
+ "mental": {
+  "code": 0,
+  "n": 0,
+  "fields": [],
+  "sample": null
+ },
+ "mental_health": {
+  "code": 0,
+  "n": 0,
+  "fields": [],
+  "sample": null
+ },
+ "mental_pressure": {
+  "code": 0,
+  "n": 0,
+  "fields": [],
+  "sample": null
+ },
+ "psychological": {
+  "code": 0,
+  "n": 0,
+  "fields": [],
+  "sample": null
+ },
+ "affect": {
+  "code": 0,
+  "n": 0,
+  "fields": [],
+  "sample": null
+ },
+ "feeling": {
+  "code": 0,
+  "n": 0,
+  "fields": [],
+  "sample": null
+ },
+ "wellbeing": {
+  "code": 0,
+  "n": 0,
+  "fields": [],
+  "sample": null
+ },
+ "stress_level": {
+  "code": 0,
+  "n": 0,
+  "fields": [],
+  "sample": null
+ },
+ "pressure_score": {
+  "code": 0,
+  "n": 0,
+  "fields": [],
+  "sample": null
+ },
+ "relax": {
+  "code": 0,
+  "n": 0,
+  "fields": [],
+  "sample": null
+ },
+ "relaxation": {
+  "code": 0,
+  "n": 0,
+  "fields": [],
+  "sample": null
+ },
+ "stress_record": {
+  "code": 0,
+  "n": 0,
+  "fields": [],
+  "sample": null
+ },
+ "energy": {
+  "code": 0,
+  "n": 0,
+  "fields": [],
+  "sample": null
+ },
+ "fatigue": {
+  "code": 0,
+  "n": 0,
+  "fields": [],
+  "sample": null
+ },
+ "tired": {
+  "code": 0,
+  "n": 0,
+  "fields": [],
+  "sample": null
+ },
+ "body_battery": {
+  "code": 0,
+  "n": 0,
+  "fields": [],
+  "sample": null
+ },
+ "hrv": {
+  "code": 0,
+  "n": 0,
+  "fields": [],
+  "sample": null
+ },
+ "blood_pressure": {
+  "code": 0,
+  "n": 0,
+  "fields": [],
+  "sample": null
+ },
+ "respiratory_rate": {
+  "code": 0,
+  "n": 0,
+  "fields": [],
+  "sample": null
+ },
+ "breath": {
+  "code": 0,
+  "n": 0,
+  "fields": [],
+  "sample": null
+ },
+ "temperature_body": {
+  "code": 0,
+  "n": 0,
+  "fields": [],
+  "sample": null
+ },
+ "body_temperature": {
+  "code": 0,
+  "n": 0,
+  "fields": [],
+  "sample": null
+ },
+ "sleep_stage": {
+  "code": 0,
+  "n": 0,
+  "fields": [],
+  "sample": null
+ },
+ "sleep_stages": {
+  "code": 0,
+  "n": 0,
+  "fields": [],
+  "sample": null
+ },
+ "sleep_detail": {
+  "code": 0,
+  "n": 0,
+  "fields": [],
+  "sample": null
+ },
+ "workout_record": {
+  "code": 0,
+  "n": 0,
+  "fields": [],
+  "sample": null
+ },
+ "sport_record": {
+  "code": 0,
+  "n": 0,
+  "fields": [],
+  "sample": null
+ },
+ "exercise_record": {
+  "code": 0,
+  "n": 0,
+  "fields": [],
+  "sample": null
+ },
+ "training": {
+  "code": 0,
+  "n": 0,
+  "fields": [],
+  "sample": null
+ },
+ "vo2max": {
+  "code": 0,
+  "n": 0,
+  "fields": [],
+  "sample": null
+ },
+ "fitness_age": {
+  "code": 0,
+  "n": 0,
+  "fields": [],
+  "sample": null
+ },
+ "run_record": {
+  "code": 0,
+  "n": 0,
+  "fields": [],
+  "sample": null
+ },
+ "walk_record": {
+  "code": 0,
+  "n": 0,
+  "fields": [],
+  "sample": null
+ },
+ "stand_count": {
+  "code": 0,
+  "n": 0,
+  "fields": [],
+  "sample": null
+ },
+ "sedentary_time": {
+  "code": 0,
+  "n": 0,
+  "fields": [],
+  "sample": null
+ },
+ "activity_minutes": {
+  "code": 0,
+  "n": 0,
+  "fields": [],
+  "sample": null
+ },
+ "move_minutes": {
+  "code": 0,
+  "n": 0,
+  "fields": [],
+  "sample": null
+ }
+}
