@@ -151,6 +151,9 @@ def api_call(path: str, payload: dict, creds: dict, tries: int = 2) -> dict:
     raise last
 
 
+_RAW: dict = {}
+
+
 def fetch_nights(creds: dict, days: int = 9) -> tuple[dict, dict]:
     """拉最近 N 天睡眠，按起床日(UTC+8)归档，同日多段取时长最长的一段。"""
     end = int(time.time())
@@ -168,6 +171,14 @@ def fetch_nights(creds: dict, days: int = 9) -> tuple[dict, dict]:
         minutes = int(v.get("duration") or 0)
         if minutes <= 0:
             continue
+        if not _RAW:
+            # 一次性导出原始字段，供人工核对 duration 口径 / 是否含入睡潜伏期
+            _RAW.update({
+                "fieldKeys": sorted(v.keys()),
+                "sample": v,
+                "itemKeys": sorted(item.keys()),
+                "itemMeta": {k: item[k] for k in item if k != "value"},
+            })
         end_ts = int(v.get("device_wake_up_time") or v.get("end_time") or item.get("time") or 0)
         bed_ts = int(v.get("bedtime") or v.get("device_bedtime") or 0)
         if not end_ts:
@@ -345,6 +356,12 @@ def main() -> None:
     }
     DATA_FILE.parent.mkdir(parents=True, exist_ok=True)
     DATA_FILE.write_text(json.dumps(out, separators=(",", ":"), ensure_ascii=False), encoding="utf-8")
+    if _RAW:
+        try:
+            (DATA_FILE.parent / "_sleep_raw.json").write_text(
+                json.dumps(_RAW, ensure_ascii=False), encoding="utf-8")
+        except Exception:
+            pass
     print("BAND_SYNC_OK", json.dumps({"latest": out["d"], "nights": len(out["nights"]),
                                       "days": len(days_map)}))
 
