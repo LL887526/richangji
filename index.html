@@ -1293,6 +1293,24 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
 .band-eff{text-align:right;flex:none}
 .band-eff b{display:block;font-size:19px;font-weight:750;font-variant-numeric:tabular-nums;line-height:1.2}
 .band-eff i{font-style:normal;font-size:10px;color:#94887a;letter-spacing:.05em}
+.band-score{margin:-2px 0 0}
+.bs-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid #f3ede4}
+.bs-row:first-child{border-top:0}
+.bs-row>span{flex:none;width:62px;font-size:12px;color:#7b7166;letter-spacing:.01em;white-space:nowrap}
+.bs-bar{flex:1;height:6px;border-radius:4px;background:#f2ece2;overflow:hidden}
+.bs-bar i{display:block;height:100%;border-radius:4px;background:#4d3045}
+.bs-bar i.low{background:#b65f42}
+.bs-row>b{flex:none;width:60px;text-align:right;font-size:12px;font-weight:750;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
+.bs-row b u{text-decoration:none;font-weight:500;font-size:10.5px;color:#b0a597;margin-left:2px}
+.bs-row>p{flex:none;width:104px;margin:0;text-align:right;font-size:10.5px;color:#a2978a;font-variant-numeric:tabular-nums;white-space:nowrap}
+.band-weak{margin:11px 0 0;padding:9px 11px;border-radius:11px;background:#fbf6ee;font-size:11.5px;line-height:1.55;color:#6f665c}
+.band-weak b{color:#4d3045;font-weight:700}
+@media(max-width:520px){
+  .bs-row{gap:7px}
+  .bs-row>span{width:58px;font-size:11.5px}
+  .bs-row>b{width:56px;font-size:11.5px}
+  .bs-row>p{display:none}
+}
 .band-seg{display:flex;height:8px;border-radius:5px;overflow:hidden;gap:2px;margin:15px 0 11px;background:#f1ebe0}
 .band-seg i{display:block;min-width:2px}
 .band-seg .s-deep{background:#4d3045}
@@ -4676,6 +4694,64 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     return ks.length?{date:ks[ks.length-1],v:m[ks[ks.length-1]]}:null;
   }
   function bandStressWord(v){if(!v)return '未测';if(v<30)return '轻松';if(v<60)return '一般';if(v<80)return '偏高';return '高';}
+  // 睡眠综合分：只用“睡着以后”的数据，不依赖上床时间
+  function bandScore(b){
+    const H=Number(b.h||0),hd=Number(b.hd||H)||H;
+    const deep=H?Number(b.deep||0)/H*100:0;
+    const rem=H?Number(b.rem||0)/H*100:0;
+    const awe=hd?Number(b.awake||0)/hd*100:0;
+    const n=Number(b.awakeN||0),hr=Number(b.hr||0),lo=Number(b.spo2Min||0);
+    let sDur;
+    if(H>=7&&H<=8.5)sDur=30;
+    else if(H>8.5&&H<=9.5)sDur=27;
+    else if(H>9.5)sDur=20;
+    else if(H>=6)sDur=18+(H-6)*12;
+    else if(H>=5)sDur=8+(H-5)*10;
+    else sDur=Math.max(0,H*1.6);
+    let sDeep;
+    if(deep>=15&&deep<=25)sDeep=12;
+    else if(deep>25&&deep<=35)sDeep=10;
+    else if(deep>35)sDeep=9;
+    else if(deep>=10)sDeep=6+(deep-10)/5*6;
+    else sDeep=Math.max(0,deep/10*6);
+    let sRem;
+    if(rem>=18&&rem<=25)sRem=13;
+    else if(rem>25&&rem<=30)sRem=11;
+    else if(rem>30)sRem=9;
+    else if(rem>=12)sRem=7+(rem-12)/6*6;
+    else sRem=Math.max(0,rem/12*7);
+    const conTab=[15,12,9,6,3];
+    let sCon=(conTab[n]!==undefined?conTab[n]:2)-(awe>10?3:0);
+    sCon=Math.max(0,sCon);
+    // 这一晚没有分期数据时，不给 0 分冤枉它，按中性 60% 计
+    const noStage=!deep&&!rem&&!Number(b.light||0);
+    if(noStage){sDeep=12*.6;sRem=13*.6;}
+    let sHr=hr?(hr<=60?10:hr<=65?10-(hr-60)*.4:hr<=70?8-(hr-65)*.6:hr<=75?5-(hr-70)*.6:2):5;
+    let sOx=lo?(lo>=92?10:lo>=90?7:lo>=85?4:1):5;
+    const bedTs=Number(b.bed||0);
+    let sBed=4;
+    if(bedTs){const d=new Date(bedTs*1000),m=d.getHours()*60+d.getMinutes();sBed=(m>=1380||m<=30)?10:m<=90?7:m<=150?4:2;}
+    const r1=v=>Math.round(v*10)/10;
+    const items=[
+      {k:'时长',v:sDur,m:30,t:`${bandNum(H)} 小时`},
+      {k:'深度睡眠',v:sDeep,m:12,t:`占 ${Math.round(deep)}%`},
+      {k:'快速眼动',v:sRem,m:13,t:`占 ${Math.round(rem)}%`},
+      {k:'连续性',v:sCon,m:15,t:`夜醒 ${n} 次`},
+      {k:'恢复',v:sHr+sOx,m:20,t:`心率 ${hr||'—'} · 最低氧 ${lo?lo+'%':'—'}`},
+      {k:'作息',v:sBed,m:10,t:`入睡 ${bedTs?bandHM(bedTs):'—'}`}
+    ];
+    items.forEach(x=>{x.v=r1(Math.max(0,Math.min(x.m,x.v)));x.p=x.v/x.m;});
+    const total=Math.round(items.reduce((a,x)=>a+x.v,0));
+    const weak=[...items].sort((a,b)=>a.p-b.p)[0];
+    let advice='';
+    if(weak.k==='时长')advice=H>9.5?`睡了 ${bandNum(H)} 小时，比需要的多出一截，多半是前一晚欠了觉。`:`只睡了 ${bandNum(H)} 小时，离 7 小时还差 ${bandNum(7-H)} 小时。`;
+    else if(weak.k==='快速眼动')advice=`快速眼动只占 ${Math.round(rem)}%，达标线是 20%。这一段管记忆和情绪修复，睡得久也补不回来。`;
+    else if(weak.k==='深度睡眠')advice=`深度睡眠只占 ${Math.round(deep)}%，15% 才算够。`;
+    else if(weak.k==='连续性')advice=`夜醒 ${n} 次，占掉 ${Math.round(awe)}% 的睡眠时间。`;
+    else if(weak.k==='恢复')advice=lo&&lo<85?`最低血氧 ${lo}%，其他几晚都在 86–95：这种情况多半是表带没戴紧或者翻身移位，先按佩戴问题看，不用紧张。`:``;
+    else if(weak.k==='作息')advice=`${bandHM(bedTs)} 才睡着，比 00:30 晚了一个多小时。`;
+    return {total,items,weak,advice};
+  }
   function renderBand(){
     const box=document.getElementById('bandBody');if(!box)return;
     const b=bandLast;
@@ -4684,6 +4760,8 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
       return;
     }
     const wake=b.bed?Number(b.bed)+Math.round(Number(b.hd||0)*3600):0;
+    const sc=bandScore(b);
+    const scoreRows=sc.items.map(x=>`<div class="bs-row"><span>${x.k}</span><div class="bs-bar"><i class="${x.p<.6?'low':''}" style="width:${Math.max(3,Math.round(x.p*100))}%"></i></div><b>${bandNum(x.v)}<u>/${x.m}</u></b><p>${x.t}</p></div>`).join('');
     const segs=[['深睡',Number(b.deep||0),'#4d3045'],['浅睡',Number(b.light||0),'#a2929c'],['快速眼动',Number(b.rem||0),'#cdbcc6'],['清醒',Number(b.awake||0),'#e3d9cb']];
     const segBar=segs.map(x=>`<i style="flex:${x[1]||0.001};background:${x[2]}"></i>`).join('');
     const legend=segs.map(x=>`<span><em style="background:${x[2]}"></em>${x[0]} <b>${bandNum(x[1])}h</b></span>`).join('');
@@ -4730,11 +4808,17 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
             <div class="band-big"><b>${bandNum(b.h)}</b><i>小时</i></div>
             <div class="band-times">${b.bed?bandHM(b.bed):'—'}<u>入睡</u>·<u>起床</u>${wake?bandHM(wake):'—'}</div>
           </div>
-          <div class="band-eff"><b>${b.eff||0}%</b><i>睡眠效率</i></div>
+          <div class="band-eff"><b>${sc.total}</b><i>综合分 /100</i></div>
         </div>
         <div class="band-seg">${segBar}</div>
         <div class="band-legend">${legend}</div>
         <div class="band-times" style="margin-top:11px">夜醒 ${b.awakeN||0} 次<u>·</u>睡眠心率 ${b.hr||0}<u>·</u>血氧 ${b.spo2||0}%</div>
+      </article>`,
+      `<article class="band-card">
+        <h3>这晚的分数怎么来的</h3>
+        <div class="band-score">${scoreRows}</div>
+        ${sc.advice?`<p class="band-weak">最拖后腿的一项：<b>${sc.weak.k}</b>，拿了 ${bandNum(sc.weak.v)} / ${sc.weak.m} 分。${sc.advice}</p>`:''}
+        <p class="band-note" style="margin-top:10px">满分 100，评分阈值参考通用睡眠区间，不作体检结论。</p>
       </article>`,
       `<article class="band-card">
         <h3>${someToday?'今日身体指标':'身体指标 · 最近记录'}</h3>
