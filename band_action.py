@@ -235,40 +235,52 @@ def collect_days(creds: dict, days: int = 9) -> dict:
         return out.setdefault(day, {"steps": 0, "dist": 0.0, "kcal": 0,
                                     "_hr": [], "_stress": [], "_spo2": []})
 
-    try:
-        for ts, v in fetch_series(creds, "steps", days):
-            s = slot(ts)
-            s["steps"] += int(v.get("steps") or 0)
-            s["dist"] += float(v.get("distance") or 0)
-            s["kcal"] += int(v.get("calories") or 0)
-    except Exception as e:
-        print("SERIES_SKIP steps", repr(e)[:90])
+    series: dict = {}
+    for key in ("steps", "heart_rate", "stress", "spo2"):
+        try:
+            series[key] = fetch_series(creds, key, days)
+        except Exception as e:
+            series[key] = []
+            print("SERIES_SKIP", key, repr(e)[:90])
+        rows = series[key]
+        byday: dict = {}
+        for ts, _v in rows:
+            dd = datetime.fromtimestamp(ts, TZ8).strftime("%m-%d")
+            byday[dd] = byday.get(dd, 0) + 1
+        print("DIAG", key, "n=", len(rows), json.dumps(dict(sorted(byday.items()))))
 
-    try:
-        for ts, v in fetch_series(creds, "heart_rate", days):
-            bpm = int(v.get("bpm") or 0)
-            if 30 <= bpm <= 220:
-                slot(ts)["_hr"].append(bpm)
-    except Exception as e:
-        print("SERIES_SKIP heart_rate", repr(e)[:90])
+    if series.get("steps"):
+        print("DIAG_STEPS_SAMPLE", json.dumps(series["steps"][:2], ensure_ascii=False)[:400])
+    if series.get("heart_rate"):
+        print("DIAG_HR_SAMPLE", json.dumps(series["heart_rate"][:2], ensure_ascii=False)[:400])
+        tcnt: dict = {}
+        for _ts, v in series["heart_rate"]:
+            k = str(v.get("type"))
+            tcnt[k] = tcnt.get(k, 0) + 1
+        print("DIAG_HR_TYPE", json.dumps(tcnt))
 
-    try:
-        for ts, v in fetch_series(creds, "stress", days):
-            val = int(v.get("stress") or 0)
-            if 1 <= val <= 100:
-                slot(ts)["_stress"].append(val)
-    except Exception as e:
-        print("SERIES_SKIP stress", repr(e)[:90])
+    for ts, v in series.get("steps", []):
+        s = slot(ts)
+        s["steps"] += int(v.get("steps") or 0)
+        s["dist"] += float(v.get("distance") or 0)
+        s["kcal"] += int(v.get("calories") or 0)
 
-    try:
-        for ts, v in fetch_series(creds, "spo2", days):
-            val = int(v.get("spo2") or 0)
-            if 70 <= val <= 100:
-                slot(ts)["_spo2"].append(val)
-    except Exception as e:
-        print("SERIES_SKIP spo2", repr(e)[:90])
+    for ts, v in series.get("heart_rate", []):
+        bpm = int(v.get("bpm") or 0)
+        if 30 <= bpm <= 220:
+            slot(ts)["_hr"].append(bpm)
 
-    for s in out.values():
+    for ts, v in series.get("stress", []):
+        val = int(v.get("stress") or 0)
+        if 1 <= val <= 100:
+            slot(ts)["_stress"].append(val)
+
+    for ts, v in series.get("spo2", []):
+        val = int(v.get("spo2") or 0)
+        if 70 <= val <= 100:
+            slot(ts)["_spo2"].append(val)
+
+    for _day, s in out.items():
         hr, st, sp = s.pop("_hr"), s.pop("_stress"), s.pop("_spo2")
         dist = s["dist"]
         s["dist"] = round(dist / 1000, 1) if dist > 300 else round(dist, 1)
