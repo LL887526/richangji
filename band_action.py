@@ -120,25 +120,42 @@ def refresh_by_passtoken(creds: dict) -> dict:
     return new
 
 
+def api_call(path: str, payload: dict, creds: dict, tries: int = 2) -> dict:
+    """带重试的请求。网络异常重试，鉴权失败立即抛出。"""
+    last = None
+    for attempt in range(tries + 1):
+        try:
+            form = build_form(path, payload, creds["ssecurity"])
+            resp = requests.post(
+                HEALTH_API_BASE + path,
+                headers={
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "User-Agent": DATA_UA,
+                    "Cookie": f"cUserId={creds['cUserId']}; serviceToken={creds['serviceToken']}",
+                },
+                data=form, timeout=22)
+            if resp.status_code in (401, 403):
+                raise RuntimeError("TOKEN_EXPIRED")
+            resp.raise_for_status()
+            body = decrypt_result(creds["ssecurity"], form["_nonce"], resp.text.strip())
+            if body.get("code") != 0:
+                raise RuntimeError(f"api code {body.get('code')}: {body.get('message', '')}")
+            return body
+        except RuntimeError:
+            raise
+        except Exception as e:
+            last = e
+            if attempt < tries:
+                print("RETRY", path.split("/")[-1], attempt + 1, type(e).__name__)
+                time.sleep(2 + attempt * 3)
+    raise last
+
+
 def fetch_nights(creds: dict, days: int = 9) -> tuple[dict, dict]:
     """拉最近 N 天睡眠，按起床日(UTC+8)归档，同日多段取时长最长的一段。"""
     end = int(time.time())
     start = end - days * 86400
-    form = build_form(SLEEP_PATH, {"start_time": start, "end_time": end, "key": "sleep"}, creds["ssecurity"])
-    resp = requests.post(
-        HEALTH_API_BASE + SLEEP_PATH,
-        headers={
-            "Content-Type": "application/x-www-form-urlencoded",
-            "User-Agent": DATA_UA,
-            "Cookie": f"cUserId={creds['cUserId']}; serviceToken={creds['serviceToken']}",
-        },
-        data=form, timeout=30)
-    if resp.status_code in (401, 403):
-        raise RuntimeError("TOKEN_EXPIRED")
-    resp.raise_for_status()
-    body = decrypt_result(creds["ssecurity"], form["_nonce"], resp.text.strip())
-    if body.get("code") != 0:
-        raise RuntimeError(f"api code {body.get('code')}: {body.get('message', '')}")
+    body = api_call(SLEEP_PATH, {"start_time": start, "end_time": end, "key": "sleep"}, creds)
     nights: dict[str, dict] = {}
     latest = None
     for item in (body.get("result") or {}).get("data_list") or []:
@@ -191,21 +208,7 @@ def fetch_series(creds: dict, key: str, days: int = 9) -> list:
     """拉某类时序数据（steps / heart_rate / stress / spo2），返回 [(ts, dict)] 升序。"""
     end = int(time.time())
     start = end - days * 86400
-    form = build_form(SLEEP_PATH, {"start_time": start, "end_time": end, "key": key}, creds["ssecurity"])
-    resp = requests.post(
-        HEALTH_API_BASE + SLEEP_PATH,
-        headers={
-            "Content-Type": "application/x-www-form-urlencoded",
-            "User-Agent": DATA_UA,
-            "Cookie": f"cUserId={creds['cUserId']}; serviceToken={creds['serviceToken']}",
-        },
-        data=form, timeout=30)
-    if resp.status_code in (401, 403):
-        raise RuntimeError("TOKEN_EXPIRED")
-    resp.raise_for_status()
-    body = decrypt_result(creds["ssecurity"], form["_nonce"], resp.text.strip())
-    if body.get("code") != 0:
-        raise RuntimeError(f"{key} code {body.get('code')}")
+    body = api_call(SLEEP_PATH, {"start_time": start, "end_time": end, "key": key}, creds)
     rows = []
     for item in (body.get("result") or {}).get("data_list") or []:
         v = item.get("value", "{}")
@@ -353,6 +356,16 @@ if __name__ == "__main__":
         DATA_FILE.parent.mkdir(parents=True, exist_ok=True)
         msg = str(e)
         err = "need_relogin" if ("passToken" in msg or "TOKEN_EXPIRED" in msg or "换取" in msg) else "sync_error"
-        DATA_FILE.write_text(json.dumps({"err": err, "t": int(time.time())}, separators=(",", ":")))
+        out = {}
+        if DATA_FILE.exists():
+            try:
+                old = json.loads(DATA_FILE.read_text(encoding="utf-8"))
+                if old.get("h"):
+                    out = old          # 保留上一次成功的读数，不被错误覆盖
+            except Exception:
+                pass
+        out["err"] = err
+        out["errT"] = int(time.time())
+        DATA_FILE.write_text(json.dumps(out, separators=(",", ":"), ensure_ascii=False), encoding="utf-8")
         print("BAND_SYNC_FAIL", msg)
         raise
