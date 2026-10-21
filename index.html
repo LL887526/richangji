@@ -566,6 +566,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
         <div data-page-node-id="pnoGCjDLvjxvdfuq59XgrF" class="nav-label"><!--pnid:DT2vGEGHJS6xWEYV6LMpkR-->生活模块</div>
         <button data-page-node-id="uoUlqps81rHb89XyO66Fse" class="nav-item" data-nav="money"><svg data-page-node-id="ryRqgqj4VQlM4Mr4SUwfVK"><use data-page-node-id="SyL69tPHCbfzUlm0GweqfU" href="#i-wallet"/></svg><span data-page-node-id="z1bIIjAwTlRifTBTRykfwF"><!--pnid:A4IoIb9zOCZI9pahA2h0Bh-->记账理财</span></button>
         <button data-page-node-id="bv6gS96sOxzUeQnsm2u47K" class="nav-item" data-nav="habits"><svg data-page-node-id="pOtdvaSYwxqgNyi02RVhBy"><use data-page-node-id="eQODsw3Ab2WcnbvZcY9sDK" href="#i-habit"/></svg><span data-page-node-id="TE3tH6pFFEucg0gmcKQF0N"><!--pnid:o4fXbKzA8j7OfzFkzPCT1A-->习惯健康</span></button>
+        <button class="nav-item" data-nav="band"><svg><use href="#i-chart"/></svg><span>手环数据</span></button>
         <button data-page-node-id="6uZvmnCDQSZwk7lVCKfF0S" class="nav-item" data-nav="fitness"><svg data-page-node-id="dH5yyEZEtdSDRcpy26e4th"><use data-page-node-id="zgqHnB2Wz5OtEmWZDYER90" href="#i-fitness"/></svg><span data-page-node-id="k7AjMECTa1wdjtmkIx3Zvf"><!--pnid:zW1yTMLFpLNETlj0Ucd74Y-->减脂健身</span></button>
         <button class="nav-item" data-nav="health"><svg><use href="#i-note"/></svg><span>健康档案</span></button>
         <button data-page-node-id="3qYVTOQV8R76ThPMnMJPiW" class="nav-item" data-nav="planner"><svg data-page-node-id="hhAebtcLIda7sGULlte8mW"><use data-page-node-id="jlRNidEOVxQGPNBeSsqT51" href="#i-calendar"/></svg><span data-page-node-id="l6JzBBmfCv3mGX8omMU7tP"><!--pnid:1tMQjWstD9ET08ZaYY2lM2-->日程统筹</span></button>
@@ -734,6 +735,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
           <div class="mp-group">
             <button class="mp-row" data-nav="money"><span class="mp-ic"><svg><use href="#i-wallet"/></svg></span><span class="mp-rt"><b>记账理财</b><small id="mpMoneySub">记一笔，掌握现金流</small></span><span class="mp-badge" id="mpMoney"><span class="v">—</span><span class="k">今日</span></span></button>
             <button class="mp-row" data-nav="habits"><span class="mp-ic"><svg><use href="#i-habit"/></svg></span><span class="mp-rt"><b>习惯健康</b><small id="mpHabitsSub">打卡连续与热力图</small></span><span class="mp-badge" id="mpHabits"><span class="v">—</span><span class="k">今日</span></span></button>
+            <button class="mp-row" data-nav="band"><span class="mp-ic"><svg><use href="#i-chart"/></svg></span><span class="mp-rt"><b>手环数据</b><small id="mpBandSub">睡眠、压力、心率、血氧</small></span><span class="mp-badge" id="mpBand"><span class="v">—</span><span class="k">昨夜</span></span></button>
             <button class="mp-row" data-nav="health"><span class="mp-ic"><svg><use href="#i-note"/></svg></span><span class="mp-rt"><b>健康档案</b><small id="mpHealthSub">身体不适与疾病史</small></span><span class="mp-badge" id="mpHealth"><span class="v">—</span><span class="k">未好转</span></span></button>
             <button class="mp-row" data-nav="planner"><span class="mp-ic"><svg><use href="#i-calendar"/></svg></span><span class="mp-rt"><b>日程统筹</b><small id="mpPlannerSub">待办、提醒与跟进</small></span><span class="mp-badge" id="mpPlanner"><span class="v">—</span><span class="k">今日待办</span></span></button>
             <button class="mp-row" data-nav="memo"><span class="mp-ic"><svg><use href="#i-board"/></svg></span><span class="mp-rt"><b>备忘录</b><small id="mpMemoSub">想法、待办、链接随手记</small></span><span class="mp-badge" id="mpMemo"><span class="v">—</span><span class="k">条</span></span></button>
@@ -779,6 +781,15 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
               <div class="memo-list" id="memoList" style="margin-top:12px"></div>
             </article>
           </div>
+        </div>
+      </section>
+      <section class="view" data-title="身体指标" id="view-band">
+        <div class="band-page">
+          <div class="band-head">
+            <p class="eyebrow" style="margin:0">小米手环 · <span id="bandStamp">尚未同步</span></p>
+            <button class="text-btn" type="button" data-action="band-sync" id="bandRefresh">立即同步</button>
+          </div>
+          <div id="bandBody"></div>
         </div>
       </section>
       <section class="view" data-title="动作库" id="view-exlib">
@@ -1266,7 +1277,58 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   .ex-page-head h1{font-size:22px;margin:2px 0 0}
   @media(min-width:900px){.ex-grid{grid-template-columns:repeat(4,1fr)}}
   input,select,textarea{font-size:16px!important}
-  </style>
+  
+/* ===== 手环数据页 ===== */
+.band-page{padding:26px 28px 90px;display:flex;flex-direction:column;gap:14px;max-width:800px;margin:0 auto}
+.band-head{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:34px}
+.band-head h2{margin:0;font-size:21px;letter-spacing:-.02em}
+.band-card{padding:18px 18px 16px;border-radius:18px;background:var(--card);border:1px solid rgba(111,89,67,.12)}
+.band-card>h3{margin:0 0 12px;font-size:10px;font-weight:750;letter-spacing:.16em;color:#94887a;text-transform:uppercase}
+.band-hero{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
+.band-big{display:flex;align-items:baseline;gap:3px}
+.band-big b{font-size:34px;font-weight:750;letter-spacing:-.03em;font-variant-numeric:tabular-nums;line-height:1}
+.band-big i{font-style:normal;font-size:12px;color:#8c8378}
+.band-times{margin-top:9px;color:var(--muted);font-size:12px;display:flex;gap:8px;align-items:center;font-variant-numeric:tabular-nums}
+.band-times u{text-decoration:none;color:#b8ada0}
+.band-eff{text-align:right;flex:none}
+.band-eff b{display:block;font-size:19px;font-weight:750;font-variant-numeric:tabular-nums;line-height:1.2}
+.band-eff i{font-style:normal;font-size:10px;color:#94887a;letter-spacing:.05em}
+.band-seg{display:flex;height:8px;border-radius:5px;overflow:hidden;gap:2px;margin:15px 0 11px;background:#f1ebe0}
+.band-seg i{display:block;min-width:2px}
+.band-seg .s-deep{background:#4d3045}
+.band-seg .s-light{background:#a2929c}
+.band-seg .s-rem{background:#cdbcc6}
+.band-seg .s-awake{background:#e3d9cb}
+.band-legend{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:11px;color:var(--muted)}
+.band-legend em{font-style:normal;display:inline-block;width:7px;height:7px;border-radius:2px;margin-right:5px;vertical-align:1px}
+.band-legend b{font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
+.band-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.band-tile{padding:14px 15px;border-radius:16px;background:var(--card);border:1px solid rgba(111,89,67,.12)}
+.band-tile>span{display:block;font-size:10px;letter-spacing:.12em;color:#94887a;text-transform:uppercase;font-weight:750}
+.band-tile>b{display:block;margin-top:6px;font-size:23px;font-weight:750;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1.1}
+.band-tile>b i{font-style:normal;font-size:11px;font-weight:600;color:#8c8378;margin-left:3px}
+.band-tile>p{margin:5px 0 0;font-size:11px;color:var(--muted)}
+.band-tile.is-empty>b{color:#cabfae}
+.band-nights{display:flex;flex-direction:column;gap:10px}
+.band-night{display:grid;grid-template-columns:42px 1fr 40px;align-items:center;gap:10px;font-size:12px}
+.band-night span{color:#94887a;font-variant-numeric:tabular-nums}
+.band-night b{font-weight:700;font-variant-numeric:tabular-nums;text-align:right}
+.band-bar{height:7px;border-radius:4px;background:#f1ebe0;overflow:hidden}
+.band-bar i{display:block;height:100%;border-radius:4px;background:var(--plum);opacity:.72}
+.band-bar i.low{background:#b0a094;opacity:.45}
+.band-stress{display:flex;align-items:flex-end;gap:7px;height:52px;margin-bottom:8px}
+.band-stress i{flex:1;background:#d5c6b6;border-radius:3px 3px 0 0;min-height:4px}
+.band-stress i.hot{background:var(--terra);opacity:.7}
+.band-axis{display:flex;gap:7px;font-size:10px;color:#a89d90}
+.band-axis span{flex:1;text-align:center}
+.band-note{margin:0;font-size:11px;line-height:1.75;color:#94887a}
+.band-empty{padding:26px 20px;text-align:center;color:var(--muted)}
+.band-empty b{display:block;margin-bottom:6px;color:var(--ink);font-size:14px}
+@media(max-width:860px){.band-page{padding:16px 14px 100px}.band-big b{font-size:30px}.band-card{padding:16px 15px 14px}}
+.band-jump{padding:2px 0;min-height:22px;border:0;background:none;color:#94887a;font:inherit;font-size:11px;line-height:1.5;cursor:pointer;text-decoration:underline;text-underline-offset:2px;text-decoration-style:dotted;text-align:left}
+.band-jump u{text-decoration:none;margin-left:2px}
+.band-jump:active{color:var(--terra)}
+</style>
   <div class="trainsheet" hidden id="trainSheet" role="dialog" aria-modal="true" aria-label="训练进行中">
     <header class="train-top">
       <div><p class="eyebrow" id="trDay">今天</p><h2 id="trTimer">00:00</h2></div>
@@ -1910,7 +1972,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     return true;
   }
   function deleteRecord(id){const target=state.records.find(r=>r.id===id);if(!target||!confirm(LANG==='en'?`Delete “${titleFor(target)}”? This cannot be undone.`:`确定删除“${titleFor(target)}”吗？删除后无法撤回。`))return;if(target.remoteId){if(target.type==='money')deleteRemoteMoney(target.remoteId);if(target.type==='planner')deleteRemotePlan(target.remoteId);if(target.type==='fitness')deleteRemoteFitness(target.remoteId);if(target.type==='home')deleteRemoteShopping(target.remoteId);}state.records=state.records.filter(r=>r.id!==id);const saved=saveState();renderAll();if(saved)toast('记录已删除');}
-  function switchView(view){const target=document.getElementById(`view-${view}`);if(!target)return;if(view==='more'&&typeof renderMorePage==='function')renderMorePage();if(view==='memo'&&typeof renderMemos==='function')renderMemos();if(view==='exlib'&&typeof renderFtExGrid==='function'){exdFillFilters(document.getElementById('ftExMuscle'),document.getElementById('ftExEquip'));renderFtExGrid();}document.querySelectorAll('.view').forEach(el=>el.classList.toggle('active',el===target));document.querySelectorAll('[data-nav]').forEach(el=>el.classList.toggle('active',el.dataset.nav===view));document.getElementById('viewTitle').textContent=target.dataset.title||'日常集';if(location.hash!==`#${view}`)history.replaceState(null,'',`#${view}`);scrollTo({top:0,behavior:'smooth'});}
+  function switchView(view){const target=document.getElementById(`view-${view}`);if(!target)return;if(view==='more'&&typeof renderMorePage==='function')renderMorePage();if(view==='memo'&&typeof renderMemos==='function')renderMemos();if(view==='band'&&typeof renderBand==='function')renderBand();if(view==='exlib'&&typeof renderFtExGrid==='function'){exdFillFilters(document.getElementById('ftExMuscle'),document.getElementById('ftExEquip'));renderFtExGrid();}document.querySelectorAll('.view').forEach(el=>el.classList.toggle('active',el===target));document.querySelectorAll('[data-nav]').forEach(el=>el.classList.toggle('active',el.dataset.nav===view));document.getElementById('viewTitle').textContent=target.dataset.title||'日常集';if(location.hash!==`#${view}`)history.replaceState(null,'',`#${view}`);scrollTo({top:0,behavior:'smooth'});}
   function formatDateHeading(value){if(value===isoDate())return t('今天');if(value===shiftDate(-1))return t('昨天');const date=new Date(`${value}T00:00:00`);return LANG==='en'?new Intl.DateTimeFormat('en-US',{month:'short',day:'numeric'}).format(date):`${date.getMonth()+1} 月 ${date.getDate()} 日`;}
   function titleFor(record){const d=record.data||{},local=value=>record.sample?translateText(value):value;if(record.type==='money')return d.note?local(d.note):t(d.category||'一笔收支');if(record.type==='planner')return d.title?local(d.title):t('一项日程');if(record.type==='fitness')return d.note?local(d.note):t('身体记录');if(record.type==='home')return d.name?local(d.name):t('待买物品');if(record.type==='vision')return d.text?String(d.text).slice(0,18):(d.kind==='text'?'图片文字':'图片识别');return t('生活记录');}
   function detailFor(record){const d=record.data||{};if(record.type==='money')return`${t(d.category||'其他')} · ${t(d.flow==='income'?'收入':d.flow==='debt'?'负债':'支出')}`;if(record.type==='planner')return`${t(d.list||'生活')} · ${d.time||t('全天')} · ${t(d.done?'已完成':'待完成')}`;if(record.type==='fitness')return`${d.bodyFat?`${LANG==='en'?'Body fat':'体脂'} ${d.bodyFat}% · `:''}${d.duration||0} ${LANG==='en'?'min exercise':'分钟运动'}`;if(record.type==='home')return`${record.sample?translateText(d.quantity||'数量未填'):(d.quantity||t('数量未填'))} · ${t(d.category||'未分类')} · ${t(d.bought?'已买':'待买')}`;if(record.type==='vision')return d.kind==='text'?'拍照提取的文字 · 点击查看全文':'AI 看图描述';return'';}
@@ -2026,7 +2088,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     const dates=Array.from({length:30},(_,i)=>shiftDate(i-29));let completedCells=0;
     state.habits.forEach(h=>dates.forEach(d=>{if(habitDone(h,d))completedCells++;}));
     document.getElementById('habitsDone').textContent=`${done} / ${state.habits.length}`;document.getElementById('habitsStreak').textContent=`${maxStreak} 天`;document.getElementById('habitRate').textContent=state.habits.length?`${Math.round(completedCells/(state.habits.length*30)*100)}%`:'0%';
-    document.getElementById('dailyHabitList').innerHTML=state.habits.map(h=>{const value=Number(h.entries?.[today]||0),isDone=habitDone(h),pulse=!isDone&&new Date().getHours()>=20,isBuiltIn=HABIT_DEFS.some(def=>def.key===h.key)||h.sample,hdef=HABIT_DEFS.find(d=>d.key===h.key),unit=h.type==='check'?localizedHtml('次'):hdef?escapeHtml(resolveHabitUnit(hdef)):isBuiltIn?localizedHtml(h.unit):userHtml(h.unit);let control='';if(h.type==='counter')control=`<div class="counter-control"><button data-action="habit-minus" data-id="${h.id}">${icon('i-minus')}</button><strong>${value}</strong><button data-action="habit-plus" data-id="${h.id}">${icon('i-plus')}</button></div>`;else if(h.type==='number')control=bandNumberControl(h,value,unit);else control=`<button class="habit-check ${isDone?'checked':''}" data-action="habit-toggle" data-id="${h.id}">${isDone?icon('i-check'):''}</button>`;return`<div class="daily-habit ${isDone?'done':''} ${pulse?'pulse':''}"><button class="habit-card-delete" data-action="delete-habit-custom" data-id="${h.id}" aria-label="${t('删除习惯')}">${icon('i-trash')}</button><div><h3>${habitNameHtml(h)}</h3><p>${LANG==='en'?`Target ${h.target} ${unit} · ${habitStreak(h)}-day streak`:`目标 ${h.target} ${unit} · 连续 ${habitStreak(h)} 天`}${bandSubNote(h)}</p>${(bandSleep(h)&&bandLast)?`<div class="band-spark" aria-hidden="true">${bandSparkBars()}</div>`:''}</div><div class="habit-action"><span class="habit-state">${habitStateText(h,isDone,'待完成')}</span>${control}</div></div>`;}).join('');
+    document.getElementById('dailyHabitList').innerHTML=state.habits.map(h=>{const value=Number(h.entries?.[today]||0),isDone=habitDone(h),pulse=!isDone&&new Date().getHours()>=20,isBuiltIn=HABIT_DEFS.some(def=>def.key===h.key)||h.sample,hdef=HABIT_DEFS.find(d=>d.key===h.key),unit=h.type==='check'?localizedHtml('次'):hdef?escapeHtml(resolveHabitUnit(hdef)):isBuiltIn?localizedHtml(h.unit):userHtml(h.unit);let control='';if(h.type==='counter')control=`<div class="counter-control"><button data-action="habit-minus" data-id="${h.id}">${icon('i-minus')}</button><strong>${value}</strong><button data-action="habit-plus" data-id="${h.id}">${icon('i-plus')}</button></div>`;else if(h.type==='number')control=bandNumberControl(h,value,unit);else control=`<button class="habit-check ${isDone?'checked':''}" data-action="habit-toggle" data-id="${h.id}">${isDone?icon('i-check'):''}</button>`;return`<div class="daily-habit ${isDone?'done':''} ${pulse?'pulse':''}"><button class="habit-card-delete" data-action="delete-habit-custom" data-id="${h.id}" aria-label="${t('删除习惯')}">${icon('i-trash')}</button><div><h3>${habitNameHtml(h)}</h3><p>${LANG==='en'?`Target ${h.target} ${unit} · ${habitStreak(h)}-day streak`:`目标 ${h.target} ${unit} · 连续 ${habitStreak(h)} 天`}${bandSubNote(h)}</p>${(bandSleep(h)&&bandLast)?`<button type="button" class="band-jump" data-nav="band">手环详细指标<u>›</u></button>`:''}</div><div class="habit-action"><span class="habit-state">${habitStateText(h,isDone,'待完成')}</span>${control}</div></div>`;}).join('');
     const header=`<div class="heatmap-header"><span></span>${dates.map((d,i)=>`<span>${i%5===0?new Date(`${d}T00:00:00`).getDate():''}</span>`).join('')}</div>`;
     document.getElementById('habitHeatmap').innerHTML=header+state.habits.map(h=>`<div class="heatmap-row"><span class="heatmap-name">${habitNameHtml(h)}<i class="streak-badge">${LANG==='en'?`${habitStreak(h)} days`:`${habitStreak(h)} 天`}</i></span>${dates.map(date=>{const value=Number(h.entries?.[date]||0);return`<span class="heat-cell ${habitDone(h,date)?'done':value?'partial':''}" title="${date}${LANG==='en'?': ':'：'}${value||t('未完成')}"></span>`;}).join('')}</div>`).join('');
   }
@@ -3766,16 +3828,11 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   })();
   function renderSleepNote(){
     const el=document.getElementById('dashSleepNote');if(!el)return;
-    if(!bandLast){el.textContent='';return;}
-    const nights=bandLast.nights||{};
-    const keys=Object.keys(nights).sort().slice(-7);
-    const vals=keys.map(k=>Number(nights[k]&&nights[k].h||0)).filter(v=>v>0);
-    if(!vals.length){el.textContent='';return;}
-    const avg=vals.reduce((a,b)=>a+b,0)/vals.length;
-    const d=bandLast.d||'',label=d===isoDate()?'昨夜':d===shiftDate(-1)?'上一晚':(d.slice(5)||'最近');
-    el.textContent=`${label} ${bandNum(bandLast.h)}h · 近 7 晚均 ${bandNum(avg)}h`;
+    if(!bandLast||!bandLast.h){el.innerHTML='';return;}
+    const d=bandLast.d||'',label=d===isoDate()?'昨夜':d===shiftDate(-1)?'上一晚':(String(d).slice(5)||'最近');
+    el.innerHTML=`<button type="button" class="band-jump" data-nav="band">${label} ${bandNum(bandLast.h)}h<u>›</u></button>`;
   }
-  function renderAll(){applyBrand();renderDashboard();renderCockpitP5();renderBackupHint();renderMoney();renderFinanceCard();renderHabits();renderMemos();renderDashMemo();renderSleepNote();renderFitness();renderFitTrain();renderHealth();renderPlanner();renderHome();renderMedia();renderArchive();renderMorePage();renderBackupStatus();renderWork();renderGrow();renderSettingsPage();}
+  function renderAll(){applyBrand();renderDashboard();renderCockpitP5();renderBackupHint();renderMoney();renderFinanceCard();renderHabits();renderMemos();renderDashMemo();renderSleepNote();renderBand();renderFitness();renderFitTrain();renderHealth();renderPlanner();renderHome();renderMedia();renderArchive();renderMorePage();renderBackupStatus();renderWork();renderGrow();renderSettingsPage();}
 
   document.addEventListener('click',event=>{
     if(event.target.closest('#view-work textarea,#view-work input,#view-work select,#view-grow textarea,#view-grow input,#view-grow select'))return;
@@ -4550,12 +4607,12 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   async function bandSyncApply(manual){
     if(bandSyncing)return;bandSyncing=true;
     try{
-      const r=await fetch(BAND_DATA_URL,{cache:'no-store'});
+      const r=await fetch(BAND_DATA_URL+'?t='+Date.now(),{cache:'no-store'});
       if(!r.ok)return;
       const j=await r.json();
-      if(j.err==='need_relogin'){if(manual)toast('手环授权过期，喊小暖重新扫码');return;}
-      if(j.err||!j.h){if(manual)toast('手环暂无数据');return;}
-      bandLast={h:j.h,d:j.d,hd:j.hd,nights:(j.nights&&typeof j.nights==='object')?j.nights:{}};
+      if(j.err==='need_relogin'){if(manual)toast('手环授权过期，需要重新扫码');return;}
+      if(!j.h){if(manual)toast('手环暂无数据');return;}
+      bandLast=Object.assign({},j,{nights:(j.nights&&typeof j.nights==='object')?j.nights:{},days:(j.days&&typeof j.days==='object')?j.days:{}});
       const h=state.habits.find(x=>x.key==='sleep')||state.habits.find(x=>x.type==='number'&&/睡眠|睡觉|sleep/i.test((x.name||'')+(x.nameEn||'')));
       if(!h){renderAll();return;}
       const nights=(j.nights&&typeof j.nights==='object')?j.nights:{[j.d]:{h:j.h,hd:j.hd}};
@@ -4602,6 +4659,96 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
       const hgt=Math.max(6,Math.round(v/max*18));
       out+=`<i class="${i===0?'now':'ok'}" style="height:${hgt}px" title="${key} ${bandNum(v)}h"></i>`;}
     return out?out+'<em>近 7 晚</em>':'';
+  }
+  function bandHM(ts){const d=new Date(Number(ts)*1000);const p=n=>String(n).padStart(2,'0');return p(d.getHours())+':'+p(d.getMinutes());}
+  function bandStampText(){
+    if(!bandLast||!bandLast.t)return '尚未同步';
+    const m=Math.round((Date.now()/1000-Number(bandLast.t))/60);
+    if(m<2)return '刚刚同步';
+    if(m<60)return m+' 分钟前同步';
+    const hr=Math.round(m/60);
+    return hr<24?hr+' 小时前同步':Math.round(hr/24)+' 天前同步';
+  }
+  function bandDayOf(b){
+    const m=(b&&b.days)||{};
+    const ks=Object.keys(m).filter(k=>m[k]&&(m[k].steps||m[k].stress||m[k].hr));
+    ks.sort();
+    return ks.length?{date:ks[ks.length-1],v:m[ks[ks.length-1]]}:null;
+  }
+  function bandStressWord(v){if(!v)return '未测';if(v<30)return '轻松';if(v<60)return '一般';if(v<80)return '偏高';return '高';}
+  function renderBand(){
+    const box=document.getElementById('bandBody');if(!box)return;
+    const b=bandLast;
+    if(!b||!b.h){
+      box.innerHTML='<article class="band-card band-empty"><b>还没有手环数据</b>确认手机上的小米运动健康已经和手环同步过，再点右上角「立即同步」。</article>';
+      return;
+    }
+    const wake=b.bed?Number(b.bed)+Math.round(Number(b.hd||0)*3600):0;
+    const segs=[['深睡',Number(b.deep||0),'#4d3045'],['浅睡',Number(b.light||0),'#a2929c'],['快速眼动',Number(b.rem||0),'#cdbcc6'],['清醒',Number(b.awake||0),'#e3d9cb']];
+    const segBar=segs.map(x=>`<i style="flex:${x[1]||0.001};background:${x[2]}"></i>`).join('');
+    const legend=segs.map(x=>`<span><em style="background:${x[2]}"></em>${x[0]} <b>${bandNum(x[1])}h</b></span>`).join('');
+
+    const fld=(name)=>{
+      const m=b.days||{};
+      const ks=Object.keys(m).filter(k=>m[k]&&Number(m[k][name]||0)>0);ks.sort();
+      if(!ks.length)return null;
+      const k=ks[ks.length-1];
+      return {date:k,v:m[k],today:k===isoDate(),label:k===isoDate()?'今天':String(k).slice(5)};
+    };
+    const fSteps=fld('steps'),fStress=fld('stress'),fHr=fld('hrMin'),fSpo2=fld('spo2');
+    const someToday=[fSteps,fStress,fHr,fSpo2].some(x=>x&&x.today);
+    const tile=(label,val,unit,note,empty)=>`<div class="band-tile${empty?' is-empty':''}"><span>${label}</span><b>${val}${(!empty&&unit)?`<i>${unit}</i>`:''}</b><p>${note||''}</p></div>`;
+    const tiles=[
+      fSteps?tile('步数',Number(fSteps.v.steps).toLocaleString('zh-CN'),'步',`${fSteps.label} · 消耗 ${fSteps.v.kcal||0} 千卡`):tile('步数','—','','没有活动记录',true),
+      fStress?tile('压力',fStress.v.stress,'',`${fStress.label} · ${bandStressWord(fStress.v.stress)} · 峰值 ${fStress.v.stressMax||0}`):tile('压力','—','','没有压力记录',true),
+      fHr?tile('静息心率',fHr.v.hrMin,'次/分',`${fHr.label} 最低读数`):tile('静息心率','—','','没有心率记录',true),
+      fSpo2?tile('血氧',fSpo2.v.spo2,'%',`${fSpo2.label} 平均`):tile('血氧','—','','没有血氧记录',true)
+    ].join('');
+
+    const nights=b.nights||{};
+    const nk=Object.keys(nights).sort().slice(-7);
+    const maxH=Math.max(9,...nk.map(k=>Number(nights[k]&&nights[k].h||0)));
+    const nightRows=nk.map(k=>{
+      const v=Number(nights[k]&&nights[k].h||0);
+      const w=Math.max(4,Math.round(v/maxH*100));
+      return `<div class="band-night"><span>${k.slice(5)}</span><div class="band-bar"><i class="${v<6?'low':''}" style="width:${w}%"></i></div><b>${bandNum(v)}h</b></div>`;
+    }).join('');
+
+    const dayKeys=Object.keys(b.days||{}).filter(k=>b.days[k]&&b.days[k].stress).sort().slice(-7);
+    const stressTop=Math.max(60,...dayKeys.map(k=>Number(b.days[k].stress||0)));
+    const stressBars=dayKeys.map(k=>{
+      const v=Number(b.days[k].stress||0);
+      return `<i class="${v>=60?'hot':''}" style="height:${Math.max(9,Math.round(v/stressTop*52))}px"></i>`;
+    }).join('');
+    const stressAxis=dayKeys.map(k=>`<span>${k.slice(8)}</span>`).join('');
+
+    box.innerHTML=[
+      `<article class="band-card">
+        <h3>昨晚睡眠</h3>
+        <div class="band-hero">
+          <div>
+            <div class="band-big"><b>${bandNum(b.h)}</b><i>小时</i></div>
+            <div class="band-times">${b.bed?bandHM(b.bed):'—'}<u>入睡</u>·<u>起床</u>${wake?bandHM(wake):'—'}</div>
+          </div>
+          <div class="band-eff"><b>${b.eff||0}%</b><i>睡眠效率</i></div>
+        </div>
+        <div class="band-seg">${segBar}</div>
+        <div class="band-legend">${legend}</div>
+        <div class="band-times" style="margin-top:11px">夜醒 ${b.awakeN||0} 次<u>·</u>睡眠心率 ${b.hr||0}<u>·</u>血氧 ${b.spo2||0}%</div>
+      </article>`,
+      `<article class="band-card">
+        <h3>${someToday?'今日身体指标':'身体指标 · 最近记录'}</h3>
+        <div class="band-grid">${tiles}</div>
+        ${someToday?'':'<p class="band-note" style="margin-top:11px">最近几天手环没上传活动数据。白天没戴，或者手机没打开小米运动健康同步，这里就会空着。</p>'}
+      </article>`,
+      nk.length?`<article class="band-card"><h3>近 ${nk.length} 晚睡眠</h3><div class="band-nights">${nightRows}</div></article>`:'',
+      dayKeys.length?`<article class="band-card"><h3>近 ${dayKeys.length} 天压力</h3><div class="band-stress">${stressBars}</div><div class="band-axis">${stressAxis}</div></article>`:'',
+      `<article class="band-card"><p class="band-note">数据来自小米运动健康云端，每小时第 10 分自动拉取，${bandStampText()}。睡眠按起床日归档，今天这一栏要等你睡醒才会出现。${b.err?' 上一次同步失败，当前显示的是最近一次成功的数据。':''}</p></article>`
+    ].join('');
+    const mv=document.querySelector('#mpBand .v');if(mv)mv.textContent=bandNum(b.h)+'h';
+    const msub=document.getElementById('mpBandSub');
+    if(msub)msub.textContent=`昨夜 ${bandNum(b.h)}h${fStress?' · 压力 '+fStress.v.stress:''}`;
+    const st=document.getElementById('bandStamp');if(st)st.textContent=bandStampText();
   }
   function habitStateText(h,isDone,pendingWord){
     if(isDone)return t('已完成');
