@@ -157,7 +157,26 @@ def fetch_nights(creds: dict, days: int = 9) -> tuple[dict, dict]:
             continue
         day = datetime.fromtimestamp(end_ts, TZ8).strftime("%Y-%m-%d")
         span = round((end_ts - bed_ts) / 60) if end_ts > bed_ts else minutes
-        rec = {"h": round(minutes / 60 * 10) / 10, "hd": round(span / 60 * 10) / 10, "end": end_ts}
+
+        def _h(key):
+            return round(int(v.get(key) or 0) / 60 * 10) / 10
+
+        rec = {
+            "h": round(minutes / 60 * 10) / 10,
+            "hd": round(span / 60 * 10) / 10,
+            "end": end_ts,
+            "bed": bed_ts,
+            "deep": _h("sleep_deep_duration"),
+            "light": _h("sleep_light_duration"),
+            "rem": _h("sleep_rem_duration"),
+            "awake": _h("sleep_awake_duration"),
+            "awakeN": int(v.get("awake_count") or 0),
+            "hr": int(v.get("avg_hr") or 0),
+            "spo2": int(v.get("avg_spo2") or 0),
+            "spo2Min": int(v.get("min_spo2") or 0),
+            "breath": int(v.get("breath_quality") or 0),
+        }
+        rec["eff"] = round(minutes / span * 100) if span > 0 else 0
         # 同日取最长一段（排除零星小睡覆盖主睡眠）
         if day not in nights or rec["h"] > nights[day]["h"]:
             nights[day] = rec
@@ -166,6 +185,101 @@ def fetch_nights(creds: dict, days: int = 9) -> tuple[dict, dict]:
     if latest is None:
         raise RuntimeError("no sleep data in window")
     return nights, {"d": latest[1], **latest[2]}
+
+
+def fetch_series(creds: dict, key: str, days: int = 9) -> list:
+    """拉某类时序数据（steps / heart_rate / stress / spo2），返回 [(ts, dict)] 升序。"""
+    end = int(time.time())
+    start = end - days * 86400
+    form = build_form(SLEEP_PATH, {"start_time": start, "end_time": end, "key": key}, creds["ssecurity"])
+    resp = requests.post(
+        HEALTH_API_BASE + SLEEP_PATH,
+        headers={
+            "Content-Type": "application/x-www-form-urlencoded",
+            "User-Agent": DATA_UA,
+            "Cookie": f"cUserId={creds['cUserId']}; serviceToken={creds['serviceToken']}",
+        },
+        data=form, timeout=30)
+    if resp.status_code in (401, 403):
+        raise RuntimeError("TOKEN_EXPIRED")
+    resp.raise_for_status()
+    body = decrypt_result(creds["ssecurity"], form["_nonce"], resp.text.strip())
+    if body.get("code") != 0:
+        raise RuntimeError(f"{key} code {body.get('code')}")
+    rows = []
+    for item in (body.get("result") or {}).get("data_list") or []:
+        v = item.get("value", "{}")
+        if isinstance(v, str):
+            try:
+                v = json.loads(v)
+            except json.JSONDecodeError:
+                continue
+        if not isinstance(v, dict):
+            continue
+        ts = int(item.get("time") or v.get("time") or 0)
+        if ts > 10 ** 12:          # 毫秒时间戳
+            ts //= 1000
+        if ts <= 0:
+            continue
+        rows.append((ts, v))
+    rows.sort(key=lambda x: x[0])
+    return rows
+
+
+def collect_days(creds: dict, days: int = 9) -> dict:
+    """把四类时序按 UTC+8 自然日聚合。任一类失败只跳过该类，不影响睡眠主链路。"""
+    out: dict = {}
+
+    def slot(ts):
+        day = datetime.fromtimestamp(ts, TZ8).strftime("%Y-%m-%d")
+        return out.setdefault(day, {"steps": 0, "dist": 0.0, "kcal": 0,
+                                    "_hr": [], "_stress": [], "_spo2": []})
+
+    try:
+        for ts, v in fetch_series(creds, "steps", days):
+            s = slot(ts)
+            s["steps"] += int(v.get("steps") or 0)
+            s["dist"] += float(v.get("distance") or 0)
+            s["kcal"] += int(v.get("calories") or 0)
+    except Exception as e:
+        print("SERIES_SKIP steps", repr(e)[:90])
+
+    try:
+        for ts, v in fetch_series(creds, "heart_rate", days):
+            bpm = int(v.get("bpm") or 0)
+            if 30 <= bpm <= 220:
+                slot(ts)["_hr"].append(bpm)
+    except Exception as e:
+        print("SERIES_SKIP heart_rate", repr(e)[:90])
+
+    try:
+        for ts, v in fetch_series(creds, "stress", days):
+            val = int(v.get("stress") or 0)
+            if 1 <= val <= 100:
+                slot(ts)["_stress"].append(val)
+    except Exception as e:
+        print("SERIES_SKIP stress", repr(e)[:90])
+
+    try:
+        for ts, v in fetch_series(creds, "spo2", days):
+            val = int(v.get("spo2") or 0)
+            if 70 <= val <= 100:
+                slot(ts)["_spo2"].append(val)
+    except Exception as e:
+        print("SERIES_SKIP spo2", repr(e)[:90])
+
+    for s in out.values():
+        hr, st, sp = s.pop("_hr"), s.pop("_stress"), s.pop("_spo2")
+        dist = s["dist"]
+        s["dist"] = round(dist / 1000, 1) if dist > 300 else round(dist, 1)
+        s["hr"] = round(sum(hr) / len(hr)) if hr else 0
+        s["hrMin"] = min(hr) if hr else 0
+        s["hrMax"] = max(hr) if hr else 0
+        s["stress"] = round(sum(st) / len(st)) if st else 0
+        s["stressMax"] = max(st) if st else 0
+        s["spo2"] = round(sum(sp) / len(sp)) if sp else 0
+        s["spo2Min"] = min(sp) if sp else 0
+    return out
 
 
 # ---------- 加密状态 ----------
@@ -192,21 +306,8 @@ def save_creds(creds: dict) -> None:
     STATE_ENC.write_text(json.dumps({"n": b64e(nonce), "c": b64e(ct)}))
 
 
-def _maybe_probe() -> None:
-    """一次性探测端点支持哪些数据项；产出 data/_band_probe.json 后不再执行。"""
-    marker = DATA_FILE.parent / "_band_probe2.json"
-    if marker.exists():
-        return
-    try:
-        import band_probe
-        band_probe.main()
-    except Exception as e:
-        print("PROBE_SKIP", repr(e)[:120])
-
-
 def main() -> None:
     creds = load_creds()
-    _maybe_probe()
     try:
         nights, latest = fetch_nights(creds)
     except RuntimeError as e:
@@ -217,16 +318,20 @@ def main() -> None:
             raise
     save_creds(creds)
 
+    days_map = collect_days(creds)
+
+    top = {k: v for k, v in latest.items() if k != "end"}
     out = {
-        "h": latest["h"],
-        "hd": latest["hd"],
-        "d": latest["d"],
-        "nights": {k: {"h": v["h"], "hd": v["hd"]} for k, v in sorted(nights.items())},
+        **top,
+        "nights": {k: {kk: vv for kk, vv in v.items() if kk != "end"}
+                   for k, v in sorted(nights.items())},
+        "days": days_map,
         "t": int(time.time()),
     }
     DATA_FILE.parent.mkdir(parents=True, exist_ok=True)
     DATA_FILE.write_text(json.dumps(out, separators=(",", ":"), ensure_ascii=False), encoding="utf-8")
-    print("BAND_SYNC_OK", json.dumps({"latest": out["d"], "nights": len(out["nights"])}))
+    print("BAND_SYNC_OK", json.dumps({"latest": out["d"], "nights": len(out["nights"]),
+                                      "days": len(days_map)}))
 
 
 if __name__ == "__main__":
