@@ -250,9 +250,9 @@
 .band-chip{padding:0;margin-left:2px;border:0;background:none;font:inherit;font-size:inherit;color:#8a7f70;text-decoration:underline;text-underline-offset:2px;text-decoration-style:dotted;cursor:pointer}
 .band-chip:active{color:var(--terra)}
 .band-read{display:flex;align-items:center;gap:6px}
-.band-read-btn{min-height:38px;padding:0 12px;border:1px solid #d6ccbe;border-radius:11px;background:#fff;display:inline-flex;align-items:center;gap:3px;color:var(--ink);transition:transform .12s}
-.band-read-btn b{font-size:17px;font-weight:750;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
-.band-read-btn i{font-style:normal;font-size:11px;line-height:1;color:#94887a;transform:translateY(1px)}
+.band-read-btn{min-height:38px;padding:0 9px;border:1px solid #d6ccbe;border-radius:11px;background:#fff;display:inline-flex;align-items:center;gap:2px;color:var(--ink);transition:transform .12s}
+.band-read-btn b{font-size:15.5px;font-weight:750;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.band-read-btn i{font-style:normal;font-size:10px;line-height:1;color:#94887a;transform:translateY(1px)}
 .band-read-btn.is-pending{background:#f6f1ea;border-color:#e2d8ca;color:#7d7367}
 .band-read-btn:active{transform:scale(.97)}
 .band-edit-link{min-height:38px;padding:0 3px;border:0;background:none;color:#8f8578;font-size:10.5px;text-decoration:underline;text-underline-offset:2px}
@@ -1328,7 +1328,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
 .band-tile>p{margin:5px 0 0;font-size:11px;color:var(--muted)}
 .band-tile.is-empty>b{color:#cabfae}
 .band-nights{display:flex;flex-direction:column;gap:10px}
-.band-night{display:grid;grid-template-columns:42px 1fr 40px;align-items:center;gap:10px;font-size:12px}
+.band-night{display:grid;grid-template-columns:42px 1fr 56px;align-items:center;gap:10px;font-size:11.5px}
 .band-night span{color:#94887a;font-variant-numeric:tabular-nums}
 .band-night b{font-weight:700;font-variant-numeric:tabular-nums;text-align:right}
 .band-bar{height:7px;border-radius:4px;background:#f1ebe0;overflow:hidden}
@@ -3848,7 +3848,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     const el=document.getElementById('dashSleepNote');if(!el)return;
     if(!bandLast||!bandLast.h){el.innerHTML='';return;}
     const d=bandLast.d||'',label=d===isoDate()?'昨夜':d===shiftDate(-1)?'上一晚':(String(d).slice(5)||'最近');
-    el.innerHTML=`<button type="button" class="band-jump" data-nav="band">${label} ${bandNum(bandLast.h)}h<u>›</u></button>`;
+    el.innerHTML=`<button type="button" class="band-jump" data-nav="band">${label} ${bandHMShort(bandLast.h)}<u>›</u></button>`;
   }
   function renderAll(){applyBrand();renderDashboard();renderCockpitP5();renderBackupHint();renderMoney();renderFinanceCard();renderHabits();renderMemos();renderDashMemo();renderSleepNote();renderBand();renderFitness();renderFitTrain();renderHealth();renderPlanner();renderHome();renderMedia();renderArchive();renderMorePage();renderBackupStatus();renderWork();renderGrow();renderSettingsPage();}
 
@@ -4648,6 +4648,10 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   }
   function bandSleep(h){return !!h&&(h.key==='sleep'||(h.type==='number'&&/睡眠|睡觉|sleep/i.test((h.name||'')+(h.nameEn||''))));}
   function bandNum(v){return String(Math.round(Number(v||0)*10)/10);}
+  function bandHMText(v){const t=Math.round(Number(v||0)*60);return `${Math.floor(t/60)} 时 ${t%60} 分`;}
+  function bandHMShort(v){const t=Math.round(Number(v||0)*60);return `${Math.floor(t/60)}时${t%60}分`;}
+  function bandHMHtml(v){const t=Math.round(Number(v||0)*60);return `<b>${Math.floor(t/60)}</b><i>时</i><b>${t%60}</b><i>分</i>`;}
+  function bandGapText(v){const t=Math.round(Number(v||0)*60);const h=Math.floor(t/60);return h?`${h} 时 ${t%60} 分`:`${t%60} 分钟`;}
   function bandTodayInfo(h){
     const today=isoDate(),v=Number(h.entries?.[today]||0);
     if(v>0)return{v:v,today:true,date:today};
@@ -4658,14 +4662,14 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     if(!bandSleep(h)||!bandLast)return '';
     const info=bandTodayInfo(h);
     if(info.today){const nv=Number((bandLast.nights&&bandLast.nights[info.date]&&bandLast.nights[info.date].h)||0);return Math.abs(nv-info.v)<0.05?' · 手环同步':'';}
-    return ` · 上一晚 ${bandNum(info.v)}h`;
+    return ` · 上一晚 ${bandHMShort(info.v)}`;
   }
   function bandNumberControl(h,value,unit){
     const inputHtml=`<div class="sleep-control"><input data-action="habit-number" data-id="${h.id}" type="number" min="0" max="9999" step="0.1" value="${value||''}" placeholder="0"><span>${unit}</span></div>`;
     if(!bandSleep(h)||!bandLast)return inputHtml;
     if(bandManualFor===h.id)return `<div class="band-read">${inputHtml}<button type="button" class="band-edit-link" data-action="band-manual" data-id="${h.id}">取消</button></div>`;
     const info=bandTodayInfo(h);
-    return `<div class="band-read"><button type="button" class="band-read-btn${(info.today||info.v>0)?'':' is-pending'}" data-action="band-sync" aria-label="${info.today?'手环已记录，点击重新同步':'同步手环睡眠'}"><b>${bandNum(info.v)}</b><i>${unit}</i></button><button type="button" class="band-edit-link" data-action="band-manual" data-id="${h.id}">改</button></div>`;
+    return `<div class="band-read"><button type="button" class="band-read-btn${(info.today||info.v>0)?'':' is-pending'}" data-action="band-sync" aria-label="${info.today?'手环已记录，点击重新同步':'同步手环睡眠'}">${bandHMHtml(info.v)}</button><button type="button" class="band-edit-link" data-action="band-manual" data-id="${h.id}">改</button></div>`;
   }
   function bandSparkBars(){
     if(!bandLast||!bandLast.nights)return '';
@@ -4675,7 +4679,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const key=isoDate(d);const v=Number(bandLast.nights[key]&&bandLast.nights[key].h||0);
       if(!v)continue;
       const hgt=Math.max(6,Math.round(v/max*18));
-      out+=`<i class="${i===0?'now':'ok'}" style="height:${hgt}px" title="${key} ${bandNum(v)}h"></i>`;}
+      out+=`<i class="${i===0?'now':'ok'}" style="height:${hgt}px" title="${key} ${bandHMShort(v)}"></i>`;}
     return out?out+'<em>近 7 晚</em>':'';
   }
   function bandHM(ts){const d=new Date(Number(ts)*1000);const p=n=>String(n).padStart(2,'0');return p(d.getHours())+':'+p(d.getMinutes());}
@@ -4733,7 +4737,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     if(bedTs){const d=new Date(bedTs*1000),m=d.getHours()*60+d.getMinutes();sBed=(m>=1380||m<=30)?10:m<=90?7:m<=150?4:2;}
     const r1=v=>Math.round(v*10)/10;
     const items=[
-      {k:'时长',v:sDur,m:30,t:`${bandNum(H)} 小时`},
+      {k:'时长',v:sDur,m:30,t:bandHMText(H)},
       {k:'深度睡眠',v:sDeep,m:12,t:`占 ${Math.round(deep)}%`},
       {k:'快速眼动',v:sRem,m:13,t:`占 ${Math.round(rem)}%`},
       {k:'连续性',v:sCon,m:15,t:`夜醒 ${n} 次`},
@@ -4744,7 +4748,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     const total=Math.round(items.reduce((a,x)=>a+x.v,0));
     const weak=[...items].sort((a,b)=>a.p-b.p)[0];
     let advice='';
-    if(weak.k==='时长')advice=H>9.5?`睡了 ${bandNum(H)} 小时，比需要的多出一截，多半是前一晚欠了觉。`:`只睡了 ${bandNum(H)} 小时，离 7 小时还差 ${bandNum(7-H)} 小时。`;
+    if(weak.k==='时长')advice=H>9.5?`睡了 ${bandHMText(H)}，比需要的多出一截，多半是前一晚欠了觉。`:`只睡了 ${bandHMText(H)}，离 7 小时还差 ${bandGapText(7-H)}。`;
     else if(weak.k==='快速眼动')advice=`快速眼动只占 ${Math.round(rem)}%，达标线是 20%。这一段管记忆和情绪修复，睡得久也补不回来。`;
     else if(weak.k==='深度睡眠')advice=`深度睡眠只占 ${Math.round(deep)}%，15% 才算够。`;
     else if(weak.k==='连续性')advice=`夜醒 ${n} 次，占掉 ${Math.round(awe)}% 的睡眠时间。`;
@@ -4764,7 +4768,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     const scoreRows=sc.items.map(x=>`<div class="bs-row"><span>${x.k}</span><div class="bs-bar"><i class="${x.p<.6?'low':''}" style="width:${Math.max(3,Math.round(x.p*100))}%"></i></div><b>${bandNum(x.v)}<u>/${x.m}</u></b><p>${x.t}</p></div>`).join('');
     const segs=[['深睡',Number(b.deep||0),'#4d3045'],['浅睡',Number(b.light||0),'#a2929c'],['快速眼动',Number(b.rem||0),'#cdbcc6'],['清醒',Number(b.awake||0),'#e3d9cb']];
     const segBar=segs.map(x=>`<i style="flex:${x[1]||0.001};background:${x[2]}"></i>`).join('');
-    const legend=segs.map(x=>`<span><em style="background:${x[2]}"></em>${x[0]} <b>${bandNum(x[1])}h</b></span>`).join('');
+    const legend=segs.map(x=>`<span><em style="background:${x[2]}"></em>${x[0]} <b>${bandHMShort(x[1])}</b></span>`).join('');
 
     const fld=(name)=>{
       const m=b.days||{};
@@ -4789,7 +4793,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     const nightRows=nk.map(k=>{
       const v=Number(nights[k]&&nights[k].h||0);
       const w=Math.max(4,Math.round(v/maxH*100));
-      return `<div class="band-night"><span>${k.slice(5)}</span><div class="band-bar"><i class="${v<6?'low':''}" style="width:${w}%"></i></div><b>${bandNum(v)}h</b></div>`;
+      return `<div class="band-night"><span>${k.slice(5)}</span><div class="band-bar"><i class="${v<6?'low':''}" style="width:${w}%"></i></div><b>${bandHMShort(v)}</b></div>`;
     }).join('');
 
     const dayKeys=Object.keys(b.days||{}).filter(k=>b.days[k]&&b.days[k].stress).sort().slice(-7);
@@ -4805,7 +4809,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
         <h3>昨晚睡眠</h3>
         <div class="band-hero">
           <div>
-            <div class="band-big"><b>${bandNum(b.h)}</b><i>小时</i></div>
+            <div class="band-big">${bandHMHtml(b.h)}</div>
             <div class="band-times">${b.bed?bandHM(b.bed):'—'}<u>入睡</u>·<u>起床</u>${wake?bandHM(wake):'—'}</div>
           </div>
           <div class="band-eff"><b>${sc.total}</b><i>综合分 /100</i></div>
@@ -4829,9 +4833,9 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
       dayKeys.length?`<article class="band-card"><h3>近 ${dayKeys.length} 天压力</h3><div class="band-stress">${stressBars}</div><div class="band-axis">${stressAxis}</div></article>`:'',
       `<article class="band-card"><p class="band-note">数据来自小米运动健康云端，每小时第 10 分自动拉取，${bandStampText()}。睡眠按起床日归档，今天这一栏要等你睡醒才会出现。${b.err?' 上一次同步失败，当前显示的是最近一次成功的数据。':''}</p></article>`
     ].join('');
-    const mv=document.querySelector('#mpBand .v');if(mv)mv.textContent=bandNum(b.h)+'h';
+    const mv=document.querySelector('#mpBand .v');if(mv)mv.textContent=bandHMShort(b.h);
     const msub=document.getElementById('mpBandSub');
-    if(msub)msub.textContent=`昨夜 ${bandNum(b.h)}h${fStress?' · 压力 '+fStress.v.stress:''}`;
+    if(msub)msub.textContent=`昨夜 ${bandHMShort(b.h)}${fStress?' · 压力 '+fStress.v.stress:''}`;
     const st=document.getElementById('bandStamp');if(st)st.textContent=bandStampText();
   }
   function habitStateText(h,isDone,pendingWord){
