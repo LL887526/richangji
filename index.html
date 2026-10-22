@@ -223,9 +223,26 @@
 .fin-row small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
 .fin-row .text-btn{flex:0 0 auto;min-height:38px}
 @media(max-width:860px){.fin-stats b{font-size:17px}}
-.foldArt{padding:12px 0}
-.foldArt .foldPad{padding:0 18px}
 .foldBar{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;min-height:48px;padding:0 16px;border:0;border-radius:16px;background:var(--plum);color:#fff;font:inherit;font-size:13px;font-weight:700;cursor:pointer;text-align:left}
+/* 首页小组件：移除态 + 编辑模式添加位 */
+.dashboard-grid>.dcard-off{display:none!important}
+.dashboard-grid>.dash-add-tile{display:none;min-height:130px;border:2px dashed rgba(146,116,138,.42);border-radius:var(--radius);background:rgba(255,252,247,.55);align-items:center;justify-content:center;grid-column:1/-1}
+.dashboard-grid.editing>.dash-add-tile{display:flex}
+.dash-sheet{position:fixed;inset:0;z-index:80;display:grid;place-items:center;padding:18px}
+.dash-sheet[hidden]{display:none}
+.dash-sheet .mask{position:absolute;inset:0;background:rgba(41,37,31,.44)}
+.dash-sheet .box{position:relative;width:min(520px,100%);max-height:76vh;overflow:auto;background:var(--card);border-radius:20px;box-shadow:0 24px 60px rgba(53,41,31,.3);padding:22px}
+.dash-sheet .sheet-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.dash-sheet .sheet-tip{margin:6px 0 4px;color:#978c80;font-size:11.5px}
+.dash-wrow{display:flex;align-items:center;gap:12px;min-height:58px;padding:10px 0;border-bottom:1px solid #eee7de}
+.dash-wrow:last-child{border-bottom:0}
+.dash-wrow .grow{flex:1;min-width:0}
+.dash-wrow .grow strong{display:block;font-size:13.5px;font-weight:700}
+.dash-wrow .grow small{display:block;margin-top:2px;font-size:11.5px;color:#94887a}
+.inspire-card blockquote{margin:14px 0 12px;font:600 18px/1.55 "Songti SC",serif;letter-spacing:.02em;cursor:pointer}
+.insight-row{display:flex;align-items:baseline;gap:8px;font-size:12px;color:#7e756a}
+.insight-tag{flex:none;font-size:10px;font-weight:750;letter-spacing:.16em;color:#a89d90}
+.insight-next{display:block;margin-top:10px;font-size:10.5px;color:#b0a597}
 .foldBar em{font-style:normal;font-size:11px;opacity:.85}
 .acc-seg{flex-wrap:wrap}
 .acc-add-chip{display:flex;align-items:center;justify-content:center;flex:0 0 auto;min-height:40px;min-width:40px;padding:0 12px;border:1px dashed var(--line);border-radius:999px;background:transparent;color:var(--muted);cursor:pointer}
@@ -492,19 +509,19 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     .topbar,.view{max-width:1360px;margin-left:auto;margin-right:auto}
     /* 同一行的卡片等高，避免矮卡下面留空洞 */
     .dashboard-grid{align-items:stretch}
-    /* 首屏「今日灵感」：撑满整张卡，指数放大 */
-    .dashboard-grid>.foldArt{display:flex;padding:0}
-    .dashboard-grid>.foldArt>.foldPad{display:flex;flex:1;flex-direction:column;width:100%;padding:0}
-    .dashboard-grid>.foldArt .foldBar{flex:1;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:8px;padding:22px 24px;border-radius:inherit;font-size:12px;letter-spacing:.04em}
-    .dashboard-grid>.foldArt .foldBar>span{display:flex;flex-direction:column;gap:9px;width:100%}
-    .dashboard-grid>.foldArt .foldBar #foldScore{font:700 52px/1 "Songti SC",serif;letter-spacing:0}
-    .dashboard-grid>.foldArt .foldBar em{order:2;font-size:11px;opacity:.72}
+    /* 首屏「今日灵感」：整卡深底，句子放大 */
+    .dashboard-grid>.inspire-card{display:flex;flex-direction:column;background:var(--plum);border-color:transparent;color:#fff}
+    .dashboard-grid>.inspire-card .eyebrow{color:rgba(255,255,255,.62)}
+    .dashboard-grid>.inspire-card blockquote{flex:1;margin:12px 0;font:600 21px/1.5 "Songti SC",serif;color:#fff}
+    .dashboard-grid>.inspire-card .insight-row{color:rgba(255,255,255,.78)}
+    .dashboard-grid>.inspire-card .insight-tag{color:rgba(255,255,255,.58)}
+    .dashboard-grid>.inspire-card .insight-next{color:rgba(255,255,255,.45)}
   }
 
   /* 中等宽度（861–1180，两栏）：整行铺开，不留半格 */
   @media(min-width:861px) and (max-width:1180px){
     .dashboard-grid{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-flow:row dense}
-    .dashboard-grid>.foldArt,
+    .dashboard-grid>.inspire-card,
     .dashboard-grid>.quick-panel,
     .dashboard-grid>.dash-memo,
     .dashboard-grid>.habit-panel,
@@ -514,7 +531,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   /* 宽屏（≥1181，十二栏）：每行刚好铺满，无右侧空带 */
   @media(min-width:1181px){
     .dashboard-grid{grid-template-columns:repeat(12,minmax(0,1fr));grid-auto-flow:row dense}
-    .dashboard-grid>.foldArt{grid-column:span 4}
+    .dashboard-grid>.inspire-card{grid-column:span 4}
     .dashboard-grid>.quick-panel{grid-column:span 8}
     .dashboard-grid>.dash-memo{grid-column:span 8}
     .dashboard-grid>.stat-card{grid-column:span 4}
@@ -640,8 +657,8 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
 
       <section data-page-node-id="Zp6anuFpepDJz33vOwxA01" class="view active" data-title="今天，慢慢来" id="view-dashboard">
         <div data-page-node-id="2Gjn69w2uGWmvwseBty2ZT" class="dashboard-grid">
-          <article class="panel foldArt"><div class="foldPad"><button class="foldBar" type="button" data-fold="life"><span>今日灵感 · 指数 <b id="foldScore">--</b></span><em>展开</em></button><div class="foldBody" hidden>
-          <article data-page-node-id="OtManHZbjKf6hTi1ZAAyRT" class="hero-card" data-act="lifeDetail" title="点一下看指数怎么算的"><div data-page-node-id="SCfxTqmUH8t5AugjdzDZla"><p data-page-node-id="L58cK3WA5mXaC0cVbBBiZL" class="eyebrow light"><!--pnid:jdonEMJaYWIbfX2nglAbVr-->今日生活指数</p><h2 data-page-node-id="zJJDpswlswvnLTQm2id8Xk"><span data-page-node-id="090iq0enxImiCvpXQ05bkm" id="lifeScore"><!--pnid:xYLXrJf88RTSWmEtPj9buF-->82</span><small data-page-node-id="A7HoZenRCyjam7YvMdfgtu"><!--pnid:bMvZPg5iRlgo04leLFb3E2-->/ 100</small></h2><p data-page-node-id="l0AAbHLroJ5sAH8QQ5sxUC" id="heroSummary" data-act="quoteNext" title="点一句，换一句" style="cursor:pointer"><!--pnid:HQnklUvgAXS0vzHQne2mS4-->三件要事，一点运动，留一笔清楚账。</p></div><div data-page-node-id="M9q6TInEDhHKWg5x7uXDrl" class="score-orbit"><span data-page-node-id="sG4i92NzuRMtqJIxD1439z"></span><i data-page-node-id="0MZDACYR2JunICsTzwVlDv"></i><b data-page-node-id="jG4beMCfZIPW2mc41Jk1IR"></b></div></article><article class="panel insight-card" style="margin-top:12px"><p class="eyebrow">轻提醒</p><blockquote id="insightText">规律不是把每天塞满，而是知道什么值得留下。</blockquote><span>根据你的记录生成</span></article></div></div></article>
+          <article class="panel inspire-card" data-dcard="inspire"><p class="eyebrow">今日灵感</p><blockquote id="heroSummary" data-act="quoteNext" title="点一句，换一句">三件要事，一点运动，留一笔清楚账。</blockquote><div class="insight-row"><span class="insight-tag">轻提醒</span><span id="insightText">规律不是把每天塞满，而是知道什么值得留下。</span></div><span class="insight-next">点句子换一句</span></article>
+          <article class="panel stat-card" data-dcard="sleep" data-nav="band" style="cursor:pointer" title="去手环数据页"><div class="stat-icon plum"><svg viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5Z"/></svg></div><div><span>昨夜睡眠</span><strong id="dashBandScore">--</strong><small id="dashBandNote">等手环同步</small></div></article>
           <article data-page-node-id="xclRILnxMMTA88Bz1K4mrE" class="panel quick-panel"><div data-page-node-id="Oh1Q7GVmu5AVb41NDgDaYU" class="panel-head"><div data-page-node-id="1vGXZN9DzCZM0MA5yXTMzQ"><p data-page-node-id="erPH5GaW6OEi6R9Z3N74CT" class="eyebrow"><!--pnid:POjOVfJ54uBckpewZ4lz3K-->快速开始</p><h2 data-page-node-id="bol3ib6XNGr4B3vrKD9WUL"><!--pnid:WYR2Lzj4ofXqgaqAXrIwdK-->记下一件小事</h2></div><span data-page-node-id="nGqcFYptwmYxPuhgoSFcHj" class="mini-note"><!--pnid:XZci9c2OZLjAHviWDRmUeX-->输入时自动保存</span></div><div data-page-node-id="Zn4QINQ350YINSRJXC6qRJ" class="quick-grid">
             <button data-page-node-id="nEVFpDDFawupn8eTSnPvmD" class="quick-action terracotta" data-quick="money"><svg data-page-node-id="eWDicYYASi2Nwu4e8i1pAa"><use data-page-node-id="cVInAPQ1QD0EfDwVf1jSi7" href="#i-wallet"/></svg><span data-page-node-id="DCyIIE79HDH0iqPcE5YCbj"><strong data-page-node-id="HlfXFVhUgl5m46dLuCQfFK"><!--pnid:jS1BWb3cQx0kyFWV23hGV6-->记一笔</strong><small data-page-node-id="bcE0HmU2ToTpx9Rme5HHx7"><!--pnid:TpDlIA1yCejnXyIHSl1Eno-->支出或收入</small></span><i data-page-node-id="BQw8lfiUwjcpuqomg3QLuV"><!--pnid:Ai7z86uo3ilRjXPR8CM0K0-->+</i></button>
             <button data-page-node-id="QGs3EW7pDzcbitw6adx4KY" class="quick-action plum" data-quick="planner"><svg data-page-node-id="ek8ujoQw7TAQzs6OL76qe9"><use data-page-node-id="NbtEgMMayEzg7eDjE7d146" href="#i-calendar"/></svg><span data-page-node-id="C6eEMf4r3rif48OMsI7P7W"><strong data-page-node-id="g3v4k3aVn7SMeYxiQVbUcq"><!--pnid:zFZ2gDSKiFfDopLwe7F0Az-->排日程</strong><small data-page-node-id="NAFvylwGA9xkN4eJjmAp3e"><!--pnid:AO7oZkmGTC6zZ9gsj6iBuP-->待办与提醒</small></span><i data-page-node-id="MBr3FCP6j1fgSeavHR3FK2"><!--pnid:7d8G1uu1AReebt8YSDzFXY-->+</i></button>
@@ -669,8 +686,10 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
           <article data-page-node-id="toSQyfTgP9eqvkBFDAyZQM" class="panel habit-panel"><div data-page-node-id="bdw93kkgLgksQipICbIIdM" class="panel-head"><div data-page-node-id="dB8d3ZIIIeaYqrlsCVVB7h"><p data-page-node-id="bKktTEbMGaqAPlQzAQpiQv" class="eyebrow"><!--pnid:os0Znfb4WxzEhxeUiQ8zAX-->今日打卡</p><h2 data-page-node-id="sGCZIrBWDQoXHXiCkxAWEC"><!--pnid:GHEqAK98xVHy900lR4AaKV-->习惯打卡</h2><span class="mini-note" id="dashSleepNote"></span></div><button data-page-node-id="DjNt3b7t9xWklgGpcv2f97" class="text-btn" data-nav="habits"><!--pnid:RXOvSixKPuPE4k6WQnmckj-->管理</button></div><div data-page-node-id="D3mB5lzAtA1p4MzjCDNnqn" class="habit-stack" id="dashboardHabits"></div></article>
           <article data-page-node-id="pjKPXRGwbmnI3lVIBpP52g" class="panel span-2"><div data-page-node-id="bXslLIeBe8a5sEIfcKEXvN" class="panel-head"><div data-page-node-id="rLVnUBnvPH9sRq0OYcmyii"><p data-page-node-id="bpUxBTE6LE0YszOk7gPjVE" class="eyebrow"><!--pnid:smyjYQVkNJON5eorYUiK9l-->生活脉络</p><h2 data-page-node-id="AmjCCBOLB4HxVQZZKQr7l6"><!--pnid:NQCXmgcttSoO3ORMFxJgj4-->最近记录</h2></div><button data-page-node-id="iz0FsTET02k3DpK6CLc9Nv" class="text-btn" data-nav="archive"><!--pnid:P2cnJpVZNzNLMMfuIxdhuK-->进入档案</button></div><div data-page-node-id="hm8ilNcOz8ChLCVCIu3Dth" class="timeline" id="recentRecords"></div></article>
           <article class="panel span-2" id="backupHint" hidden><div class="panel-head"><div><p class="eyebrow">数据安全</p><h2>该做一次备份了</h2></div></div><p class="mini-note" id="backupHintNote" style="margin:6px 0 0"></p><div class="wmore" style="margin-top:10px"><button data-act="bkExport"><svg><use href="#i-download"/></svg>立即备份</button><button data-act="bkDismiss">本周不再提醒</button></div></article>
+          <article class="dash-add-tile" data-addtile><button class="dash-pill primary" type="button" data-action="dash-add"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>添加小组件</button></article>
         </div>
       </section>
+      <div class="dash-sheet" id="dashAddSheet" hidden><div class="mask" data-action="dash-add-close"></div><div class="box"><div class="sheet-head"><div><p class="eyebrow">定制首页</p><h2>添加小组件</h2></div><button class="dash-icon-btn" type="button" data-action="dash-add-close" aria-label="关闭"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></button></div><p class="sheet-tip">添加后会出现在首页末尾，回到编辑模式可挪位置。</p><div id="dashAddList"></div></div></div>
 
       <section data-page-node-id="4cCWKVjo7MugUG8mIdgn8y" class="view" data-title="记账理财" id="view-money">
         <div data-page-node-id="LLyxJ7TdTK3DEEinsdjMzB" class="module-alert" id="moneyAlert"></div>
@@ -2059,14 +2078,6 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     const monthExpense=sum(state.records.filter(r=>r.type==='money'&&r.date.startsWith(month)&&r.data.flow==='expense'),r=>r.data.amount);
     const todayTasks=sortedRecords('planner').filter(r=>r.date===today),doneTasks=todayTasks.filter(r=>r.data.done).length;
     const completed=state.habits.filter(h=>habitDone(h)).length;
-    const fitnessToday=state.records.some(r=>r.type==='fitness'&&r.date===today);
-    const habitRatio=state.habits.length?completed/state.habits.length:0;
-    const taskRatio=todayTasks.length?doneTasks/todayTasks.length:0;
-    const todayMoney=state.records.some(r=>r.type==='money'&&r.date===today);
-    const score=Math.min(100,Math.round(30+habitRatio*25+taskRatio*20+(fitnessToday?15:0)+(todayMoney?10:0)));
-    lifeBreak={habit:Math.round(habitRatio*25),task:Math.round(taskRatio*20),fit:fitnessToday?15:0,money:todayMoney?10:0};
-    document.getElementById('lifeScore').textContent=score;
-    const foldScore=document.getElementById('foldScore');if(foldScore)foldScore.textContent=score;
     const lq=(state.settings&&state.settings.lifeQuote&&state.settings.lifeQuote.date===today&&state.settings.lifeQuote.text)?state.settings.lifeQuote.text:LIFE_QUOTES[Number(today.split('-').join(''))%LIFE_QUOTES.length];
     document.getElementById('heroSummary').textContent=t(lq);
     document.getElementById('monthExpense').textContent=money(monthExpense);
@@ -2098,11 +2109,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     '每天前进一点点，一年后回头看会吓一跳。',
     '不慌，稳住手上的这一件就好。'
   ];
-  let lifeBreak=null,quoteLocalIdx=0;
-  function lifeDetailToast(){
-    if(!lifeBreak){toast('还没算出来，稍等一下');return;}
-    toast('指数构成：习惯 +'+lifeBreak.habit+' · 待办 +'+lifeBreak.task+' · 训练 +'+lifeBreak.fit+' · 记账 +'+lifeBreak.money+' · 底分 30');
-  }
+  let quoteLocalIdx=0;
   function lifeQuoteLocal(){
     quoteLocalIdx++;
     const txt=LIFE_QUOTES[(LIFE_QUOTES.length+quoteLocalIdx)%LIFE_QUOTES.length];
@@ -4225,7 +4232,6 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
       renderPlanDay();return;
     }
     if(event.target.closest('[data-act="quoteNext"]')){lifeQuoteNext();return;}
-    if(event.target.closest('[data-act="lifeDetail"]')){lifeDetailToast();return;}
     if(event.target.closest('[data-act="v13Dismiss"]')){try{localStorage.setItem('richangji-v13bar-dismissed','1');}catch(e){}const vb=document.getElementById('v13bar');if(vb)vb.hidden=true;toast('已收起，之后想迁移可去「全局设置」');return;}
     if(event.target.closest('[data-act="actPick"]')){openExDrawer('multi',event.target.closest('[data-act="actPick"]').dataset.part);return;}
     if(event.target.closest('[data-action="close-ex-drawer"]')){closeExDrawer();return;}
@@ -4808,11 +4814,15 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     const box=document.getElementById('bandBody');if(!box)return;
     const b=bandLast;
     if(!b||!b.h){
+      const dS=document.getElementById('dashBandScore'),dN=document.getElementById('dashBandNote');
+      if(dS){dS.textContent='--';dN.textContent='等手环同步';}
       box.innerHTML='<article class="band-card band-empty"><b>还没有手环数据</b>确认手机上的小米运动健康已经和手环同步过，再点右上角「立即同步」。</article>';
       return;
     }
     const wake=b.bed?Number(b.bed)+Math.round(Number(b.hd||0)*3600):0;
     const sc=bandScore(b);
+    const dS=document.getElementById('dashBandScore'),dN=document.getElementById('dashBandNote');
+    if(dS){dS.textContent=sc.total+' 分';dN.textContent='昨夜 '+bandHMShort(b.h)+(b.bed?' · '+bandHM(b.bed)+' 入睡':'');}
     const scoreRows=sc.items.map(x=>`<div class="bs-row"><span>${x.k}</span><div class="bs-bar"><i class="${x.p<.6?'low':''}" style="width:${Math.max(3,Math.round(x.p*100))}%"></i></div><b>${bandNum(x.v)}<u>/${x.m}</u></b><p>${x.t}</p></div>`).join('');
     const segs=[['深睡',Number(b.deep||0),'#4d3045'],['浅睡',Number(b.light||0),'#a2929c'],['快速眼动',Number(b.rem||0),'#cdbcc6'],['清醒',Number(b.awake||0),'#e3d9cb']];
     const segBar=segs.map(x=>`<i style="flex:${x[1]||0.001};background:${x[2]}"></i>`).join('');
@@ -4904,13 +4914,17 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     document.getElementById('fitnessProfileSettings').addEventListener('click',event=>{if(event.target.id==='fitnessProfileSettings')closeFitnessProfile();});
     document.addEventListener('keydown',event=>{if(event.key==='Escape'){closeBrandSettings();closeHabitSettings();closePlanSettings();closeFitnessProfile();}});
     document.addEventListener('click',event=>{
-      const nav=event.target.closest('[data-nav]');if(nav)switchView(nav.dataset.nav);
+      const nav=event.target.closest('[data-nav]');if(nav&&!event.target.closest('[data-action]'))switchView(nav.dataset.nav);
       const quick=event.target.closest('[data-quick]');if(quick){switchView(quick.dataset.quick);const qsel=quick.getAttribute('data-focus')||(`#view-${quick.dataset.quick} input:not([type="radio"])`);setTimeout(()=>{const qel=document.querySelector(qsel);if(!qel)return;try{qel.scrollIntoView({block:'center'});}catch(e){}try{qel.focus({preventScroll:true});}catch(e){qel.focus();}},220);return;}
       const action=event.target.closest('[data-action]');if(!action)return;const id=action.dataset.id,type=action.dataset.action;
       if(type==='delete')deleteRecord(id);if(type==='toggle-task')toggleTask(id);
       if(type==='dash-edit'){const g=document.querySelector('#view-dashboard .dashboard-grid');dashSetEdit(!(g&&g.classList.contains('editing')));return;}
-      if(type==='dash-up'||type==='dash-down'){const grid=document.querySelector('#view-dashboard .dashboard-grid');const card=event.target.closest('[data-dcard]');if(!grid||!card)return;let ref=type==='dash-up'?card.previousElementSibling:card.nextElementSibling;while(ref&&!ref.dataset.dcard)ref=type==='dash-up'?ref.previousElementSibling:ref.nextElementSibling;if(!ref)return;if(type==='dash-up')grid.insertBefore(card,ref);else grid.insertBefore(card,ref.nextSibling);dashSaveOrder();return;}
-      if(type==='dash-reset'){delete state.settings.dashOrder;const g=dashCardMap();if(g)DASH_CARDS.forEach(pr=>{const el=g.querySelector(pr[1]);if(el&&el.parentElement===g)g.appendChild(el);});saveState();dashSetEdit(false);toast('已恢复默认排版');return;}
+      if(type==='dash-up'||type==='dash-down'){const grid=document.querySelector('#view-dashboard .dashboard-grid');const card=event.target.closest('[data-dcard]');if(!grid||!card)return;let ref=type==='dash-up'?card.previousElementSibling:card.nextElementSibling;while(ref&&(!ref.dataset.dcard||ref.classList.contains('dcard-off')))ref=type==='dash-up'?ref.previousElementSibling:ref.nextElementSibling;if(!ref)return;if(type==='dash-up')grid.insertBefore(card,ref);else grid.insertBefore(card,ref.nextSibling);dashSaveOrder();return;}
+      if(type==='dash-remove'){const card=event.target.closest('article[data-dcard]');if(!card)return;const id=card.dataset.dcard;card.classList.add('dcard-off');const hid=dashHiddenList();if(!hid.includes(id)){hid.push(id);state.settings.dashHidden=hid;}saveState();toast('已移除「'+(DASH_META[id]?DASH_META[id][0]:id)+'」，想找回点「添加小组件」');return;}
+      if(type==='dash-add'){dashOpenAdd();return;}
+      if(type==='dash-add-close'){const sh=document.getElementById('dashAddSheet');if(sh)sh.hidden=true;return;}
+      if(type==='dash-add-item'){const row=event.target.closest('[data-wid]');if(row)dashAddItem(row.dataset.wid);return;}
+      if(type==='dash-reset'){delete state.settings.dashOrder;delete state.settings.dashHidden;const g=dashCardMap();if(g)DASH_CARDS.forEach(pr=>{const el=g.querySelector(pr[1]);if(el){el.classList.remove('dcard-off');if(el.parentElement===g)g.appendChild(el);}});saveState();dashSetEdit(false);toast('已恢复默认排版');return;}
       if(type==='band-sync'){bandSyncApply(true);return;}
       if(type==='band-manual'){bandManualFor=(bandManualFor===id?'':id);renderAll();return;}
       if(type==='habit-plus')updateHabit(id,'plus');if(type==='habit-minus')updateHabit(id,'minus');if(type==='habit-toggle')updateHabit(id,'toggle');if(type==='habit-quick')updateHabit(id,'quick');
@@ -4937,7 +4951,9 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     window.addEventListener('storage',e=>{if(e.key!==STORAGE_KEY||!e.newValue)return;try{state=normalizeState(JSON.parse(e.newValue));renderAll();toast('另一个页面的数据已同步');}catch{}});
   }
 
-  const DASH_CARDS=[['inspire','#view-dashboard .foldArt'],['quick','#view-dashboard .quick-panel'],['memo','#view-dashboard [data-dcard="memo"]'],['spend','#view-dashboard [data-page-node-id="QbWqicbgLq07V3DcCM2dGa"]'],['habit','#view-dashboard [data-page-node-id="TVGgNBxLSxp3J6cynLoCnd"]'],['tasks','#view-dashboard [data-page-node-id="1u4iTcySePGnGwjEhG1fsR"]'],['fin','#view-dashboard #dashFinCard'],['zones','#view-dashboard [data-p5="cockpit"]'],['todo','#view-dashboard [data-page-node-id="YfWNDApKCV3kvDVbTZj0Ln"]'],['checkin','#view-dashboard [data-page-node-id="toSQyfTgP9eqvkBFDAyZQM"]'],['recent','#view-dashboard [data-page-node-id="pjKPXRGwbmnI3lVIBpP52g"]'],['backup','#view-dashboard #backupHint']];
+  const DASH_CARDS=[['inspire','#view-dashboard .inspire-card'],['sleep','#view-dashboard [data-dcard="sleep"]'],['quick','#view-dashboard .quick-panel'],['memo','#view-dashboard [data-dcard="memo"]'],['spend','#view-dashboard [data-page-node-id="QbWqicbgLq07V3DcCM2dGa"]'],['habit','#view-dashboard [data-page-node-id="TVGgNBxLSxp3J6cynLoCnd"]'],['tasks','#view-dashboard [data-page-node-id="1u4iTcySePGnGwjEhG1fsR"]'],['fin','#view-dashboard #dashFinCard'],['zones','#view-dashboard [data-p5="cockpit"]'],['todo','#view-dashboard [data-page-node-id="YfWNDApKCV3kvDVbTZj0Ln"]'],['checkin','#view-dashboard [data-page-node-id="toSQyfTgP9eqvkBFDAyZQM"]'],['recent','#view-dashboard [data-page-node-id="pjKPXRGwbmnI3lVIBpP52g"]'],['backup','#view-dashboard #backupHint']];
+  const DASH_META={inspire:['今日灵感','每天一句话，点一下换一句'],sleep:['昨夜睡眠','睡眠综合分与时长，来自手环'],quick:['快速开始','记一笔、排日程、记体重、待买的入口'],memo:['备忘录','想法、待办、视频链接随手扔'],spend:['本月支出','花了多少，预算还剩多少'],habit:['今日习惯','打卡完成度一览'],tasks:['今日待办','今天有几件事、完成了几件'],fin:['净可用','余额快照，点进去看明细'],zones:['三域投影','工作 · 成长 · 健身一览'],todo:['待办清单','今天的节奏安排'],checkin:['习惯打卡','逐项打卡面板'],recent:['最近记录','最近五条记录'],backup:['备份提醒','数据该备份时自动出现']};
+  function dashHiddenList(){const v=state.settings.dashHidden;return Array.isArray(v)?v:[];}
   function dashCardMap(){
     const grid=document.querySelector('#view-dashboard .dashboard-grid');if(!grid)return null;
     const map={};
@@ -4948,11 +4964,14 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   }
   function dashApplyOrder(){
     const grid=dashCardMap();if(!grid)return;
-    const order=state.settings.dashOrder;
-    if(!Array.isArray(order)||!order.length)return;
-    const els={};[...grid.children].forEach(el=>{if(el.dataset.dcard)els[el.dataset.dcard]=el;});
-    let cursor=null;
-    order.forEach(k=>{const el=els[k];if(!el)return;if(cursor)grid.insertBefore(el,cursor.nextSibling);else grid.insertBefore(el,grid.firstChild);cursor=el;delete els[k];});
+    const order=state.settings.dashOrder,hid=dashHiddenList();
+    DASH_CARDS.forEach(pair=>{const el=grid.querySelector(pair[1]);if(!el)return;el.classList.toggle('dcard-off',hid.includes(pair[0]));});
+    if(Array.isArray(order)&&order.length){
+      const els={};[...grid.children].forEach(el=>{if(el.dataset.dcard)els[el.dataset.dcard]=el;});
+      let cursor=null;
+      order.forEach(k=>{const el=els[k];if(!el)return;if(cursor)grid.insertBefore(el,cursor.nextSibling);else grid.insertBefore(el,grid.firstChild);cursor=el;delete els[k];});
+    }
+    const tile=grid.querySelector('[data-addtile]');if(tile)grid.appendChild(tile);
   }
   function dashSaveOrder(){
     const grid=dashCardMap();if(!grid)return;
@@ -4970,11 +4989,26 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
       let h=el.querySelector('.dh-move');
       if(on){
         if(!h){h=document.createElement('div');h.className='dh-move';
-          h.innerHTML='<button type="button" data-action="dash-up" aria-label="上移"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 14 12 8 18 14"/></svg></button><button type="button" data-action="dash-down" aria-label="下移"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 10 12 16 18 10"/></svg></button>';
+          h.innerHTML='<button type="button" data-action="dash-up" aria-label="上移"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 14 12 8 18 14"/></svg></button><button type="button" data-action="dash-down" aria-label="下移"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 10 12 16 18 10"/></svg></button><button type="button" data-action="dash-remove" aria-label="移除这个小组件" title="移除"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></button>';
           el.appendChild(h);}
         h.hidden=false;
       }else if(h)h.hidden=true;
     });
+  }
+  function dashOpenAdd(){
+    const grid=dashCardMap();if(!grid)return;
+    const placed=new Set([...grid.children].filter(el=>el.dataset.dcard&&!el.classList.contains('dcard-off')).map(el=>el.dataset.dcard));
+    const list=document.getElementById('dashAddList');if(!list)return;
+    const rows=DASH_CARDS.filter(pair=>!placed.has(pair[0])).map(pair=>{const m=DASH_META[pair[0]]||[pair[0],''];return `<div class="dash-wrow"><span class="grow"><strong>${m[0]}</strong><small>${m[1]}</small></span><button class="dash-pill" type="button" data-action="dash-add-item" data-wid="${pair[0]}">添加</button></div>`;}).join('');
+    list.innerHTML=rows||'<p class="sheet-tip">能加的都在首页上了。想挪位置，先点右上角编辑，用上移 / 下移。</p>';
+    const sh=document.getElementById('dashAddSheet');if(sh)sh.hidden=false;
+  }
+  function dashAddItem(id){
+    if(!DASH_CARDS.some(pair=>pair[0]===id))return;
+    state.settings.dashHidden=dashHiddenList().filter(k=>k!==id);
+    const grid=dashCardMap();const el=grid&&grid.querySelector(`[data-dcard="${id}"]`);
+    if(el){el.classList.remove('dcard-off');const tile=grid.querySelector('[data-addtile]');if(tile)grid.insertBefore(el,tile);else grid.appendChild(el);}
+    saveState();dashSaveOrder();dashOpenAdd();toast('已添加到首页，可在编辑模式里挪位置');
   }
   function dashWatchView(){
     const bar=document.getElementById('dashEditBar');if(!bar)return;
@@ -5042,16 +5076,6 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     head.addEventListener('touchmove',function(e){if(!drag||!body)return;dy=Math.max(0,e.touches[0].clientY-sy);body.style.transition='none';body.style.transform=dy>0?('translateY('+dy+'px)'):'';},{passive:true});
     head.addEventListener('touchend',function(){if(!drag)return;drag=false;if(body){body.style.transition='';body.style.transform='';}if(dy>80)sheet.hidden=true;dy=0;},{passive:true});
   }
-})();
-(function(){/* 手机端折叠仪式区：今日灵感（指数+轻提醒）默认收起 */
-  var bar=document.querySelector('.foldBar[data-fold="life"]');
-  if(!bar)return;
-  bar.addEventListener('click',function(){
-    var body=bar.parentElement.querySelector('.foldBody');
-    if(!body)return;
-    body.hidden=!body.hidden;
-    var em=bar.querySelector('em');if(em)em.textContent=body.hidden?'展开':'收起';
-  });
 })();
 (function(){/* 成长页：每日复盘默认收起，摘要前置 */
   var bar=document.querySelector('.foldBar[data-fold="review"]');
