@@ -1570,6 +1570,61 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
 .band-jump{padding:2px 0;min-height:22px;border:0;background:none;color:#94887a;font:inherit;font-size:11px;line-height:1.5;cursor:pointer;text-decoration:underline;text-underline-offset:2px;text-decoration-style:dotted;text-align:left}
 .band-jump u{text-decoration:none;margin-left:2px}
 .band-jump:active{color:var(--terra)}
+
+/* ===== 批次 A：小组件尺寸系统 + iOS 编辑态 + 分段控件 v2（2026-10-23） ===== */
+/* 尺寸三档：S = 四栏（三分之一），M = 八栏（三分之二），L = 整行。桌面走 12 栏换算。
+   默认跨度沿用原排版，用户改过就存 settings.dashSpan，不再按卡片类硬编码。 */
+@media(min-width:1181px){
+  .dashboard-grid>article[data-dspan="4"]{grid-column:span 4}
+  .dashboard-grid>article[data-dspan="8"]{grid-column:span 8}
+  .dashboard-grid>article[data-dspan="12"]{grid-column:1/-1}
+}
+/* 手机：两列节奏。s 占半宽做紧凑卡，m / l 整行 */
+@media(max-width:860px){
+  .dashboard-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-flow:row dense;gap:12px;align-items:stretch}
+  .dashboard-grid>article{grid-column:1/-1}
+  .dashboard-grid>article[data-dsize="s"]{grid-column:span 1;padding:14px}
+  .dashboard-grid>article[data-dsize="s"] .panel-head{margin-bottom:10px;flex-direction:column;align-items:flex-start;gap:5px}
+  .dashboard-grid>article[data-dsize="s"] .panel-head h2{font-size:15px}
+  .dashboard-grid>article[data-dsize="s"] .panel-head .mini-note,
+  .dashboard-grid>article[data-dsize="s"] .panel-head .wnote,
+  .dashboard-grid>article[data-dsize="s"] .insight-row{display:none}
+  .dashboard-grid>article.stat-card[data-dsize="s"]{display:flex;flex-direction:column;align-items:flex-start;gap:9px;padding:14px}
+  .dashboard-grid>article.stat-card[data-dsize="s"] .stat-icon{width:32px;height:32px;border-radius:10px}
+  .dashboard-grid>article.stat-card[data-dsize="s"] .stat-icon svg{width:15px;height:15px}
+  .dashboard-grid>article.stat-card[data-dsize="s"] strong{font-size:20px}
+  .dashboard-grid>article.stat-card[data-dsize="s"] small{display:block;margin-top:2px;font-size:10px;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .dashboard-grid>article[data-dsize="s"]#backupHint{grid-column:1/-1}
+}
+/* iOS 风编辑态：轻微抖动 + 卡片顶部预留一条浮层工具行。
+   工具行绝对定位，不参与卡片内部布局，所以 stat-card 这种横向 flex 卡也不会被挤变形。 */
+.dashboard-grid.editing>article{outline:0;padding-top:64px;box-shadow:0 0 0 1.5px rgba(146,116,138,.4),0 12px 28px rgba(77,48,69,.1);animation:dsWobble 2.6s ease-in-out infinite}
+.dashboard-grid.editing>article:nth-child(2n){animation-delay:-.65s}
+.dashboard-grid.editing>article:nth-child(3n){animation-delay:-1.3s}
+@keyframes dsWobble{0%,100%{transform:rotate(-.26deg)}50%{transform:rotate(.26deg)}}
+@media(prefers-reduced-motion:reduce){.dashboard-grid.editing>article{animation:none}}
+/* 编辑态一律整行，避免半宽卡里工具条挤成一坨 */
+@media(max-width:860px){.dashboard-grid.editing>article{grid-column:1/-1!important;padding-top:58px}}
+.dh-move{position:absolute;left:0;top:0;right:0;display:flex;align-items:center;gap:7px;padding:14px 22px 0;z-index:6}
+@media(max-width:860px){.dh-move{padding:11px 14px 0}}
+/* 排版编辑时收起 AI 悬浮球，否则它会压住卡片右上角的 S / M / L */
+body:has(.dashboard-grid.editing) .ai-fab{opacity:0;pointer-events:none;transform:scale(.8)}
+.dh-min{width:26px;height:26px;flex:none;padding:0;border:0;border-radius:50%;background:#3b3430;color:#fff;display:grid;place-items:center;cursor:pointer;box-shadow:0 2px 6px rgba(24,20,18,.24)}
+.dh-min svg{width:12px;height:12px}
+.dh-order{display:flex;gap:5px;flex:none}
+.dh-order button{width:32px;height:26px;padding:0;border:1px solid rgba(31,26,22,.13);border-radius:8px;background:#fff;color:#6f6459;display:grid;place-items:center;cursor:pointer}
+.dh-order svg{width:13px;height:13px}
+.dh-size{display:flex;gap:5px;margin-left:auto;flex:none}
+.dh-size button{width:26px;height:26px;padding:0;border:1px solid rgba(31,26,22,.13);border-radius:50%;background:#fff;color:#6f6459;font:inherit;font-size:10px;font-weight:800;line-height:1;display:grid;place-items:center;cursor:pointer}
+.dh-size button.on{background:var(--plum);border-color:var(--plum);color:#fff}
+/* 分段控件 v2：凹槽底 + 滑动白块。替换原「一排描边胶囊」 */
+.wseg{position:relative;display:flex;gap:3px;padding:4px;margin-bottom:14px;border-radius:13px;background:rgba(111,89,67,.11);overflow:hidden}
+.wseg button{position:relative;z-index:2;flex:1;min-width:0;min-height:34px;padding:0 6px;border:0;border-radius:9px;background:transparent;color:#8d8175;font:inherit;font-size:12.5px;font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;transition:color .26s cubic-bezier(.22,.61,.36,1)}
+.wseg button.on{color:var(--ink);font-weight:800}
+.wseg .seg-pill{position:absolute;z-index:1;left:0;top:4px;bottom:4px;width:0;border-radius:9px;background:#fff;box-shadow:0 1px 3px rgba(31,26,22,.17),0 0 0 .5px rgba(31,26,22,.07);opacity:0;transition:transform .34s cubic-bezier(.22,.61,.36,1),width .34s cubic-bezier(.22,.61,.36,1)}
+.wseg .seg-pill.is-ready{opacity:1}
+@keyframes segIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+#capList,#matList,#msList,#ideaGrid,#mediaMat,#mediaStat,#mediaTopic{animation:segIn .3s cubic-bezier(.22,.61,.36,1)}
 </style>
   <div class="trainsheet" hidden id="trainSheet" role="dialog" aria-modal="true" aria-label="训练进行中">
     <header class="train-top">
@@ -2214,7 +2269,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     return true;
   }
   function deleteRecord(id){const target=state.records.find(r=>r.id===id);if(!target||!confirm(LANG==='en'?`Delete “${titleFor(target)}”? This cannot be undone.`:`确定删除“${titleFor(target)}”吗？删除后无法撤回。`))return;if(target.remoteId){if(target.type==='money')deleteRemoteMoney(target.remoteId);if(target.type==='planner')deleteRemotePlan(target.remoteId);if(target.type==='fitness')deleteRemoteFitness(target.remoteId);if(target.type==='home')deleteRemoteShopping(target.remoteId);}state.records=state.records.filter(r=>r.id!==id);const saved=saveState();renderAll();if(saved)toast('记录已删除');}
-  function switchView(view){const target=document.getElementById(`view-${view}`);if(!target)return;if(view==='more'&&typeof renderMorePage==='function')renderMorePage();if(view==='memo'&&typeof renderMemos==='function')renderMemos();if(view==='band'&&typeof renderBand==='function')renderBand();if(view==='mymedia'&&typeof renderMyMedia==='function')renderMyMedia();if(view==='exlib'&&typeof renderFtExGrid==='function'){exdFillFilters(document.getElementById('ftExMuscle'),document.getElementById('ftExEquip'));renderFtExGrid();}document.querySelectorAll('.view').forEach(el=>el.classList.toggle('active',el===target));document.querySelectorAll('[data-nav]').forEach(el=>el.classList.toggle('active',el.dataset.nav===view));document.getElementById('viewTitle').textContent=target.dataset.title||'日常集';if(location.hash!==`#${view}`)history.replaceState(null,'',`#${view}`);scrollTo({top:0,behavior:'smooth'});}
+  function switchView(view){const target=document.getElementById(`view-${view}`);if(!target)return;if(view==='more'&&typeof renderMorePage==='function')renderMorePage();if(view==='memo'&&typeof renderMemos==='function')renderMemos();if(view==='band'&&typeof renderBand==='function')renderBand();if(view==='mymedia'&&typeof renderMyMedia==='function')renderMyMedia();if(view==='exlib'&&typeof renderFtExGrid==='function'){exdFillFilters(document.getElementById('ftExMuscle'),document.getElementById('ftExEquip'));renderFtExGrid();}document.querySelectorAll('.view').forEach(el=>el.classList.toggle('active',el===target));document.querySelectorAll('[data-nav]').forEach(el=>el.classList.toggle('active',el.dataset.nav===view));document.getElementById('viewTitle').textContent=target.dataset.title||'日常集';if(location.hash!==`#${view}`)history.replaceState(null,'',`#${view}`);scrollTo({top:0,behavior:'smooth'});if(typeof segSyncAll==='function')setTimeout(segSyncAll,60);}
   function formatDateHeading(value){if(value===isoDate())return t('今天');if(value===shiftDate(-1))return t('昨天');const date=new Date(`${value}T00:00:00`);return LANG==='en'?new Intl.DateTimeFormat('en-US',{month:'short',day:'numeric'}).format(date):`${date.getMonth()+1} 月 ${date.getDate()} 日`;}
   function titleFor(record){const d=record.data||{},local=value=>record.sample?translateText(value):value;if(record.type==='money')return d.note?local(d.note):t(d.category||'一笔收支');if(record.type==='planner')return d.title?local(d.title):t('一项日程');if(record.type==='fitness')return d.note?local(d.note):t('身体记录');if(record.type==='home')return d.name?local(d.name):t('待买物品');if(record.type==='vision')return d.text?String(d.text).slice(0,18):(d.kind==='text'?'图片文字':'图片识别');return t('生活记录');}
   function detailFor(record){const d=record.data||{};if(record.type==='money')return`${t(d.category||'其他')} · ${t(d.flow==='income'?'收入':d.flow==='debt'?'负债':'支出')}`;if(record.type==='planner')return`${t(d.list||'生活')} · ${d.time||t('全天')} · ${t(d.done?'已完成':'待完成')}`;if(record.type==='fitness')return`${d.bodyFat?`${LANG==='en'?'Body fat':'体脂'} ${d.bodyFat}% · `:''}${d.duration||0} ${LANG==='en'?'min exercise':'分钟运动'}`;if(record.type==='home')return`${record.sample?translateText(d.quantity||'数量未填'):(d.quantity||t('数量未填'))} · ${t(d.category||'未分类')} · ${t(d.bought?'已买':'待买')}`;if(record.type==='vision')return d.kind==='text'?'拍照提取的文字 · 点击查看全文':'AI 看图描述';return'';}
@@ -4192,7 +4247,19 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     const d=bandLast.d||'',label=d===isoDate()?'昨夜':d===shiftDate(-1)?'上一晚':(String(d).slice(5)||'最近');
     el.innerHTML=`<button type="button" class="band-jump" data-nav="band">${label} ${bandHMShort(bandLast.h)}<u>›</u></button>`;
   }
-  function renderAll(){applyBrand();renderDashboard();renderCockpitP5();renderBackupHint();renderMoney();renderFinanceCard();renderHabits();renderMemos();renderDashMemo();renderSleepNote();renderBand();renderFitness();renderFitTrain();renderHealth();renderPlanner();renderHome();renderMedia();renderArchive();renderMorePage();renderBackupStatus();renderWork();renderGrow();renderSettingsPage();}
+  function renderAll(){applyBrand();renderDashboard();renderCockpitP5();renderBackupHint();renderMoney();renderFinanceCard();renderHabits();renderMemos();renderDashMemo();renderSleepNote();renderBand();renderFitness();renderFitTrain();renderHealth();renderPlanner();renderHome();renderMedia();renderArchive();renderMorePage();renderBackupStatus();renderWork();renderGrow();renderSettingsPage();segSyncAll();dashApplySize();}
+  /* 分段控件：白色滑块跟着选中项走，切换时平滑平移。原来是「一排描边胶囊」，切换没有任何过渡。 */
+  function segSync(seg){
+    if(!seg)return;
+    const on=seg.querySelector('button.on');
+    let pill=seg.querySelector('.seg-pill');
+    if(!pill){pill=document.createElement('i');pill.className='seg-pill';seg.appendChild(pill);}
+    if(!on||!on.offsetWidth){pill.classList.remove('is-ready');return;}
+    pill.style.width=on.offsetWidth+'px';
+    pill.style.transform=`translateX(${on.offsetLeft}px)`;
+    pill.classList.add('is-ready');
+  }
+  function segSyncAll(){document.querySelectorAll('.wseg').forEach(segSync);}
 
   document.addEventListener('click',event=>{
     if(event.target.closest('#view-work textarea,#view-work input,#view-work select,#view-grow textarea,#view-grow input,#view-grow select'))return;
@@ -5217,18 +5284,22 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     document.getElementById('planSettings').addEventListener('click',event=>{if(event.target.id==='planSettings')closePlanSettings();});
     document.getElementById('fitnessProfileSettings').addEventListener('click',event=>{if(event.target.id==='fitnessProfileSettings')closeFitnessProfile();});
     document.addEventListener('keydown',event=>{if(event.key==='Escape'){closeBrandSettings();closeHabitSettings();closePlanSettings();closeFitnessProfile();}});
+    window.addEventListener('resize',()=>{segSyncAll();});
     document.addEventListener('click',event=>{
+      const segBtn=event.target.closest('.wseg button');
+      if(segBtn){const seg=segBtn.parentElement;setTimeout(()=>segSync(seg),0);}
       const nav=event.target.closest('[data-nav]');if(nav&&!event.target.closest('[data-action]'))switchView(nav.dataset.nav);
       const quick=event.target.closest('[data-quick]');if(quick){switchView(quick.dataset.quick);const qsel=quick.getAttribute('data-focus')||(`#view-${quick.dataset.quick} input:not([type="radio"])`);setTimeout(()=>{const qel=document.querySelector(qsel);if(!qel)return;try{qel.scrollIntoView({block:'center'});}catch(e){}try{qel.focus({preventScroll:true});}catch(e){qel.focus();}},220);return;}
       const action=event.target.closest('[data-action]');if(!action)return;const id=action.dataset.id,type=action.dataset.action;
       if(type==='delete')deleteRecord(id);if(type==='toggle-task')toggleTask(id);
       if(type==='dash-edit'){const g=document.querySelector('#view-dashboard .dashboard-grid');dashSetEdit(!(g&&g.classList.contains('editing')));return;}
       if(type==='dash-up'||type==='dash-down'){const grid=document.querySelector('#view-dashboard .dashboard-grid');const card=event.target.closest('[data-dcard]');if(!grid||!card)return;let ref=type==='dash-up'?card.previousElementSibling:card.nextElementSibling;while(ref&&(!ref.dataset.dcard||ref.classList.contains('dcard-off')))ref=type==='dash-up'?ref.previousElementSibling:ref.nextElementSibling;if(!ref)return;if(type==='dash-up')grid.insertBefore(card,ref);else grid.insertBefore(card,ref.nextSibling);dashSaveOrder();return;}
+      if(type==='dash-size'){const card=event.target.closest('[data-dcard]');if(!card)return;dashSetSize(card.dataset.dcard,Number(action.dataset.size));dashSetEdit(true);return;}
       if(type==='dash-remove'){const card=event.target.closest('article[data-dcard]');if(!card)return;const id=card.dataset.dcard;card.classList.add('dcard-off');const hid=dashHiddenList();if(!hid.includes(id)){hid.push(id);state.settings.dashHidden=hid;}saveState();toast('已移除「'+(DASH_META[id]?DASH_META[id][0]:id)+'」，想找回点「添加小组件」');return;}
       if(type==='dash-add'){dashOpenAdd();return;}
       if(type==='dash-add-close'){const sh=document.getElementById('dashAddSheet');if(sh)sh.hidden=true;return;}
       if(type==='dash-add-item'){const row=event.target.closest('[data-wid]');if(row)dashAddItem(row.dataset.wid);return;}
-      if(type==='dash-reset'){delete state.settings.dashOrder;delete state.settings.dashHidden;const g=dashCardMap();if(g)DASH_CARDS.forEach(pr=>{const el=g.querySelector(pr[1]);if(el){el.classList.remove('dcard-off');if(el.parentElement===g)g.appendChild(el);}});saveState();dashSetEdit(false);toast('已恢复默认排版');return;}
+      if(type==='dash-reset'){delete state.settings.dashOrder;delete state.settings.dashHidden;delete state.settings.dashSpan;const g=dashCardMap();if(g)DASH_CARDS.forEach(pr=>{const el=g.querySelector(pr[1]);if(el){el.classList.remove('dcard-off');if(el.parentElement===g)g.appendChild(el);}});saveState();dashApplySize();dashSetEdit(false);toast('已恢复默认排版');return;}
       if(type==='band-sync'){bandSyncApply(true);return;}
       if(type==='band-manual'){bandManualFor=(bandManualFor===id?'':id);renderAll();return;}
       if(type==='habit-plus')updateHabit(id,'plus');if(type==='habit-minus')updateHabit(id,'minus');if(type==='habit-toggle')updateHabit(id,'toggle');if(type==='habit-quick')updateHabit(id,'quick');
@@ -5257,7 +5328,39 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
 
   const DASH_CARDS=[['inspire','#view-dashboard .inspire-card'],['sleep','#view-dashboard [data-dcard="sleep"]'],['quick','#view-dashboard .quick-panel'],['memo','#view-dashboard [data-dcard="memo"]'],['spend','#view-dashboard [data-page-node-id="QbWqicbgLq07V3DcCM2dGa"]'],['habit','#view-dashboard [data-page-node-id="TVGgNBxLSxp3J6cynLoCnd"]'],['tasks','#view-dashboard [data-page-node-id="1u4iTcySePGnGwjEhG1fsR"]'],['fin','#view-dashboard #dashFinCard'],['zones','#view-dashboard [data-p5="cockpit"]'],['todo','#view-dashboard [data-page-node-id="YfWNDApKCV3kvDVbTZj0Ln"]'],['checkin','#view-dashboard [data-page-node-id="toSQyfTgP9eqvkBFDAyZQM"]'],['recent','#view-dashboard [data-page-node-id="pjKPXRGwbmnI3lVIBpP52g"]'],['backup','#view-dashboard #backupHint']];
   const DASH_META={inspire:['今日灵感','每天一句话，点一下换一句'],sleep:['昨夜睡眠','睡眠综合分与时长，来自手环'],quick:['快速开始','记一笔、排日程、记体重、待买的入口'],memo:['备忘录','想法、待办、视频链接随手扔'],spend:['本月支出','花了多少，预算还剩多少'],habit:['今日习惯','打卡完成度一览'],tasks:['今日待办','今天有几件事、完成了几件'],fin:['净可用','余额快照，点进去看明细'],zones:['三域投影','工作 · 成长 · 健身一览'],todo:['待办清单','今天的节奏安排'],checkin:['习惯打卡','逐项打卡面板'],recent:['最近记录','最近五条记录'],backup:['备份提醒','数据该备份时自动出现']};
+  /* 小中大三档 → 12 栏下的跨度。默认值等于改造前各卡的视觉宽度，所以不动设置时排版不变。 */
+  /* 手机默认哪些卡走半宽。纯数字卡（睡眠 / 支出 / 习惯 / 待办数 / 余额）适合半宽，
+     文字型卡片（灵感 / 快速开始 / 备忘录 / 清单）半宽会被压到读不动，一律整行。
+     桌面默认不写 data-dspan，继续用原样式表里各卡的跨度，排版与改造前完全一致；
+     只有用户手动点了 S / M / L 才落 data-dspan 覆盖。 */
+  const DASH_MOBILE_DEFAULT={inspire:'l',sleep:'s',quick:'l',memo:'l',spend:'s',habit:'s',tasks:'s',fin:'s',zones:'l',todo:'l',checkin:'l',recent:'l',backup:'l'};
+  const DASH_SPAN_STEPS=[4,8,12];
+  const DASH_SIZE_LABEL={4:'S',8:'M',12:'L'};
   function dashHiddenList(){const v=state.settings.dashHidden;return Array.isArray(v)?v:[];}
+  function dashSpanMap(){const v=state.settings.dashSpan;return (v&&typeof v==='object'&&!Array.isArray(v))?v:{};}
+  /* 把尺寸写回 DOM。桌面读 data-dspan 换算 12 栏跨度；手机只看 data-dspan<=4 决定半宽。 */
+  function dashApplySize(){
+    const grid=dashCardMap();if(!grid)return;
+    const sp=dashSpanMap();
+    DASH_CARDS.forEach(pair=>{
+      const id=pair[0];
+      const el=grid.querySelector(`[data-dcard="${id}"]`);if(!el)return;
+      const n=Number(sp[id]);
+      if(DASH_SPAN_STEPS.includes(n)){
+        el.dataset.dspan=String(n);
+        el.dataset.dsize=n<=4?'s':'l';
+      }else{
+        delete el.dataset.dspan;
+        el.dataset.dsize=DASH_MOBILE_DEFAULT[id]||'l';
+      }
+    });
+  }
+  function dashSetSize(id,n){
+    if(!DASH_SPAN_STEPS.includes(n))return;
+    const sp={...dashSpanMap()};sp[id]=n;state.settings.dashSpan=sp;
+    saveState();dashApplySize();
+    toast(`「${DASH_META[id]?DASH_META[id][0]:id}」改成 ${DASH_SIZE_LABEL[n]} 号`);
+  }
   function dashCardMap(){
     const grid=document.querySelector('#view-dashboard .dashboard-grid');if(!grid)return null;
     const map={};
@@ -5293,9 +5396,17 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
       let h=el.querySelector('.dh-move');
       if(on){
         if(!h){h=document.createElement('div');h.className='dh-move';
-          h.innerHTML='<button type="button" data-action="dash-up" aria-label="上移"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 14 12 8 18 14"/></svg></button><button type="button" data-action="dash-down" aria-label="下移"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 10 12 16 18 10"/></svg></button><button type="button" data-action="dash-remove" aria-label="移除这个小组件" title="移除"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></button>';
-          el.appendChild(h);}
+          h.innerHTML=`<button type="button" class="dh-min" data-action="dash-remove" aria-label="移除这个小组件" title="移除"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg></button>`
+            +`<div class="dh-order"><button type="button" data-action="dash-up" aria-label="上移" title="上移"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 14 12 8 18 14"/></svg></button><button type="button" data-action="dash-down" aria-label="下移" title="下移"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 10 12 16 18 10"/></svg></button></div>`
+            +`<div class="dh-size">${DASH_SPAN_STEPS.map(n=>`<button type="button" data-action="dash-size" data-size="${n}" title="${DASH_SIZE_LABEL[n]} 号尺寸" aria-label="${DASH_SIZE_LABEL[n]} 号尺寸">${DASH_SIZE_LABEL[n]}</button>`).join('')}</div>`;
+          el.insertBefore(h,el.firstChild);}
         h.hidden=false;
+        /* 档位：设过的用设置值；手机走默认映射（编辑态被强制整行，按宽度算会全变 L）；桌面按实际宽度反推 */
+        const mobile=window.matchMedia('(max-width:860px)').matches;
+        const gw=grid.getBoundingClientRect().width||1;
+        const ratio=el.getBoundingClientRect().width/gw;
+        const cur=Number(el.dataset.dspan)||(mobile?((DASH_MOBILE_DEFAULT[el.dataset.dcard]==='s')?4:12):(ratio>0.9?12:(ratio>0.6?8:4)));
+        h.querySelectorAll('.dh-size button').forEach(b=>b.classList.toggle('on',Number(b.dataset.size)===cur));
       }else if(h)h.hidden=true;
     });
   }
@@ -5321,7 +5432,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     const target=document.getElementById('view-dashboard');
     if(target&&window.MutationObserver)new MutationObserver(sync).observe(target,{attributes:true,attributeFilter:['class']});
   }
-  function init(){const now=new Date(),weekdays=['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];document.getElementById('todayLabel').textContent=LANG==='en'?new Intl.DateTimeFormat('en-US',{month:'long',day:'numeric',weekday:'long'}).format(now):`${now.getMonth()+1} 月 ${now.getDate()} 日 · ${weekdays[now.getDay()]}`;setDateDefaults();updateMoneyCategories();restoreDrafts();bindForms();bindEvents();dashApplyOrder();dashWatchView();bandSyncApply(false);setInterval(()=>bandSyncApply(false),30*60*1000);const debtFixed=migrateDebtFlow();renderAll();renderAiStatus();checkDueReminders();renderFinanceCard();if(debtFixed)setTimeout(function(){toast('已把 '+debtFixed+' 笔「欠款」从支出改为负债，不再计入本月支出');},600);var aiInp=document.getElementById('aiInput');if(aiInp)aiInp.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();aiSend();}});switchView(document.getElementById(`view-${location.hash.slice(1)}`)?location.hash.slice(1):'dashboard');if(!dataCorrupted)saveState();pullAllRemote(function(ok){ if(ok){ saveState(); renderAll(); } });}
+  function init(){const now=new Date(),weekdays=['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];document.getElementById('todayLabel').textContent=LANG==='en'?new Intl.DateTimeFormat('en-US',{month:'long',day:'numeric',weekday:'long'}).format(now):`${now.getMonth()+1} 月 ${now.getDate()} 日 · ${weekdays[now.getDay()]}`;setDateDefaults();updateMoneyCategories();restoreDrafts();bindForms();bindEvents();dashApplySize();dashApplyOrder();dashWatchView();bandSyncApply(false);setInterval(()=>bandSyncApply(false),30*60*1000);const debtFixed=migrateDebtFlow();renderAll();renderAiStatus();checkDueReminders();renderFinanceCard();if(debtFixed)setTimeout(function(){toast('已把 '+debtFixed+' 笔「欠款」从支出改为负债，不再计入本月支出');},600);var aiInp=document.getElementById('aiInput');if(aiInp)aiInp.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();aiSend();}});switchView(document.getElementById(`view-${location.hash.slice(1)}`)?location.hash.slice(1):'dashboard');if(!dataCorrupted)saveState();pullAllRemote(function(ok){ if(ok){ saveState(); renderAll(); } });}
   startI18n();
   document.addEventListener('DOMContentLoaded',init);
 })();
