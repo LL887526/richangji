@@ -133,9 +133,8 @@
 .wcopy{display:flex;flex-direction:column;gap:8px;padding:14px;border:1px solid var(--line);border-radius:14px;background:var(--paper)}
 .wcopy-body{margin:0;padding:12px;border-radius:12px;background:var(--card);color:var(--ink);font-size:13.5px;line-height:1.85;white-space:pre-wrap}
 .wtree-stage{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
-.wtree-canvas{position:relative;flex:0 0 auto;width:200px;height:220px;margin:0 auto}
-.wtree-svg{display:block;width:200px;height:220px}
-.wtree-fall{position:absolute;inset:0;width:200px;height:220px;pointer-events:none}
+.wtree-canvas{position:relative;flex:0 0 auto;width:min(320px,74vw);aspect-ratio:1;margin:0 auto}
+.wtree-svg{display:block;width:100%;height:100%}
 .wtree-trunk-path{fill:none;stroke:#9c7a4d;stroke-width:9;stroke-linecap:round}
 .wtree-branch-path{fill:none;stroke:#a9885c;stroke-width:4.2;stroke-linecap:round}
 .wtree-leaf{opacity:0;transform:scale(.4);transform-origin:center;transition:opacity .5s ease,transform .5s cubic-bezier(.34,1.56,.64,1)}
@@ -887,47 +886,83 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
       </section>
 
       <section data-page-node-id="kpPnubsun3OlHHydKytZUI" class="view" data-title="减脂健身" id="view-fitness">
-        <div data-page-node-id="m50d5EovmStFBFVLv7l2Q9" class="module-alert" id="fitnessAlert"></div>
-        <nav class="wspace-tabs" id="ftAnchor" aria-label="健身分区导航">
-          <button data-ftgo="ft-panel-today">训练</button>
-          <button data-ftgo="ft-panel-cal">训练日历</button>
-          <button data-ftgo="ft-panel-plan">计划设置</button>
-          <button data-ftgo="ft-panel-log">训练日志</button>
-        </nav>
-        <article class="wpanel" id="ft-panel-today" data-ft="today">
-          <div class="wpanel-head"><div><p class="eyebrow">跟着计划练</p><h2>今日训练</h2></div><span class="wnote" id="ftTodayNote"></span></div>
-          <div id="ftTodayCtrl"></div>
-          <div id="ftRestBar" hidden></div>
-          <div class="wbranch" id="ftTodayList"></div>
-        </article>
-        <article class="wpanel" id="ft-panel-cal" data-ft="cal">
-          <div class="wpanel-head"><div><p class="eyebrow">坚持的痕迹</p><h2>训练日历</h2></div><span class="wnote" id="ftCalNote"></span></div>
-          <div class="wadd" style="align-items:center">
-            <button class="wbtn ghostbtn" data-ftcal="prev" type="button" style="min-width:44px" aria-label="上个月">‹</button>
-            <b id="ftCalTitle" style="flex:1;text-align:center;font-size:15px"></b>
-            <button class="wbtn ghostbtn" data-ftcal="next" type="button" style="min-width:44px" aria-label="下个月">›</button>
+        <div class="fit-app">
+          <header class="fit-hero">
+            <div class="fit-hero-top">
+              <p class="fit-eyebrow">减脂健身</p>
+              <button class="fit-hero-link" type="button" data-nav="habits">体重与热量<svg aria-hidden="true"><use href="#i-back"/></svg></button>
+            </div>
+            <div class="fit-hero-main">
+              <div class="fit-hero-lead"><b id="fitStreakNum">0</b><span>天连续</span></div>
+              <div class="fit-hero-grid">
+                <div><b id="fitWeekVol">0</b><span>本周 kg</span></div>
+                <div><b id="fitMonthCnt">0</b><span>本月次数</span></div>
+                <div><b id="fitWeekSets">0</b><span>本周组数</span></div>
+              </div>
+            </div>
+            <p class="fit-hero-hint" id="fitHeroHint">今天没有安排训练，休息也是训练的一部分。</p>
+          </header>
+          <div data-page-node-id="m50d5EovmStFBFVLv7l2Q9" class="module-alert" id="fitnessAlert" hidden></div>
+          <nav class="wseg fit-seg" id="fitSeg" aria-label="健身分区导航">
+            <button class="on" data-fsec="today" type="button">今天</button>
+            <button data-fsec="cal" type="button">日历</button>
+            <button data-fsec="plan" type="button">计划</button>
+            <button data-fsec="data" type="button">数据</button>
+            <button data-fsec="log" type="button">日志</button>
+          </nav>
+          <div class="fit-sec on" id="fsec-today">
+            <article class="fit-card">
+              <div class="fit-card-head"><div><p class="fit-eyebrow">跟着计划练</p><h2>今日训练</h2></div><span class="fit-note" id="ftTodayNote"></span></div>
+              <div id="ftTodayCtrl"></div>
+              <div id="ftRestBar" hidden></div>
+              <div class="wbranch" id="ftTodayList"></div>
+            </article>
           </div>
-          <div class="ftcal-head"><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span></div>
-          <div class="ftcal-grid" id="ftCalGrid"></div>
-          <p class="wnote2">练过的日子会亮起来 · 点日子看当天练了什么</p>
-          <div class="wlist" id="ftCalDetail" style="margin-top:8px"></div>
-          <div class="ftwk-wrap">
-            <div class="ftwk-head"><span class="eyebrow">近 8 周训练量</span><span class="wnote" id="ftWeekNote"></span></div>
-            <div class="ftwk" id="ftWeekChart"></div>
-            <p class="wnote2">柱子=当周训练量(kg) · 灰=没练 · 连续打卡看右上角</p>
+          <div class="fit-sec" id="fsec-cal">
+            <article class="fit-card">
+              <div class="fit-cal-nav">
+                <button class="fit-cal-btn" data-ftcal="prev" type="button" aria-label="上个月"><svg aria-hidden="true"><use href="#i-back"/></svg></button>
+                <b id="ftCalTitle">2026 年 10 月</b>
+                <button class="fit-cal-btn next" data-ftcal="next" type="button" aria-label="下个月"><svg aria-hidden="true"><use href="#i-back"/></svg></button>
+              </div>
+              <p class="fit-cal-sub" id="ftCalNote"></p>
+              <div class="ftcal-head"><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span></div>
+              <div class="ftcal-grid" id="ftCalGrid"></div>
+              <p class="fit-tip">练过的日子会亮起来 · 点一天看当天练了什么</p>
+              <div class="wlist" id="ftCalDetail"></div>
+            </article>
           </div>
-        </article>
-        <article class="wpanel" id="ft-panel-plan" data-ft="plan">
-          <div class="wpanel-head"><div><p class="eyebrow">全周总览</p><h2>周计划</h2></div><span class="wnote" id="ftPlanNote"></span></div>
-          <div class="wadd" style="margin-top:10px"><button class="wbtn dbtn-solid" data-act="ftPlanEdit" type="button" style="width:100%">编辑周计划</button><button class="wbtn ghostbtn" data-nav="exlib" type="button" style="width:100%;margin-top:8px">浏览动作库（含动图演示）</button></div>
-          <p class="wnote2">点动作记一组 · 记满自动标完成 · 练满后再点清零</p>
-          <div class="wbranch" id="ftPlanList"></div>
-        </article>
-        <article class="wpanel" id="ft-panel-log" data-ft="log">
-          <div class="wpanel-head"><div><p class="eyebrow">训练历史</p><h2>训练日志</h2></div><span class="wnote" id="ftLogCount"></span></div>
-          <div class="wlist" id="ftLogList"></div>
-        </article>
-            </section>
+          <div class="fit-sec" id="fsec-plan">
+            <article class="fit-card">
+              <div class="fit-card-head"><div><p class="fit-eyebrow">全周总览</p><h2>周计划</h2></div><span class="fit-note" id="ftPlanNote"></span></div>
+              <div class="fit-plan-acts">
+                <button class="fit-btn solid" data-act="ftPlanEdit" type="button">编辑周计划</button>
+                <button class="fit-btn ghost" data-nav="exlib" type="button">动作库</button>
+              </div>
+              <p class="fit-tip">点动作记一组 · 记满自动标完成 · 练满后再点清零</p>
+              <div class="wbranch" id="ftPlanList"></div>
+            </article>
+          </div>
+          <div class="fit-sec" id="fsec-data">
+            <article class="fit-card">
+              <div class="fit-card-head"><div><p class="fit-eyebrow">负荷走势</p><h2>近 8 周训练量</h2></div><span class="fit-note" id="ftWeekNote"></span></div>
+              <div class="ftwk" id="ftWeekChart"></div>
+              <p class="fit-tip">柱子越高这周练得越多 · 灰柱=没练</p>
+            </article>
+            <article class="fit-card">
+              <div class="fit-card-head"><div><p class="fit-eyebrow">近 30 天</p><h2>各部位训练量</h2></div><span class="fit-note" id="ftMuscleNote"></span></div>
+              <div class="fit-muscle" id="ftMuscleDist"></div>
+            </article>
+            <button class="fit-link-row" type="button" data-nav="habits"><span><b>体重趋势与热量</b><small>每日体重、7 天平均与热量缺口</small></span><svg aria-hidden="true"><use href="#i-back"/></svg></button>
+          </div>
+          <div class="fit-sec" id="fsec-log">
+            <article class="fit-card">
+              <div class="fit-card-head"><div><p class="fit-eyebrow">训练历史</p><h2>训练日志</h2></div><span class="fit-note" id="ftLogCount"></span></div>
+              <div class="wlist" id="ftLogList"></div>
+            </article>
+          </div>
+        </div>
+      </section>
 
       <section class="view" data-title="更多" id="view-more">
         <div class="mp-panel">
@@ -1276,11 +1311,11 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
         </div>
         <div class="wsec" id="gsec-tree">
           <article class="wpanel">
-            <div class="wpanel-head"><div><p class="eyebrow">点亮里程碑，树就长一截</p><h2>成长树</h2></div><span class="wnote" id="treeStageLbl"></span></div>
+            <div class="wpanel-head"><div><p class="eyebrow">每点亮一次，年轮多长一圈</p><h2>成长年轮</h2></div><span class="wnote" id="treeStageLbl"></span></div>
+            <p class="wnote2" style="margin:0 0 6px">从内向外，每个环是一个成长阶段。点亮里程碑，年轮就长一截；超过 7 天没写复盘，年轮会发黄。</p>
             <div class="wtree-stage">
               <div class="wtree-canvas">
-                <svg class="wtree-svg" id="treeSVG" viewBox="0 0 200 220" aria-label="成长树"></svg>
-                <canvas class="wtree-fall" id="treeFall" width="200" height="220"></canvas>
+                <svg class="wtree-svg" id="treeSVG" viewBox="0 0 320 320" aria-label="成长年轮"></svg>
               </div>
               <div class="wtree-gamify" id="treeGamify"></div>
             </div>
@@ -1763,6 +1798,100 @@ body:has(.dashboard-grid.editing) .ai-fab{opacity:0;pointer-events:none;transfor
   .rv-compose textarea{min-height:190px;font-size:14.5px;padding:14px 15px}
   .rv-bar{justify-content:flex-end;gap:14px}
   .rv-bar .wbtn{flex:0 1 auto;min-width:180px;justify-content:center}
+}
+
+/* ===== 批次 C 2026-10-24：健身页 App 化 ===== */
+.fit-app{display:flex;flex-direction:column;gap:14px;padding-bottom:6px}
+.fit-hero{padding:20px 20px 17px;border-radius:24px;background:var(--plum);color:#fff;box-shadow:0 18px 40px rgba(77,48,69,.2)}
+.fit-hero-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.fit-eyebrow{margin:0;font-size:10.5px;font-weight:800;letter-spacing:.13em;color:rgba(255,255,255,.6)}
+.fit-hero-link{display:inline-flex;align-items:center;gap:4px;min-height:30px;padding:0 8px;border:0;border-radius:9px;background:rgba(255,255,255,.13);color:rgba(255,255,255,.86);font:inherit;font-size:11px;font-weight:700;cursor:pointer}
+.fit-hero-link svg{width:11px;height:11px;transform:rotate(180deg)}
+.fit-hero-main{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-top:14px}
+.fit-hero-lead{display:flex;align-items:baseline;gap:6px}
+.fit-hero-lead b{font-size:54px;line-height:.86;font-weight:800;letter-spacing:-.045em;font-variant-numeric:tabular-nums}
+.fit-hero-lead span{font-size:11.5px;font-weight:700;color:rgba(255,255,255,.6)}
+.fit-hero-grid{display:grid;grid-template-columns:repeat(3,auto);gap:16px;padding-bottom:3px}
+.fit-hero-grid>div{display:flex;flex-direction:column;gap:3px;align-items:flex-end}
+.fit-hero-grid b{font-size:16px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.fit-hero-grid span{font-size:9.5px;color:rgba(255,255,255,.55);white-space:nowrap}
+.fit-hero-hint{margin:15px 0 0;padding-top:12px;border-top:1px solid rgba(255,255,255,.15);font-size:12.5px;line-height:1.65;color:rgba(255,255,255,.74)}
+.fit-seg{margin:0}
+.fit-sec{display:none}
+.fit-sec.on{display:flex;flex-direction:column;gap:14px;animation:fitIn .3s cubic-bezier(.22,.61,.36,1)}
+@keyframes fitIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+.fit-card{padding:18px;border:1px solid var(--line);border-radius:20px;background:var(--card);box-shadow:var(--shadow)}
+.fit-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:12px}
+.fit-card-head h2{margin:3px 0 0;font-size:19px;font-weight:800;letter-spacing:-.01em}
+.fit-card .fit-eyebrow{color:#a2988b}
+.fit-note{padding-top:5px;font-size:11.5px;color:var(--muted);white-space:nowrap}
+.fit-tip{margin:0 0 9px;font-size:11.5px;line-height:1.65;color:#a2988b}
+.fit-cal-nav{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.fit-cal-btn{flex:none;display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;min-height:40px;padding:0;border:1px solid var(--line);border-radius:12px;background:#fbf8f3;color:var(--ink);cursor:pointer}
+.fit-cal-btn:active{background:#f2ece2}
+.fit-cal-btn svg{width:15px;height:15px}
+.fit-cal-btn.next svg{transform:scaleX(-1)}
+#ftCalTitle{flex:1;text-align:center;font-size:15.5px;font-weight:800;font-variant-numeric:tabular-nums}
+.fit-cal-sub{margin:8px 0 11px;text-align:center;font-size:11.5px;color:var(--muted)}
+.fit-plan-acts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:11px}
+.fit-btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;border-radius:13px;font:inherit;font-size:13px;font-weight:700;cursor:pointer}
+.fit-btn.solid{border:0;background:var(--plum);color:#fff}
+.fit-btn.ghost{border:1px solid var(--line);background:#fbf8f3;color:var(--ink)}
+.fit-muscle{display:flex;flex-direction:column;gap:10px}
+.fm-row{display:grid;grid-template-columns:46px minmax(0,1fr) 62px;align-items:center;gap:10px;font-size:12.5px}
+.fm-name{font-weight:700;color:#4b433a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fm-bar{height:9px;border-radius:5px;background:#efe8dc;overflow:hidden}
+.fm-bar i{display:block;height:100%;border-radius:5px;background:var(--sage)}
+.fm-val{text-align:right;color:var(--muted);font-size:11.5px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.fit-link-row{display:flex;align-items:center;gap:12px;width:100%;min-height:66px;padding:14px 16px;border:1px solid var(--line);border-radius:18px;background:var(--card);box-shadow:var(--shadow);cursor:pointer;text-align:left}
+.fit-link-row>span{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.fit-link-row b{font-size:13.5px;color:var(--ink)}
+.fit-link-row small{font-size:11.5px;color:var(--muted)}
+.fit-link-row>svg{flex:none;width:14px;height:14px;transform:rotate(180deg);color:#b3a99b}
+.fit-empty{display:flex;flex-direction:column;align-items:center;gap:12px;padding:20px 16px;border:1px dashed var(--line);border-radius:14px;background:#fbf8f3;text-align:center}
+.fit-empty p{margin:0;font-size:12.5px;line-height:1.7;color:var(--muted)}
+.fit-empty .fit-btn{min-width:152px;padding:0 18px}
+@media(min-width:861px){
+  .fit-app{width:100%;max-width:920px;margin:0 auto}
+  .fit-hero-main{display:grid;grid-template-columns:auto minmax(0,1fr);gap:24px}
+  .fit-hero-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:0;justify-items:end}
+  .ftcal-cell{min-height:58px;font-size:14px}
+  #fsec-data.on{display:grid;grid-template-columns:1fr 1fr;align-items:start}
+  #fsec-data.on .fit-link-row{grid-column:1/-1}
+}
+@media(max-width:560px){
+  .fit-hero{padding:17px 16px 15px;border-radius:21px}
+  .fit-hero-lead b{font-size:47px}
+  .fit-hero-grid{gap:13px}
+  .fit-hero-grid b{font-size:15px}
+  .fit-card{padding:16px;border-radius:18px}
+  .fit-cal-btn{width:38px;height:38px;min-height:38px}
+  .fm-row{grid-template-columns:42px minmax(0,1fr) 56px;gap:8px}
+}
+
+/* ===== 批次 C 2026-10-24：成长年轮 ===== */
+.wtree-gamify{flex:1;min-width:210px;display:flex;flex-direction:column;align-items:stretch;gap:14px}
+.wtree-gamify .wtree-xp{flex:0 0 auto;max-width:440px}
+.wtb-head{display:flex;align-items:center;gap:12px}
+.wtb-meta{display:flex;flex-direction:column;gap:2px;min-width:0}
+.wtb-meta b{font-size:16.5px;font-weight:800;letter-spacing:-.01em}
+.wtb-meta span{font-size:11px;color:var(--muted);font-weight:600}
+.wtree-stages{display:flex;flex-wrap:nowrap;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;-ms-overflow-style:none}
+.wtree-stages::-webkit-scrollbar{display:none}
+.wtree-st{flex:0 0 auto;display:inline-flex;align-items:center;gap:5px;padding:3px 9px 3px 7px;border-radius:999px;background:#f2ece2;color:#a2988b;font-size:10.5px;font-weight:700;white-space:nowrap}
+.wtree-st i{width:5px;height:5px;border-radius:50%;background:#cbbfae}
+.wtree-st.on{background:var(--sage-soft);color:var(--sage)}
+.wtree-st.on i{background:var(--sage)}
+.wtree-st.cur{background:var(--sage);color:#fff}
+.wtree-st.cur i{background:#fff}
+.wtree-ring{transition:stroke-dasharray .8s cubic-bezier(.22,.61,.36,1)}
+.wtree-ring.is-growing{animation:ringPulse 2.8s ease-in-out infinite}
+@keyframes ringPulse{0%,100%{opacity:.82}50%{opacity:1}}
+.wtree-ring-tip{filter:drop-shadow(0 0 3px rgba(98,122,103,.4))}
+@media(max-width:560px){
+  .wtb-badge{width:52px;height:52px}
+  .wtb-meta b{font-size:15px}
+  .wtree-st{font-size:10px;padding:2px 8px 2px 6px}
 }
 </style>
   <div class="trainsheet" hidden id="trainSheet" role="dialog" aria-modal="true" aria-label="训练进行中">
@@ -2668,7 +2797,7 @@ body:has(.dashboard-grid.editing) .ai-fab{opacity:0;pointer-events:none;transfor
     if(!list)return;
     if(ftClockTimer){clearInterval(ftClockTimer);ftClockTimer=null;}
     const st=ftTodayState(),sched=st.sched,today=st.today;
-    if(!sched){note.textContent='休息日';ctrl.innerHTML='';rest.hidden=true;list.innerHTML='<p class="wempty-task">今天没有安排训练。想练的话去「周计划」看看，或让身体好好恢复。</p>';return;}
+    if(!sched){note.textContent='休息日';ctrl.innerHTML='';rest.hidden=true;list.innerHTML='<div class="fit-empty"><p>今天没有安排训练。<br>想练的话去周计划看看，或者让身体好好恢复。</p><button class="fit-btn ghost" data-fsec-jump="plan" type="button">去看周计划</button></div>';return;}
     const done=today.done||{};let totalSets=0,didSets=0;
     sched.parts.forEach(p=>(p.actions||[]).forEach(a=>{totalSets+=a.sets;didSets+=(done[a.aid]||[]).length;}));
     note.textContent='已记 '+didSets+'/'+totalSets+' 组';
@@ -2722,10 +2851,15 @@ body:has(.dashboard-grid.editing) .ai-fab{opacity:0;pointer-events:none;transfor
     document.getElementById('ftLogCount').textContent=log.length+' 条记录';
     document.getElementById('ftLogList').innerHTML=log.length?log.slice().sort((a,b)=>(b.startedAt||0)-(a.startedAt||0)).map(r=>{
       const meta=[r.volume!=null?r.volume+' kg 训练量':'',r.totalSets!=null?r.totalSets+' 组 · '+r.totalReps+' 次':'',r.durationMin!=null?r.durationMin+' 分钟':'',r.kcal!=null?r.kcal+' kcal':''].filter(Boolean).join(' · ');
-      return '<div class="wrv" data-ft-log="1"><div class="wrv-date">'+escapeHtml(r.date||'')+(meta?' · '+escapeHtml(meta):'')+'</div><div class="wrv-line" style="cursor:pointer">点开看动作明细</div><div class="ftlog-detail" hidden></div></div>';
-    }).join(''):'<p class="wempty-task">还没有训练记录。完成一次训练后自动生成。</p>';
+      const muscles=[...new Set((r.parts||[]).map(p=>p.muscle).filter(Boolean))].join(' / ');
+      const names=(r.parts||[]).reduce((a,p)=>a.concat((p.actions||[]).map(x=>x.name)),[]).filter(Boolean);
+      const brief=names.length?(names.slice(0,3).join('、')+(names.length>3?' 等 '+names.length+' 个动作':'')):'点开看动作明细';
+      return '<div class="wrv" data-ft-log="1"><div class="wrv-date">'+escapeHtml(r.date||'')+(meta?' · '+escapeHtml(meta):'')+'</div><div class="wrv-line" style="cursor:pointer">'+escapeHtml((muscles?muscles+' · ':'')+brief)+'</div><div class="ftlog-detail" hidden></div></div>';
+    }).join(''):'<div class="fit-empty"><p>还没有训练记录。<br>完成一次训练后，这里会自动生成。</p><button class="fit-btn ghost" data-fsec-jump="today" type="button">去今天训练</button></div>';
     renderFtToday();
     renderFitCal();
+    renderFitHero();
+    renderFtMuscleDist();
   }
   function ftFavs(){return (state.fitTrain&&Array.isArray(state.fitTrain.favs))?state.fitTrain.favs:[];}
   function ftFavToggle(aid){
@@ -2756,11 +2890,63 @@ body:has(.dashboard-grid.editing) .ai-fab{opacity:0;pointer-events:none;transfor
     }).join('')+'</div></div>').join('');
   }
   let ftCalY=0,ftCalM=0,ftCalSel='';
+  function ftCalEnsure(){if(!ftCalY){const n=new Date();ftCalY=n.getFullYear();ftCalM=n.getMonth();}}
   function ftLogAll(){return (state.fitTrain&&Array.isArray(state.fitTrain.log))?state.fitTrain.log:[];}
+  function renderFitHero(){
+    const el=document.getElementById('fitStreakNum');if(!el)return;
+    const log=ftLogAll(),ws=ftWeekStats(),cur=ws[ws.length-1]||{vol:0,sets:0};
+    const d=new Date(),mk=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+    el.textContent=ftStreak();
+    const volEl=document.getElementById('fitWeekVol'),mEl=document.getElementById('fitMonthCnt'),sEl=document.getElementById('fitWeekSets');
+    if(volEl)volEl.textContent=cur.vol>=1000?(cur.vol/1000).toFixed(1)+'k':String(Math.round(cur.vol));
+    if(mEl)mEl.textContent=log.filter(r=>(r.date||'').slice(0,7)===mk).length;
+    if(sEl)sEl.textContent=Math.round(cur.sets);
+    const st=ftTodayState(),hint=document.getElementById('fitHeroHint');if(!hint)return;
+    let txt='今天没有安排训练，休息也是训练的一部分。';
+    if(st.sched){
+      const done=st.today.done||{};let tot=0,did=0;
+      (st.sched.parts||[]).forEach(p=>(p.actions||[]).forEach(a=>{tot+=Number(a.sets)||0;did+=(done[a.aid]||[]).length;}));
+      txt=st.today.startedAt
+        ?('已练 '+did+'/'+tot+' 组 · 用时 '+ftElapsedText(st.today.startedAt)+'，练完记得结束训练。')
+        :('今天练 '+(st.sched.parts||[]).length+' 个部位 · 共 '+tot+' 组，准备好了就开始。');
+    }
+    hint.textContent=txt;
+  }
+  function renderFtMuscleDist(){
+    const box=document.getElementById('ftMuscleDist');if(!box)return;
+    const from=new Date();from.setDate(from.getDate()-30);
+    const byM={};
+    ftLogAll().forEach(r=>{
+      if(!r.date)return;
+      const d=new Date(r.date+'T00:00:00');
+      if(isNaN(d.getTime())||d<from)return;
+      (r.parts||[]).forEach(p=>{
+        let sets=0;(p.actions||[]).forEach(a=>{sets+=(a.doneSets||[]).length;});
+        if(sets>0)byM[p.muscle||'未分组']=(byM[p.muscle||'未分组']||0)+sets;
+      });
+    });
+    const rows=Object.keys(byM).map(k=>({k:k,v:byM[k]})).sort((a,b)=>b.v-a.v);
+    const total=rows.reduce((s,x)=>s+x.v,0);
+    const note=document.getElementById('ftMuscleNote');
+    if(note)note.textContent=total?('共 '+total+' 组'):'';
+    if(!rows.length){box.innerHTML='<p class="fit-tip" style="margin:0">近 30 天还没有训练记录，练完一次就会长出来。</p>';return;}
+    const max=rows[0].v;
+    box.innerHTML=rows.map(x=>'<div class="fm-row"><span class="fm-name">'+escapeHtml(x.k)+'</span><span class="fm-bar"><i style="width:'+Math.max(6,Math.round(x.v/max*100))+'%"></i></span><span class="fm-val">'+x.v+' 组</span></div>').join('');
+  }
+  let fitSec='today';
+  function fitGo(sec){
+    if(['today','cal','plan','data','log'].indexOf(sec)<0)sec='today';
+    fitSec=sec;
+    document.querySelectorAll('#fitSeg [data-fsec]').forEach(b=>b.classList.toggle('on',b.dataset.fsec===fitSec));
+    document.querySelectorAll('#view-fitness .fit-sec').forEach(el=>el.classList.toggle('on',el.id==='fsec-'+fitSec));
+    segSync(document.getElementById('fitSeg'));
+    if(fitSec==='cal')renderFitCal();
+    if(fitSec==='data'){renderFtWeeks();renderFtMuscleDist();}
+    if(document.getElementById('view-fitness').classList.contains('active'))window.scrollTo({top:0,behavior:'smooth'});
+  }
   function renderFitCal(){
     const grid=document.getElementById('ftCalGrid');if(!grid)return;
-    const now=new Date();
-    if(!ftCalY){ftCalY=now.getFullYear();ftCalM=now.getMonth();}
+    ftCalEnsure();
     document.getElementById('ftCalTitle').textContent=ftCalY+' 年 '+(ftCalM+1)+' 月';
     const byDate={};
     ftLogAll().forEach(r=>{if(r.date){(byDate[r.date]=byDate[r.date]||[]).push(r);}});
@@ -2809,7 +2995,11 @@ body:has(.dashboard-grid.editing) .ai-fab{opacity:0;pointer-events:none;transfor
   function renderFtWeeks(){
     const box=document.getElementById('ftWeekChart');if(!box)return;
     const ws=ftWeekStats(),max=Math.max.apply(null,ws.map(w=>w.vol).concat([1]));
-    document.getElementById('ftWeekNote').textContent='连续 '+ftStreak()+' 天';
+    const cur=ws[ws.length-1]||{vol:0},prev=ws[ws.length-2]||{vol:0};
+    let noteText='本周还没练';
+    if(cur.vol>0&&prev.vol>0){const d=Math.round((cur.vol-prev.vol)/prev.vol*100);noteText='比上周 '+(d>=0?'+':'')+d+'%';}
+    else if(cur.vol>0)noteText='本周 '+Math.round(cur.vol)+' kg';
+    document.getElementById('ftWeekNote').textContent=noteText;
     box.innerHTML=ws.map(w=>{
       const h=w.vol>0?Math.max(8,Math.round(w.vol/max*72)):3;
       return '<div class="ftwk-col'+(w.cur?' cur':'')+'"><span class="ftwk-num">'+(w.vol>0?(w.vol>=1000?(w.vol/1000).toFixed(1)+'k':String(Math.round(w.vol))):'')+'</span><div class="ftwk-bar'+(w.vol>0?'':' zero')+'" style="height:'+h+'px" title="'+(w.vol>0?w.label+' 那周 · '+Math.round(w.vol)+'kg · '+w.sets+' 组':'没练')+'"></div><span class="ftwk-lab">'+w.label+'</span></div>';
@@ -4031,57 +4221,50 @@ body:has(.dashboard-grid.editing) .ai-fab{opacity:0;pointer-events:none;transfor
     return (Date.now()-new Date(last).getTime())/864e5>7;
   }
   function nodeState(nd){const ov=state.grow.nodeOverride||{};return ov[nd.id]!==undefined?ov[nd.id]:(nd.s||0);}
+  /* 成长年轮：6 个环对应 6 个成长阶段，每点亮一个里程碑年轮就长一段 */
+  const TREE_RINGS=[
+    {r:44,cap:2},{r:63,cap:3},{r:82,cap:4},{r:101,cap:5},{r:120,cap:5},{r:139,cap:1}
+  ];
+  const TREE_RING_COL=['#b9c9a4','#a8bd94','#93ae80','#7c9a6f','#67885f','#527550'];
+  const TREE_RING_DRY=['#cec096','#c4b381','#b8a772','#ab9a66','#9e8d5a','#90804f'];
   function buildTreeSVG(svg,lit,wilt){
     if(!svg)return;
     const ns='http://www.w3.org/2000/svg';svg.innerHTML='';
-    const leafCol=wilt?'#b39a3e':'#3f9d5a';
     const mk=(tag,attrs)=>{const el=document.createElementNS(ns,tag);Object.keys(attrs).forEach(k=>el.setAttribute(k,attrs[k]));return el;};
-    // 地面
-    svg.appendChild(mk('ellipse',{cx:100,cy:213,rx:56,ry:6,fill:'rgba(111,89,67,.14)'}));
-    const grow=Math.max(0,Math.min(1,lit/12));
-    if(lit<=0){
-      // 一粒种子：土面 + 刚冒头的嫩芽
-      svg.appendChild(mk('path',{class:'wtree-trunk-path','stroke-width':'2.6',d:'M100 212 C100 206 100 201 100 196'}));
-      svg.appendChild(mk('path',{d:'M100 197 C96 191 90 190 85 192 C88 197 94 199 100 197 Z',fill:leafCol,opacity:.9}));
-      svg.appendChild(mk('path',{d:'M100 197 C104 191 110 190 115 192 C112 197 106 199 100 197 Z',fill:leafCol,opacity:.75}));
-      svg.appendChild(mk('circle',{cx:100,cy:214,r:4.5,fill:'#8a6a44'}));
-      return;
-    }
-    // 树干随里程碑变粗变高
-    const trunkTop=138-grow*22;
-    svg.appendChild(mk('path',{class:'wtree-trunk-path','stroke-width':(4.5+grow*5).toFixed(1),d:`M100 214 C98 184 102 162 100 ${trunkTop+16}`}));
-    // 分枝逐段长出：每点亮 2 个里程碑多一段
-    const BRANCHES=[
-      'M100 148 C86 130 70 120 56 110',
-      'M100 140 C116 124 132 114 150 102',
-      'M100 156 C80 150 62 150 46 148',
-      'M100 152 C120 148 138 150 158 152',
-      'M100 168 C92 156 84 148 74 140',
-      'M100 166 C110 154 120 148 132 142'
-    ];
-    const nBr=Math.min(BRANCHES.length,Math.ceil(lit/2));
-    BRANCHES.slice(0,nBr).forEach(d=>svg.appendChild(mk('path',{class:'wtree-branch-path','stroke-width':(3+grow*1.6).toFixed(1),d})));
-    // 叶子：点亮越多越茂密
-    const on=Math.min(lit*2,TREE_LEAF_POS.length);
-    TREE_LEAF_POS.forEach((p,i)=>{
-      const go=mk('g',{transform:`translate(${p.x.toFixed(1)},${p.y.toFixed(1)})`});
-      const gl=mk('g',{class:'wtree-leaf'+(i<on?' on':'')});gl.style.transitionDelay=p.delay+'s';
-      const gs=mk('g',{class:'wtree-leaf-sway'});
-      const blade=mk('path',{class:'wtree-leaf-blade'});
-      blade.setAttribute('transform','scale('+(p.sc*(0.72+0.4*grow)).toFixed(2)+')');
-      blade.setAttribute('fill',leafCol);blade.setAttribute('opacity','0.92');
-      blade.setAttribute('d','M0,-8 C5.5,-4.5 5.5,3.5 0,8 C-5.5,3.5 -5.5,-4.5 0,-8 Z');
-      gs.appendChild(blade);gl.appendChild(gs);go.appendChild(gl);svg.appendChild(go);
+    const CX=160,CY=160,PAL=wilt?TREE_RING_DRY:TREE_RING_COL;
+    svg.appendChild(mk('circle',{cx:CX,cy:CY,r:153,fill:'#fbf7f0'}));
+    svg.appendChild(mk('circle',{cx:CX,cy:CY,r:153,fill:'none',stroke:'#eadfce','stroke-width':1.2}));
+    let acc=0;
+    TREE_RINGS.forEach((ring,i)=>{
+      const prev=acc;acc+=ring.cap;
+      const ratio=Math.max(0,Math.min(1,(lit-prev)/ring.cap));
+      svg.appendChild(mk('circle',{cx:CX,cy:CY,r:ring.r,fill:'none',stroke:'#eae0d1','stroke-width':9}));
+      if(ratio>0){
+        const C=2*Math.PI*ring.r;
+        const arc=mk('circle',{cx:CX,cy:CY,r:ring.r,fill:'none',stroke:PAL[i],'stroke-width':9,'stroke-linecap':'round',
+          'stroke-dasharray':(C*ratio).toFixed(1)+' '+C.toFixed(1),transform:'rotate(-90 '+CX+' '+CY+')'});
+        if(ratio<1)arc.setAttribute('class','wtree-ring is-growing');
+        svg.appendChild(arc);
+        const a=-Math.PI/2+ratio*2*Math.PI;
+        svg.appendChild(mk('circle',{cx:(CX+Math.cos(a)*ring.r).toFixed(2),cy:(CY+Math.sin(a)*ring.r).toFixed(2),
+          r:4.6,fill:'#fffdfa',stroke:PAL[i],'stroke-width':2.6,class:'wtree-ring-tip'}));
+      }
+      for(let k=0;k<ring.cap;k++){
+        const a=-Math.PI/2+(k+0.5)/ring.cap*2*Math.PI;
+        const on=lit>prev+k;
+        svg.appendChild(mk('circle',{cx:(CX+Math.cos(a)*ring.r).toFixed(2),cy:(CY+Math.sin(a)*ring.r).toFixed(2),
+          r:on?3:1.7,fill:on?'#fffdfa':'#ddd2c2',opacity:on?.95:.55}));
+      }
     });
-    // 开花：15 个里程碑起
-    if(lit>=15){
-      const nF=Math.min(8,lit-13);
-      TREE_LEAF_POS.slice(2,2+nF*2).forEach((p,i)=>{if(i%2)return;svg.appendChild(mk('circle',{cx:p.x.toFixed(1),cy:(p.y+3).toFixed(1),r:2.6,fill:'#d98a9c',opacity:.95}));});
-    }
-    // 硕果：20 个里程碑起
-    if(lit>=20){
-      const nFr=Math.min(8,lit-18);
-      TREE_LEAF_POS.slice(1,1+nFr*3).forEach((p,i)=>{if(i%3)return;svg.appendChild(mk('circle',{cx:(p.x+2).toFixed(1),cy:(p.y+4).toFixed(1),r:3.4,fill:'#c96a4a',stroke:'#a94f33','stroke-width':.8}));});
+    // 中心：一枚嫩芽，代表今天的自己
+    svg.appendChild(mk('circle',{cx:CX,cy:CY,r:31,fill:'#fffdfa',stroke:'#e3d8c8','stroke-width':1.6}));
+    const leaf=wilt?'#b39a3e':'#4f8a5c';
+    svg.appendChild(mk('path',{d:'M160 172 C160 158 153 151 144 148 C146 160 153 168 160 172 Z',fill:leaf}));
+    svg.appendChild(mk('path',{d:'M160 172 C160 158 167 151 176 148 C174 160 167 168 160 172 Z',fill:leaf,opacity:.68}));
+    svg.appendChild(mk('path',{d:'M160 176 L160 163',stroke:'#9c7a4d','stroke-width':2.2,'stroke-linecap':'round'}));
+    // 满级：外圈一圈金线
+    if(lit>=20&&lit>=msAll().length){
+      svg.appendChild(mk('circle',{cx:CX,cy:CY,r:150,fill:'none',stroke:'#c9a45c','stroke-width':1.6,'stroke-dasharray':'3 6',opacity:.9}));
     }
   }
   let treeFallRAF=null,treeFallRunning=false,treeFallParts=[],treeFallLit=0;
@@ -4118,28 +4301,28 @@ body:has(.dashboard-grid.editing) .ai-fab{opacity:0;pointer-events:none;transfor
     buildTreeSVG(document.getElementById('treeSVG'),n,wilt);
     const g=document.getElementById('treeGamify');
     if(g){
-      const xpText=lvl.isMax?('已达 '+lvl.name+' · 满级'):('还差 <b>'+lvl.remain+'</b> 个点亮到 '+lvl.nextName);
+      const xpText=lvl.isMax?('已达 <b>'+lvl.name+'</b> · 满级'):('还差 <b>'+lvl.remain+'</b> 个点亮到 '+lvl.nextName);
       g.innerHTML=
-        '<div style="flex:0 0 auto">'+
+        '<div class="wtb-head">'+
           '<svg class="wtb-badge" viewBox="0 0 64 64" aria-label="等级徽章">'+
-            '<circle cx="32" cy="32" r="28" fill="none" stroke="#3f9d5a" stroke-width="3"/>'+
-            '<circle cx="32" cy="32" r="22" fill="rgba(63,157,90,0.10)"/>'+
-            '<path d="M32 46 C32 30 25 26 17 24 C19 35 26 42 32 46 Z" fill="#3f9d5a"/>'+
-            '<path d="M32 46 C32 30 39 26 47 24 C45 35 38 42 32 46 Z" fill="#5cb46a"/>'+
+            '<circle cx="32" cy="32" r="28" fill="none" stroke="'+(wilt?'#b39a3e':'#4f8a5c')+'" stroke-width="3"/>'+
+            '<circle cx="32" cy="32" r="22" fill="'+(wilt?'rgba(179,154,62,.1)':'rgba(79,138,92,.1)')+'"/>'+
+            '<path d="M32 46 C32 30 25 26 17 24 C19 35 26 42 32 46 Z" fill="'+(wilt?'#b39a3e':'#4f8a5c')+'"/>'+
+            '<path d="M32 46 C32 30 39 26 47 24 C45 35 38 42 32 46 Z" fill="'+(wilt?'#c9b256':'#6aa377')+'"/>'+
             '<rect x="30.5" y="42" width="3" height="13" rx="1.5" fill="#9c7a4d"/>'+
           '</svg>'+
-          '<div class="wtb-name">'+lvl.name+'</div><div class="wtb-rank">Lv.'+(lvl.idx+1)+'</div>'+
+          '<div class="wtb-meta"><b>'+lvl.name+'</b><span>Lv.'+(lvl.idx+1)+' / '+TREE_LEVELS.length+'</span></div>'+
         '</div>'+
         '<div class="wtree-xp">'+
           '<div class="wtree-xp-top"><span>点亮里程碑</span><b>'+n+' / '+total+'</b></div>'+
           '<div class="wtree-xp-bar"><i style="width:'+lvl.pct+'%"></i></div>'+
           '<div class="wtree-xp-text">'+xpText+'</div>'+
-        '</div>';
+        '</div>'+
+        '<div class="wtree-stages">'+TREE_LEVELS.map((l,i)=>'<span class="wtree-st'+(i<=lvl.idx?' on':'')+(i===lvl.idx?' cur':'')+'"><i></i>'+l.name+'</span>').join('')+'</div>';
     }
     const sl=document.getElementById('treeStageLbl');
     if(sl)sl.innerHTML='<span class="wtree-health'+(wilt?' warn':'')+'">'+(wilt?'需打理 · 久未复盘':'生长旺盛')+'</span>';
     renderTreeBranches();
-    startTreeFall(n);
   }
   function renderTreeBranches(){
     const box=document.getElementById('treeBranches');if(!box)return;
@@ -4623,7 +4806,8 @@ body:has(.dashboard-grid.editing) .ai-fab{opacity:0;pointer-events:none;transfor
     if(mn){const m=state.grow.mymedia.materials.find(x=>x.id===mn);if(m){m.note=event.target.value.trim()||'（无备注）';saveState(true);}return;}
   });
 
-  document.getElementById('ftAnchor').addEventListener('click',e=>{const b=e.target.closest('[data-ftgo]');if(!b)return;const el=document.getElementById(b.dataset.ftgo);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});});
+  document.getElementById('fitSeg').addEventListener('click',e=>{const b=e.target.closest('[data-fsec]');if(!b)return;fitGo(b.dataset.fsec);});
+  document.addEventListener('click',e=>{const b=e.target.closest('[data-fsec-jump]');if(!b)return;fitGo(b.dataset.fsecJump);});
   document.getElementById('ftExMuscle').addEventListener('change',()=>{exPageShow=60;renderFtExGrid();});
   document.getElementById('ftExEquip').addEventListener('change',()=>{exPageShow=60;renderFtExGrid();});
   document.getElementById('ftExSearch').addEventListener('input',()=>{exPageShow=60;renderFtExGrid();});
@@ -4844,7 +5028,7 @@ body:has(.dashboard-grid.editing) .ai-fab{opacity:0;pointer-events:none;transfor
       return;
     }
     const ftCalBtn=event.target.closest('[data-ftcal]');
-    if(ftCalBtn){if(ftCalBtn.dataset.ftcal==='prev'){ftCalM--;if(ftCalM<0){ftCalM=11;ftCalY--;}}else{ftCalM++;if(ftCalM>11){ftCalM=0;ftCalY++;}}ftCalSel='';renderFitCal();return;}
+    if(ftCalBtn){ftCalEnsure();if(ftCalBtn.dataset.ftcal==='prev'){ftCalM--;if(ftCalM<0){ftCalM=11;ftCalY--;}}else{ftCalM++;if(ftCalM>11){ftCalM=0;ftCalY++;}}ftCalSel='';renderFitCal();return;}
     const ftCalDay=event.target.closest('[data-ftcal-day]');
     if(ftCalDay){ftCalSel=ftCalDay.dataset.ftcalDay;renderFitCal();return;}
     const logItem=event.target.closest('#ftLogList [data-ft-log]');
