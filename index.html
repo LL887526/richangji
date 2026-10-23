@@ -558,6 +558,11 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   }
 
   /* ===== 批量审美修复 2026-10-22 ===== */
+  /* 0) hidden 一律真隐藏：任何写了 display 的类（.dash-pill 等）都会盖掉
+        浏览器对 [hidden] 的 display:none，导致「恢复默认 / 完成排版」在
+        非编辑态也一直显示。这条兜底，别再单独给每个类补 [hidden]。
+        2026-10-23 手机端与 PC 端同修。 */
+  [hidden]{display:none!important}
   /* 1) 按钮内图标对齐：全部按钮图标垂直居中、不参与基线错位 */
   button svg{flex:none}
   .dash-pill{display:inline-flex;align-items:center;justify-content:center;gap:6px}
