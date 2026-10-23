@@ -738,6 +738,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     <symbol data-page-node-id="rqr65Lqp2cNYMqQjxUaHDp" id="i-check" viewBox="0 0 24 24"><path data-page-node-id="lEGEZxdj5CTe6gz8MhJoZt" d="m5 12 4 4L19 6"/></symbol>
     <symbol data-page-node-id="PfhBIBCC5LUfdpkeTb9eYT" id="i-more" viewBox="0 0 24 24"><circle data-page-node-id="bCMLGfXxowZHVBl2z21M6H" cx="5" cy="12" r="1"/><circle data-page-node-id="XTii40pLvfWKxRk1jFMgzY" cx="12" cy="12" r="1"/><circle data-page-node-id="JrT2PKCzoVFrgEbx5OnWtd" cx="19" cy="12" r="1"/></symbol>
     <symbol id="i-back" viewBox="0 0 24 24"><path d="M19.5 12h-15"/><path d="m10.5 6-6 6 6 6"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><path d="M8.5 8.5V6.2A2.2 2.2 0 0 1 10.7 4h7.1A2.2 2.2 0 0 1 20 6.2v7.1a2.2 2.2 0 0 1-2.2 2.2h-2.3"/><rect x="4" y="8.5" width="11.5" height="11.5" rx="2.4"/></symbol>
     <symbol data-page-node-id="LEC9aUyTAkSc2a8ILFXyS8" id="i-chart" viewBox="0 0 24 24"><path data-page-node-id="ttfofpZfjVaEp9Ehm1S5bh" d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></symbol>
     <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l2.2 6.8L21 12l-6.8 2.2L12 21l-2.2-6.8L3 12l6.8-2.2z"/><path d="M19 3.5v3M17.5 5h3"/></symbol>
     <symbol id="i-mic" viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V5a3 3 0 0 1 3-3z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1M12 18v4"/></symbol>
@@ -1140,11 +1141,19 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
         <div class="wsec on" id="wsec-board">
           <article class="wpanel">
             <div class="wpanel-head"><div><p class="eyebrow">先写事，再分配</p><h2>任务看板</h2></div><span class="wnote" id="boardStats"></span></div>
-            <div class="wadd"><input type="text" id="taskInput" maxlength="60" placeholder="写下要推进的事，回车确认"><button class="wbtn" data-act="addTask">添加</button></div>
-            <div class="acc-chip-row" id="accChips"><span class="acc-chip-lbl">分配给</span></div>
-            <p class="wnote2">点账号 = 选中为新任务的分配对象 · 点账号上的 × = 删除账号（任务数据保留在本地）</p>
-            <div class="acc-manage" id="accManage" hidden><div class="wadd"><input type="text" id="accNameInput" maxlength="10" placeholder="新账号名，如：小林号"><button class="wbtn" data-act="accAdd">添加</button></div></div>
-            <div class="wlist" id="taskList"></div>
+            <div class="tb-compose">
+              <div class="tb-input-row"><input type="text" id="taskInput" maxlength="60" placeholder="要推进什么？回车就好"><button class="wbtn primary" data-act="addTask">添加</button></div>
+              <div class="tb-meta-row">
+                <span class="tb-lbl">分配给</span>
+                <div class="tb-accs" id="accChips"></div>
+                <button class="tb-manage" data-act="accManage"><svg aria-hidden="true"><use href="#i-settings"/></svg>管理</button>
+              </div>
+            </div>
+            <div class="acc-manage" id="accManage" hidden>
+              <div id="accManageList"></div>
+              <div class="wadd" style="margin-bottom:0"><input type="text" id="accNameInput" maxlength="10" placeholder="新账号名，如：小林号"><button class="wbtn" data-act="accAdd">添加</button></div>
+            </div>
+            <div id="taskList"></div>
           </article>
           <article class="wpanel">
             <div class="wpanel-head"><div><p class="eyebrow">今天要收尾的</p><h2>今日待办</h2></div><span class="wnote" id="taskStats"></span></div>
@@ -1195,8 +1204,15 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
         <div class="wsec" id="wsec-copy">
           <article class="wpanel">
             <div class="wpanel-head"><div><p class="eyebrow">成稿归档</p><h2>文案库</h2></div><span class="wnote" id="copyCount"></span></div>
-            <div class="wadd"><input type="text" id="copyInput" maxlength="60" placeholder="文案标题，如：传统工艺传承人 3 分钟口播"><select id="copyTopicSel" class="wsel"></select></div>
-            <div class="wform"><textarea id="copyBody" placeholder="文案正文……"></textarea><button class="wbtn primary" data-act="addCopy">保存文案</button></div>
+            <div class="cp-compose">
+              <input type="text" id="copyInput" class="cp-title" maxlength="60" placeholder="文案标题">
+              <div class="cp-row">
+                <select id="copyTopicSel" class="wsel"></select>
+                <span class="cp-word" id="copyWordCount">0 字</span>
+              </div>
+              <textarea id="copyBody" class="cp-body" placeholder="正文写在这里。口播稿按你说的习惯排，一句一行就行。"></textarea>
+              <div class="cp-bar"><button class="wbtn primary" data-act="addCopy">保存文案</button></div>
+            </div>
             <div class="wlist" id="copyList"></div>
           </article>
         </div>
@@ -1625,6 +1641,129 @@ body:has(.dashboard-grid.editing) .ai-fab{opacity:0;pointer-events:none;transfor
 .wseg .seg-pill.is-ready{opacity:1}
 @keyframes segIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
 #capList,#matList,#msList,#ideaGrid,#mediaMat,#mediaStat,#mediaTopic{animation:segIn .3s cubic-bezier(.22,.61,.36,1)}
+
+/* ===== 批次 B 2026-10-24：任务看板 / 文案库 / 每日复盘 ===== */
+
+/* --- 1) 任务看板：录入卡 + 分配行 + 按阶段分组 --- */
+.tb-compose{padding:14px;border:1px solid var(--line);border-radius:18px;background:#fbf8f3}
+.tb-input-row{display:flex;gap:8px}
+.tb-input-row input{flex:1;min-width:0;height:44px;padding:0 14px;border:1px solid transparent;border-radius:13px;background:#fff;color:var(--ink);font-size:14.5px;outline:0;transition:.18s}
+.tb-input-row input:focus{border-color:#c7b6c2;box-shadow:0 0 0 3.5px rgba(146,116,138,.1)}
+.tb-input-row input::placeholder{color:#a2988b}
+.tb-input-row .wbtn{flex:0 0 auto;min-width:74px;min-height:44px;border-radius:13px}
+.tb-meta-row{display:flex;align-items:flex-start;gap:10px;margin-top:12px;padding-top:12px;border-top:1px dashed rgba(146,116,138,.22)}
+.tb-lbl{flex:none;padding-top:7px;color:#8a7f72;font-size:11.5px;font-weight:700;letter-spacing:.02em}
+.tb-accs{display:flex;align-items:center;gap:7px;flex:0 1 auto;min-width:0;flex-wrap:wrap;padding:1px 0}
+.tb-acc{flex:none;display:inline-flex;align-items:center;gap:6px;min-height:32px;padding:0 12px;border:1px solid var(--line);border-radius:999px;background:#fff;color:#655b50;font-size:12.5px;font-weight:700;cursor:pointer;transition:.16s}
+.tb-acc i{width:6px;height:6px;border-radius:50%;background:#c9bda9;flex:none}
+.tb-acc:hover{border-color:#c9bda9}
+.tb-acc.on{border-color:var(--plum);background:var(--plum);color:#fff;box-shadow:0 3px 10px rgba(77,48,69,.16)}
+.tb-acc.on i{background:#fff}
+.tb-manage{flex:none;margin-left:2px;display:inline-flex;align-items:center;gap:5px;min-height:32px;padding:0 10px;border:1px solid transparent;border-radius:999px;background:transparent;color:#8a7f72;font-size:12px;font-weight:700;cursor:pointer}
+.tb-manage svg{width:12px;height:12px;opacity:.75}
+.tb-manage:hover{background:#efe8dc;color:#5d554b}
+.acc-manage{margin:12px 0 0;padding:13px;border:1px solid var(--line);border-radius:16px;background:#fbf8f3}
+.accm-row{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:11px;background:#fff;margin-bottom:7px}
+.accm-row i{width:8px;height:8px;border-radius:50%;flex:none}
+.accm-row b{flex:1;min-width:0;font-size:13.5px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.accm-row span{flex:none;color:var(--muted);font-size:11px}
+.accm-row .wdel{flex:none}
+.accm-empty{padding:12px;text-align:center;color:var(--muted);font-size:12.5px;background:#fff;border-radius:11px;margin-bottom:7px}
+
+.tb-group{margin-top:20px}
+.tb-group:first-child{margin-top:18px}
+.tb-ghead{display:flex;align-items:center;gap:7px;margin:0 2px 9px;font-size:11.5px;font-weight:800;letter-spacing:.09em;color:#8a7f72}
+.tb-ghead i{width:7px;height:7px;border-radius:50%;flex:none}
+.tb-ghead b{margin-left:2px;padding:1px 7px;border-radius:999px;background:#efe8dc;color:#77695b;font-size:10.5px;font-weight:800;letter-spacing:0}
+.tb-ghead .tb-gdone{margin-left:auto;font-size:10.5px;font-weight:700;color:#a2988b;letter-spacing:0}
+.tb-items{display:flex;flex-direction:column;gap:8px}
+@media(min-width:1181px){
+  .tb-items{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;align-items:start}
+}
+.tb-task{display:flex;align-items:flex-start;gap:11px;padding:12px 12px 12px 13px;border:1px solid var(--line);border-radius:15px;background:var(--card);transition:.16s}
+.tb-task:hover{border-color:#cfc2af;box-shadow:0 4px 14px rgba(63,48,36,.05)}
+.tb-check{flex:none;width:21px;height:21px;margin-top:1px;padding:0;border:1.7px solid #c9bda9;border-radius:50%;background:#fff;cursor:pointer;display:grid;place-items:center;transition:.18s}
+.tb-check svg{width:12px;height:12px;color:#fff;opacity:0;transition:.18s}
+.tb-task.is-done .tb-check{background:var(--sage);border-color:var(--sage)}
+.tb-task.is-done .tb-check svg{opacity:1}
+.tb-task.is-done .tb-txt{color:#a2988b;text-decoration:line-through}
+.tb-body{flex:1;min-width:0}
+.tb-txt{margin:0;font-size:14.5px;line-height:1.5;word-break:break-word}
+.tb-sub{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:6px}
+.tb-acc-tag{display:inline-flex;align-items:center;gap:5px;padding:2px 8px;border-radius:7px;background:#f2ece2;color:#6b5f53;font-size:10.5px;font-weight:700}
+.tb-acc-tag i{width:6px;height:6px;border-radius:50%;flex:none}
+.tb-time{color:#a2988b;font-size:10.5px}
+.tb-task .wdel{flex:none;margin-top:1px;opacity:0;transition:.15s}
+.tb-task:hover .wdel,.tb-task:focus-within .wdel{opacity:1}
+@media(max-width:860px){
+  .tb-compose{padding:12px;border-radius:16px}
+  .tb-task .wdel{opacity:.45}
+  .tb-acc{min-height:34px}
+}
+
+/* --- 2) 文案库：编辑器 + 稿纸卡片 --- */
+.cp-compose{padding:14px;border:1px solid var(--line);border-radius:18px;background:#fbf8f3;margin-bottom:18px}
+.cp-title{width:100%;height:42px;padding:0;border:0;border-bottom:1px solid rgba(146,116,138,.22);border-radius:0;background:transparent;color:var(--ink);font-size:16px;font-weight:700;outline:0}
+.cp-title::placeholder{color:#a2988b;font-weight:600}
+.cp-row{display:flex;align-items:center;gap:10px;margin:11px 0 12px}
+.cp-row .wsel{flex:1;min-width:0;min-height:40px;padding:0 11px;border:1px solid var(--line);border-radius:11px;background:#fff;color:#5d554b;outline:0}
+.cp-word{flex:none;color:#a2988b;font-size:11.5px;font-variant-numeric:tabular-nums}
+.cp-body{width:100%;min-height:150px;max-height:420px;padding:14px;border:1px solid var(--line);border-radius:13px;background:#fff;color:var(--ink);font-size:14.5px;line-height:1.9;outline:0;resize:vertical}
+.cp-body::placeholder{color:#a2988b}
+.cp-bar{display:flex;justify-content:flex-end;margin-top:11px}
+.cp-card{padding:15px 16px;border:1px solid var(--line);border-radius:16px;background:var(--card);cursor:pointer;transition:.16s}
+.cp-card:hover{border-color:#cfc2af;box-shadow:0 4px 14px rgba(63,48,36,.05)}
+.cp-top{display:flex;align-items:flex-start;gap:10px}
+.cp-top h3{flex:1;min-width:0;margin:0;font-size:15px;font-weight:800;line-height:1.4;color:var(--ink);word-break:break-word}
+.cp-acts{flex:none;display:flex;align-items:center;gap:4px}
+.cp-ic{display:inline-flex;align-items:center;gap:5px;min-height:30px;padding:0 10px;border:1px solid var(--line);border-radius:9px;background:#fbf8f3;color:#77695b;font-size:11.5px;font-weight:700;cursor:pointer;transition:.15s}
+.cp-ic:hover{background:#efe8dc;color:var(--ink)}
+.cp-ic.is-ok{background:var(--sage-soft);border-color:#bccfbd;color:var(--green)}
+.cp-ic svg{width:13px;height:13px}
+.cp-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:8px}
+.cp-tag{padding:2px 8px;border-radius:7px;background:var(--plum-soft);color:var(--plum);font-size:10.5px;font-weight:700}
+.cp-dim{color:#a2988b;font-size:10.5px;font-variant-numeric:tabular-nums}
+.cp-prev{margin:11px 0 0;color:#5d554b;font-size:13px;line-height:1.75;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.cp-full{margin:13px 0 0;padding:14px;border-radius:12px;background:#fbf8f3;color:#3d362f;font-size:14px;line-height:1.95;white-space:pre-wrap;word-break:break-word}
+.cp-note{margin:8px 0 0;color:#a2988b;font-size:11px}
+
+/* --- 3) 每日复盘：备忘录卡片 --- */
+.rv-card{padding:0;border:1px solid var(--line);border-radius:16px;background:var(--card);overflow:hidden;transition:.16s}
+.rv-card:hover{border-color:#cfc2af}
+.rv-head{display:flex;align-items:center;gap:11px;padding:13px 16px 11px;border-bottom:1px solid rgba(146,116,138,.13)}
+.rv-day{flex:none;display:flex;align-items:baseline;gap:6px}
+.rv-day b{font-size:21px;font-weight:800;line-height:1;color:var(--ink);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.rv-day span{font-size:11px;font-weight:700;color:#8a7f72}
+.rv-today{margin-left:2px;padding:1px 7px;border-radius:999px;background:var(--terra-soft);color:var(--terra);font-size:9.5px;font-weight:800;letter-spacing:.04em}
+.rv-cnt{margin-left:auto;color:#a2988b;font-size:10.5px;font-variant-numeric:tabular-nums}
+.rv-card .wdel{flex:none;opacity:0;transition:.15s}
+.rv-card:hover .wdel,.rv-card:focus-within .wdel{opacity:1}
+.rv-text{padding:14px 16px 4px;color:#3d362f;font-size:14.5px;line-height:1.95;white-space:pre-wrap;word-break:break-word}
+.rv-text.is-fold{display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden}
+.rv-more{display:inline-flex;align-items:center;gap:5px;margin:0 16px 14px;min-height:32px;padding:0 0;border:0;background:transparent;color:var(--plum);font-size:12px;font-weight:700;cursor:pointer}
+.rv-more svg{width:12px;height:12px;transition:.2s}
+.rv-more.is-open svg{transform:rotate(180deg)}
+.rv-fade{position:relative;margin-top:-28px;height:28px;background:linear-gradient(to bottom,rgba(255,253,250,0),var(--card));pointer-events:none}
+@media(max-width:860px){
+  .rv-card .wdel{opacity:.45}
+  .rv-text{padding:13px 14px 2px;font-size:14.5px;line-height:1.9}
+  .rv-head{padding:12px 14px 10px}
+  .rv-more{margin-left:14px;margin-right:14px}
+}
+/* 两个列表的卡片间距放松一点，别叠成一片 */
+#rvList,#copyList{gap:12px}
+/* 复盘录入区：更像一张稿纸 */
+.rv-compose{gap:11px;margin-bottom:18px}
+.rv-date{display:inline-flex;align-items:center;gap:7px;color:#8a7f72;font-size:12px;font-weight:700;letter-spacing:.03em}
+.rv-date::before{content:"";width:3px;height:13px;border-radius:2px;background:var(--plum);opacity:.55}
+.rv-compose textarea{min-height:220px;padding:16px 17px;font-size:14.5px;line-height:1.95;border-radius:16px}
+.rv-compose textarea::placeholder{color:#a89d90;line-height:1.85}
+.rv-bar .wbtn{min-height:40px;border-radius:12px}
+@media(max-width:860px){
+  .rv-compose textarea{min-height:190px;font-size:14.5px;padding:14px 15px}
+  .rv-bar{justify-content:flex-end;gap:14px}
+  .rv-bar .wbtn{flex:0 1 auto;min-width:180px;justify-content:center}
+}
 </style>
   <div class="trainsheet" hidden id="trainSheet" role="dialog" aria-modal="true" aria-label="训练进行中">
     <header class="train-top">
@@ -3627,22 +3766,58 @@ body:has(.dashboard-grid.editing) .ai-fab{opacity:0;pointer-events:none;transfor
   const nowStamp=()=>{const d=new Date();return `${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;};
   const workTasks=()=>state.work.tasks[state.work.account]||[];
 
+  /* 账号色板：同一个账号在选中按钮、任务标签、管理列表里颜色一致 */
+  const ACC_COLORS=['#4d3045','#b65f42','#627a67','#a57c45','#5b7089','#8a5c72'];
+  function accColor(id){
+    const i=(state.work.accList||[]).findIndex(a=>a.id===id);
+    return ACC_COLORS[(i<0?0:i)%ACC_COLORS.length];
+  }
+  function accTasks(id){return (state.work.tasks||{})[id]||[];}
+
   function renderAccSeg(){
     const seg=document.getElementById('accChips');if(!seg)return;
     const list=state.work.accList||[];
-    const chips=list.map(a=>'<button type="button" class="acc-chip'+(a.id===state.work.account?' on':'')+'" data-acc="'+escapeHtml(a.id)+'" title="点选为默认分配">'+escapeHtml(a.name)+'<span class="acc-x" data-wact="delAcc" data-id="'+escapeHtml(a.id)+'" role="button" aria-label="删除 '+escapeHtml(a.name)+'">×</span></button>').join('');
-    seg.innerHTML='<span class="acc-chip-lbl">分配给</span>'+chips+'<button type="button" class="acc-chip acc-new" data-act="accManage">＋ 新账号</button>';
+    seg.innerHTML=list.map(a=>'<button type="button" class="tb-acc'+(a.id===state.work.account?' on':'')+'" data-acc="'+escapeHtml(a.id)+'" aria-pressed="'+(a.id===state.work.account)+'"><i style="background:'+(a.id===state.work.account?'#fff':accColor(a.id))+'"></i>'+escapeHtml(a.name)+'</button>').join('');
+    if(!list.length)seg.innerHTML='<button type="button" class="tb-acc on" data-acc="default">自用</button>';
+    renderAccManage();
   }
+
+  function renderAccManage(){
+    const box=document.getElementById('accManageList');if(!box)return;
+    const list=state.work.accList||[];
+    box.innerHTML=list.length?list.map(a=>{
+      const n=accTasks(a.id).length;
+      return '<div class="accm-row"><i style="background:'+accColor(a.id)+'"></i><b>'+escapeHtml(a.name)+'</b><span>'+n+' 条任务</span><button class="wdel" data-wact="delAcc" data-id="'+escapeHtml(a.id)+'" aria-label="删除 '+escapeHtml(a.name)+'">'+icon('i-trash')+'</button></div>';
+    }).join(''):'<p class="accm-empty">还没有账号，下面加一个</p>';
+  }
+
   function renderBoard(){
     const box=document.getElementById('taskList');if(!box)return;
     const list=state.work.accList||[];
     let all=[];
-    list.forEach(a=>(state.work.tasks[a.id]||[]).forEach(t=>all.push({...t,accId:a.id,accName:a.name})));
+    list.forEach(a=>accTasks(a.id).forEach(t=>all.push({...t,accId:a.id,accName:a.name})));
     all.sort((x,y)=>(y.ts||0)-(x.ts||0));
     const stats=document.getElementById('boardStats');
-    if(stats){const pend=all.filter(t=>t.stage!=='已发').length;stats.textContent=all.length?`${pend} / ${all.length} 未发`:'';}
+    if(stats){const pend=all.filter(t=>t.stage!=='已发').length;stats.textContent=all.length?`${pend} 条在推进`:'';}
     if(!all.length){box.innerHTML='<p class="wempty-task">上面写下第一件事，回车就好</p>';return;}
-    box.innerHTML=all.map(t=>`<div class="wtask"><button class="wstage" data-wact="stage" data-acc="${t.accId}" data-id="${t.id}" data-s="${escapeHtml(t.stage)}">${escapeHtml(t.stage)}</button><span class="wt-text">${escapeHtml(t.text)}</span><span class="wt-acc">${escapeHtml(t.accName)}</span><span class="wt-time">${escapeHtml(t.time||'')}</span><button class="wdel" data-wact="delTask" data-acc="${t.accId}" data-id="${t.id}" aria-label="删除">${icon('i-trash')}</button></div>`).join('');
+    const stageColor={'待剪':'#a57c45','待发':'#b65f42','已发':'#627a67'};
+    box.innerHTML=WSTAGES.map(s=>{
+      const items=all.filter(t=>t.stage===s);
+      if(!items.length)return '';
+      return '<div class="tb-group"><div class="tb-ghead"><i style="background:'+stageColor[s]+'"></i>'+escapeHtml(s)+'<b>'+items.length+'</b></div><div class="tb-items">'
+        +items.map(t=>{
+          const done=t.stage==='已发';
+          return '<div class="tb-task'+(done?' is-done':'')+'">'
+            +'<button class="tb-check" data-wact="stage" data-acc="'+escapeHtml(t.accId)+'" data-id="'+escapeHtml(t.id)+'" data-s="'+escapeHtml(t.stage)+'" aria-label="切换阶段，当前 '+escapeHtml(t.stage)+'" title="点一下换到下一阶段">'+icon('i-check')+'</button>'
+            +'<div class="tb-body"><p class="tb-txt">'+escapeHtml(t.text)+'</p><div class="tb-sub">'
+            +'<span class="tb-acc-tag"><i style="background:'+accColor(t.accId)+'"></i>'+escapeHtml(t.accName)+'</span>'
+            +(t.time?'<span class="tb-time">'+escapeHtml(t.time)+'</span>':'')
+            +'</div></div>'
+            +'<button class="wdel" data-wact="delTask" data-acc="'+escapeHtml(t.accId)+'" data-id="'+escapeHtml(t.id)+'" aria-label="删除">'+icon('i-trash')+'</button>'
+            +'</div>';
+        }).join('')
+        +'</div></div>';
+    }).join('');
   }
 
   function renderTodos(){
@@ -3653,6 +3828,19 @@ body:has(.dashboard-grid.editing) .ai-fab{opacity:0;pointer-events:none;transfor
     box.innerHTML=list.map(t=>`<div class="wtask ${t.done?'done':''}"><button class="wcheck" data-wact="toggleTodo" data-id="${t.id}" aria-label="切换完成"></button><span class="wt-text">${escapeHtml(t.text)}</span><button class="wdel" data-wact="delTodo" data-id="${t.id}" aria-label="删除">${icon('i-trash')}</button></div>`).join('');
   }
 
+  /* 复盘展开态：按 id 记，重渲染不丢 */
+  const rvOpen=new Set();
+  function rvParts(dateStr){
+    const s=String(dateStr||'');
+    const m=s.match(/(\d{4})-(\d{1,2})-(\d{1,2})/);
+    const dt=m?new Date(Number(m[1]),Number(m[2])-1,Number(m[3])):new Date(s);
+    if(isNaN(dt.getTime()))return{d:'—',label:s||'早期记录',today:false};
+    return{
+      d:dt.getDate(),
+      label:`${dt.getMonth()+1}月 · 周${'日一二三四五六'[dt.getDay()]}`,
+      today:s.slice(0,10)===isoDate()
+    };
+  }
   function renderReviews(){
     const box=document.getElementById('rvList');if(!box)return;
     const list=state.grow.reviews;
@@ -3661,9 +3849,20 @@ body:has(.dashboard-grid.editing) .ai-fab{opacity:0;pointer-events:none;transfor
     if(dt){const d=new Date(),w='日一二三四五六'[d.getDay()];dt.textContent=`${d.getFullYear()} 年 ${d.getMonth()+1} 月 ${d.getDate()} 日 · 星期${w}`;}
     if(!list.length){box.innerHTML='<p class="wempty-task">还没有复盘，上面写下第一篇</p>';return;}
     box.innerHTML=list.slice().reverse().map(r=>{
-      const body=r.text||(r.done?`<div class="wrv-line"><b>完成</b>${escapeHtml(r.done)}</div>`:'')+(r.stuck?`<div class="wrv-line"><b>卡点</b>${escapeHtml(r.stuck)}</div>`:'')+(r.next?`<div class="wrv-line"><b>明天</b>${escapeHtml(r.next)}</div>`:'');
-      const len=(r.text||'').length;
-      return `<details class="wrv"><summary><span class="wrv-date">${escapeHtml(r.date)}</span><span class="wrv-prev">${escapeHtml((r.text||'').slice(0,42))||'（早期格式）'}${len>42||!r.text?'…':''}</span><button class="wdel" data-wact="delReview" data-id="${r.id}" aria-label="删除">${icon('i-trash')}</button></summary><div class="wrv-text">${escapeHtml(r.text||'')}</div></details>`;
+      const text=r.text||[r.done?`完成：${r.done}`:'',r.stuck?`卡点：${r.stuck}`:'',r.next?`明天：${r.next}`:''].filter(Boolean).join('\n');
+      const p=rvParts(r.date);
+      const len=text.replace(/\s/g,'').length;
+      const open=rvOpen.has(r.id);
+      const long=len>130;
+      return '<article class="rv-card">'
+        +'<div class="rv-head"><div class="rv-day"><b>'+p.d+'</b><span>'+escapeHtml(p.label)+'</span></div>'
+        +(p.today?'<span class="rv-today">今天</span>':'')
+        +'<span class="rv-cnt">'+len+' 字</span>'
+        +'<button class="wdel" data-wact="delReview" data-id="'+r.id+'" aria-label="删除这条复盘">'+icon('i-trash')+'</button>'
+        +'</div>'
+        +'<div class="rv-text'+(long&&!open?' is-fold':'')+'">'+escapeHtml(text||'（这条没有正文）')+'</div>'
+        +(long?'<button class="rv-more'+(open?' is-open':'')+'" data-wact="rvToggle" data-id="'+r.id+'">'+(open?'收起':'展开全文')+'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button>':'')
+        +'</article>';
     }).join('');
   }
 
@@ -3739,16 +3938,28 @@ body:has(.dashboard-grid.editing) .ai-fab{opacity:0;pointer-events:none;transfor
     const box=document.getElementById('copyList');if(!box)return;
     const all=state.work.copy;
     const cnt=document.getElementById('copyCount');if(cnt)cnt.textContent=all.length?all.length+' 篇':'';
+    fillCopyTopicSel();
     if(!all.length){box.innerHTML='<p class="wempty-task">还没有文案，从选题点进去直接写</p>';return;}
     box.innerHTML=all.slice().sort((a,b)=>b.ts-a.ts).map(k=>{
       const t=state.work.topics.find(x=>x.id===k.topicId);
       const open=k.id===openCopyId;
-      return '<div class="wcopy" data-wact="openCopy" data-id="'+k.id+'"><div class="wrow-top">'+
-        '<span class="wrow-name">'+escapeHtml(k.title)+'</span>'+
-        '<span class="witem-meta">'+(t?('关联：'+escapeHtml(t.title)):'未关联选题')+'</span>'+
-        '<button class="wmini" data-wact="copyCopyText" data-id="'+k.id+'">复制</button>'+
-        '<button class="wdel" data-wact="delCopy" data-id="'+k.id+'" aria-label="删除">'+icon('i-trash')+'</button>'+
-        '</div>'+(open?'<pre class="wcopy-body">'+escapeHtml(k.body||'(正文待写)')+'</pre>':'')+'</div>';
+      const body=k.body||'';
+      const len=body.replace(/\s/g,'').length;
+      const d=new Date(Number(k.ts)||Date.now());
+      const dt=`${d.getMonth()+1}-${String(d.getDate()).padStart(2,'0')}`;
+      return '<div class="cp-card" data-wact="openCopy" data-id="'+k.id+'">'
+        +'<div class="cp-top"><h3>'+escapeHtml(k.title)+'</h3><div class="cp-acts">'
+        +'<button class="cp-ic" data-wact="copyCopyText" data-id="'+k.id+'" aria-label="复制全文">'+icon('i-copy')+'复制</button>'
+        +'<button class="wdel" data-wact="delCopy" data-id="'+k.id+'" aria-label="删除">'+icon('i-trash')+'</button>'
+        +'</div></div>'
+        +'<div class="cp-meta">'
+        +(t?'<span class="cp-tag">'+escapeHtml(t.title)+'</span>':'<span class="cp-dim">未关联选题</span>')
+        +'<span class="cp-dim">'+len+' 字</span><span class="cp-dim">'+dt+'</span>'
+        +'</div>'
+        +(open
+          ?'<div class="cp-full">'+escapeHtml(body||'(正文待写)')+'</div>'
+          :'<p class="cp-prev">'+escapeHtml(body?body.replace(/\n+/g,' ').slice(0,120):'正文待写，点开继续写')+'</p>')
+        +'</div>';
     }).join('');
   }
 
@@ -4073,7 +4284,7 @@ body:has(.dashboard-grid.editing) .ai-fab{opacity:0;pointer-events:none;transfor
     saveState(true);renderReviews();celebrate();toast('复盘已保存');
   }
 
-  function handleWorkAction(type,id,accId){
+  function handleWorkAction(type,id,accId,el){
     if(type==='stage'){
       const k=accId||state.work.account;
       const t=(state.work.tasks[k]||[]).find(x=>x.id===id);if(!t)return;
@@ -4098,7 +4309,8 @@ body:has(.dashboard-grid.editing) .ai-fab{opacity:0;pointer-events:none;transfor
       t.done=!t.done;saveState(true);renderTodos();if(t.done)celebrate();
     }
     if(type==='delTodo'){if(!confirm('确定删除这条待办吗？删除后无法撤回。'))return;state.work.todos=state.work.todos.filter(x=>x.id!==id);saveState(true);renderTodos();}
-    if(type==='delReview'){if(!confirm('确定删除这条复盘吗？删除后无法撤回。'))return;state.grow.reviews=state.grow.reviews.filter(x=>x.id!==id);saveState(true);renderReviews();}
+    if(type==='delReview'){if(!confirm('确定删除这条复盘吗？删除后无法撤回。'))return;state.grow.reviews=state.grow.reviews.filter(x=>x.id!==id);rvOpen.delete(id);saveState(true);renderReviews();}
+    if(type==='rvToggle'){if(rvOpen.has(id))rvOpen.delete(id);else rvOpen.add(id);renderReviews();}
     if(type==='bumpProj'){
       const p=state.work.projects.find(x=>x.id===id);if(!p)return;
       p.progress=Math.min(100,(p.progress||0)+10);
@@ -4123,7 +4335,7 @@ body:has(.dashboard-grid.editing) .ai-fab{opacity:0;pointer-events:none;transfor
     }
     if(type==='delCopy'){if(!confirm('确定删除这条文案吗？删除后无法撤回。'))return;state.work.copy=state.work.copy.filter(x=>x.id!==id);openCopyId='';saveState(true);renderCopys();}
     if(type==='openCopy'){openCopyId=openCopyId===id?'':id;renderCopys();}
-    if(type==='copyCopyText'){const k=state.work.copy.find(x=>x.id===id);if(k)copyTextOut(k.body||'');}
+    if(type==='copyCopyText'){const k=state.work.copy.find(x=>x.id===id);if(k)copyTextOut(k.body||'');if(el&&el.classList){el.classList.add('is-ok');const old=el.innerHTML;el.innerHTML=icon('i-check')+'已复制';setTimeout(()=>{el.classList.remove('is-ok');el.innerHTML=old;},1300);}}
     if(type==='toggleMs'){
       const m=msLitMap();
       if(m[id]&&m[id].on){m[id].on=0;saveState(true);renderTree();toast('已取消点亮');return;}
@@ -4341,6 +4553,7 @@ body:has(.dashboard-grid.editing) .ai-fab{opacity:0;pointer-events:none;transfor
         if(!title&&!body){toast('标题或正文至少写一个');return;}
         state.work.copy.unshift({id:uid(),title:title||'未命名文案',topicId:document.getElementById('copyTopicSel').value,body:body||'(正文待写)',ts:Date.now()});
         i.value='';document.getElementById('copyBody').value='';
+        const wc=document.getElementById('copyWordCount');if(wc)wc.textContent='0 字';
         saveState(true);renderCopys();toast('文案已保存');
       }
       if(a==='addSkill'){
@@ -4377,13 +4590,16 @@ body:has(.dashboard-grid.editing) .ai-fab{opacity:0;pointer-events:none;transfor
       return;
     }
     const wa=event.target.closest('[data-wact]');
-    if(wa&&!event.target.closest('.wmat-note')){handleWorkAction(wa.dataset.wact,wa.dataset.id,wa.dataset.acc);}
+    if(wa&&!event.target.closest('.wmat-note')){handleWorkAction(wa.dataset.wact,wa.dataset.id,wa.dataset.acc,wa);}
   });
 
   const bindEnter=(id,fn)=>{const el=document.getElementById(id);if(!el)return;el.addEventListener('keydown',e=>{if(e.key!=='Enter')return;const v=el.value.trim();if(!v)return;fn(v);el.value='';});};
   bindEnter('taskInput',addWorkTask);
   const rvT=document.getElementById('rvText');
   if(rvT)rvT.addEventListener('input',()=>{const c=document.getElementById('rvCount');if(c)c.textContent=rvT.value.length+' 字';});
+  /* 文案编辑器：实时字数，写完心里有数 */
+  const cpT=document.getElementById('copyBody');
+  if(cpT)cpT.addEventListener('input',()=>{const c=document.getElementById('copyWordCount');if(c)c.textContent=cpT.value.replace(/\s/g,'').length+' 字';});
   bindEnter('msCustomInput',()=>{const i=document.getElementById('msCustomInput');const v=(i.value||'').trim();if(!v)return;state.grow.msCustom=state.grow.msCustom||[];state.grow.msCustom.push({id:'m_x'+Date.now().toString(36),n:v.slice(0,30)});i.value='';saveState(true);renderTree();toast('已添加，做到了就点亮');});
   bindEnter('todoInput',v=>{state.work.todos.unshift({id:uid(),text:v,done:false,date:isoDate(),ts:Date.now()});saveState(true);renderTodos();});
   ['projInput','collabInput','capInput','topicInput','skillInput','matInput','ideaInput'].forEach(id=>{
