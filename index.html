@@ -1878,7 +1878,7 @@ body:has(.dashboard-grid.editing) .ai-fab{opacity:0;pointer-events:none;transfor
 .wtb-meta span{font-size:11px;color:var(--muted);font-weight:600}
 .wtree-stages{display:flex;flex-wrap:nowrap;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;-ms-overflow-style:none}
 .wtree-stages::-webkit-scrollbar{display:none}
-.wtree-st{flex:0 0 auto;display:inline-flex;align-items:center;gap:5px;padding:3px 9px 3px 7px;border-radius:999px;background:#f2ece2;color:#a2988b;font-size:10.5px;font-weight:700;white-space:nowrap}
+.wtree-st{flex:0 0 auto;display:inline-flex;align-items:center;gap:4px;padding:3px 8px 3px 6px;border-radius:999px;background:#f2ece2;color:#a2988b;font-size:10.5px;font-weight:700;white-space:nowrap}
 .wtree-st i{width:5px;height:5px;border-radius:50%;background:#cbbfae}
 .wtree-st.on{background:var(--sage-soft);color:var(--sage)}
 .wtree-st.on i{background:var(--sage)}
@@ -1889,9 +1889,12 @@ body:has(.dashboard-grid.editing) .ai-fab{opacity:0;pointer-events:none;transfor
 @keyframes ringPulse{0%,100%{opacity:.82}50%{opacity:1}}
 .wtree-ring-tip{filter:drop-shadow(0 0 3px rgba(98,122,103,.4))}
 @media(max-width:560px){
+  .wtree-canvas{width:min(282px,68vw)}
+  .wtree-gamify{gap:11px}
   .wtb-badge{width:52px;height:52px}
   .wtb-meta b{font-size:15px}
-  .wtree-st{font-size:10px;padding:2px 8px 2px 6px}
+  .wtree-st{font-size:9.5px;padding:2px 7px 2px 5px;gap:3px}
+  .wtree-stages{gap:4px}
 }
 </style>
   <div class="trainsheet" hidden id="trainSheet" role="dialog" aria-modal="true" aria-label="训练进行中">
@@ -4318,7 +4321,7 @@ body:has(.dashboard-grid.editing) .ai-fab{opacity:0;pointer-events:none;transfor
           '<div class="wtree-xp-bar"><i style="width:'+lvl.pct+'%"></i></div>'+
           '<div class="wtree-xp-text">'+xpText+'</div>'+
         '</div>'+
-        '<div class="wtree-stages">'+TREE_LEVELS.map((l,i)=>'<span class="wtree-st'+(i<=lvl.idx?' on':'')+(i===lvl.idx?' cur':'')+'"><i></i>'+l.name+'</span>').join('')+'</div>';
+        '<div class="wtree-stages">'+TREE_LEVELS.map((l,i)=>'<span class="wtree-st'+(i<=lvl.idx?' on':'')+(i===lvl.idx?' cur':'')+'"><i></i>'+['种子','破土','幼苗','小树','成树','开花','硕果'][i]+'</span>').join('')+'</div>';
     }
     const sl=document.getElementById('treeStageLbl');
     if(sl)sl.innerHTML='<span class="wtree-health'+(wilt?' warn':'')+'">'+(wilt?'需打理 · 久未复盘':'生长旺盛')+'</span>';
