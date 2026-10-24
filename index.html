@@ -1503,7 +1503,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
                 <div class="key-mask" id="visionKeyMask">还没有保存 Key</div>
                 <div class="key-meta" id="visionKeyMeta">保存后这里会显示 Key 尾号和保存时间</div>
               </div>
-              <p class="zdesc">DeepSeek 不支持图片，识图走智谱免费视觉模型（open.bigmodel.cn 手机号注册即有 Key，GLM-4V-Flash 免费）。小票发票自动记账，体重秤记身体数据，药盒化验单记健康，截图提取文字。</p>
+              <p class="zdesc">DeepSeek 不支持图片，识图走智谱免费视觉模型（bigmodel.cn 手机号注册即有 Key，GLM-4V-Flash 免费）。小票发票自动记账，体重秤记身体数据，药盒化验单记健康，截图提取文字。</p>
               <div class="dgate" style="margin:8px 0 0">
                 <input type="password" id="visionKeyInput" maxlength="80" placeholder="智谱 Key" autocomplete="off">
                 <button class="wbtn dbtn-solid" data-act="visionKeySave" type="button">保存</button>
@@ -1587,8 +1587,8 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
       <div class="settings-head"><button class="ai-back" data-action="close-ai" aria-label="返回"><svg aria-hidden="true"><use href="#i-back"/></svg></button><div><p class="eyebrow">对话即记录</p><h2 id="aiTitle">AI 助理</h2></div><button class="sheet-close" data-action="close-ai" aria-label="关闭">×</button></div>
       <div class="ai-log" id="aiLog"><div class="ai-msg bot ai-hello"><div class="ai-hello-b"><b id="aiHelloT">嗨</b><p>想记什么直接说：记账、加待办、记睡眠、身体不舒服，我落到对应板块，写入前先给你确认。</p></div><div class="ai-chips"><button type="button" class="ai-chip" data-ai-fill="记一笔：">记一笔账</button><button type="button" class="ai-chip" data-ai-fill="加条待办：">加条待办</button><button type="button" class="ai-chip" data-ai-fill="身体不舒服：">身体不舒服</button><button type="button" class="ai-chip" data-ai-fill="记一下昨晚睡眠：">记睡眠</button></div></div></div>
       <div class="ai-inputbar">
-        <button id="aiCamBtn" data-action="ai-cam" aria-label="拍照识图或选备份文件"><svg><use href="#i-camera"/></svg></button>
-        <input type="file" id="aiCamFile" accept="image/*,.json,application/json" hidden>
+        <button id="aiCamBtn" data-action="ai-cam" aria-label="拍照或从相册选图"><svg><use href="#i-camera"/></svg></button>
+        <input type="file" id="aiCamFile" accept="image/*" hidden>
         <input type="text" id="aiInput" maxlength="200" placeholder="随便说：午饭 25.5">
         <button id="aiMicBtn" data-action="ai-mic" aria-label="语音输入" hidden><svg><use href="#i-mic"/></svg></button>
         <button class="ai-send" data-action="ai-send" aria-label="发送">发送</button>
@@ -3445,7 +3445,7 @@ html[data-skin="linen"]{background-color:#f2ebdf;background-image:repeating-line
       ['身体与心情','体重体脂、身体不适、疾病史、习惯打卡',hasKey],
       ['拍照识图','小票记账、体重秤、药盒化验单、截图提字、任意图片描述',hasVis],
       ['图片上传','传到自己的 GitHub 仓库，拿可分享的链接',hasImg],
-      ['导入备份文件','点相机按钮选一个备份 JSON，确认后覆盖导入本机',true]
+      ['导入备份文件','设置页 → 数据 → 导入备份（覆盖当前），选一个备份 JSON',true]
     ];
     box.innerHTML=rows.map(r=>'<div class="ai-cap-row"><b>'+escapeHtml(r[0])+'</b>'+mark(r[2])+'<small>'+escapeHtml(r[1])+'</small></div>').join('')
       +'<div class="ai-cap-row"><b>外面的事</b><span class="ai-cap-no">做不到</span><small>发帖发布、付款转账、联系他人、操作其他 App、查实时行情天气、读微信或相册 —— 这类会明确说做不到并指到对应设置，不会假装完成</small></div>'
@@ -3648,6 +3648,52 @@ html[data-skin="linen"]{background-color:#f2ebdf;background-image:repeating-line
   const VISION_KEY_NAME='richangji-vision-key';
   function aiVisionKeyGet(){try{return localStorage.getItem(VISION_KEY_NAME)||'';}catch(e){return '';}}
   const AI_VISION_PROMPT='你是「日常集」个人工作台的看图助理，任何图片都要给出有用的结果。只输出 JSON：{"intent":"...","reply":"一句简短中文确认","draft":{...}}。intent 判定规则：①图里主要是文字（截图/文档/告示/菜单/表格/聊天记录/手写等）→ intent=text_extract，draft.text=完整提取的文字，保持原有换行；②图中可辨认出待记事项（外卖单/购物小票/打车发票）→ intent=money_expense，draft:{amount:数字,category:"吃饭/交通/购物/娱乐/房租/看病/学习/其他",note:"商家或摘要"}；③体重秤读数 → intent=fitness，draft:{weight:数字}；④药盒/诊断单/化验单 → intent=health_issue，draft:{part:"相关部位",desc:"一句话"}；⑤以上都不是（风景/物品/人/状态等）→ intent=describe，draft.text=一段准确的中文描述，说清物体、数量、状态、场景里对用户有用的信息。金额只认图里明确可读的数字。reply 要按 intent 分别写：text_extract 用「提取到这些文字：」、describe 用「看图结果：」、money_expense 用「记一笔支出：」、fitness 用「记身体数据：」、health_issue 用「记身体不适：」。只输出 JSON。';
+  const VISION_API='https://bigmodel.cn/api/paas/v4/chat/completions';
+  function visionErrText(s,tx){
+    const raw=String(tx||'').replace(/\s+/g,' ').slice(0,120);
+    if(s===401||s===403)return '智谱 Key 无效或已过期（'+s+'）。去 bigmodel.cn 重新生成，粘到设置页再试。';
+    if(s===429)return '智谱限流或免费额度用完了（'+s+'）。等几分钟再试。';
+    if(s===400)return '智谱拒了这个请求（400）：'+raw+'。多半是图片有问题或模型不支持。';
+    if(s===404)return '接口地址不对（404）。这是代码里的地址写错了，不是你的问题。';
+    if(s>=500)return '智谱服务端出错（'+s+'），不是你的问题，过一会儿再试。';
+    return '智谱返回 '+s+'：'+raw;
+  }
+  function visionNetErrText(err){
+    const m=(err&&err.message)||'';
+    if(/Failed to fetch|NetworkError|Load failed/i.test(m))return '识图请求没发出去（'+m+'）。换 WiFi 或流量再试一次；两次都不行，就是网络把接口拦了。';
+    if(/timeout|abort/i.test(m))return '识图超时（'+m+'）。图太大或网太慢，换张小图再试。';
+    return '识图失败：'+(m||'未知错误');
+  }
+  function visionStripFence(s){
+    return String(s||'').replace(/^\s*```[a-zA-Z]*\s*/,'').replace(/\s*```\s*$/,'').trim();
+  }
+  function visionSalvageText(s){
+    const m=String(s||'').match(/"text"\s*:\s*"([\s\S]*)$/);
+    if(!m)return '';
+    return m[1].replace(/\\n/g,'\n').replace(/\\"/g,'"').replace(/[",}\s]*$/,'').slice(0,800);
+  }
+  function visionParse(raw){
+    const s=visionStripFence(raw);
+    try{const o=JSON.parse(s);if(o&&o.intent)return o;}catch(e){}
+    const im=s.match(/"intent"\s*:\s*"([a-zA-Z_]+)"/);
+    if(!im)return null;
+    const out={intent:im[1],reply:'',draft:{}};
+    const pick=function(k){
+      const m=s.match(new RegExp('"'+k+'"\\s*:\\s*"((?:[^"\\\\]|\\\\.)*)"'));
+      return m?m[1].replace(/\\n/g,'\n').replace(/\\"/g,'"'):'';
+    };
+    const num=function(k){
+      const m=s.match(new RegExp('"'+k+'"\\s*:\\s*"?([0-9.]+)"?'));
+      return m?parseFloat(m[1]):0;
+    };
+    out.reply=pick('reply');
+    const it=out.intent;
+    if(it==='money_expense'){out.draft.amount=num('amount');out.draft.category=pick('category')||'其他';out.draft.note=pick('note');}
+    else if(it==='fitness'){out.draft.weight=num('weight');}
+    else if(it==='health_issue'){out.draft.part=pick('part');out.draft.desc=pick('desc');}
+    else out.draft.text=pick('text')||visionSalvageText(s);
+    return out;
+  }
   function aiCam(file){
     if(!file)return;
     const nm=String(file.name||''),tp=String(file.type||'');
@@ -3661,22 +3707,36 @@ html[data-skin="linen"]{background-color:#f2ebdf;background-image:repeating-line
       const img=new Image();
       img.onload=()=>{
         try{
-          const max=720,scale=Math.min(1,max/Math.max(img.width,img.height));
+          const max=1600,scale=Math.min(1,max/Math.max(img.width,img.height));
           const cv=document.createElement('canvas');cv.width=Math.max(1,Math.round(img.width*scale));cv.height=Math.max(1,Math.round(img.height*scale));
           cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);
-          const b64=cv.toDataURL('image/jpeg',0.7).split(',')[1];
-          fetch('https://open.bigmodel.cn/api/paas/v4/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+vk},body:JSON.stringify({model:'glm-4v-flash',messages:[{role:'user',content:[{type:'text',text:AI_VISION_PROMPT},{type:'image_url',image_url:{url:'data:image/jpeg;base64,'+b64}}]}],temperature:0.1,max_tokens:300})})
-          .then(r=>r.json()).then(j=>{
+          const b64=cv.toDataURL('image/jpeg',0.85).split(',')[1];
+          fetch(VISION_API,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+vk},body:JSON.stringify({model:'glm-4v-flash',messages:[{role:'user',content:[{type:'text',text:AI_VISION_PROMPT},{type:'image_url',image_url:{url:'data:image/jpeg;base64,'+b64}}]}],temperature:0.1,max_tokens:1000})})
+          .then(function(r){return r.text().then(function(tx){return{s:r.status,tx:tx};});})
+          .then(function(res){
             if(thinking)thinking.remove();
-            let out=null;try{out=JSON.parse(j.choices[0].message.content);}catch(e){}
-            if(!out||!out.intent){aiAppendMsg('bot','这张图没看出能记什么，换个清晰点的试试。');return;}
+            if(res.s!==200){aiAppendMsg('bot',visionErrText(res.s,res.tx));return;}
+            let j=null;try{j=JSON.parse(res.tx);}catch(e){aiAppendMsg('bot','识图服务回的不是 JSON（前 80 字：'+String(res.tx||'').slice(0,80)+'）');return;}
+            const ch=(j.choices&&j.choices[0])||{},msg=(ch.message&&ch.message.content)||'';
+            const out=visionParse(msg);
+            if(ch.finish_reason==='length'){
+              const part=(out&&out.draft&&out.draft.text)?out.draft.text:visionSalvageText(msg);
+              aiAppendMsg('bot',part?('这张图文字太多，识图服务在 1000 token 处截断了。先给你认出来的部分：\n'+part):'这张图文字太多，识图服务截断了。只截一小块再发，或者直接说一句让我手记。');
+              return;
+            }
+            if(!out||!out.intent){const part=visionSalvageText(msg);aiAppendMsg('bot',part?('识图结果没收全，先给你认出来的部分：\n'+part):'这张图没看出能记什么（返回里没有可记的字段）。换个清晰点的，或者直接说一句让我记。');return;}
+            if(out.intent==='money_expense'&&!(out.draft&&out.draft.amount>0)){aiAppendMsg('bot','这张图认出来是小票，但金额没读清。把金额说一句，我直接记。');return;}
+            if(out.intent==='fitness'&&!(out.draft&&out.draft.weight>0)){aiAppendMsg('bot','这张图认出是体重秤，但数字没读清。把数字说一句，我直接记。');return;}
+            if(!out.reply){const def={text_extract:'提取到这些文字：',money_expense:'记一笔支出：',fitness:'记身体数据：',health_issue:'记身体不适：',describe:'看图结果：'};out.reply=def[out.intent]||'看图结果：';}
             aiAfter(out,false);
-          }).catch(err=>{if(thinking)thinking.remove();aiAppendMsg('bot','识图连不上（'+(err&&err.message?err.message:'网络')+'）');});
-        }catch(e){if(thinking)thinking.remove();aiAppendMsg('bot','图片处理失败，换一张试试。');}
+          })
+          .catch(function(err){if(thinking)thinking.remove();aiAppendMsg('bot',visionNetErrText(err));});
+        }catch(e){if(thinking)thinking.remove();aiAppendMsg('bot','图片处理失败：'+(e&&e.message?e.message:'未知错误')+'。换一张试试。');}
       };
-      img.onerror=()=>{if(thinking)thinking.remove();aiAppendMsg('bot','图片读不出来，换一张试试。');};
+      img.onerror=()=>{if(thinking)thinking.remove();aiAppendMsg('bot','这张图读不出来（格式可能不支持），换一张试试。');};
       img.src=rd.result;
     };
+    rd.onerror=()=>{if(thinking)thinking.remove();aiAppendMsg('bot','文件读取失败，再选一次。');};
     rd.readAsDataURL(file);
   }
   function aiImportBackup(file){
@@ -3767,20 +3827,20 @@ html[data-skin="linen"]{background-color:#f2ebdf;background-image:repeating-line
     const key=aiVisionKeyGet();
     if(!key){keyResult('visionTestResult','还没保存智谱 Key，拍照识图不可用。','bad');return;}
     keyResult('visionTestResult','正在测试…','');
-    fetch('https://open.bigmodel.cn/api/paas/v4/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model:'glm-4v-flash',messages:[{role:'user',content:'ping'}],max_tokens:1})})
+    fetch(VISION_API,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model:'glm-4v-flash',messages:[{role:'user',content:'ping'}],max_tokens:1})})
       .then(function(r){return r.text().then(function(tx){return{s:r.status,tx:tx};});})
       .then(function(res){
         const s=res.s;let ok=false,msg='';
         if(s===200){ok=true;msg='可用。识图走 glm-4v-flash，不消耗 DeepSeek 额度。';}
-        else if(s===401||s===403)msg='Key 无效，或账号没有该模型权限，去 open.bigmodel.cn 重新生成。';
+        else if(s===401||s===403)msg='Key 无效，或账号没有该模型权限，去 bigmodel.cn 重新生成。';
         else if(s===429)msg='限流或免费额度用尽，稍后再试。';
         else msg='返回 '+s+'：'+String(res.tx||'').slice(0,120);
         keyMetaSet('vision',{checkedAt:Date.now(),ok:ok,msg:msg});
         keyResult('visionTestResult',msg,ok?'ok':'bad');renderKeyPanels();
       })
       .catch(function(){
-        keyMetaSet('vision',{checkedAt:Date.now(),ok:null,msg:'浏览器跨域限制，未直连校验'});
-        keyResult('visionTestResult','浏览器跨域限制，没法直连校验。Key 已经保存，识图时若失败会明确报错。','');
+        keyMetaSet('vision',{checkedAt:Date.now(),ok:null,msg:'请求没发出去'});
+        keyResult('visionTestResult','请求没发出去。换 WiFi 或流量再试；两次都这样就是网络把接口拦了。','bad');
         renderKeyPanels();
       });
   }
