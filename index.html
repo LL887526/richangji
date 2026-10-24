@@ -47,12 +47,9 @@
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
 .lang-switch{position:fixed;right:18px;bottom:18px;z-index:90;display:flex;align-items:center;gap:5px;padding:5px 7px;border:1px solid rgba(85,69,55,.14);border-radius:999px;background:rgba(255,253,250,.94);box-shadow:0 8px 24px rgba(53,41,31,.12);backdrop-filter:blur(12px)}.lang-switch button{min-width:34px;height:28px;padding:0 8px;border:0;border-radius:999px;background:transparent;color:var(--muted);font-size:11px;font-weight:700}.lang-switch button.active{background:var(--plum);color:#fff}.lang-switch span{color:#b2a89d;font-size:11px}.lang-switch button:focus-visible{outline:2px solid var(--terra);outline-offset:2px}@media(max-width:860px){.lang-switch{right:14px;bottom:calc(82px + env(safe-area-inset-bottom))}}
 
-.wspace-tabs{display:flex;gap:8px;overflow:auto;flex-wrap:wrap;padding:2px 0 16px}
-.wspace-tabs button{flex:0 0 auto;display:flex;align-items:center;gap:6px;min-height:40px;padding:0 15px;border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--muted);font-size:13px}
-.wspace-tabs button svg{width:16px;height:16px}
-.wspace-tabs button.on{background:var(--plum);border-color:var(--plum);color:#fff}
 .wsec{display:none}
-.wsec.on{display:block}
+.wsec.on{display:block;animation:secIn .26s cubic-bezier(.22,.61,.36,1)}
+@keyframes secIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 .wpanel{margin-bottom:16px;padding:20px;border:1px solid var(--line);border-radius:var(--radius);background:var(--card);box-shadow:var(--shadow)}
 .wpanel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}
 .wpanel-head .eyebrow{margin:0 0 4px}
@@ -1251,14 +1248,14 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
           <button class="wbtn ghostbtn" data-act="v13Dismiss" type="button" title="收起，不再显示">知道了</button>
           <input type="file" id="v13File" accept=".json,application/json" hidden>
         </div>
-        <div class="wspace-tabs" id="workTabs">
+        <nav class="wseg wseg-auto" id="workTabs" aria-label="工作空间分区">
           <button class="on" data-wsec="board"><svg aria-hidden="true"><use href="#i-board"/></svg>任务看板</button>
           <button data-wsec="proj"><svg aria-hidden="true"><use href="#i-chart"/></svg>项目</button>
           <button data-wsec="collab"><svg aria-hidden="true"><use href="#i-list"/></svg>协作</button>
           <button data-wsec="capture"><svg aria-hidden="true"><use href="#i-fire"/></svg>灵感捕获</button>
           <button data-wsec="topic"><svg aria-hidden="true"><use href="#i-archive"/></svg>选题库</button>
           <button data-wsec="copy"><svg aria-hidden="true"><use href="#i-note"/></svg>文案库</button>
-        </div>
+        </nav>
         <div class="wsec on" id="wsec-board">
           <article class="wpanel">
             <div class="wpanel-head"><div><p class="eyebrow">先写事，再分配</p><h2>任务看板</h2></div><span class="wnote" id="boardStats"></span></div>
@@ -1378,12 +1375,12 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
       </section>
 
       <section class="view" data-title="成长空间" id="view-grow">
-        <div class="wspace-tabs" id="growTabs">
+        <nav class="wseg wseg-auto" id="growTabs" aria-label="成长空间分区">
           <button data-gsec="tree"><svg aria-hidden="true"><use href="#i-sprout"/></svg>成长树</button>
           <button class="on" data-gsec="review"><svg aria-hidden="true"><use href="#i-note"/></svg>每日复盘</button>
           <button data-gsec="skills"><svg aria-hidden="true"><use href="#i-list"/></svg>skill 库</button>
           <button data-gsec="words"><svg aria-hidden="true"><use href="#i-fire"/></svg>词海</button>
-        </div>
+        </nav>
         <div class="wsec on" id="gsec-review">
           <article class="wpanel">
             <div class="wpanel-head"><div><p class="eyebrow">自己的一天，写给自己</p><h2>每日复盘</h2></div><span class="wnote" id="reviewCount"></span></div>
@@ -1801,6 +1798,13 @@ body:has(.dashboard-grid.editing) .ai-fab{opacity:0;pointer-events:none;transfor
 .wseg button.on{background:transparent;border-color:transparent;color:var(--ink);font-weight:800}
 .wseg .seg-pill{position:absolute;z-index:1;left:0;top:4px;bottom:4px;width:0;border-radius:9px;background:#fff;box-shadow:0 1px 3px rgba(31,26,22,.17),0 0 0 .5px rgba(31,26,22,.07);opacity:0;transition:transform .34s cubic-bezier(.22,.61,.36,1),width .34s cubic-bezier(.22,.61,.36,1)}
 .wseg .seg-pill.is-ready{opacity:1}
+/* 分段控件·内容自适应变体（工作空间 / 成长空间顶栏）：按钮按文字宽排，滑块照样滑动 */
+.wseg-auto{justify-content:flex-start;overflow-x:auto;overflow-y:hidden;scrollbar-width:none}
+.wseg-auto::-webkit-scrollbar{display:none}
+.wseg-auto button{flex:0 1 auto;display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:0 12px}
+.wseg-auto button svg{width:14px;height:14px;flex:none;opacity:.85}
+.wseg-auto button.on svg{opacity:1}
+@media(max-width:600px){.wseg-auto button svg{display:none}.wseg-auto button{padding:0 9px}}
 @keyframes segIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
 #capList,#matList,#msList,#ideaGrid,#mediaMat,#mediaStat,#mediaTopic{animation:segIn .3s cubic-bezier(.22,.61,.36,1)}
 
