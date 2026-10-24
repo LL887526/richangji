@@ -823,41 +823,88 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
       </section>
       <div class="dash-sheet" id="dashAddSheet" hidden><div class="mask" data-action="dash-add-close"></div><div class="box"><div class="sheet-head"><div><p class="eyebrow">定制首页</p><h2>添加小组件</h2></div><button class="dash-icon-btn" type="button" data-action="dash-add-close" aria-label="关闭"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></button></div><p class="sheet-tip">添加后会出现在首页末尾，回到编辑模式可挪位置。</p><div id="dashAddList"></div></div></div>
 
-      <section data-page-node-id="4cCWKVjo7MugUG8mIdgn8y" class="view" data-title="记账理财" id="view-money">
-        <div data-page-node-id="LLyxJ7TdTK3DEEinsdjMzB" class="module-alert" id="moneyAlert"></div>
-        <div data-page-node-id="dO6F61xDrrdB1h0GpvtomY" class="section-actions"><button data-page-node-id="YDcmg7YYDqrbrkaMXMDWpm" class="btn ghost" data-action="export-money"><svg data-page-node-id="ngfJZxbxTgFFkft46ilkSA"><use data-page-node-id="4iBwdLQ4jobvLvkwWmP4wX" href="#i-chart"/></svg><!--pnid:O1b2npahCrIvKfSDkPwSaQ-->导出 Excel</button></div>
-        <div data-page-node-id="Hk9Ds5jqgUxmVE7sCTzaXB" class="module-layout">
-          <article data-page-node-id="dI6GEW4qN3GEyPWdCFPmFn" class="panel form-panel"><div data-page-node-id="ug5woqxhAgvO8BuGh6b6Mw" class="panel-head"><div data-page-node-id="hjoGGC3sB7m9wg1AtJRgmB"><p data-page-node-id="nWuMbAO4o4yTfR7WF4USyt" class="eyebrow"><!--pnid:D9JJtKmSxDyG2rv8KSFGNd-->收支手账</p><h2 data-page-node-id="tSdYMjrdiLMZjs809roZK4"><!--pnid:DM3v5V4dk5xqHhUkeTgeTx-->记一笔账</h2></div><span data-page-node-id="cbmalzuWaAm7NJHoF7akn2" class="draft-status" data-draft-for="moneyForm"><!--pnid:nJHyOX1PWKCGNerZOOLhjZ-->草稿自动保存</span></div><form data-page-node-id="M6DDTH6lD7nIHCPPgg2xJv" data-draft="moneyForm" id="moneyForm">
-            <div data-page-node-id="sIBQxKrsPnGW7od9TVOFHr" class="segmented"><label data-page-node-id="03P7CmX51DZW3jZG4oVJd4"><input data-page-node-id="0ASMIZHkhoB6cXJu2y59PV" checked name="flow" type="radio" value="expense"><span data-page-node-id="hPkKMZG2qetCDrfNE95d2G"><!--pnid:WPIa5evkguKkdzgeYR5wr1-->支出</span></label><label data-page-node-id="GNDzTlCuT1VSCa83rYpNql"><input data-page-node-id="2wgkoZh6QIHRi170fGouUZ" name="flow" type="radio" value="income"><span data-page-node-id="2wbFiYTWABMOfSkjwM2jn5"><!--pnid:GYHeGUwirfbjyFSaIoq7Zu-->收入</span></label></div>
-            <label data-page-node-id="TeOXKnIXPXx0OyxorIF0Fm" class="field amount-field"><span data-page-node-id="kP2nH0OldXNAqdCxxIl7ct"><!--pnid:wC8Msq3z98n97JtbVzLvBM-->金额</span><div data-page-node-id="6cSQtyLhqqNFyNixX4jDPu"><b data-page-node-id="kbK4gfZzhhi8CDgFImCKE4"><!--pnid:Due5Ydgn0GJSStQLTxj4KY-->¥</b><input data-page-node-id="yUNDV0TS8WmQTunhv04jcG" inputmode="decimal" min="0.01" name="amount" placeholder="0.00" required step="0.01" type="number"></div></label>
-            <div data-page-node-id="e9o9vAtBiAfIyhcaNfzEor" class="form-row"><label data-page-node-id="rst0cxauliTjqTW6jpUvsk" class="field"><span data-page-node-id="9MQcy6W5sIF5SP4tQHE0No"><!--pnid:f18AZLErs4pKbvpXxoRHBa-->分类</span><select data-page-node-id="osUwK3gwpsnxckleIY4cAI" id="moneyCategory" name="category"></select></label><label data-page-node-id="8AG197wNYLvQ2fxzos83PD" class="field"><span data-page-node-id="U8IDTfez56QlBokNTzx05G"><!--pnid:149zlMeDmsHYPXfZWuHfjx-->日期</span><input data-page-node-id="FcZnRpWFXM9QyFg5Tgyciz" name="date" required type="date"></label></div>
-            <label data-page-node-id="AJgWwoHUmgRshovuu62BCw" class="field"><span data-page-node-id="HydFmOsD3YoaDkwZ3KmENH"><!--pnid:J11iFkqb1gSXZTykjSCKue-->备注</span><input data-page-node-id="tiGpC6k6YQBph3Yt8SLLTI" maxlength="60" name="note" placeholder="这笔钱花在了哪里"></label>
-            <button data-page-node-id="rXDSRE2XVsUl6jnigbHYYf" class="btn primary full" type="submit"><svg data-page-node-id="I7EXKk8PywypWQ1ZnLjbvT"><use data-page-node-id="JbYz2Cl6hfpYY7tr1LcZRl" href="#i-plus"/></svg><!--pnid:alCHqr7FXaZxhvsgHeqP1F-->记下这笔</button>
-          </form></article>
-          <div data-page-node-id="WzhPhtlMMzUB501tXxJQyu" class="module-main">
-            <div data-page-node-id="7ifSX6RbQMwg9T81bhl2p2" class="metric-row"><article data-page-node-id="98xUf5GMrFYft8zecidGOl" class="metric income"><span data-page-node-id="i7rQt03ZF8iJK2sOo9C0v7"><!--pnid:WM79L2q4RkA310mXCkDllF-->本月收入</span><strong data-page-node-id="Ci3NmUi1Sx5VMSQEuyyabL" id="moneyIncome"><!--pnid:69txuZjefyKCUd5iOzmKb0-->¥0</strong></article><article data-page-node-id="MkVp74c13Xqm0iwPEOa5Oj" class="metric expense"><span data-page-node-id="hz5cNpfKYCx6oiCL1oshup"><!--pnid:Qr00T0IKzrauTyvabYufio-->本月支出</span><strong data-page-node-id="foPApfQh5kWwWkuM0EtsJ1" id="moneyExpense"><!--pnid:10brk7Q3r6aIGkKfuKzRW3-->¥0</strong></article><article data-page-node-id="EUYLsU4BocNDQbflrumgcz" class="metric"><span data-page-node-id="MMADq9EvsXEv8jcNwWzKUO"><!--pnid:jBZcc2wDUcqkkh1jOrzSUX-->本月剩余</span><strong data-page-node-id="y1SopagOHIAECRzEhCFzZb" id="moneyBalance"><!--pnid:WNFHwwdnehvPVcTPPUqppQ-->¥0</strong></article></div>
-            <article class="panel" id="finCard">
-              <div class="panel-head"><div><p class="eyebrow">资产负债</p><h2 id="finNet">净可用 待校准</h2></div><button class="text-btn" data-act="finBalanceBtn">更新余额</button></div>
-              <div class="fin-stats">
-                <div><span>当前余额</span><b id="finBal">未校准</b><small id="finBalNote">对 AI 说「手上还有 2900」即可校准</small></div>
-                <div><span>总负债</span><b id="finDebt">¥0</b><small id="finDebtNote">0 笔欠款</small></div>
-              </div>
-              <div id="finDebtList"></div>
-              <div id="finExpected"></div>
-              <div id="finPlanBox" hidden><p class="eyebrow" style="margin:12px 0 4px">还款与花钱计划</p><div id="finPlanText" style="white-space:pre-wrap;font-size:13px;color:#3d3830;margin:0"></div></div>
-              <div class="wmore" style="margin-top:10px"><button class="wbtn ghostbtn" data-act="finPlan" id="finPlanBtn">生成还款 / 花钱计划</button></div>
-            </article>
-            <article data-page-node-id="bn83OJ2LS8ST3bBC7EmVmR" class="panel compare-card"><div data-page-node-id="VHUordHoD4aVN5wbkB4ZmU"><p data-page-node-id="k5CBhds4NSYO9gG1XsfwBh" class="eyebrow"><!--pnid:qkCOv5dxHINUEg5tzDKE6m-->月度对比</p><h2 data-page-node-id="3eiQp2eypLqcBbltderIOj" id="monthCompare"><!--pnid:M3M3EF9G8Oou5GQI6uIUVa-->暂无对比</h2></div><span data-page-node-id="SIyER20rwusuiGqTHdi5bE" id="monthCompareDetail"><!--pnid:kMFZtTb5c35gtcPBBL9OKg-->有了上月数据后，这里会显示变化</span></article>
-            <article data-page-node-id="sXDgtJiJHzdRbD9WbUiZsP" class="panel budget-panel"><div data-page-node-id="YrEMV3wMNcOeff31VHQ33n" class="panel-head"><div data-page-node-id="52DZ2R2QXt2TmaGrfA1kxw"><p data-page-node-id="rQd2WFVbp5nZQSZhOS3VgN" class="eyebrow"><!--pnid:kUUF1EwXHUJTzd0YXkvxx7-->月度预算</p><h2 data-page-node-id="epKsAz0E2IRdgah54qAIvg"><!--pnid:j18hGW2ML8YGlQJpRIGaYm-->花得明白，不必紧绷</h2></div><label data-page-node-id="oHLhbDUPpsklVhxrXcXn3A" class="inline-budget"><!--pnid:oBzPKBcIXlIgX85VKpeki2-->预算 ¥<input data-page-node-id="3EQoyiPug40GsG7Dke79Tl" id="budgetInput" min="0" step="100" type="number"></label></div><div data-page-node-id="kbVkUhDSSYSLj4b40jtG9r" class="large-progress"><span data-page-node-id="QeWnqwtAWnn66sfoLvfiZE" id="budgetBar"></span></div><div data-page-node-id="usdwo4NhsIR6wyb6OLEld3" class="progress-label"><span data-page-node-id="rVM7oB232TFhXZWh54z2bZ" id="budgetUsedText"><!--pnid:sA02EyGFBSSm5ogLzYmbjX-->已使用 0%</span><span data-page-node-id="4yDs2h3Fx4W1Va73RL4ri8" id="budgetRemainText"><!--pnid:tSxa2Nj16Fmo7F3LCaQJUa-->剩余 ¥0</span></div></article>
-            <div data-page-node-id="KKIV9GFoCvlKbmuApY8P8K" class="split-grid">
-              <article data-page-node-id="cYfoZhS5sheglBcJPlBrzS" class="panel"><div data-page-node-id="AssrnJpZgGDlBvMQkPOvNV" class="panel-head"><div data-page-node-id="cuCF5TwWY9tDhIPZ7ISvZK"><p data-page-node-id="hTIyPmXB02o0zllXwzHYl7" class="eyebrow"><!--pnid:hJUB1JFaYvfeQwIbv2rjZv-->消费结构</p><h2 data-page-node-id="evtesX3IyGyIWbN1dnli7Q"><!--pnid:iukMqgM79K33OEqrVJKTLP-->钱花在了哪里</h2></div></div><div data-page-node-id="7NonEtKCfad98Csph2ULPK" class="pie-wrap"><svg data-page-node-id="7P6zi8d9D5L4zWku6ePH9K" aria-label="消费结构饼图" id="moneyPie" viewBox="0 0 220 220"></svg><div data-page-node-id="cxdVaQsODOOSWlPndbM0T5" class="chart-legend" id="moneyLegend"></div></div></article>
-              <article data-page-node-id="uygPkH61F0S3wI5hdALOQr" class="panel"><div data-page-node-id="N6z9ksk4JdfuG1Kxxr7WCT" class="panel-head"><div data-page-node-id="3rHDYyTogKjdMsbXdj1HZd"><p data-page-node-id="97qo6xKaKzvCuqypBqQQJq" class="eyebrow"><!--pnid:daC18UTKhuSWz3tYI3CzxY-->流水</p><h2 data-page-node-id="c5h9z7T8CJz7lPyecaEqbu"><!--pnid:rixDSsOQoevXNGmkaH1HYZ-->最近账目</h2></div><select data-page-node-id="BYcQOwMs7LeD7on4i2WSpE" class="compact-select" id="moneyFilter"><option data-page-node-id="IqABFjsRaBAdYjeEYhSDjT" value="all"><!--pnid:fvR32wEd7s3CIzZbfDyqaw-->全部分类</option></select></div><div data-page-node-id="yoz9XWQiG1lJ0ibfBTNoCt" class="record-list" id="moneyList"></div></article>
+            <section data-page-node-id="4cCWKVjo7MugUG8mIdgn8y" class="view" data-title="记账理财" id="view-money">
+        <div class="money-wrap">
+          <header class="money-hero">
+            <div class="money-hero-top">
+              <div><p class="eyebrow">本月</p><h2 id="moneyMonthTitle">10 月</h2></div>
+              <button class="money-export" type="button" data-action="export-money" aria-label="导出 Excel"><svg><use href="#i-download"/></svg>导出</button>
             </div>
+            <div class="money-nums">
+              <div class="mn"><span>收入</span><b id="moneyIncome">¥0</b></div>
+              <div class="mn is-exp"><span>支出</span><b id="moneyExpense">¥0</b></div>
+              <div class="mn"><span>结余</span><b id="moneyBalance">¥0</b></div>
+            </div>
+            <div class="money-alert" id="moneyAlert"></div>
+          </header>
+
+          <article class="money-compose">
+            <form id="moneyForm" data-draft="moneyForm">
+              <div class="segmented"><label><input checked name="flow" type="radio" value="expense"><span>支出</span></label><label><input name="flow" type="radio" value="income"><span>收入</span></label></div>
+              <label class="field amount-field"><span>金额</span><div><b>¥</b><input inputmode="decimal" min="0.01" name="amount" placeholder="0.00" required step="0.01" type="number"></div></label>
+              <div class="pick-row"><span class="pick-lb">分类</span><div class="pick-chips" id="moneyCatChips"></div><select id="moneyCategory" name="category" hidden></select></div>
+              <div class="pick-row"><span class="pick-lb">账户</span><div class="pick-chips" id="moneyAccChips"></div><button class="pick-more" type="button" data-act="walletManage">管理</button></div>
+              <input type="hidden" name="account" id="moneyAccount" value="">
+              <div class="money-lastrow">
+                <label class="mini-field" data-act="moneyDatePick"><svg><use href="#i-calendar"/></svg><span id="moneyDateLbl">今天</span><input type="date" name="date" id="moneyDate" required aria-label="日期"></label>
+                <input class="money-note" name="note" maxlength="60" placeholder="这笔钱花在了哪里">
+              </div>
+              <button class="btn primary full" type="submit"><svg><use href="#i-plus"/></svg>记下这笔</button>
+            </form>
+          </article>
+
+          <article class="money-card" id="debtCard">
+            <div class="mc-head"><div><p class="eyebrow">负债</p><h2>欠的钱，一笔笔清</h2></div><button class="text-btn" type="button" data-act="debtAdd">+ 记一笔</button></div>
+            <div class="debt-top">
+              <div><span>总欠款</span><b id="finDebt">¥0</b><small id="finDebtNote">0 笔</small></div>
+              <div><span>每月要还</span><b id="debtMonthly">¥0</b><small>月供合计</small></div>
+              <div><span>净可用</span><b id="finNet">待校准</b><small>余额减负债</small></div>
+            </div>
+            <div class="debt-list" id="finDebtList"></div>
+          </article>
+
+          <article class="money-card" id="accCard">
+            <div class="mc-head"><div><p class="eyebrow">账户</p><h2>钱从哪儿进出</h2></div><button class="text-btn" type="button" data-act="walletAdd">+ 加账户</button></div>
+            <div class="acc-list" id="accList"></div>
+          </article>
+
+          <article class="money-card" id="finCard">
+            <div class="mc-head"><div><p class="eyebrow">手上现金</p><h2 id="finBal">未校准</h2></div><button class="text-btn" data-act="finBalanceBtn">更新余额</button></div>
+            <p class="fin-note" id="finBalNote">对 AI 说「手上还有 2900」即可校准</p>
+            <div id="finExpected"></div>
+            <div id="finPlanBox" hidden><p class="eyebrow" style="margin:12px 0 4px">还款与花钱计划</p><div id="finPlanText" style="white-space:pre-wrap;font-size:13px;color:#3d3830;margin:0"></div></div>
+            <button class="wbtn ghostbtn" data-act="finPlan" id="finPlanBtn" style="margin-top:10px">生成还款 / 花钱计划</button>
+          </article>
+
+          <article class="money-card"><div class="mc-head"><div><p class="eyebrow">月度对比</p><h2 id="monthCompare">暂无对比</h2></div><span class="mc-note" id="monthCompareDetail">有了上月数据后，这里会显示变化</span></div></article>
+
+          <article class="money-card"><div class="mc-head"><div><p class="eyebrow">月度预算</p><h2>花得明白，不必紧绷</h2></div><label class="inline-budget">预算 ¥<input id="budgetInput" min="0" step="100" type="number"></label></div><div class="large-progress"><span id="budgetBar"></span></div><div class="progress-label"><span id="budgetUsedText">已使用 0%</span><span id="budgetRemainText">剩余 ¥0</span></div></article>
+
+          <div class="money-row">
+            <article class="money-card"><div class="mc-head"><div><p class="eyebrow">消费结构</p><h2>钱花在了哪里</h2></div></div><div class="pie-wrap"><svg aria-label="消费结构饼图" id="moneyPie" viewBox="0 0 220 220"></svg><div class="chart-legend" id="moneyLegend"></div></div></article>
+            <article class="money-card"><div class="mc-head"><div><p class="eyebrow">流水</p><h2>最近账目</h2></div></div><div class="pick-chips cat-filter" id="moneyCatFilter"></div><div class="record-list" id="moneyList"></div></article>
           </div>
         </div>
-      </section>
 
-      <section data-page-node-id="lyz5GJPM6ztrwraSI5AVGO" class="view" data-title="习惯健康" id="view-habits">
+        <div class="dash-sheet" id="debtSheet" hidden><div class="mask" data-act="sheetClose"></div><div class="box">
+          <div class="sheet-head"><div><p class="eyebrow">负债台账</p><h2>记一笔欠款</h2></div><button class="dash-icon-btn" type="button" data-act="sheetClose" aria-label="关闭"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></button></div>
+          <p class="sheet-tip">花呗、白条、抖音月付、网贷都能记，欠款不会重复算进支出。</p>
+          <label class="field" style="margin-top:10px"><span>叫什么</span><input id="debtName" maxlength="20" placeholder="抖音月付 / 借呗 / 朋友借款"></label>
+          <div class="pick-row"><span class="pick-lb">类型</span><div class="pick-chips" id="debtKindChips"></div></div>
+          <label class="field" style="margin-top:10px"><span>一共欠多少</span><input id="debtAmount" inputmode="decimal" min="0" step="0.01" type="number" placeholder="0.00"></label>
+          <div class="form-row" style="margin-top:10px"><label class="field"><span>每月还多少</span><input id="debtMonthlyIn" inputmode="decimal" min="0" step="0.01" type="number" placeholder="可留空"></label><label class="field"><span>每月几号还</span><input id="debtDueIn" inputmode="numeric" min="1" max="31" step="1" type="number" placeholder="可留空"></label></div>
+          <button class="btn primary full" type="button" data-act="debtSave" style="margin-top:14px">存进负债</button>
+        </div></div>
+
+        <div class="dash-sheet" id="accSheet" hidden><div class="mask" data-act="sheetClose"></div><div class="box">
+          <div class="sheet-head"><div><p class="eyebrow">账户</p><h2>加一个账户</h2></div><button class="dash-icon-btn" type="button" data-act="sheetClose" aria-label="关闭"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></button></div>
+          <p class="sheet-tip">记支出时选它就行。信用卡、花呗这类负债账户，花了会自动记进上面的欠款里。</p>
+          <label class="field" style="margin-top:10px"><span>名称</span><input id="accName" maxlength="20" placeholder="微信零钱 / 招商信用卡"></label>
+          <div class="pick-row"><span class="pick-lb">类型</span><div class="pick-chips" id="accKindChips"></div></div>
+          <button class="btn primary full" type="button" data-act="accSave" style="margin-top:14px">加上这个账户</button>
+        </div></div>
+      </section>
+<section data-page-node-id="lyz5GJPM6ztrwraSI5AVGO" class="view" data-title="习惯健康" id="view-habits">
         <style data-page-node-id="c5lE9jF9lNoBFZQ3FYoxaY" data-pnid-children="h8a5Sw9pKHwU4KVcymi1KS">.habit-layout{display:grid;grid-template-columns:minmax(0,1fr);gap:18px}.habit-layout .panel{border-color:transparent;background:transparent;box-shadow:none;padding:0}.daily-habits{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}</style>
         <div data-page-node-id="Xp2oXw8y7LwT1n3vaAGbSl" class="habit-layout">
           <article data-page-node-id="MsjQdPdJSl7EeVFm6grYnm" class="panel"><div data-page-node-id="ceJiYoVqaoRXt4bkXHg2Fn" class="panel-head"><div data-page-node-id="dX0F41iJBryPrIf1hlQ99h"><p data-page-node-id="2bKNfpDwSiqpkJQHtheyc6" class="eyebrow"><!--pnid:uFyYso84dytxw3j5PaGvH5-->今天打卡</p><h2 data-page-node-id="WkJsPCbxNtJUVagTZzaP7K"><!--pnid:sPyUlF8KBcEYIlNpuEj9Bi-->完成一点，就算前进</h2></div><div data-page-node-id="w2DabS3eOHYudbpZ8CAAGH" class="panel-actions"><span data-page-node-id="qFmwG68cKev1zxTzSOjchm" class="mini-note"><!--pnid:vhS94nuqK56CNJqnFlUPvZ-->每次点击立即保存</span><button data-page-node-id="G2ZKyqjj9l56zRJMjbq05p" class="btn ghost compact" data-action="open-habit-settings"><svg data-page-node-id="2f5GvafcwC8JkFGIM8KUoC"><use data-page-node-id="kYSE4Dg8iqC4FldmqzvL0D" href="#i-plus"/></svg><!--pnid:sjzMVcjM3j0hVvmnPiNHbL-->新增习惯</button></div></div><div data-page-node-id="o69vej7nGyOCbXtWrOy2LO" class="daily-habits" id="dailyHabitList"></div></article>
@@ -1105,25 +1152,52 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
         </div>
         <div class="wmore" style="margin-top:12px"><button class="wbtn ghostbtn" data-nav="fitness"><svg><use href="#i-fitness"/></svg>去健身页记训练</button></div>
       </section>
-      <section data-page-node-id="wtVHT4ckl1gIvxm2dBxz6z" class="view" data-title="日程统筹" id="view-planner">
-        <div data-page-node-id="WvIn3jlZQkyHo0rT70KFgu" class="module-layout">
-          <article data-page-node-id="gI8dtL2VlBHlSg9eHo8V5d" class="panel form-panel"><div data-page-node-id="UFDI3qoUvTQM6zvypZqrnZ" class="panel-head"><div data-page-node-id="PyJ70So9TywKsSPuL8zmLF"><p data-page-node-id="dRKlIfhwYfipjLpuSK4kph" class="eyebrow"><!--pnid:mfqMvsNJ55t8HCf3lRsE60-->提醒事项</p><h2 data-page-node-id="5JrZpt9bkoNIHc4ScIzStW"><!--pnid:aUi10M7CblY7nyLHS7Dq95-->添加待办</h2></div><span data-page-node-id="zoRw3oWWbncuMufyG7EdHM" class="draft-status" data-draft-for="plannerForm"><!--pnid:zoues9DTaPUBiYN1DTJUyr-->草稿自动保存</span></div><form data-page-node-id="9ZI6g6htXCfbxQwbRp0joI" data-draft="plannerForm" id="plannerForm">
-            <label data-page-node-id="JmPAOwNiZiIe3i55Eqbpq3" class="field"><span data-page-node-id="h2iLnsiwPAaQvDa11dMmUI"><!--pnid:pJJwAjjVFwGpl5sGmQQ4gQ-->要做什么</span><input data-page-node-id="TG7omTa18ThWvKecxsLnhO" maxlength="60" name="title" placeholder="写下一件具体的事" required></label>
-            <div data-page-node-id="JEltFOJECfWjndEzTrgOFH" class="form-row"><label data-page-node-id="5TSyoUktHHKG3WDbksAhYU" class="field"><span data-page-node-id="joFWzwrfRygqvhnoMWFbzn"><!--pnid:bvKxKAvgjXB71S9m9oCrTP-->日期</span><input data-page-node-id="6wLQr2z0DC4h9gx5VLP0ss" name="date" required type="date"></label><label data-page-node-id="gMabHRGKWY2iWBDteh7wYo" class="field"><span data-page-node-id="6juvsHTcjXzM2Wcjwbw3bq"><!--pnid:rj4uCmmR1GuFPcfi4pU1Qb-->时间</span><input data-page-node-id="yPvTcfehGpvtUmMw8guaQ4" name="time" type="time"></label></div>
-            <div data-page-node-id="F1vWjZOBPEtl2lqP5r0OLt" class="form-row"><label data-page-node-id="WsN6tQKe53Xuebohe2q6dr" class="field"><span data-page-node-id="JzI01VD7xNr05oifUY48wr"><!--pnid:u0CXTXcgVHenb5MkSRtHPW-->清单</span><select data-page-node-id="tj89CYH1frS6MMz1ybvxhI" name="list"><option data-page-node-id="wrYalcFDHvEG6QzLiTNqq6"><!--pnid:LMYZixFoyLk3JoPgcAWydd-->生活</option><option data-page-node-id="u8tr2KDt7kxieKWbdm02oN"><!--pnid:gKaqWfWwP40CZRM92tUiRO-->工作</option><option data-page-node-id="4dj7dgLg4D0HqmZwdubleE"><!--pnid:snsCk9QIjOrF7LFlhYw5sj-->家庭</option><option data-page-node-id="s8NYwyVrID7Mnqv8KTa8Uw"><!--pnid:bQPvPOOFFxwQ9nPNB3aB8p-->个人</option></select></label><label data-page-node-id="U0sDjCbBaFYEu7h6RuWOqU" class="field"><span data-page-node-id="DRMEdIYLae2tNAiex5ewdA"><!--pnid:1dRf4QYgtKRuuEvBBRL6Ka-->优先级</span><select data-page-node-id="y0mxmEDKr5ZH6fgB7WK2Rf" name="priority"><option data-page-node-id="6iKwQ7QgUuNRMbmaKoLGQv" value="normal"><!--pnid:TmfNjA7MSFcbW52w30sPzi-->普通</option><option data-page-node-id="IEHZS6EjmpSHUPSDbylo66" value="high"><!--pnid:PslSSnyauah5Q3DXGEfZyE-->高优先级</option><option data-page-node-id="kIUZJmCsfREATFKvcfDCtV" value="low"><!--pnid:jD1GgaxwOpSpA3SnLOJp9i-->低优先级</option></select></label></div>
-            <label data-page-node-id="eYSQljfS6qNAwJElPYl2J6" class="field"><span data-page-node-id="dc9rU3qod0YOhjTYzcnYlf"><!--pnid:oFKpRf8PSEJmmxgwKQjC0S-->备注</span><input data-page-node-id="4DYAz0GEjLJodlyLhlMuRu" maxlength="100" name="note" placeholder="地点、准备事项或补充说明"></label>
-            <label data-page-node-id="9BJ2CMqFYPDji7ZH0K8aWG" class="switch-row"><input data-page-node-id="Gb9kPgbIk6D2ntSIqM4b2d" name="remind" type="checkbox" value="1"><span data-page-node-id="klk5sJzVERcfNaZ4iAAFxv"><!--pnid:mneAxX9Vx5yRQlh0C62Rx1-->到时间提醒我</span></label>
-            <button data-page-node-id="pHRxWSRq33y0Vr5u4O6Em5" class="btn primary full" type="submit"><svg data-page-node-id="9xR7D1lKNFsAlsdsqAAn5H"><use data-page-node-id="cNcEbduxJQYz4Oia15fBL1" href="#i-plus"/></svg><!--pnid:sVpuLlKGQ4bERizmQDevDV-->加入日程</button>
-          </form></article>
-          <div data-page-node-id="izJP2K9L2tW53g7yZq7Q4h" class="module-main">
-            <div data-page-node-id="DOlBlUZnNopQ0VxyB6jUWF" class="metric-row"><article data-page-node-id="QWWRDGVDK73KMkMD2DAXMo" class="metric"><span data-page-node-id="o76cxyzZUy5khfou8gnKVy"><!--pnid:ioqxJ27chlMHkT6QnNXjWn-->今天</span><strong data-page-node-id="V7zYZxrticdCP8d98bKbpH" id="plannerToday"><!--pnid:4QUP8nwzFmjekDZ12kfqnL-->0</strong></article><article data-page-node-id="Uz0jPtkHaTSKdKAxwIds9u" class="metric"><span data-page-node-id="k3KyWKvh0uKzKtIG67mJNK"><!--pnid:TsQNUnQebwdxeZuSjSnoI0-->已逾期</span><strong data-page-node-id="Agxw9QmKneSmR6ICm0sEqP" id="plannerOverdue"><!--pnid:Dtgp4wq5KtfAmxtXpeay9z-->0</strong></article><article data-page-node-id="4BU4dr3tHgmpaR2BYweaWy" class="metric"><span data-page-node-id="BA6z5XtORgxMocH9eTQukT"><!--pnid:pjCmCwChL9r8JS6B5MI0rn-->未来 7 天</span><strong data-page-node-id="4bOyyL7HkcZWDoXWKVD6kB" id="plannerWeek"><!--pnid:yXVSX4NBeaIgAUHrhfiqBK-->0</strong></article></div>
-            <article data-page-node-id="Px5floKfHXUvHDjfKZvIK2" class="panel week-panel"><div data-page-node-id="IDlrMM5wvGrIehvXqNZYND" class="panel-head"><div data-page-node-id="QgfaxaEzuHo3fxYpWPCzyR"><p data-page-node-id="WOsHMqyQyny6AVsy9wGTfT" class="eyebrow"><!--pnid:bFOWkI6Y1tTcc0kSBYdSYq-->一周日历</p><h2 data-page-node-id="rdQOObc6MttC494id6DUW1"><!--pnid:OlfxqJ3iPpksn7GkiKM7yv-->接下来七天</h2></div></div><div data-page-node-id="gugUNDMDrR8XeUD6pQcD2j" class="week-strip" id="weekStrip"></div></article>
-            <article data-page-node-id="LGQjyBxEnyOXFsak9WPQCM" class="panel"><div data-page-node-id="y95CO3f7Y3cMlibTOOJIeS" class="panel-head"><div data-page-node-id="JcEPsvRuZhPVoubhwOGDI3"><p data-page-node-id="QJKWF2OYwcGhXI5zTjb66f" class="eyebrow"><!--pnid:Q4ChjHmHHdPdXaFPGIy2su-->智能清单</p><h2 data-page-node-id="tv1mM0zsAQ3WY1AhKUsdDm"><!--pnid:DDivmLaVZ8pLU7D0PAd2sf-->我的提醒事项</h2></div><div data-page-node-id="16iLmXtrrLhPFwUSi3sBKi" class="filter-chips" id="plannerFilters"><button data-page-node-id="LOaBargvU8D9o2nKfhnGNj" class="active" data-planner-filter="all"><!--pnid:NHCMXbQmVf9SNAbWkcKVuI-->全部</button><button data-page-node-id="ZVOeHGddyt78Cma6c2xTSZ" data-planner-filter="today"><!--pnid:KaG1HzYrIIh1BerpmJaAX7-->今天</button><button data-page-node-id="3EnuneEjLd21lpPrI2pogh" data-planner-filter="scheduled"><!--pnid:AZg6qgBz3eMFsaSTQTVHEY-->计划内</button><button data-page-node-id="ZnTDWZ0t93TSc6cl3py8jW" data-planner-filter="done"><!--pnid:iiK7xcOqh9u4ArMtF4Djxb-->已完成</button></div></div><div data-page-node-id="9XkkVgGDwiEuUbLhpvYjCM" class="date-groups" id="plannerList"></div></article>
+            <section data-page-node-id="wtVHT4ckl1gIvxm2dBxz6z" class="view" data-title="日程统筹" id="view-planner">
+        <div class="sch-wrap">
+          <header class="sch-hero">
+            <div class="sch-hero-row">
+              <div class="sch-hero-t"><p class="eyebrow">日程</p><h2 id="schMonthTitle">10 月 24 日 周六</h2></div>
+              <div class="sch-nums">
+                <span><b id="plannerToday">0</b><i>今天</i></span>
+                <span class="warn"><b id="plannerOverdue">0</b><i>逾期</i></span>
+                <span><b id="plannerWeek">0</b><i>七天</i></span>
+              </div>
+            </div>
+            <div class="sch-days" id="weekStrip"></div>
+          </header>
+
+          <article class="sch-compose">
+            <form id="plannerForm" data-draft="plannerForm">
+              <div class="sch-inrow">
+                <input class="sch-input" id="schTitle" name="title" maxlength="60" placeholder="写一件事，例如「明天下午3点 交剪辑稿」" autocomplete="off" required>
+                <button class="sch-addbtn" type="submit" aria-label="加入日程"><svg><use href="#i-plus"/></svg></button>
+              </div>
+              <div class="sch-optrow">
+                <div class="sch-quick"><button type="button" data-schday="0" class="on">今天</button><button type="button" data-schday="1">明天</button><button type="button" data-schday="2">后天</button></div>
+                <label class="sch-datechip" data-act="schDatePick"><svg><use href="#i-calendar"/></svg><span id="schDateLbl">今天</span><input type="date" name="date" id="schDate" required></label>
+                <label class="sch-timechip"><input type="time" name="time" id="schTime" aria-label="时间"></label>
+              </div>
+              <div class="sch-detect" id="schDetect"></div>
+              <input type="hidden" name="list" id="schList" value="生活">
+              <input type="hidden" name="priority" id="schPriority" value="normal">
+              <input type="hidden" name="note" id="schNote" value="">
+              <button class="sch-morebtn" type="button" data-act="schMore">清单 · 优先级 · 备注<svg><use href="#i-back"/></svg></button>
+              <div class="sch-more" id="schMore" hidden>
+                <div class="sch-segrow"><span>清单</span><div class="sch-seg" data-schseg="list"><button type="button" data-v="生活" class="on">生活</button><button type="button" data-v="工作">工作</button><button type="button" data-v="家庭">家庭</button><button type="button" data-v="个人">个人</button></div></div>
+                <div class="sch-segrow"><span>优先级</span><div class="sch-seg" data-schseg="priority"><button type="button" data-v="high">高</button><button type="button" data-v="normal" class="on">普通</button><button type="button" data-v="low">低</button></div></div>
+                <input class="sch-noteinput" id="schNoteInput" maxlength="100" placeholder="备注：地点、要带的东西…">
+              </div>
+            </form>
+          </article>
+
+          <div class="sch-bar">
+            <div class="sch-filters" id="plannerFilters"><button class="on" data-planner-filter="all">全部</button><button data-planner-filter="pending">待完成</button><button data-planner-filter="overdue">逾期</button><button data-planner-filter="done">已完成</button></div>
+            <button class="sch-clearday" type="button" data-act="schClearDay" id="schClearDay" hidden>看全部</button>
           </div>
+          <div class="sch-timeline" id="plannerList"></div>
         </div>
       </section>
-
-      <section data-page-node-id="yZMdeZiJBS4KRpuQNtiavB" class="view" data-title="待买清单" id="view-home">
+<section data-page-node-id="yZMdeZiJBS4KRpuQNtiavB" class="view" data-title="待买清单" id="view-home">
         <div data-page-node-id="5hEBiZFakhTGg8474cGFP9" class="module-layout">
           <article data-page-node-id="5IFNz97hLeRR50NRzP2ixv" class="panel form-panel"><div data-page-node-id="siJTaZZBpGhhu7TtrBJTcY" class="panel-head"><div data-page-node-id="rp1nHUtyzXTBWMFg6hrXoz"><p data-page-node-id="mmiNe9gDgXoAPybUMqzWX7" class="eyebrow"><!--pnid:lCcXplmW2dg9MsgII3S6ts-->想买先记下</p><h2 data-page-node-id="61FZdDAygEQwILVKe5AKag"><!--pnid:FOpIWhbhbBd7M571qVy1Mo-->添加待买物品</h2></div><span data-page-node-id="EsqdmJzGLjHGIEtBQiedv1" class="draft-status" data-draft-for="homeForm"><!--pnid:3z8jDIMJoQArsuJ5fSyIVy-->草稿自动保存</span></div><form data-page-node-id="SOEpkAFivspmKCP3JmaxnA" data-draft="homeForm" id="homeForm">
             <label data-page-node-id="9Eoj1UrruhuEy0YuOdVrSe" class="field"><span data-page-node-id="ttfYd9JU2MIR1fwc49yz0o"><!--pnid:ygdclgDVd6HvPb6q8hdyK3-->物品名称</span><input data-page-node-id="d1VFx8oRwb9bmYuo8DbMLJ" maxlength="40" name="name" placeholder="例如：洗衣液、燕麦奶" required></label>
@@ -1896,6 +1970,175 @@ body:has(.dashboard-grid.editing) .ai-fab{opacity:0;pointer-events:none;transfor
   .wtree-st{font-size:9.5px;padding:2px 7px 2px 5px;gap:3px}
   .wtree-stages{gap:4px}
 }
+
+/* ===== 批次 D 2026-10-24：日程 iOS 化 ===== */
+.sch-wrap{max-width:800px;margin:0 auto;display:flex;flex-direction:column;gap:13px}
+.sch-hero{background:var(--card);border:1px solid rgba(111,89,67,.12);border-radius:22px;padding:15px 14px 11px}
+.sch-hero-row{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.sch-hero-t h2{font-size:19px;font-weight:800;letter-spacing:-.01em;line-height:1.3;margin:2px 0 0}
+.sch-nums{display:flex;gap:13px;padding-top:2px}
+.sch-nums span{display:flex;flex-direction:column;align-items:flex-end;line-height:1.05}
+.sch-nums b{font-size:18px;font-weight:800;font-variant-numeric:tabular-nums}
+.sch-nums i{font-style:normal;font-size:10px;color:var(--muted);font-weight:700;margin-top:4px}
+.sch-nums .warn b{color:var(--red)}
+.sch-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px;margin-top:12px}
+.sch-day{border:0;background:transparent;border-radius:14px;padding:5px 1px 4px;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:60px}
+.sch-day span{font-size:9.5px;color:var(--muted);font-weight:700;white-space:nowrap;letter-spacing:-.02em}
+.sch-day b{font-size:16px;font-weight:800;font-variant-numeric:tabular-nums;width:29px;height:29px;border-radius:50%;display:grid;place-items:center}
+.sch-day i{width:4px;height:4px;border-radius:50%;background:transparent}
+.sch-day.has i{background:var(--terra,#b65f42)}
+.sch-day.today b{background:var(--plum,#4d3045);color:#fff}
+.sch-day.today i{background:#e9d3cb}
+.sch-day.sel{background:#f3ece2}
+.sch-day.sel b{background:var(--ink);color:#fff}
+.sch-compose{background:var(--card);border:1px solid rgba(111,89,67,.12);border-radius:20px;padding:11px 12px 12px}
+.sch-inrow{display:flex;gap:8px;align-items:center}
+.sch-input{flex:1;min-width:0;height:46px;border:0;border-radius:14px;background:#f6f1e9;padding:0 14px;color:var(--ink)}
+.sch-addbtn{flex:0 0 42px;width:42px;height:42px;border:0;border-radius:50%;background:var(--plum,#4d3045);color:#fff;display:grid;place-items:center}
+.sch-addbtn svg{width:18px;height:18px}
+.sch-optrow{display:flex;align-items:center;gap:7px;margin-top:9px;flex-wrap:wrap}
+.sch-quick{display:flex;gap:2px;background:#f6f1e9;border-radius:11px;padding:3px}
+.sch-quick button{height:30px;padding:0 10px;border:0;border-radius:8px;background:transparent;font-size:11.5px;font-weight:700;color:#7d7268}
+.sch-quick button.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(53,41,31,.13)}
+.sch-datechip,.sch-timechip{position:relative;display:inline-flex;align-items:center;gap:5px;height:36px;padding:0 10px;border:1px solid var(--line);border-radius:11px;font-size:12px;font-weight:700;color:#5c534a;overflow:hidden}
+.sch-datechip svg,.sch-timechip svg{width:14px;height:14px;flex:none;color:#9c9083}
+.sch-datechip input{position:absolute;inset:0;width:100%;height:100%;opacity:0;border:0;padding:0}
+.sch-timechip input{border:0;background:transparent;padding:0;width:86px;min-width:0;font-weight:700;color:inherit}
+.sch-detect{display:flex;flex-wrap:wrap;gap:5px;margin-top:9px;font-size:11px;color:#8a7f73}
+.sch-detect:empty{display:none}
+.sch-detect em{font-style:normal;display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:999px;background:#f2ece2;color:#6f6459;font-weight:700}
+.sch-detect em.hot{background:#fbe9e1;color:#b65f42}
+.sch-morebtn{display:inline-flex;align-items:center;gap:4px;margin-top:7px;height:28px;padding:0;border:0;background:transparent;color:#9c9083;font-size:11px;font-weight:700}
+.sch-morebtn svg{width:11px;height:11px;transform:rotate(-90deg);transition:transform .2s}
+.sch-morebtn.open svg{transform:rotate(90deg)}
+.sch-more{display:flex;flex-direction:column;gap:9px;margin-top:4px;padding-top:10px;border-top:1px solid #f1eae1}
+.sch-segrow{display:flex;align-items:center;gap:9px}
+.sch-segrow>span{flex:0 0 40px;font-size:11px;color:#9c9083;font-weight:700}
+.sch-seg{display:flex;gap:5px;flex-wrap:wrap}
+.sch-seg button{height:31px;padding:0 12px;border:1px solid var(--line);border-radius:9px;background:transparent;font-size:11.5px;font-weight:700;color:#6f6459}
+.sch-seg button.on{border-color:transparent;background:#3b3430;color:#fff}
+.sch-noteinput{height:38px;border:1px solid var(--line);border-radius:11px;padding:0 12px;background:#faf7f2;font-size:11.5px;width:100%}
+.sch-bar{display:flex;align-items:center;gap:8px}
+.sch-filters{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;flex:1;min-width:0}
+.sch-filters::-webkit-scrollbar{display:none}
+.sch-filters button{flex:0 0 auto;height:34px;padding:0 13px;border:1px solid var(--line);border-radius:999px;background:transparent;color:#72695f;font-size:11.5px;font-weight:700}
+.sch-filters button.on{background:var(--ink);border-color:transparent;color:#fff}
+.sch-clearday{flex:0 0 auto;height:34px;padding:0 12px;border:0;border-radius:999px;background:#f0e8dc;color:#7a6e61;font-size:11.5px;font-weight:700}
+.sch-timeline{display:flex;flex-direction:column;gap:4px}
+.sch-ghead{display:flex;align-items:center;gap:7px;padding:9px 5px 3px;font-size:11.5px;font-weight:800;color:#8a7f73}
+.sch-ghead .n{font-weight:600;color:#b3a99b}
+.sch-item{display:grid;grid-template-columns:52px minmax(0,1fr) 32px 28px;align-items:center;gap:7px;padding:11px 8px 11px 2px;background:var(--card);border-radius:16px;border:1px solid rgba(111,89,67,.09)}
+.sch-rail{display:flex;flex-direction:column;align-items:flex-end;gap:4px;padding-right:7px;border-right:1px solid #f1eae1;min-height:26px;justify-content:center}
+.sch-rail .tm{font-size:12px;font-weight:800;font-variant-numeric:tabular-nums;color:#413a33}
+.sch-rail .tm.all{font-size:10.5px;color:#a89d90;font-weight:700}
+.sch-rail i{width:6px;height:6px;border-radius:50%;background:#d3c8ba}
+.sch-rail i.high{background:var(--red)}
+.sch-rail i.low{background:#c9bfb2}
+.sch-body{min-width:0}
+.sch-body b{display:block;font-size:13.5px;font-weight:700;line-height:1.35;word-break:break-word}
+.sch-body small{display:block;margin-top:2px;font-size:11px;color:#9a8f82;line-height:1.4;word-break:break-word}
+.sch-item.done .sch-body b{text-decoration:line-through;color:#a89d90}
+.sch-item.overdue{border-color:#f0d6cc;background:#fffaf7}
+.sch-item.overdue .sch-rail .tm{color:#b65f42}
+.sch-tag{display:inline-block;margin-right:5px;padding:1px 6px;border-radius:6px;background:#f2ece2;color:#7a6e61;font-size:10px;font-weight:800;vertical-align:1px}
+.sch-tag.work{background:#e8eef6;color:#4f6b8a}
+.sch-tag.family{background:#f7ecea;color:#a4645a}
+.sch-tag.personal{background:#eaf1ea;color:#547a5e}
+.sch-cb{width:26px;height:26px;border-radius:50%;border:1.5px solid #d3c8ba;background:transparent;display:grid;place-items:center;color:#fff;justify-self:center}
+.sch-cb.on{background:var(--sage);border-color:var(--sage)}
+.sch-cb svg{width:13px;height:13px}
+.sch-del{width:26px;height:26px;border:0;background:transparent;color:#c9beb0;display:grid;place-items:center;justify-self:center}
+.sch-del svg{width:14px;height:14px}
+
+/* ===== 批次 D 2026-10-24：记账理财 ===== */
+.money-wrap{max-width:960px;margin:0 auto;display:flex;flex-direction:column;gap:13px}
+.money-hero{background:var(--card);border:1px solid rgba(111,89,67,.12);border-radius:22px;padding:14px 15px 13px}
+.money-hero-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.money-hero-top h2{font-size:18px;font-weight:800;letter-spacing:-.01em;margin:2px 0 0}
+.money-export{display:inline-flex;align-items:center;gap:5px;height:31px;padding:0 11px;border:1px solid var(--line);border-radius:999px;background:transparent;font-size:11px;font-weight:700;color:#7a6e61}
+.money-export svg{width:13px;height:13px}
+.money-nums{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:11px}
+.mn{display:flex;flex-direction:column;gap:3px;min-width:0}
+.mn span{font-size:10.5px;color:var(--muted);font-weight:700}
+.mn b{font-size:18px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mn.is-exp b{color:#b65f42}
+.money-alert:empty{display:none}
+.money-alert{margin-top:10px;display:flex;align-items:center;gap:7px;padding:8px 11px;border-radius:12px;background:#fbe9e1;color:#a4543a;font-size:11px;font-weight:700;line-height:1.45}
+.money-alert.good{background:#eaf1ea;color:#547a5e}
+.money-compose{background:var(--card);border:1px solid rgba(111,89,67,.12);border-radius:22px;padding:14px 15px 15px;display:flex;flex-direction:column;gap:12px}
+.money-compose .segmented{margin:0}
+.pick-row{display:flex;align-items:flex-start;gap:8px}
+.pick-lb{flex:0 0 30px;padding-top:8px;font-size:11px;color:#9c9083;font-weight:800}
+.pick-chips{display:flex;gap:6px;flex-wrap:wrap;flex:1;min-width:0}
+.pick-chips button{height:31px;padding:0 11px;border:1px solid var(--line);border-radius:9px;background:transparent;font-size:11.5px;font-weight:700;color:#6f6459;white-space:nowrap}
+.pick-chips button.on{border-color:transparent;background:#3b3430;color:#fff}
+.pick-more{flex:0 0 auto;height:31px;padding:0 9px;border:0;border-radius:9px;background:#f2ece2;color:#7a6e61;font-size:10.5px;font-weight:800}
+.money-lastrow{display:flex;gap:8px;align-items:center}
+.mini-field{position:relative;display:inline-flex;align-items:center;gap:6px;flex:0 0 auto;height:42px;padding:0 11px;border:1px solid var(--line);border-radius:12px;background:#faf7f2;overflow:hidden}
+.mini-field svg{width:14px;height:14px;color:#9c9083;flex:none}
+.mini-field span{font-size:11.5px;font-weight:700;color:#5c534a;white-space:nowrap}
+.mini-field input{position:absolute;inset:0;width:100%;height:100%;opacity:0;border:0;padding:0}
+.money-note{flex:1;min-width:0;height:42px;border:1px solid var(--line);border-radius:12px;padding:0 12px;background:#faf7f2;font-size:11.5px}
+.money-card{background:var(--card);border:1px solid rgba(111,89,67,.12);border-radius:22px;padding:14px 15px 13px}
+.mc-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.mc-head h2{font-size:15.5px;font-weight:800;line-height:1.3;margin:2px 0 0}
+.mc-note{font-size:11px;color:var(--muted);font-weight:700;text-align:right;max-width:56%;line-height:1.45}
+.debt-top{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:12px;padding:11px 10px;border-radius:14px;background:#faf6f0}
+.debt-top>div{display:flex;flex-direction:column;gap:2px;min-width:0}
+.debt-top span{font-size:10px;color:var(--muted);font-weight:700}
+.debt-top b{font-size:16px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.debt-top small{font-size:9.5px;color:#a89d90}
+.debt-list{display:flex;flex-direction:column}
+.debt-list .fin-row{display:flex;align-items:center;gap:9px;padding:10px 0;border-bottom:1px solid #f1eae1;font-size:13px;min-height:44px}
+.debt-list .fin-row:last-child{border-bottom:0}
+.debt-list .fin-row .grow{flex:1;min-width:0}
+.debt-list .fin-row b{font-size:13.5px;font-weight:800}
+.debt-list .fin-row small{display:block;margin-top:1px;font-size:10.5px;color:#9a8f82}
+.debt-kind{flex:0 0 auto;padding:2px 7px;border-radius:6px;background:#f2ece2;color:#7a6e61;font-size:10px;font-weight:800}
+.acc-list{display:flex;flex-direction:column}
+.acc-row{display:flex;align-items:center;gap:9px;padding:10px 0;border-bottom:1px solid #f1eae1;min-height:46px}
+.acc-row:last-child{border-bottom:0}
+.acc-ic{flex:0 0 30px;width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:#f2ece2;color:#8a7f73}
+.acc-ic svg{width:14px;height:14px}
+.acc-row .grow{flex:1;min-width:0}
+.acc-row b{display:block;font-size:12.5px;font-weight:800}
+.acc-row small{display:block;font-size:10.5px;color:#9a8f82;margin-top:1px}
+.acc-del{flex:0 0 auto;width:28px;height:28px;border:0;background:transparent;color:#c9beb0;display:grid;place-items:center}
+.acc-del svg{width:14px;height:14px}
+.fin-note{margin:6px 0 0;font-size:11px;color:#9a8f82;line-height:1.5}
+.cat-filter{margin:10px 0 2px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+.cat-filter::-webkit-scrollbar{display:none}
+.cat-filter button{flex:0 0 auto}
+.record-list{overscroll-behavior:contain;overflow-x:hidden;overflow-y:auto;touch-action:pan-y;-webkit-overflow-scrolling:touch;max-height:520px}
+.money-row{display:flex;flex-direction:column;gap:13px}
+.money-compose .pick-chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.money-compose .pick-chips::-webkit-scrollbar{display:none}
+.money-compose .pick-chips button{flex:0 0 auto}
+.chart-legend .legend-item{border:0;background:transparent;padding:0;font:inherit;color:inherit;text-align:left;cursor:pointer}
+.money-card .fin-row small{display:block;margin-top:1px;font-size:10.5px;color:#9a8f82;line-height:1.45}
+@media(max-width:560px){
+  .sch-hero{padding:13px 12px 8px;border-radius:20px}
+  .sch-hero-t h2{font-size:17px}
+  .sch-nums{gap:10px}
+  .sch-nums b{font-size:16px}
+  .sch-nums i{font-size:9.5px}
+  .sch-day b{font-size:15px;width:27px;height:27px}
+  .sch-input{height:44px;padding:0 12px;border-radius:13px}
+  .money-hero,.money-compose,.money-card{border-radius:20px}
+  .mn b{font-size:16.5px}
+  .debt-top b{font-size:15px}
+  .pick-lb{flex:0 0 26px}
+}
+@media(min-width:960px){
+  .money-wrap{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:15px;align-items:start}
+  .money-hero{grid-column:1/-1}
+  .money-nums{display:flex;gap:64px}
+  .mn{flex:0 0 auto;min-width:96px}
+  .money-row{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:15px;align-items:start}
+  .sch-wrap{gap:15px}
+  .sch-item{grid-template-columns:62px minmax(0,1fr) 34px 30px;padding:12px 12px 12px 4px}
+  .sch-body b{font-size:14.5px}
+}
 </style>
   <div class="trainsheet" hidden id="trainSheet" role="dialog" aria-modal="true" aria-label="训练进行中">
     <header class="train-top">
@@ -2543,7 +2786,7 @@ body:has(.dashboard-grid.editing) .ai-fab{opacity:0;pointer-events:none;transfor
   function switchView(view){const target=document.getElementById(`view-${view}`);if(!target)return;if(view==='more'&&typeof renderMorePage==='function')renderMorePage();if(view==='memo'&&typeof renderMemos==='function')renderMemos();if(view==='band'&&typeof renderBand==='function')renderBand();if(view==='mymedia'&&typeof renderMyMedia==='function')renderMyMedia();if(view==='exlib'&&typeof renderFtExGrid==='function'){exdFillFilters(document.getElementById('ftExMuscle'),document.getElementById('ftExEquip'));renderFtExGrid();}document.querySelectorAll('.view').forEach(el=>el.classList.toggle('active',el===target));document.querySelectorAll('[data-nav]').forEach(el=>el.classList.toggle('active',el.dataset.nav===view));document.getElementById('viewTitle').textContent=target.dataset.title||'日常集';if(location.hash!==`#${view}`)history.replaceState(null,'',`#${view}`);scrollTo({top:0,behavior:'smooth'});if(typeof segSyncAll==='function')setTimeout(segSyncAll,60);}
   function formatDateHeading(value){if(value===isoDate())return t('今天');if(value===shiftDate(-1))return t('昨天');const date=new Date(`${value}T00:00:00`);return LANG==='en'?new Intl.DateTimeFormat('en-US',{month:'short',day:'numeric'}).format(date):`${date.getMonth()+1} 月 ${date.getDate()} 日`;}
   function titleFor(record){const d=record.data||{},local=value=>record.sample?translateText(value):value;if(record.type==='money')return d.note?local(d.note):t(d.category||'一笔收支');if(record.type==='planner')return d.title?local(d.title):t('一项日程');if(record.type==='fitness')return d.note?local(d.note):t('身体记录');if(record.type==='home')return d.name?local(d.name):t('待买物品');if(record.type==='vision')return d.text?String(d.text).slice(0,18):(d.kind==='text'?'图片文字':'图片识别');return t('生活记录');}
-  function detailFor(record){const d=record.data||{};if(record.type==='money')return`${t(d.category||'其他')} · ${t(d.flow==='income'?'收入':d.flow==='debt'?'负债':'支出')}`;if(record.type==='planner')return`${t(d.list||'生活')} · ${d.time||t('全天')} · ${t(d.done?'已完成':'待完成')}`;if(record.type==='fitness')return`${d.bodyFat?`${LANG==='en'?'Body fat':'体脂'} ${d.bodyFat}% · `:''}${d.duration||0} ${LANG==='en'?'min exercise':'分钟运动'}`;if(record.type==='home')return`${record.sample?translateText(d.quantity||'数量未填'):(d.quantity||t('数量未填'))} · ${t(d.category||'未分类')} · ${t(d.bought?'已买':'待买')}`;if(record.type==='vision')return d.kind==='text'?'拍照提取的文字 · 点击查看全文':'AI 看图描述';return'';}
+  function detailFor(record){const d=record.data||{};if(record.type==='money')return`${t(d.category||'其他')} · ${t(d.flow==='income'?'收入':d.flow==='debt'?'负债':'支出')}${d.accountName?' · '+d.accountName:''}`;if(record.type==='planner')return`${t(d.list||'生活')} · ${d.time||t('全天')} · ${t(d.done?'已完成':'待完成')}`;if(record.type==='fitness')return`${d.bodyFat?`${LANG==='en'?'Body fat':'体脂'} ${d.bodyFat}% · `:''}${d.duration||0} ${LANG==='en'?'min exercise':'分钟运动'}`;if(record.type==='home')return`${record.sample?translateText(d.quantity||'数量未填'):(d.quantity||t('数量未填'))} · ${t(d.category||'未分类')} · ${t(d.bought?'已买':'待买')}`;if(record.type==='vision')return d.kind==='text'?'拍照提取的文字 · 点击查看全文':'AI 看图描述';return'';}
   function valueFor(record){const d=record.data||{};if(record.type==='money')return`${d.flow==='income'?'+':d.flow==='debt'?'':'-'}${money(d.amount)}`;if(record.type==='fitness'&&d.weight)return`${d.weight} kg`;if(record.type==='planner')return d.time||'';if(record.type==='home')return d.price?money(d.price):'';return'';}
   function recordDetailHtml(record){if(record.type!=='home')return escapeHtml(detailFor(record));const d=record.data||{},quantity=record.sample?localizedHtml(d.quantity||'数量未填'):userHtml(d.quantity||t('数量未填'));return`${quantity} · ${localizedHtml(d.category||'未分类')} · ${t(d.bought?'已买':'待买')}`;}
   function recordTitleHtml(record){if(record.sample)return localizedHtml(titleFor(record));const raw=titleFor(record);const translated=translateText(raw);return translated!==raw?translated:userHtml(raw);}
@@ -2621,7 +2864,41 @@ body:has(.dashboard-grid.editing) .ai-fab{opacity:0;pointer-events:none;transfor
     if(!total){svg.innerHTML='<circle cx="110" cy="110" r="72" fill="#eee7df"/><text x="110" y="115" text-anchor="middle" fill="#8f8579" font-size="12">暂无支出</text>';legend.innerHTML='';return;}
     const circumference=2*Math.PI*72;let offset=0;
     svg.innerHTML=`<circle cx="110" cy="110" r="72" fill="none" stroke="#eee7df" stroke-width="34"/>`+entries.map(([category,value],index)=>{const length=value/total*circumference;const item=`<circle cx="110" cy="110" r="72" fill="none" stroke="${CATEGORY_COLORS[index%CATEGORY_COLORS.length]}" stroke-width="34" stroke-dasharray="${length} ${circumference-length}" stroke-dashoffset="${-offset}" transform="rotate(-90 110 110)"/>`;offset+=length;return item;}).join('')+`<circle cx="110" cy="110" r="40" fill="white" fill-opacity=".85"/><text x="110" y="102" text-anchor="middle" fill="#9a9288" font-size="10" font-weight="400">${t('本月支出')}</text><text x="110" y="124" text-anchor="middle" fill="#3d3830" font-size="20" font-weight="500" letter-spacing="-0.5">${escapeHtml(money(total))}</text>`;
-    legend.innerHTML=entries.map(([category,value],index)=>`<div class="legend-item"><i style="background:${CATEGORY_COLORS[index%CATEGORY_COLORS.length]}"></i><span>${escapeHtml(category)}</span><b>${Math.round(value/total*100)}%</b></div>`).join('');
+    const pcts=entries.map(([,v])=>v/total*100),rounded=pcts.map(p=>Math.floor(p));
+    let rest=100-rounded.reduce((a,b)=>a+b,0);
+    const order=pcts.map((p,i)=>[p,i]).sort((a,b)=>b[0]-a[0]);
+    for(let i=0;i<rest;i++)rounded[order[i%order.length][1]]++;
+    legend.innerHTML=entries.map(([category,value],index)=>`<button type="button" class="legend-item" data-mfilter="${escapeHtml(category)}"><i style="background:${CATEGORY_COLORS[index%CATEGORY_COLORS.length]}"></i><span>${escapeHtml(category)}</span><b>${rounded[index]}%</b></button>`).join('');
+  }
+  const ACC_KINDS=[['cash','现金'],['wechat','微信零钱'],['debit','储蓄卡'],['credit','信用卡'],['huabei','花呗'],['baitiao','白条'],['douyin','抖音月付'],['meituan','美团月付'],['loan','网贷'],['other','其他']];
+  const ACC_CREDIT=['credit','huabei','baitiao','douyin','meituan','loan'];
+  function accKindLabel(k){const f=ACC_KINDS.find(x=>x[0]===k);return f?f[1]:'其他';}
+  function accIsCredit(k){return ACC_CREDIT.indexOf(k)>-1;}
+  function ensureAccounts(fin){
+    if(!Array.isArray(fin.accounts)||!fin.accounts.length){
+      fin.accounts=[{id:'acc-wechat',name:'微信零钱',kind:'wechat'},{id:'acc-alipay',name:'支付宝',kind:'cash'},{id:'acc-bank',name:'银行卡',kind:'debit'}];
+      saveFin(fin);
+    }
+    return fin.accounts;
+  }
+  function renderMoneyCatChips(){
+    const box=document.getElementById('moneyCatChips');if(!box)return;
+    const sel=document.getElementById('moneyCategory');if(!sel)return;
+    const cats=Array.from(sel.options).map(o=>o.value);
+    const cur=sel.value||cats[0]||'';
+    box.innerHTML=cats.map(c=>`<button type="button" data-mcat="${escapeHtml(c)}" class="${c===cur?'on':''}">${escapeHtml(c)}</button>`).join('');
+  }
+  function renderMoneyAccChips(){
+    const box=document.getElementById('moneyAccChips');if(!box)return;
+    const fin=loadFin(),accs=ensureAccounts(fin);
+    const cur=(document.getElementById('moneyAccount')||{}).value||'';
+    box.innerHTML=accs.map(a=>`<button type="button" data-accid="${escapeHtml(a.id)}" class="${a.id===cur?'on':''}">${escapeHtml(a.name)}</button>`).join('');
+  }
+  function renderMoneyFilterChips(){
+    const box=document.getElementById('moneyCatFilter');if(!box)return;
+    const cats=[...new Set([...EXPENSE_CATEGORIES,...INCOME_CATEGORIES])];
+    const cur=state.settings.moneyFilter||'all';
+    box.innerHTML=`<button type="button" data-mfilter="all" class="${cur==='all'?'on':''}">全部</button>`+cats.map(c=>`<button type="button" data-mfilter="${escapeHtml(c)}" class="${cur===c?'on':''}">${escapeHtml(c)}</button>`).join('');
   }
   function renderMoney(){
     const month=isoDate().slice(0,7),prev=previousMonthKey(),records=sortedRecords('money');
@@ -2629,14 +2906,21 @@ body:has(.dashboard-grid.editing) .ai-fab{opacity:0;pointer-events:none;transfor
     const expense=sum(expenses,r=>r.data.amount),income=sum(monthly.filter(r=>r.data.flow==='income'),r=>r.data.amount),remain=income-expense;
     const prevExpense=sum(records.filter(r=>r.date.startsWith(prev)&&r.data.flow==='expense'),r=>r.data.amount);
     document.getElementById('moneyIncome').textContent=money(income);document.getElementById('moneyExpense').textContent=money(expense);document.getElementById('moneyBalance').textContent=money(remain);
+    const mt=document.getElementById('moneyMonthTitle');if(mt)mt.textContent=(new Date().getMonth()+1)+' 月';
     if(prevExpense){const diff=expense-prevExpense,pct=Math.abs(diff/prevExpense*100).toFixed(0);document.getElementById('monthCompare').textContent=`比上月${diff>=0?'多':'少'}花了 ${money(Math.abs(diff))}`;document.getElementById('monthCompareDetail').textContent=`${diff>=0?'↑':'↓'} ${pct}% · 上月 ${money(prevExpense)}`;}else{document.getElementById('monthCompare').textContent='暂无对比';document.getElementById('monthCompareDetail').textContent='有了上月数据后，这里会显示变化';}
     const used=state.settings.budget?Math.round(expense/state.settings.budget*100):0;document.getElementById('budgetInput').value=state.settings.budget;document.getElementById('budgetBar').style.width=`${Math.min(100,used)}%`;document.getElementById('budgetUsedText').textContent=`已使用 ${used}%`;document.getElementById('budgetRemainText').textContent=`剩余 ${money(state.settings.budget-expense)}`;
     const alert=document.getElementById('moneyAlert'),todayCount=records.filter(r=>r.date===isoDate()).length;
-    if(expense>state.settings.budget){alert.className='module-alert';alert.innerHTML=`<div><strong>本月支出已超预算 ${money(expense-state.settings.budget)}</strong><span>先看消费结构，再决定哪些支出可以放慢一点。</span></div>`;}else if(!todayCount){alert.className='module-alert good';alert.innerHTML='<div><strong>今天还没记账</strong><span>有空时补一笔，让月度趋势保持完整。</span></div>';}else if(state.settings.moneySinceExport>=20){alert.className='module-alert';alert.innerHTML='<div><strong>已新增 20 笔账目</strong><span>建议现在导出一次备份。</span></div>';}else alert.innerHTML='';
-    const categories=[...new Set([...EXPENSE_CATEGORIES,...INCOME_CATEGORIES])];
-    document.getElementById('moneyFilter').innerHTML='<option value="all">全部分类</option>'+categories.map(c=>`<option ${state.settings.moneyFilter===c?'selected':''}>${c}</option>`).join('');
-    const filtered=records.filter(r=>state.settings.moneyFilter==='all'||r.data.category===state.settings.moneyFilter);document.getElementById('moneyList').innerHTML=filtered.length?filtered.slice(0,60).map(recordRow).join(''):empty('这个分类还没有流水');
+    if(alert){
+      if(expense>state.settings.budget){alert.className='money-alert';alert.textContent='本月已超预算 '+money(expense-state.settings.budget)+'，先看消费结构。';}
+      else if(!todayCount){alert.className='money-alert good';alert.textContent='今天还没记账，有空补一笔。';}
+      else if(state.settings.moneySinceExport>=20){alert.className='money-alert';alert.textContent='已新增 20 笔账目，建议导出备份。';}
+      else{alert.className='money-alert';alert.textContent='';}
+    }
+    updateMoneyCategories();renderMoneyCatChips();renderMoneyAccChips();renderMoneyFilterChips();
+    const filtered=records.filter(r=>state.settings.moneyFilter==='all'||r.data.category===state.settings.moneyFilter);
+    document.getElementById('moneyList').innerHTML=filtered.length?filtered.slice(0,60).map(recordRow).join(''):empty('这个分类还没有流水');
     renderMoneyPie(expenses);
+    schSyncUI();
   }
 
   function habitTargetText(h,unit){
@@ -3384,7 +3668,7 @@ body:has(.dashboard-grid.editing) .ai-fab{opacity:0;pointer-events:none;transfor
   }
 
   const FIN_KEY='richangji-finance-v1';
-  function loadFin(){try{const o=JSON.parse(localStorage.getItem(FIN_KEY)||'{}');return{balance:o.balance||null,debts:Array.isArray(o.debts)?o.debts:[],expected:o.expected||null,plan:o.plan||null};}catch(e){return{balance:null,debts:[],expected:null,plan:null};}}
+  function loadFin(){try{const o=JSON.parse(localStorage.getItem(FIN_KEY)||'{}');return{balance:o.balance||null,debts:Array.isArray(o.debts)?o.debts:[],accounts:Array.isArray(o.accounts)?o.accounts:[],expected:o.expected||null,plan:o.plan||null};}catch(e){return{balance:null,debts:[],accounts:[],expected:null,plan:null};}}
   function saveFin(fin){try{localStorage.setItem(FIN_KEY,JSON.stringify(fin));}catch(e){toast('保存失败：存储空间不足');}}
   function finDisplayBalance(){const fin=loadFin();if(!fin.balance)return null;let bal=Number(fin.balance.amount)||0;const asOf=Number(fin.balance.asOf)||0;state.records.forEach(r=>{if(r.type!=='money'||(Number(r.createdAt)||0)<=asOf)return;const fl=r.data&&r.data.flow;if(fl==='debt')return;bal+=fl==='income'?Number(r.data.amount||0):-Number(r.data.amount||0);});return bal;}
   function finUpsertDebt(name,amount){const fin=loadFin();const nm=String(name||'欠款').slice(0,20);const hit=fin.debts.find(d=>d.name===nm||d.name.indexOf(nm)>-1||nm.indexOf(d.name)>-1);if(hit){hit.amount=Math.max(0,(Number(hit.amount)||0)+Number(amount||0));hit.updatedAt=Date.now();}else fin.debts.push({id:uid(),name:nm,amount:Math.max(0,Number(amount)||0),createdAt:Date.now()});saveFin(fin);}
@@ -3491,20 +3775,43 @@ body:has(.dashboard-grid.editing) .ai-fab{opacity:0;pointer-events:none;transfor
     const tgl=txt.querySelector('[data-ptgl]');
     if(tgl)tgl.addEventListener('click',()=>{const li=txt.querySelector('.pA-list');const open=li.hidden;li.hidden=!open;tgl.querySelector('em').textContent=open?'收起':'展开';});
   }
+  function debtKindOf(name){
+    const n=String(name||'');
+    if(/花呗/.test(n))return 'huabei';
+    if(/白条/.test(n))return 'baitiao';
+    if(/抖音/.test(n))return 'douyin';
+    if(/美团/.test(n))return 'meituan';
+    if(/信用卡/.test(n))return 'credit';
+    if(/借呗|网商|网贷|借款|分期|贷款/.test(n))return 'loan';
+    return 'other';
+  }
   function renderFinanceCard(){
-    const fin=loadFin();const bal=finDisplayBalance();const debtTotal=fin.debts.reduce((s,d)=>s+(Number(d.amount)||0),0);
+    const fin=loadFin();const accs=ensureAccounts(fin);const bal=finDisplayBalance();
+    const debtTotal=fin.debts.reduce((s,d)=>s+(Number(d.amount)||0),0);
+    const monthTotal=fin.debts.reduce((s,d)=>s+(Number(d.monthly)||0),0);
     const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
     set('finBal',bal==null?'未校准':money(bal));
     set('finBalNote',fin.balance?('上次校准 '+new Date(Number(fin.balance.asOf)).toLocaleDateString()+'，之后的收支已自动加减'):'对 AI 说「手上还有 2900」即可校准');
     set('finDebt',money(debtTotal));
     set('finDebtNote',fin.debts.length+' 笔欠款');
-    set('finNet',bal==null?'净可用 待校准':'净可用 '+money(bal-debtTotal));
+    set('debtMonthly',money(monthTotal));
+    set('finNet',bal==null?'待校准':money(bal-debtTotal));
     const list=document.getElementById('finDebtList');
-    if(list)list.innerHTML=fin.debts.length?fin.debts.map(d=>'<div class="fin-row"><span class="grow">'+escapeHtml(d.name)+'<small>欠 '+money(d.amount)+'</small></span><button class="text-btn" data-act="finDebtClear" data-id="'+escapeHtml(d.id)+'">还清了</button></div>').join(''):'<p class="zdesc" style="margin:6px 0 0">还没有负债记录。对 AI 说「抖音月付欠了 484.59」，会登记负债并自动算总欠款。</p>';
+    if(list)list.innerHTML=fin.debts.length?fin.debts.map(d=>{
+      const kind=d.kind||debtKindOf(d.name);
+      const meta=[d.monthly?('月供 '+money(d.monthly)):'',d.dueDay?('每月 '+d.dueDay+' 号还'):''].filter(Boolean).join(' · ');
+      return '<div class="fin-row"><span class="debt-kind">'+accKindLabel(kind)+'</span><span class="grow"><b>'+escapeHtml(d.name)+'</b><small>欠 '+money(d.amount)+(meta?' · '+meta:'')+'</small></span><button class="text-btn" data-act="finDebtClear" data-id="'+escapeHtml(d.id)+'">还清了</button></div>';
+    }).join(''):'<p class="zdesc" style="margin:8px 0 0">还没有负债。点右上角「记一笔」，把花呗、抖音月付、网贷都记进来。</p>';
+    const accBox=document.getElementById('accList');
+    if(accBox)accBox.innerHTML=accs.length?accs.map(a=>{
+      const credit=accIsCredit(a.kind);
+      return '<div class="acc-row"><span class="acc-ic">'+icon('i-wallet')+'</span><span class="grow"><b>'+escapeHtml(a.name)+'</b><small>'+accKindLabel(a.kind)+(credit?' · 记支出自动进负债':'')+'</small></span><button class="acc-del" type="button" data-act="accDel" data-id="'+escapeHtml(a.id)+'" aria-label="删除账户">'+icon('i-trash')+'</button></div>';
+    }).join(''):'<p class="zdesc" style="margin:8px 0 0">还没有账户，点右上角加一个。</p>';
     const exp=document.getElementById('finExpected');
     if(exp)exp.innerHTML=fin.expected?'<div class="fin-row" style="margin-top:6px"><span class="grow">预计 '+(fin.expected.date||'')+' 到账 '+money(fin.expected.amount)+(fin.expected.label?' · '+escapeHtml(fin.expected.label):'')+'<small>到账后点「已到账」，再对 AI 说「工资发了 xxx」记收入</small></span><button class="text-btn" data-act="finExpectedDone">已到账</button></div>':'';
     const box=document.getElementById('finPlanBox'),txt=document.getElementById('finPlanText');
     if(box&&txt){box.hidden=!fin.plan;renderFinPlanText(txt,fin);}
+    const pb=document.getElementById('finPlanBtn');if(pb)pb.hidden=!!fin.plan;
     set('dashFinNet',bal==null?'--':money(bal-debtTotal));
     set('dashFinNote',bal==null?'待校准':(fin.debts.length?('总欠款 '+money(debtTotal)+' · '+fin.debts.length+' 笔'):'无负债'));
   }
@@ -3862,13 +4169,153 @@ body:has(.dashboard-grid.editing) .ai-fab{opacity:0;pointer-events:none;transfor
   }
 
   function groupByDate(records){return records.reduce((groups,r)=>{(groups[r.date]||=[]).push(r);return groups;},{});}
+  let schDay='',schTouched={list:false,priority:false,date:false,time:false};
+  function schFilterKey(){const f=state.settings.plannerFilter||'all';return ['all','pending','overdue','done'].indexOf(f)>-1?f:'all';}
+  function schTagClass(list){return list==='工作'?'work':list==='家庭'?'family':list==='个人'?'personal':'';}
+  function schWeekday(date){const n=new Date(`${date}T00:00:00`);return ['周日','周一','周二','周三','周四','周五','周六'][n.getDay()];}
+  function schDateLabel(date){
+    if(!date)return '今天';
+    if(date===isoDate())return '今天';
+    if(date===shiftDate(1))return '明天';
+    if(date===shiftDate(2))return '后天';
+    return `${Number(date.slice(5,7))}/${Number(date.slice(8,10))}`;
+  }
+  function schParse(text){
+    const t2=String(text||''),out={list:'生活',priority:'normal',date:null,time:''};
+    if(/紧急|重要|必须|截止|尽快|马上|一定|别忘|最后|着急|急用|加急|急单|deadline|交稿|交片/.test(t2))out.priority='high';
+    else if(/有空|顺便|不急|改天|想起来|闲了/.test(t2))out.priority='low';
+    const LISTS=[
+      ['工作',/开会|会议|开个会|稿子|改稿|剪辑|剪片|交片|拍摄|客户|门店|上班|加班|方案|选题|文案|对接|汇报|项目|直播|同事|老板|录制|脚本|预算|排期|品牌号|凤姐|小林/g],
+      ['个人',/医院|挂号|体检|牙医|看牙|理发|健身|跑步|看病|拿药|面试|学习|上课|考试|考证|办证|银行|社保|医保|公积金|身份证/g],
+      ['家庭',/妈妈|爸爸|家里|亲戚|回家|礼物|生日|团圆|接人|家庭/g],
+      ['生活',/买菜|超市|做饭|洗衣|打扫|快递|取件|缴费|充电|生活|收拾|采购/g]
+    ];
+    let best=0;LISTS.forEach(([name,re])=>{const m=t2.match(re);const c=m?m.length:0;if(c>best){best=c;out.list=name;}});
+    if(/大后天/.test(t2))out.date=shiftDate(3);
+    else if(/后天/.test(t2))out.date=shiftDate(2);
+    else if(/明天|明早|明晚/.test(t2))out.date=shiftDate(1);
+    else if(/今天|今晚|今早/.test(t2))out.date=isoDate();
+    else{
+      const md=t2.match(/(\d{1,2})\s*月\s*(\d{1,2})\s*[日号]/);
+      const md2=t2.match(/(\d{1,2})\s*[日号]\s*(?=[上下晚中])/);
+      const wk=t2.match(/下周([一二三四五六日天])|周([一二三四五六日天])/);
+      if(md){out.date=`${new Date().getFullYear()}-${String(md[1]).padStart(2,'0')}-${String(md[2]).padStart(2,'0')}`;}
+      else if(md2){out.date=`${new Date().getFullYear()}-${String(new Date().getMonth()+1).padStart(2,'0')}-${String(md2[1]).padStart(2,'0')}`;}
+      else if(wk){
+        const w=(wk[1]||wk[2]).replace('天','日');
+        const map={'一':1,'二':2,'三':3,'四':4,'五':5,'六':6,'日':0},target=map[w];
+        const now=new Date();let diff=(target-now.getDay()+7)%7;if(diff===0)diff=7;if(wk[0])diff+=7;
+        out.date=shiftDate(diff);
+      }
+    }
+    const tm=t2.match(/(\d{1,2})\s*[点:：]\s*(\d{1,2})?/);
+    if(tm){
+      let h=Number(tm[1]);
+      if(/下午|晚上|傍晚|夜里|晚/.test(t2)&&h<12)h+=12;
+      if(/中午/.test(t2)&&h<11)h+=12;
+      if(h>=0&&h<24)out.time=String(h).padStart(2,'0')+':'+String(Math.min(59,Number(tm[2]||0))).padStart(2,'0');
+    }
+    return out;
+  }
+  function schStripTitle(t){
+    let s=String(t||'');
+    const pick=[
+      /^(大后天|后天|明天|明早|明晚|今天|今晚|今早)/,
+      /^(下周|这周|本周)?(周|星期)[一二三四五六日天]/,
+      /^\d{1,2}\s*月\s*\d{1,2}\s*[日号]/,
+      /^(上午|中午|下午|晚上|傍晚|夜里)/,
+      /^\d{1,2}\s*[点:：]\s*\d{0,2}\s*分?/
+    ];
+    for(let i=0;i<6;i++){
+      let changed=false;
+      for(const re of pick){const before=s;s=s.replace(re,'');if(s!==before)changed=true;}
+      s=s.replace(/^[,，、。:：\s]+/,'');
+      if(!changed)break;
+    }
+    s=s.replace(/\s+/g,' ').trim();
+    return s.length>=2?s:'';
+  }
+  function schSyncUI(){
+    const l=document.getElementById('schList'),p=document.getElementById('schPriority');
+    document.querySelectorAll('[data-schseg="list"] button').forEach(b=>b.classList.toggle('on',b.dataset.v===(l?l.value:'生活')));
+    document.querySelectorAll('[data-schseg="priority"] button').forEach(b=>b.classList.toggle('on',b.dataset.v===(p?p.value:'normal')));
+    const dv=(document.getElementById('schDate')||{}).value||isoDate();
+    document.querySelectorAll('[data-schday]').forEach(b=>b.classList.toggle('on',shiftDate(Number(b.dataset.schday))===dv));
+    const lbl=document.getElementById('schDateLbl');if(lbl)lbl.textContent=dv.slice(5).replace('-','/');
+    const mv=(document.getElementById('moneyDate')||{}).value,mlbl=document.getElementById('moneyDateLbl');
+    if(mlbl&&mv)mlbl.textContent=schDateLabel(mv);
+  }
+  function schRenderDetect(p){
+    const box=document.getElementById('schDetect');if(!box)return;
+    const raw=(document.getElementById('schTitle')||{}).value||'';
+    if(String(raw).trim().length<2){box.innerHTML='';return;}
+    const parts=[];
+    parts.push('<em>'+localizedHtml(p.list)+'</em>');
+    if(p.priority==='high')parts.push('<em class="hot">高优先级</em>');
+    else if(p.priority==='low')parts.push('<em>不急</em>');
+    if(p.date)parts.push('<em>'+escapeHtml(schDateLabel(p.date))+'</em>');
+    if(p.time)parts.push('<em>'+escapeHtml(p.time)+'</em>');
+    box.innerHTML='识别为 '+parts.join('');
+  }
+  function schApply(text){
+    const p=schParse(text),d=document.getElementById('schDate'),tm=document.getElementById('schTime'),l=document.getElementById('schList'),pr=document.getElementById('schPriority');
+    if(!schTouched.list&&l)l.value=p.list;
+    if(!schTouched.priority&&pr)pr.value=p.priority;
+    if(p.date&&!schTouched.date&&d)d.value=p.date;
+    if(p.time&&!schTouched.time&&tm)tm.value=p.time;
+    schSyncUI();schRenderDetect(p);
+  }
+  function schResetUI(){
+    schTouched={list:false,priority:false,date:false,time:false};
+    const l=document.getElementById('schList'),p=document.getElementById('schPriority'),d=document.getElementById('schDate'),tm=document.getElementById('schTime');
+    if(l)l.value='生活';if(p)p.value='normal';if(d)d.value=isoDate();if(tm)tm.value='';
+    const nh=document.getElementById('schNote'),ni=document.getElementById('schNoteInput');
+    if(nh)nh.value='';if(ni)ni.value='';
+    const det=document.getElementById('schDetect');if(det)det.innerHTML='';
+    const more=document.getElementById('schMore');if(more)more.hidden=true;
+    const mb=document.querySelector('.sch-morebtn');if(mb)mb.classList.remove('open');
+    schSyncUI();
+  }
+  function schItemRow(r){
+    const d=r.data||{},overdue=!d.done&&r.date<isoDate();
+    const rawTitle=String(d.title||''),rawNote=String(d.note||'');
+    const title=r.sample?(LANG==='en'&&d.titleEn?d.titleEn:localizedHtml(rawTitle)):userHtml(rawTitle);
+    const note=rawNote?(r.sample?localizedHtml(rawNote):userHtml(rawNote)):'';
+    const list=d.list||'生活';
+    const tail=[overdue?t('已逾期'):'',note].filter(Boolean).join(' · ');
+    return `<div class="sch-item ${d.done?'done':''} ${overdue?'overdue':''}">`
+      +`<div class="sch-rail"><span class="tm ${d.time?'':'all'}">${d.time?escapeHtml(d.time):t('全天')}</span><i class="${d.priority==='high'?'high':d.priority==='low'?'low':''}"></i></div>`
+      +`<div class="sch-body"><b>${title}</b><small><i class="sch-tag ${schTagClass(list)}">${localizedHtml(list)}</i>${tail}</small></div>`
+      +`<button class="sch-cb ${d.done?'on':''}" type="button" data-action="toggle-task" data-id="${r.id}" aria-label="${t('切换完成状态')}">${d.done?icon('i-check'):''}</button>`
+      +`<button class="sch-del" type="button" data-action="delete" data-id="${r.id}" aria-label="${t('删除')}">${icon('i-trash')}</button>`
+      +`</div>`;
+  }
   function renderPlanner(){
-    const records=sortedRecords('planner',true),today=isoDate(),weekEnd=shiftDate(6),filter=state.settings.plannerFilter;
-    document.getElementById('plannerToday').textContent=records.filter(r=>r.date===today&&!r.data.done).length;document.getElementById('plannerOverdue').textContent=records.filter(r=>r.date<today&&!r.data.done).length;document.getElementById('plannerWeek').textContent=records.filter(r=>r.date>=today&&r.date<=weekEnd&&!r.data.done).length;
-    document.getElementById('weekStrip').innerHTML=Array.from({length:7},(_,i)=>{const date=shiftDate(i),d=new Date(`${date}T00:00:00`),count=records.filter(r=>r.date===date&&!r.data.done).length,weekdays=LANG==='en'?['Sun','Mon','Tue','Wed','Thu','Fri','Sat']:['日','一','二','三','四','五','六'];return`<div class="week-day ${i===0?'today':''}"><span>${weekdays[d.getDay()]}</span><strong>${d.getDate()}</strong><small>${count?(LANG==='en'?`${count} items`:`${count} 项`):t('留白')}</small></div>`;}).join('');
-    document.querySelectorAll('[data-planner-filter]').forEach(b=>b.classList.toggle('active',b.dataset.plannerFilter===filter));
-    const filtered=records.filter(r=>filter==='all'||(filter==='today'&&r.date===today&&!r.data.done)||(filter==='scheduled'&&r.date>=today&&!r.data.done)||(filter==='done'&&r.data.done));const groups=groupByDate(filtered);
-    document.getElementById('plannerList').innerHTML=Object.keys(groups).length?Object.entries(groups).map(([date,items],i)=>`<details class="date-group" ${i<3?'open':''}><summary><strong>${formatDateHeading(date)}</strong><span>${items.filter(x=>!x.data.done).length} 件待完成</span></summary><div class="group-body">${items.map(r=>taskRow(r,true)).join('')}</div></details>`).join(''):empty('这个智能清单里暂时没有事项');
+    const records=sortedRecords('planner',true),today=isoDate(),weekEnd=shiftDate(6),filter=schFilterKey();
+    document.getElementById('plannerToday').textContent=records.filter(r=>r.date===today&&!r.data.done).length;
+    document.getElementById('plannerOverdue').textContent=records.filter(r=>r.date<today&&!r.data.done).length;
+    document.getElementById('plannerWeek').textContent=records.filter(r=>r.date>=today&&r.date<=weekEnd&&!r.data.done).length;
+    const mh=document.getElementById('schMonthTitle');
+    if(mh){const n=new Date();mh.textContent=`${n.getMonth()+1} 月 ${n.getDate()} 日 ${schWeekday(isoDate())}`;}
+    const strip=document.getElementById('weekStrip');
+    if(strip)strip.innerHTML=Array.from({length:7},(_,i)=>{
+      const date=shiftDate(i),dt=new Date(`${date}T00:00:00`),cnt=records.filter(r=>r.date===date&&!r.data.done).length;
+      const wd=i===0?'今天':i===1?'明天':schWeekday(date);
+      return `<button type="button" class="sch-day ${i===0?'today':''} ${schDay===date?'sel':''} ${cnt?'has':''}" data-schpick="${date}"><span>${wd}</span><b>${dt.getDate()}</b><i></i></button>`;
+    }).join('');
+    document.querySelectorAll('[data-planner-filter]').forEach(b=>b.classList.toggle('on',b.dataset.plannerFilter===filter));
+    const cd=document.getElementById('schClearDay');if(cd)cd.hidden=!schDay;
+    const list=records.filter(r=>{
+      if(schDay&&r.date!==schDay)return false;
+      if(filter==='pending')return !r.data.done;
+      if(filter==='overdue')return !r.data.done&&r.date<today;
+      if(filter==='done')return !!r.data.done;
+      return true;
+    }).sort((a,b)=>{const dc=a.date.localeCompare(b.date);if(dc)return dc;const at=a.data.time||'',bt=b.data.time||'';if(at&&bt)return at.localeCompare(bt);if(at)return 1;if(bt)return -1;return 0;});
+    const groups=groupByDate(list);
+    document.getElementById('plannerList').innerHTML=Object.keys(groups).length
+      ?Object.entries(groups).map(([date,items])=>`<div class="sch-group"><div class="sch-ghead">${formatDateHeading(date)}<span class="n">${items.filter(x=>!x.data.done).length} 件待完成</span></div>${items.map(schItemRow).join('')}</div>`).join('')
+      :empty(schDay?'这一天没有安排':'这里暂时没有事项');
   }
 
   function renderHome(){
@@ -5356,7 +5803,7 @@ body:has(.dashboard-grid.editing) .ai-fab{opacity:0;pointer-events:none;transfor
   function setDateDefaults(){document.querySelectorAll('input[type="date"][name="date"]').forEach(input=>{if(!input.value)input.value=isoDate();});}
   function serializeForm(form){const values={};Array.from(form.elements).forEach(field=>{if(!field.name||field.type==='submit'||(field.type==='radio'&&!field.checked))return;values[field.name]=field.type==='checkbox'?field.checked:field.value;});return values;}
   function restoreDrafts(){document.querySelectorAll('form[data-draft]').forEach(form=>{const draft=state.drafts[form.dataset.draft];if(!draft)return;Object.entries(draft).forEach(([name,value])=>form.querySelectorAll(`[name="${CSS.escape(name)}"]`).forEach(field=>{if(field.type==='radio')field.checked=field.value===value;else if(field.type==='checkbox')field.checked=Boolean(value);else field.value=value;}));});updateMoneyCategories();}
-  function clearDraft(form){delete state.drafts[form.dataset.draft];form.reset();setDateDefaults();updateMoneyCategories();saveState();}
+  function clearDraft(form){delete state.drafts[form.dataset.draft];form.reset();setDateDefaults();updateMoneyCategories();if(typeof schResetUI==='function')schResetUI();if(typeof renderMoneyAccChips==='function')renderMoneyAccChips();saveState();}
   function updateMoneyCategories(){const form=document.getElementById('moneyForm'),flow=form?.querySelector('[name="flow"]:checked')?.value||'expense',select=document.getElementById('moneyCategory');if(!select)return;const current=select.value,categories=flow==='income'?INCOME_CATEGORIES:EXPENSE_CATEGORIES;select.innerHTML=categories.map(c=>`<option ${c===current?'selected':''}>${c}</option>`).join('');}
 
   const SNAP_PREFIX=STORAGE_KEY+'-snapshot-';
@@ -5434,9 +5881,9 @@ body:has(.dashboard-grid.editing) .ai-fab{opacity:0;pointer-events:none;transfor
   function bindForms(){
     document.querySelectorAll('form[data-draft]').forEach(form=>form.addEventListener('input',()=>{state.drafts[form.dataset.draft]=serializeForm(form);const saved=saveState(true);const status=document.querySelector(`[data-draft-for="${form.dataset.draft}"]`);if(status){status.textContent=saved?'草稿已保存':'草稿保存失败';if(saved)setTimeout(()=>status.textContent='草稿自动保存',900);}}));
     document.getElementById('moneyForm').addEventListener('change',e=>{if(e.target.name==='flow')updateMoneyCategories();});
-    document.getElementById('moneyForm').addEventListener('submit',e=>{e.preventDefault();const data=Object.fromEntries(new FormData(e.currentTarget));if(!(Number(data.amount)>0))return toast('请输入有效金额');if(addRecord('money',data.date,{flow:data.flow,amount:Number(data.amount),category:data.category,note:data.note.trim()}))clearDraft(e.currentTarget);});
+    document.getElementById('moneyForm').addEventListener('submit',e=>{e.preventDefault();const data=Object.fromEntries(new FormData(e.currentTarget));if(!(Number(data.amount)>0))return toast('请输入有效金额');const fin=loadFin();const acc=(fin.accounts||[]).find(a=>a.id===data.account)||null;const payload={flow:data.flow,amount:Number(data.amount),category:data.category,note:(data.note||'').trim()};if(acc){payload.account=acc.id;payload.accountName=acc.name;}if(addRecord('money',data.date,payload)){if(acc&&accIsCredit(acc.kind)&&data.flow==='expense')chargeCredit(acc,Number(data.amount));clearDraft(e.currentTarget);}});
     document.getElementById('fitnessForm').addEventListener('submit',e=>{e.preventDefault();const data=Object.fromEntries(new FormData(e.currentTarget));if(!(Number(data.weight)>0))return toast('请记录今天的体重');if(addRecord('fitness',data.date,{weight:Number(data.weight),bodyFat:data.bodyFat?Number(data.bodyFat):null,calories:Number(data.calories||0),duration:Number(data.duration||0),note:data.note.trim()}))clearDraft(e.currentTarget);});
-    document.getElementById('plannerForm').addEventListener('submit',e=>{e.preventDefault();const data=Object.fromEntries(new FormData(e.currentTarget));if(addRecord('planner',data.date,{title:data.title.trim(),time:data.time,priority:data.priority,list:data.list,note:data.note.trim(),remind:data.remind==='1',done:false}))clearDraft(e.currentTarget);});
+    document.getElementById('plannerForm').addEventListener('submit',e=>{e.preventDefault();const data=Object.fromEntries(new FormData(e.currentTarget));let title=String(data.title||'').trim();if(!title)return;title=schStripTitle(title)||title;if(addRecord('planner',data.date,{title:title,time:data.time||'',priority:data.priority||'normal',list:data.list||'生活',note:(data.note||'').trim(),remind:data.remind==='1',done:false}))clearDraft(e.currentTarget);});
     document.getElementById('homeForm').addEventListener('submit',e=>{e.preventDefault();const data=Object.fromEntries(new FormData(e.currentTarget));if(addRecord('home',isoDate(),{name:data.name.trim(),quantity:data.quantity.trim(),category:data.category,price:Number(data.price||0),priority:data.priority,note:data.note.trim(),bought:false}))clearDraft(e.currentTarget);});
     document.getElementById('mediaCoverInput').addEventListener('change',async e=>{const[file]=e.target.files;if(!file)return;if(file.size>12*1024*1024){toast('封面图片请控制在 12MB 以内');e.target.value='';return;}try{pendingMediaCover=await compressCover(file);const preview=document.getElementById('mediaCoverPreview');preview.style.backgroundImage=`url(${pendingMediaCover})`;preview.closest('.cover-upload').classList.add('has-cover');toast('封面已压缩，可以保存了');}catch(error){toast(error.message);resetMediaCover();}});
     document.getElementById('mediaForm').addEventListener('submit',e=>{e.preventDefault();const data=Object.fromEntries(new FormData(e.currentTarget));var newItem={id:uid(),name:data.name.trim(),type:data.type,status:data.status,rating:Number(data.rating||0),review:data.review.trim(),date:data.date,cover:pendingMediaCover,sample:false};state.mediaItems.push(newItem);pushMedia(newItem);state.settings.recordsSinceExport=Number(state.settings.recordsSinceExport||0)+1;const saved=saveState(true);renderAll();if(saved){clearDraft(e.currentTarget);resetMediaCover();toast('已加入书影音清单');}});
@@ -5678,6 +6125,107 @@ body:has(.dashboard-grid.editing) .ai-fab{opacity:0;pointer-events:none;transfor
   function updateHabit(id,operation,value){const h=state.habits.find(x=>x.id===id);if(!h)return;const today=isoDate(),current=Number(h.entries[today]||0);if(operation==='plus')h.entries[today]=current+1;if(operation==='minus')h.entries[today]=Math.max(0,current-1);if(operation==='toggle')h.entries[today]=habitDone(h)?0:1;if(operation==='quick')h.entries[today]=habitDone(h)?0:Number(h.target||1);if(operation==='number')h.entries[today]=clamp(Number(value||0),0,9999);pushHabit(h,today);const justDone=habitDone(h),saved=saveState();renderAll();if(saved&&justDone){celebrate();const name=HABIT_DEFS.some(def=>def.key===h.key)||h.sample?translateText(h.name):h.name;toast(LANG==='en'?`${name} completed — nicely done`:`${h.name}，完成得漂亮`);}}
   function toggleTask(id){const task=state.records.find(r=>r.id===id&&r.type==='planner');if(!task)return;task.data.done=!task.data.done;updateRemotePlan(task);const saved=saveState();renderAll();if(saved&&task.data.done){celebrate();toast('完成一项，心里轻一点');}}
 
+  /* ===== 批次 D：日程快录 + 账户负债 ===== */
+  let debtKindPick='other',accKindPick='cash';
+  const DEBT_KINDS=[['huabei','花呗'],['baitiao','白条'],['douyin','抖音月付'],['meituan','美团月付'],['credit','信用卡'],['loan','网贷'],['other','其他']];
+  function kindChips(box,attr,pick,onPick,list){
+    if(!box)return;
+    const arr=list||ACC_KINDS;
+    box.innerHTML=arr.map(k=>`<button type="button" ${attr}="${k[0]}" class="${k[0]===pick?'on':''}">${k[1]}</button>`).join('');
+    box.onclick=e=>{const b=e.target.closest('['+attr+']');if(!b)return;box.querySelectorAll('['+attr+']').forEach(x=>x.classList.toggle('on',x===b));onPick(b.getAttribute(attr));};
+  }
+  function openDebtSheet(){
+    const sh=document.getElementById('debtSheet');if(!sh)return;
+    const set=(id,v)=>{const el=document.getElementById(id);if(el)el.value=v;};
+    set('debtName','');set('debtAmount','');set('debtMonthlyIn','');set('debtDueIn','');
+    debtKindPick='other';
+    kindChips(document.getElementById('debtKindChips'),'data-dkind',debtKindPick,v=>{debtKindPick=v;},DEBT_KINDS);
+    sh.hidden=false;
+  }
+  function openAccSheet(){
+    const sh=document.getElementById('accSheet');if(!sh)return;
+    const n=document.getElementById('accName');if(n)n.value='';
+    accKindPick='cash';
+    kindChips(document.getElementById('accKindChips'),'data-akind',accKindPick,v=>{accKindPick=v;});
+    sh.hidden=false;
+  }
+  function closeSheets(){['debtSheet','accSheet'].forEach(id=>{const el=document.getElementById(id);if(el)el.hidden=true;});}
+  function saveDebtSheet(){
+    const name=String((document.getElementById('debtName')||{}).value||'').trim();
+    const amount=Number((document.getElementById('debtAmount')||{}).value);
+    if(!name){toast('先写个名字');return;}
+    if(!(amount>0)){toast('金额要大于 0');return;}
+    const fin=loadFin();
+    fin.debts.unshift({id:uid(),name:name.slice(0,20),amount:amount,kind:debtKindPick,monthly:Number((document.getElementById('debtMonthlyIn')||{}).value)||0,dueDay:Number((document.getElementById('debtDueIn')||{}).value)||0,createdAt:Date.now()});
+    saveFin(fin);closeSheets();renderFinanceCard();toast('已记进负债');
+  }
+  function saveAccSheet(){
+    const name=String((document.getElementById('accName')||{}).value||'').trim();
+    if(!name){toast('先写个名字');return;}
+    const fin=loadFin();ensureAccounts(fin);
+    fin.accounts.push({id:uid(),name:name.slice(0,20),kind:accKindPick});
+    saveFin(fin);closeSheets();renderFinanceCard();renderMoneyAccChips();toast('账户已加上');
+  }
+  function delAcc(id){
+    const fin=loadFin();
+    fin.accounts=fin.accounts.filter(a=>a.id!==id);
+    saveFin(fin);renderFinanceCard();renderMoneyAccChips();
+  }
+  function chargeCredit(acc,amount){
+    const fin=loadFin();
+    let d=fin.debts.find(x=>x.accId===acc.id);
+    if(!d)d=fin.debts.find(x=>!x.accId&&String(x.name||'')===String(acc.name||''));
+    if(!d){d={id:uid(),name:acc.name,amount:0,kind:acc.kind,accId:acc.id,monthly:0,dueDay:0,createdAt:Date.now()};fin.debts.push(d);}
+    if(!d.accId)d.accId=acc.id;
+    d.amount=Math.round((Number(d.amount||0)+amount)*100)/100;
+    d.kind=d.kind||acc.kind;
+    saveFin(fin);renderFinanceCard();
+    toast('已记进「'+acc.name+'」欠款');
+  }
+  function bindBatchD(){
+    const title=document.getElementById('schTitle');
+    if(title)title.addEventListener('input',()=>schApply(title.value));
+    const pform=document.getElementById('plannerForm');
+    if(pform){
+      pform.addEventListener('click',e=>{
+        const day=e.target.closest('[data-schday]');
+        if(day){schTouched.date=true;const d=document.getElementById('schDate');if(d)d.value=shiftDate(Number(day.dataset.schday));schSyncUI();schRenderDetect(schParse((document.getElementById('schTitle')||{}).value||''));return;}
+        const seg=e.target.closest('[data-schseg] button');
+        if(seg){const wrap=seg.closest('[data-schseg]'),field=wrap.dataset.schseg,hidden=document.getElementById(field==='list'?'schList':'schPriority');if(hidden)hidden.value=seg.dataset.v;schTouched[field]=true;schSyncUI();return;}
+        const mb=e.target.closest('[data-act="schMore"]');
+        if(mb){const m=document.getElementById('schMore');if(m){m.hidden=!m.hidden;mb.classList.toggle('open',!m.hidden);}return;}
+      });
+      pform.addEventListener('change',e=>{
+        if(e.target.id==='schDate'){schTouched.date=true;schSyncUI();}
+        if(e.target.id==='schTime'){schTouched.time=true;}
+      });
+    }
+    const ni=document.getElementById('schNoteInput');
+    if(ni)ni.addEventListener('input',()=>{const h=document.getElementById('schNote');if(h)h.value=ni.value;});
+    const strip=document.getElementById('weekStrip');
+    if(strip)strip.addEventListener('click',e=>{const b=e.target.closest('[data-schpick]');if(!b)return;schDay=schDay===b.dataset.schpick?'':b.dataset.schpick;renderPlanner();});
+    const catBox=document.getElementById('moneyCatChips');
+    if(catBox)catBox.addEventListener('click',e=>{const b=e.target.closest('[data-mcat]');if(!b)return;const sel=document.getElementById('moneyCategory');if(sel)sel.value=b.dataset.mcat;catBox.querySelectorAll('[data-mcat]').forEach(x=>x.classList.toggle('on',x===b));});
+    const accBox=document.getElementById('moneyAccChips');
+    if(accBox)accBox.addEventListener('click',e=>{const b=e.target.closest('[data-accid]');if(!b)return;const h=document.getElementById('moneyAccount');const cur=h?h.value:'';const next=cur===b.dataset.accid?'':b.dataset.accid;if(h)h.value=next;accBox.querySelectorAll('[data-accid]').forEach(x=>x.classList.toggle('on',x.dataset.accid===next&&next!==''));});
+    const pickFilter=code=>{state.settings.moneyFilter=code;saveState(true);renderMoney();};
+    const filterBox=document.getElementById('moneyCatFilter');
+    if(filterBox)filterBox.addEventListener('click',e=>{const b=e.target.closest('[data-mfilter]');if(b)pickFilter(b.dataset.mfilter);});
+    const legend=document.getElementById('moneyLegend');
+    if(legend)legend.addEventListener('click',e=>{const b=e.target.closest('[data-mfilter]');if(b)pickFilter(b.dataset.mfilter);});
+    const md=document.getElementById('moneyDate');if(md)md.addEventListener('change',schSyncUI);
+    document.addEventListener('click',e=>{
+      const b=e.target.closest('[data-act]');if(!b)return;
+      const act=b.dataset.act;
+      if(act==='walletManage'||act==='walletAdd')openAccSheet();
+      else if(act==='debtAdd')openDebtSheet();
+      else if(act==='debtSave')saveDebtSheet();
+      else if(act==='accSave')saveAccSheet();
+      else if(act==='accDel')delAcc(b.dataset.id);
+      else if(act==='sheetClose')closeSheets();
+      else if(act==='schClearDay'){schDay='';renderPlanner();}
+    });
+  }
   function bindEvents(){
     document.getElementById('brandSettingsBtn').addEventListener('click',openBrandSettings);
     document.getElementById('brandForm').addEventListener('input',updateBrandPreview);
@@ -5718,7 +6266,7 @@ body:has(.dashboard-grid.editing) .ai-fab{opacity:0;pointer-events:none;transfor
     document.getElementById('budgetInput').addEventListener('change',e=>{state.settings.budget=Math.max(0,Number(e.target.value||0));const saved=saveState();renderAll();if(saved)toast('月度预算已更新');});
     const bkFreq=document.getElementById('bkFreqSel');
     if(bkFreq)bkFreq.addEventListener('change',()=>{try{localStorage.setItem('richangji-backup-freq',bkFreq.value);}catch(e){}renderBackupHint();toast('备份提醒频率已更新');});
-    document.getElementById('moneyFilter').addEventListener('change',e=>{state.settings.moneyFilter=e.target.value;saveState();renderMoney();});
+    const mfEl=document.getElementById('moneyFilter');if(mfEl)mfEl.addEventListener('change',e=>{state.settings.moneyFilter=e.target.value;saveState();renderMoney();});
     document.getElementById('plannerFilters').addEventListener('click',e=>{const b=e.target.closest('[data-planner-filter]');if(!b)return;state.settings.plannerFilter=b.dataset.plannerFilter;saveState();renderPlanner();});
     document.getElementById('shoppingFilters').addEventListener('click',e=>{const b=e.target.closest('[data-shopping-filter]');if(!b)return;state.settings.shoppingFilter=b.dataset.shoppingFilter;saveState();renderHome();});
     document.getElementById('archiveFilters').addEventListener('click',e=>{const b=e.target.closest('[data-filter]');if(!b)return;state.settings.archiveFilter=b.dataset.filter;saveState();renderArchive();});
@@ -5835,7 +6383,7 @@ body:has(.dashboard-grid.editing) .ai-fab{opacity:0;pointer-events:none;transfor
     const target=document.getElementById('view-dashboard');
     if(target&&window.MutationObserver)new MutationObserver(sync).observe(target,{attributes:true,attributeFilter:['class']});
   }
-  function init(){const now=new Date(),weekdays=['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];document.getElementById('todayLabel').textContent=LANG==='en'?new Intl.DateTimeFormat('en-US',{month:'long',day:'numeric',weekday:'long'}).format(now):`${now.getMonth()+1} 月 ${now.getDate()} 日 · ${weekdays[now.getDay()]}`;setDateDefaults();updateMoneyCategories();restoreDrafts();bindForms();bindEvents();dashApplySize();dashApplyOrder();dashWatchView();bandSyncApply(false);setInterval(()=>bandSyncApply(false),30*60*1000);const debtFixed=migrateDebtFlow();renderAll();renderAiStatus();checkDueReminders();renderFinanceCard();if(debtFixed)setTimeout(function(){toast('已把 '+debtFixed+' 笔「欠款」从支出改为负债，不再计入本月支出');},600);var aiInp=document.getElementById('aiInput');if(aiInp)aiInp.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();aiSend();}});switchView(document.getElementById(`view-${location.hash.slice(1)}`)?location.hash.slice(1):'dashboard');if(!dataCorrupted)saveState();pullAllRemote(function(ok){ if(ok){ saveState(); renderAll(); } });}
+  function init(){const now=new Date(),weekdays=['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];document.getElementById('todayLabel').textContent=LANG==='en'?new Intl.DateTimeFormat('en-US',{month:'long',day:'numeric',weekday:'long'}).format(now):`${now.getMonth()+1} 月 ${now.getDate()} 日 · ${weekdays[now.getDay()]}`;setDateDefaults();updateMoneyCategories();restoreDrafts();bindForms();bindEvents();if(typeof bindBatchD==='function')bindBatchD();dashApplySize();dashApplyOrder();dashWatchView();bandSyncApply(false);setInterval(()=>bandSyncApply(false),30*60*1000);const debtFixed=migrateDebtFlow();renderAll();renderAiStatus();checkDueReminders();renderFinanceCard();if(debtFixed)setTimeout(function(){toast('已把 '+debtFixed+' 笔「欠款」从支出改为负债，不再计入本月支出');},600);var aiInp=document.getElementById('aiInput');if(aiInp)aiInp.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();aiSend();}});switchView(document.getElementById(`view-${location.hash.slice(1)}`)?location.hash.slice(1):'dashboard');if(!dataCorrupted)saveState();pullAllRemote(function(ok){ if(ok){ saveState(); renderAll(); } });}
   startI18n();
   document.addEventListener('DOMContentLoaded',init);
 })();
