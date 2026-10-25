@@ -1779,9 +1779,10 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
 /* 尺寸三档：S = 四栏（三分之一），M = 八栏（三分之二），L = 整行。桌面走 12 栏换算。
    默认跨度沿用原排版，用户改过就存 settings.dashSpan，不再按卡片类硬编码。 */
 @media(min-width:1181px){
-  .dashboard-grid>article[data-dspan="4"]{grid-column:span 4}
-  .dashboard-grid>article[data-dspan="8"]{grid-column:span 8}
-  .dashboard-grid>article[data-dspan="12"]{grid-column:1/-1}
+  /* ID 前缀提权：压过 550/553/554 三条 ID 级跨度规则，让 todo / recent / backup 也吃 dspan */
+  #view-dashboard .dashboard-grid>article[data-dspan="4"]{grid-column:span 4}
+  #view-dashboard .dashboard-grid>article[data-dspan="8"]{grid-column:span 8}
+  #view-dashboard .dashboard-grid>article[data-dspan="12"]{grid-column:1/-1}
 }
 /* 手机：两列节奏。s 占半宽做紧凑卡，m / l 整行 */
 @media(max-width:860px){
@@ -1800,6 +1801,14 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   .dashboard-grid>article.stat-card[data-dsize="s"] small{display:block;margin-top:2px;font-size:10px;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .dashboard-grid>article[data-dsize="s"]#backupHint{grid-column:1/-1}
 }
+/* ===== 甲案落地 2026-10-25：三档高度制。只对用户显式点过 S/M/L（带 data-dspan）的卡生效，
+   默认排版的卡一概不动，保持既有观感。S=半宽120px / M=半宽216px / L=整行且不低于216px。 ===== */
+@media(max-width:860px){
+  .dashboard-grid>article[data-dspan="4"]{grid-column:span 1;height:120px;overflow:hidden}
+  .dashboard-grid>article[data-dspan="8"]{grid-column:span 1;height:216px;overflow:hidden}
+  .dashboard-grid>article[data-dspan="12"]{grid-column:1/-1;min-height:216px}
+  .dashboard-grid>article[data-dspan="4"]#backupHint{height:auto}
+}
 /* iOS 风编辑态：轻微抖动 + 卡片顶部预留一条浮层工具行。
    工具行绝对定位，不参与卡片内部布局，所以 stat-card 这种横向 flex 卡也不会被挤变形。 */
 .dashboard-grid.editing>article{outline:0;padding-top:64px;box-shadow:0 0 0 1.5px rgba(146,116,138,.4),0 12px 28px rgba(77,48,69,.1);animation:dsWobble 2.6s ease-in-out infinite}
@@ -1807,20 +1816,27 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
 .dashboard-grid.editing>article:nth-child(3n){animation-delay:-1.3s}
 @keyframes dsWobble{0%,100%{transform:rotate(-.26deg)}50%{transform:rotate(.26deg)}}
 @media(prefers-reduced-motion:reduce){.dashboard-grid.editing>article{animation:none}}
-/* 编辑态保持原排版（半宽卡不跳成整行）；窄卡隐藏上移/下移，手机端隐藏 M 档（2 列下 M/L 无差别） */
-@media(max-width:860px){.dashboard-grid.editing>article{padding-top:48px}.dashboard-grid.editing>article[data-dsize="s"],.dashboard-grid.editing>article.dh-narrow{padding-top:44px}.dashboard-grid.editing>article.dh-narrow .dh-order{display:none}.dh-size button[data-size="8"]{display:none}}
-.dh-move{position:absolute;left:0;top:0;right:0;display:flex;align-items:center;gap:7px;padding:14px 22px 0;z-index:6}
-@media(max-width:860px){.dh-move{padding:11px 14px 0}}
+/* 编辑态保持原排版（半宽卡不跳成整行）；手机端 M 档解禁（高度制下三档都有区别） */
+@media(max-width:860px){.dashboard-grid.editing>article{padding-top:56px}}
+.dh-move{position:absolute;left:0;top:0;right:0;display:flex;align-items:center;gap:6px;padding:12px 14px 0;z-index:6;flex-wrap:wrap}
+@media(max-width:860px){.dh-move{padding:8px 6px 0;gap:4px}}
 /* 排版编辑时收起 AI 悬浮球，否则它会压住卡片右上角的 S / M / L */
 body:has(.dashboard-grid.editing) .ai-fab{opacity:0;pointer-events:none;transform:scale(.8)}
-.dh-min{width:26px;height:26px;flex:none;padding:0;border:0;border-radius:50%;background:#3b3430;color:#fff;display:grid;place-items:center;cursor:pointer;box-shadow:0 2px 6px rgba(24,20,18,.24)}
+.dh-min{width:28px;height:38px;flex:none;padding:0;border:0;border-radius:10px;background:#3b3430;color:#fff;display:grid;place-items:center;cursor:pointer;box-shadow:0 2px 6px rgba(24,20,18,.24)}
 .dh-min svg{width:12px;height:12px}
-.dh-order{display:flex;gap:5px;flex:none}
-.dh-order button{width:32px;height:26px;padding:0;border:1px solid rgba(31,26,22,.13);border-radius:8px;background:#fff;color:#6f6459;display:grid;place-items:center;cursor:pointer}
-.dh-order svg{width:13px;height:13px}
-.dh-size{display:flex;gap:5px;margin-left:auto;flex:none}
-.dh-size button{width:26px;height:26px;padding:0;border:1px solid rgba(31,26,22,.13);border-radius:50%;background:#fff;color:#6f6459;font:inherit;font-size:10px;font-weight:800;line-height:1;display:grid;place-items:center;cursor:pointer}
+/* 拖动握把：touch-action none，从这里起拖不被页面滚动抢走 */
+.dh-grip{width:36px;height:38px;flex:none;padding:0;border:0;border-radius:10px;background:var(--ink);color:#f3ecdd;display:grid;place-items:center;cursor:grab;touch-action:none}
+.dh-grip svg{width:15px;height:15px}
+.dh-grip:active{cursor:grabbing}
+@media(max-width:860px){.dh-grip{width:34px}}
+/* 拖动落位占位框 + 浮起卡；编辑态网格做坐标锚 */
+.dcard-ph{border:1.5px dashed #b7a892;border-radius:var(--radius);background:rgba(180,166,140,.08)}
+.dashboard-grid.editing{position:relative}
+.dashboard-grid>article.dcard-drag{position:absolute;z-index:20;box-shadow:0 18px 44px rgba(41,37,31,.28);transform:scale(1.02);animation:none;cursor:grabbing}
+.dh-size{display:flex;gap:4px;margin-left:auto;flex:none}
+.dh-size button{min-width:26px;height:38px;padding:0;border:1px solid rgba(31,26,22,.13);border-radius:50%;background:#fff;color:#6f6459;font:inherit;font-size:11px;font-weight:800;line-height:1;display:grid;place-items:center;cursor:pointer}
 .dh-size button.on{background:var(--plum);border-color:var(--plum);color:#fff}
+@media(min-width:861px){.dh-size{gap:5px}.dh-size button{min-width:32px;font-size:12px}}
 /* 分段控件 v2：凹槽底 + 滑动白块。替换原「一排描边胶囊」 */
 .wseg{position:relative;display:flex;gap:3px;padding:4px;margin-bottom:14px;border-radius:13px;background:rgba(111,89,67,.11);overflow:hidden}
 .wseg button{position:relative;z-index:2;flex:1;min-width:0;min-height:34px;padding:0 6px;border:0;border-radius:9px;background:transparent;color:#8d8175;font:inherit;font-size:12.5px;font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;transition:color .26s cubic-bezier(.22,.61,.36,1)}
@@ -4617,7 +4633,7 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     if(/紧急|重要|必须|截止|尽快|马上|一定|别忘|最后|着急|急用|加急|急单|deadline|交稿|交片/.test(t2))out.priority='high';
     else if(/有空|顺便|不急|改天|想起来|闲了/.test(t2))out.priority='low';
     const LISTS=[
-      ['工作',/开会|会议|开个会|稿子|改稿|剪辑|剪片|交片|拍摄|客户|门店|上班|加班|方案|选题|文案|对接|汇报|项目|直播|同事|老板|录制|脚本|预算|排期|品牌号|凤姐|小林/g],
+      ['工作',/开会|会议|开个会|稿子|改稿|剪辑|剪片|交片|拍摄|客户|门店|上班|加班|方案|选题|文案|对接|汇报|项目|直播|同事|老板|录制|脚本|预算|排期|品牌号|小林|小林/g],
       ['个人',/医院|挂号|体检|牙医|看牙|理发|健身|跑步|看病|拿药|面试|学习|上课|考试|考证|办证|银行|社保|医保|公积金|身份证/g],
       ['家庭',/妈妈|爸爸|家里|亲戚|回家|礼物|生日|团圆|接人|家庭/g],
       ['生活',/买菜|超市|做饭|洗衣|打扫|快递|取件|缴费|充电|生活|收拾|采购/g]
@@ -6785,7 +6801,7 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
       const action=event.target.closest('[data-action]');if(!action)return;const id=action.dataset.id,type=action.dataset.action;
       if(type==='delete')deleteRecord(id);if(type==='toggle-task')toggleTask(id);
       if(type==='dash-edit'){const g=document.querySelector('#view-dashboard .dashboard-grid');dashSetEdit(!(g&&g.classList.contains('editing')));return;}
-      if(type==='dash-up'||type==='dash-down'){const grid=document.querySelector('#view-dashboard .dashboard-grid');const card=event.target.closest('[data-dcard]');if(!grid||!card)return;let ref=type==='dash-up'?card.previousElementSibling:card.nextElementSibling;while(ref&&(!ref.dataset.dcard||ref.classList.contains('dcard-off')))ref=type==='dash-up'?ref.previousElementSibling:ref.nextElementSibling;if(!ref)return;if(type==='dash-up')grid.insertBefore(card,ref);else grid.insertBefore(card,ref.nextSibling);dashSaveOrder();return;}
+      /* 上移/下移箭头已移除：排序改为编辑态长按拖动（见 dashDrag 模块） */
       if(type==='dash-size'){const card=event.target.closest('[data-dcard]');if(!card)return;dashSetSize(card.dataset.dcard,Number(action.dataset.size));dashSetEdit(true);return;}
       if(type==='dash-remove'){const card=event.target.closest('article[data-dcard]');if(!card)return;const id=card.dataset.dcard;card.classList.add('dcard-off');const hid=dashHiddenList();if(!hid.includes(id)){hid.push(id);state.settings.dashHidden=hid;}saveState();toast('已移除「'+(DASH_META[id]?DASH_META[id][0]:id)+'」，想找回点「添加小组件」');return;}
       if(type==='dash-add'){dashOpenAdd();return;}
@@ -6842,7 +6858,7 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
       const n=Number(sp[id]);
       if(DASH_SPAN_STEPS.includes(n)){
         el.dataset.dspan=String(n);
-        el.dataset.dsize=n<=4?'s':'l';
+        el.dataset.dsize=n<=4?'s':(n===8?'m':'l');
       }else{
         delete el.dataset.dspan;
         el.dataset.dsize=DASH_MOBILE_DEFAULT[id]||'l';
@@ -6879,28 +6895,93 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     state.settings.dashOrder=[...grid.children].map(el=>el.dataset.dcard).filter(Boolean);
     saveState();
   }
+  /* ===== 甲案落地：长按拖动排序（Pointer Events，320ms 长按 / 8px 位移容差）。
+     未触发长按就移动 = 让给页面滚动；从握把起拖 100% 可靠（touch-action:none）。 ===== */
+  (function(){
+    const HOLD=320,SLOP=8;
+    let drag=null,ph=null,swallow=false;
+    /* 拖完吞掉紧随的 click，避免误触卡内按钮 */
+    document.addEventListener('click',e=>{if(swallow){swallow=false;e.stopPropagation();e.preventDefault();}},true);
+    document.addEventListener('pointerdown',e=>{
+      const grid=document.querySelector('#view-dashboard .dashboard-grid');
+      if(!grid||!grid.classList.contains('editing'))return;
+      const art=e.target.closest('[data-dcard]');
+      if(!art||!grid.contains(art)||art.classList.contains('dcard-off'))return;
+      if(!e.target.closest('.dh-grip')&&e.target.closest('button,input,a,select,textarea'))return;
+      drag={art,pid:e.pointerId,x0:e.clientX,y0:e.clientY,px:e.clientX,py:e.clientY,engaged:false};
+      drag.timer=setTimeout(engage,HOLD);
+      if(e.pointerType==='mouse')e.preventDefault();
+    });
+    function engage(){
+      if(!drag)return;drag.engaged=true;
+      const art=drag.art,r=art.getBoundingClientRect(),grid=art.parentElement,gr=grid.getBoundingClientRect();
+      try{art.setPointerCapture(drag.pid)}catch(err){}
+      ph=document.createElement('div');ph.className='dcard-ph';
+      ph.style.gridColumn=getComputedStyle(art).gridColumn;ph.style.height=r.height+'px';
+      grid.insertBefore(ph,art);
+      drag.offX=drag.px-(r.left-gr.left);drag.offY=drag.py-(r.top-gr.top);
+      art.classList.add('dcard-drag');art.style.width=r.width+'px';art.style.height=r.height+'px';
+      art.style.left=(drag.px-drag.offX)+'px';art.style.top=(drag.py-drag.offY)+'px';
+      tick();
+    }
+    function tick(){
+      if(!drag||!drag.engaged)return;
+      if(drag.py<70)scrollBy(0,-9);else if(drag.py>innerHeight-70)scrollBy(0,9);
+      requestAnimationFrame(tick);
+    }
+    window.addEventListener('pointermove',e=>{
+      if(!drag)return;drag.px=e.clientX;drag.py=e.clientY;
+      if(!drag.engaged){
+        const dx=e.clientX-drag.x0,dy=e.clientY-drag.y0;
+        if(dx*dx+dy*dy>SLOP*SLOP){clearTimeout(drag.timer);drag=null;}
+        return;
+      }
+      const grid=drag.art.parentElement,gr=grid.getBoundingClientRect();
+      drag.art.style.left=(e.clientX-gr.left-drag.offX)+'px';
+      drag.art.style.top=(e.clientY-gr.top-drag.offY)+'px';
+      let best=null,bd=1e18;
+      grid.querySelectorAll(':scope>[data-dcard]').forEach(a=>{
+        if(a===drag.art||a.classList.contains('dcard-off'))return;
+        const r=a.getBoundingClientRect(),mx=r.left+r.width/2,my=r.top+r.height/2;
+        const d=(e.clientX-mx)*(e.clientX-mx)+(e.clientY-my)*(e.clientY-my);
+        if(d<bd){bd=d;best={a,r};}
+      });
+      if(best){
+        const ref=e.clientY<best.r.top+best.r.height/2?best.a:best.a.nextElementSibling;
+        if(ref!==ph)grid.insertBefore(ph,ref);
+      }
+    });
+    function finish(){
+      if(!drag)return;
+      if(drag.engaged&&ph&&ph.parentElement){
+        const grid=ph.parentElement;
+        grid.insertBefore(drag.art,ph);ph.remove();ph=null;
+        drag.art.classList.remove('dcard-drag');drag.art.style.cssText='';
+        dashSaveOrder();swallow=true;setTimeout(()=>{swallow=false},80);
+      }else{clearTimeout(drag.timer);}
+      drag=null;
+    }
+    window.addEventListener('pointerup',finish);
+    window.addEventListener('pointercancel',finish);
+  })();
   function dashSetEdit(on){
     const grid=dashCardMap();if(!grid)return;
     grid.classList.toggle('editing',on);
     const btn=document.getElementById('dashEditBtn');if(btn)btn.hidden=on;
-    const done=document.getElementById('dashDoneBtn');if(done)done.hidden=!on;
+    const done=document.getElementById('dashDoneBtn');if(done)done.hidden=on;
     const rst=document.getElementById('dashResetBtn');if(rst)rst.hidden=!on;
     [...grid.children].forEach(el=>{
       if(!el.dataset.dcard)return;
       let h=el.querySelector('.dh-move');
       if(on){
         if(!h){h=document.createElement('div');h.className='dh-move';
-          h.innerHTML=`<button type="button" class="dh-min" data-action="dash-remove" aria-label="移除这个小组件" title="移除"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg></button>`
-            +`<div class="dh-order"><button type="button" data-action="dash-up" aria-label="上移" title="上移"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 14 12 8 18 14"/></svg></button><button type="button" data-action="dash-down" aria-label="下移" title="下移"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 10 12 16 18 10"/></svg></button></div>`
+          h.innerHTML=`<button type="button" class="dh-grip" aria-label="拖动排序" title="按住拖动排序"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.7"/><circle cx="15" cy="6" r="1.7"/><circle cx="9" cy="12" r="1.7"/><circle cx="15" cy="12" r="1.7"/><circle cx="9" cy="18" r="1.7"/><circle cx="15" cy="18" r="1.7"/></svg></button>`
+            +`<button type="button" class="dh-min" data-action="dash-remove" aria-label="移除这个小组件" title="移除"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg></button>`
             +`<div class="dh-size">${DASH_SPAN_STEPS.map(n=>`<button type="button" data-action="dash-size" data-size="${n}" title="${DASH_SIZE_LABEL[n]} 号尺寸" aria-label="${DASH_SIZE_LABEL[n]} 号尺寸">${DASH_SIZE_LABEL[n]}</button>`).join('')}</div>`;
           el.insertBefore(h,el.firstChild);}
         h.hidden=false;
-        /* 档位：设过的用设置值；手机走默认映射（编辑态被强制整行，按宽度算会全变 L）；桌面按实际宽度反推 */
-        const mobile=window.matchMedia('(max-width:860px)').matches;
-        const gw=grid.getBoundingClientRect().width||1;
-        const ratio=el.getBoundingClientRect().width/gw;
-        const cur=Number(el.dataset.dspan)||(mobile?((DASH_MOBILE_DEFAULT[el.dataset.dcard]==='s')?4:12):(ratio>0.9?12:(ratio>0.6?8:4)));
-        el.classList.toggle('dh-narrow',ratio<0.55);
+        /* 档位高亮：设过的用设置值；没设过的按默认映射（默认半宽卡亮 S，其余亮 L） */
+        const cur=Number(el.dataset.dspan)||((el.dataset.dsize==='s')?4:12);
         h.querySelectorAll('.dh-size button').forEach(b=>b.classList.toggle('on',Number(b.dataset.size)===cur));
       }else if(h)h.hidden=true;
     });
