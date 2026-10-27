@@ -899,8 +899,15 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
             <form id="moneyForm" data-draft="moneyForm">
               <div class="segmented"><label><input checked name="flow" type="radio" value="expense"><span>支出</span></label><label><input name="flow" type="radio" value="income"><span>收入</span></label></div>
               <label class="field amount-field money-amount"><span>金额</span><div><b>¥</b><input inputmode="decimal" min="0.01" name="amount" placeholder="0.00" required step="0.01" type="number"></div></label>
-              <div class="pick-row"><span class="pick-lb">分类</span><div class="pick-chips" id="moneyCatChips"></div><select id="moneyCategory" name="category" hidden></select></div>
-              <div class="pick-row"><span class="pick-lb">账户</span><div class="pick-chips" id="moneyAccChips"></div><button class="pick-more" type="button" data-act="walletManage">管理</button></div>
+              <div class="pick-block">
+                <div class="pb-head"><span>分类</span></div>
+                <div class="pick-chips chips-grid g4" id="moneyCatChips"></div>
+                <select id="moneyCategory" name="category" hidden></select>
+              </div>
+              <div class="pick-block">
+                <div class="pb-head"><span>账户</span><button class="pb-more" type="button" data-act="walletManage">管理账户</button></div>
+                <div class="pick-chips chips-grid g3" id="moneyAccChips"></div>
+              </div>
               <input type="hidden" name="account" id="moneyAccount" value="">
               <div class="money-lastrow">
                 <label class="mini-field" data-act="moneyDatePick"><svg><use href="#i-calendar"/></svg><span id="moneyDateLbl">今天</span><input type="date" name="date" id="moneyDate" required aria-label="日期"></label>
@@ -2304,28 +2311,37 @@ body:has(.dashboard-grid.editing) .ai-fab{opacity:0;pointer-events:none;transfor
 .money-alert.good{background:#eaf1ea;color:#547a5e}
 
 /* ---- 记账 ---- */
-.money-compose{background:var(--card);border:1px solid rgba(111,89,67,.12);border-radius:24px;padding:14px 16px 16px;display:flex;flex-direction:column;gap:12px}
-.money-compose .segmented{margin:0;background:#f0eae1}
-.money-compose .segmented span{height:34px}
+.money-compose{background:var(--card);border:1px solid rgba(111,89,67,.12);border-radius:24px;padding:15px 18px 18px;display:flex;flex-direction:column;gap:0}
+.money-compose .segmented{margin:0;background:#efe8de;padding:4px;border-radius:13px}
+.money-compose .segmented span{height:38px;font-size:13px;border-radius:10px}
 .pick-row{display:flex;align-items:flex-start;gap:9px}
 .pick-lb{flex:0 0 28px;padding-top:9px;font-size:10.5px;color:#a2988b;font-weight:800;letter-spacing:.03em}
 .pick-chips{display:flex;gap:7px;flex-wrap:wrap;flex:1;min-width:0}
 .pick-chips button{height:33px;padding:0 12px;border:1px solid #e5dbcd;border-radius:10px;background:#fdfaf5;font-size:12px;font-weight:700;color:#6f6459;white-space:nowrap;transition:background .15s,border-color .15s}
 .pick-chips button.on{border-color:transparent;background:#3b3430;color:var(--white);box-shadow:0 2px 9px rgba(59,52,48,.2)}
 .pick-more{flex:0 0 auto;height:33px;padding:0 10px;border:0;border-radius:10px;background:#f2ece2;color:#7a6e61;font-size:10.5px;font-weight:800}
-.money-amount>span{font-size:10.5px;letter-spacing:.03em}
-.money-amount>div{gap:7px;border-bottom:1px solid #e9e0d3;padding-bottom:4px}
-.money-amount>div b{font:600 19px/1 ui-serif,Georgia,serif;color:#b7a996}
-.money-amount input{height:46px;font-size:34px;font-weight:800;letter-spacing:-.035em;font-variant-numeric:tabular-nums;padding:0}
-.money-amount input::placeholder{color:#d9cfc2;font-weight:700}
-.money-lastrow{display:flex;gap:8px;align-items:center}
-.mini-field{position:relative;display:inline-flex;align-items:center;gap:6px;flex:0 0 auto;height:44px;padding:0 11px;border:1px solid #e5dbcd;border-radius:12px;background:#fdfaf5;overflow:hidden}
+.pick-block{padding-top:13px;margin-top:13px;border-top:1px solid #f1eae1}
+.pb-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px}
+.pb-head>span{font-size:11px;color:#a2988b;font-weight:800;letter-spacing:.04em}
+.pb-more{flex:none;height:27px;padding:0 10px;border:0;border-radius:8px;background:#f2ece2;color:#7a6e61;font-size:10.5px;font-weight:800}
+.chips-grid{display:grid;gap:9px;flex:none}
+.chips-grid.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.chips-grid.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.money-compose .chips-grid button{height:37px;padding:0 5px;display:grid;place-items:center;font-size:12.5px;border-radius:11px;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.money-amount{gap:0;padding:13px 0 0}
+.money-amount>span{display:block;margin:0 0 2px;font-size:11px;line-height:1.15;color:#a2988b;font-weight:800;letter-spacing:.04em}
+.money-amount>div{gap:8px;border-bottom:1px solid #e9e0d3;padding-bottom:8px}
+.money-amount>div b{font:600 20px/1 ui-serif,Georgia,serif;color:#bfb2a1}
+.money-amount input{height:40px;font-size:34px;font-weight:800;letter-spacing:-.035em;font-variant-numeric:tabular-nums;padding:0}
+.money-amount input::placeholder{color:#dad0c3;font-weight:700}
+.money-lastrow{display:flex;gap:9px;align-items:center;padding-top:13px;margin-top:13px;border-top:1px solid #f1eae1}
+.mini-field{position:relative;display:inline-flex;align-items:center;gap:6px;flex:0 0 auto;height:46px;padding:0 11px;border:1px solid #e5dbcd;border-radius:12px;background:#fdfaf5;overflow:hidden}
 .mini-field svg{width:14px;height:14px;color:#a2988b;flex:none}
 .mini-field span{font-size:12px;font-weight:700;color:#5c534a;white-space:nowrap}
 .mini-field input{position:absolute;inset:0;width:100%;height:100%;opacity:0;border:0;padding:0}
-.money-note{flex:1;min-width:0;height:44px;border:1px solid #e5dbcd;border-radius:12px;padding:0 12px;background:#fdfaf5;font-size:12px}
+.money-note{flex:1;min-width:0;height:46px;border:1px solid #e5dbcd;border-radius:12px;padding:0 12px;background:#fdfaf5;font-size:12px}
 .money-note::placeholder{color:#b3a89a}
-.money-compose .btn.full{min-height:48px;font-size:14px;font-weight:800;border-radius:15px;margin-top:2px}
+.money-compose .btn.full{min-height:50px;font-size:14.5px;font-weight:800;border-radius:16px;margin-top:14px}
 
 /* ---- 卡片通用 ---- */
 .money-card{background:var(--card);border:1px solid rgba(111,89,67,.12);border-radius:24px;padding:15px 16px 14px}
@@ -2455,7 +2471,7 @@ body:has(.dashboard-grid.editing) .ai-fab{opacity:0;pointer-events:none;transfor
   .sch-input{height:44px;padding:0 12px;border-radius:13px}
   .money-hero,.money-compose,.money-card{border-radius:20px}
   .mh-balance>b{font-size:30px}
-  .money-amount input{font-size:30px}
+  .money-amount input{font-size:32px}
   .debt-top b{font-size:14.5px}
   .pick-lb{flex:0 0 26px}
   .money-chart .pie-wrap{grid-template-columns:1fr;gap:6px;justify-items:center}
