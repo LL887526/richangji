@@ -1102,12 +1102,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
           <div class="fit-sec" id="fsec-plan">
             <div class="ft-weekrow" id="ftWeekRow"></div>
             <article class="fit-card">
-              <div class="fit-card-head"><div><p class="fit-eyebrow">全周总览</p><h2>周计划</h2></div><span class="fit-note" id="ftPlanNote"></span></div>
-              <div class="fit-plan-acts">
-                <button class="fit-btn solid" data-act="ftPlanEdit" type="button">编辑周计划</button>
-                <button class="fit-btn ghost" data-nav="exlib" type="button">动作库</button>
-              </div>
-              <p class="fit-tip">点动作记一组 · 记满自动标完成 · 练满后再点清零</p>
+              <div class="fit-card-head fp-head"><div><p class="fit-eyebrow">全周总览</p><h2>周计划</h2><span class="fit-note" id="ftPlanNote"></span></div><div class="fp-hbtns"><button class="fp-hbtn" data-act="ftPlanEdit" type="button">编辑</button><button class="fp-hbtn" data-nav="exlib" type="button">动作库</button></div></div>
               <div class="wbranch" id="ftPlanList"></div>
             </article>
           </div>
@@ -1220,16 +1215,16 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
         <div class="view-inner">
           <div class="ex-page-head">
             <button class="ex-backbtn" type="button" data-act="exlibBack" aria-label="返回"><svg aria-hidden="true"><use href="#i-back"/></svg></button>
-            <div><p class="eyebrow">资料库</p><h1>动作库</h1></div>
-            <span class="wnote" id="ftExCount"></span>
+            <div class="ex-htxt"><p class="eyebrow">资料库</p><b>全部动作<i id="ftExCount"></i></b></div>
           </div>
-          <p class="wnote2" style="margin:2px 0 10px">按肌群分组收起，点分组标题展开；搜索或筛选时命中的分组自动展开。带「动图」角标的为精选演示动作，星标收藏后排前。</p>
-          <div class="wadd ex-filters">
-            <input type="text" id="ftExSearch" placeholder="搜索动作名">
-            <select id="ftExMuscle" class="wsel"><option value="">全部肌群</option></select>
-            <select id="ftExEquip" class="wsel"><option value="">全部器械</option></select>
-            <label class="ex-giftoggle"><input type="checkbox" id="ftExGif"><span>只看有动图</span></label>
+          <div class="ex-bar"><label class="ex-sbox"><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.6"/><path d="M20 20l-3.9-3.9"/></svg><input type="text" id="ftExSearch" placeholder="搜动作名，例如 卧推"></label></div>
+          <div class="ex-chips" id="ftExMuscleChips"></div>
+          <div class="ex-subbar">
+            <select id="ftExEquip" class="ex-eq"><option value="">全部器械</option></select>
+            <button class="ex-gifbtn" type="button" data-exgif aria-pressed="false"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 5.5h16v13H4z"/><path d="M10 9.2l5 2.8-5 2.8z"/></svg>只看有动图</button>
           </div>
+          <select id="ftExMuscle" hidden><option value="">全部肌群</option></select>
+          <label class="ex-giftoggle" hidden><input type="checkbox" id="ftExGif"></label>
           <div class="wadd">
             <input type="file" id="ftLibFile" accept=".json,application/json" hidden>
           </div>
@@ -3812,15 +3807,34 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     document.getElementById('ftPlanNote').textContent=(todaySched&&todaySched.parts&&todaySched.parts.length)?('今天'+FT_DAYS[Number(dow)]+' · '+todaySched.parts.length+' 个部位'):'今天没有安排训练';
     if(!hasSched){planEl.innerHTML='<p class="wempty-task">还没有训练计划。点上方「编辑周计划」，一分钟配出你的第一份计划。</p>';}
     else{
-      const done=ftDoneMap();
-      planEl.innerHTML=Object.keys(state.fitTrain.schedule).sort((a,b)=>a-b).map(d=>{
-        const day=state.fitTrain.schedule[d];if(!day||!day.parts||!day.parts.length)return '';
-        const isToday=String(d)===dow;
-        return '<div class="wb-row"><span class="wb-name">'+FT_DAYS[Number(d)]+'</span><div class="wb-nodes">'+(isToday?'<span class="wbadge">今天</span>':'')+day.parts.map(p=>p.actions.map(a=>{
-          const meta=ftActById(a.aid),arr=done[a.aid]||[],dn=arr.length,full=dn>=a.sets;
-          return '<button class="wnode" data-ft-act="'+escapeHtml(a.aid)+'" data-ft-target="'+a.sets+'" data-ft-w="'+Number(a.weight||0)+'" data-ft-r="'+Number(a.reps||0)+'" data-s="'+(full?2:(dn?1:0))+'" title="'+escapeHtml(meta.name+' · '+a.sets+'组×'+a.reps+(a.weight?'×'+a.weight+'kg':'')+' · 组间休息'+a.rest+'s · '+(meta.tip||''))+'">'+escapeHtml(meta.name)+' '+dn+'/'+a.sets+'</button>';
-        }).join('')).join('')+'</div></div>';
-      }).join('');
+      const done=ftDoneMap(),order=['1','2','3','4','5','6','0'];
+      const days=order.filter(d=>{const y=state.fitTrain.schedule[d];return y&&y.parts&&y.parts.length;});
+      const hasToday=days.indexOf(dow)>-1;
+      const seq=hasToday?[dow].concat(days.filter(d=>d!==dow)):days;
+      planEl.innerHTML='<div class="fp-week">'+seq.map((d,i)=>{
+        const day=state.fitTrain.schedule[d],isToday=String(d)===dow;
+        const acts=[];day.parts.forEach(p=>(p.actions||[]).forEach(a=>acts.push(a)));
+        const totalSets=acts.reduce((s,a)=>s+Number(a.sets||0),0);
+        const doneSets=acts.reduce((s,a)=>s+Math.min(Number(a.sets||0),(done[a.aid]||[]).length),0);
+        const muscles=day.parts.map(p=>p.muscle).filter(Boolean).join(' · ');
+        const rows=day.parts.map(p=>(p.actions||[]).map(a=>{
+          const meta=ftActById(a.aid),arr=done[a.aid]||[],dn=arr.length,full=a.sets>0&&dn>=a.sets;
+          const thumb=meta.gif?'<img loading="lazy" alt="" src="'+escapeHtml(meta.gif)+'">':'<svg aria-hidden="true"><use href="#i-fitness"/></svg>';
+          return '<div class="fp-row'+(full?' is-full':'')+'">'+
+            '<span class="fp-thumb'+(meta.gif?'':' is-noimg')+'">'+thumb+'</span>'+
+            '<span class="fp-info"><b>'+escapeHtml(meta.name||a.aid)+'</b>'+
+              '<small>'+a.sets+' 组 × '+a.reps+' 次'+(Number(a.weight||0)>0?' · '+a.weight+' kg':' · 自重')+' · 休 '+a.rest+'s</small>'+
+              '<span class="fp-bar"><i style="width:'+Math.round(Math.min(1,dn/Math.max(1,a.sets))*100)+'%"></i></span></span>'+
+            '<button class="fp-log" data-ft-act="'+escapeHtml(a.aid)+'" data-ft-target="'+a.sets+'" data-ft-w="'+Number(a.weight||0)+'" data-ft-r="'+Number(a.reps||0)+'" data-ft-rest="'+Number(a.rest||60)+'" data-s="'+(full?2:(dn?1:0))+'" title="点一下记一组，记满自动算完成">'+(full?'练满':dn+'/'+a.sets)+'</button>'+
+          '</div>';
+        }).join('')).join('');
+        const sep=(i===1&&hasToday)?'<div class="fp-sep"><span>其余安排</span></div>':'';
+        return sep+'<section class="fp-day'+(isToday?' is-today':'')+'">'+
+          '<header class="fp-dhead"><b>'+FT_DAYS[Number(d)]+'</b>'+(isToday?'<em>今天</em>':'')+
+            '<span class="fp-mus">'+escapeHtml(muscles||'未命名')+'</span>'+
+            '<span class="fp-sum">'+acts.length+' 动作 · '+doneSets+'/'+totalSets+' 组</span></header>'+
+          '<div class="fp-rows">'+rows+'</div></section>';
+      }).join('')+'</div>';
     }
     const mSel=document.getElementById('ftExMuscle'),eSel=document.getElementById('ftExEquip');
     const mv=mSel.value,ev=eSel.value,lib=ftLib();
@@ -3828,7 +3842,8 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     mSel.innerHTML='<option value="">全部肌群</option>'+muscles.map(m=>'<option'+(m===mv?' selected':'')+'>'+escapeHtml(m)+'</option>').join('');
     eSel.innerHTML='<option value="">全部器械</option>'+equips.map(x=>'<option'+(x===ev?' selected':'')+'>'+escapeHtml(x)+'</option>').join('');
     const usingDefault=!(state.fitTrain&&Array.isArray(state.fitTrain.lib)&&state.fitTrain.lib.length);
-    document.getElementById('ftExCount').textContent=lib.length+' 个动作'+(usingDefault?'（默认库）':'');
+    document.getElementById('ftExCount').textContent=lib.length+' 个'+(usingDefault?' · 默认库':'');
+    exRenderChips();
     renderFtExGrid();
     const log=(state.fitTrain&&Array.isArray(state.fitTrain.log))?state.fitTrain.log:[];
     document.getElementById('ftLogCount').textContent=log.length+' 条记录';
@@ -3854,6 +3869,12 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
   }
   let exGroupOpen=new Set(),exGroupIO=null;
   const EX_GROUP_BATCH=40;
+  function exRenderChips(){
+    const box=document.getElementById('ftExMuscleChips'),sel=document.getElementById('ftExMuscle');
+    if(!box||!sel)return;
+    const cur=sel.value;
+    box.innerHTML=[...sel.options].map(o=>'<button type="button" class="ex-chip'+(o.value===cur?' on':'')+'" data-exmuscle="'+escapeHtml(o.value)+'">'+escapeHtml(o.textContent)+'</button>').join('');
+  }
   function exFiltersNow(){
     const gEl=document.getElementById('ftExGif');
     return {q:(document.getElementById('ftExSearch').value||'').trim().toLowerCase(),
@@ -3864,7 +3885,7 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
   function exGroupBucket(k){return exFilterList(exFiltersNow()).filter(x=>(x.muscle||'未分组')===k);}
   function exMoreInner(shown,n){return n>shown?'<button class="wbtn ghostbtn" data-act="exMore" type="button">展开更多（已显示 '+shown+' / '+n+'）</button>':'<p class="wnote2">已显示全部 '+n+' 个动作</p>';}
   function exGroupHeadHTML(k,n,gif,open){
-    return '<button class="ex-ghead" type="button" aria-expanded="'+(open?'true':'false')+'"><b class="ex-gname">'+escapeHtml(k)+'</b><span class="ex-gcount">'+n+' 个动作'+(gif?' · '+gif+' 有图':'')+'</span><svg class="ex-gchev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>';
+    return '<button class="ex-ghead" type="button" aria-expanded="'+(open?'true':'false')+'"><b class="ex-gname">'+escapeHtml(k)+'</b><span class="ex-gcount">'+n+' 个</span><svg class="ex-gchev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>';
   }
   function exGroupBodyHTML(items){
     const shown=Math.min(EX_GROUP_BATCH,items.length);
@@ -3878,7 +3899,7 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     const buckets=[],bidx={};
     list.forEach(x=>{const k=x.muscle||'未分组';if(!(k in bidx)){bidx[k]=buckets.length;buckets.push({k:k,items:[],gif:0});}const b=buckets[bidx[k]];b.items.push(x);if(x.gif)b.gif++;});
     const cnt=document.getElementById('ftExCount');
-    if(cnt)cnt.textContent=forced?('匹配 '+list.length+' / '+ftLib().length):(ftLib().length+' 个动作');
+    if(cnt)cnt.textContent=forced?('匹配 '+list.length+' / '+ftLib().length):(ftLib().length+' 个');
     if(exGroupIO)exGroupIO.disconnect();
     const wrap=document.getElementById('exPageGrid');
     if(!list.length){wrap.innerHTML='<p class="wempty-task">没有匹配的动作</p>';return;}
@@ -6643,7 +6664,7 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
       const ins=document.getElementById('ftExSearch');if(ins)ins.value='';
       const eq=document.getElementById('ftExEquip');if(eq)eq.value='';
       const gf=document.getElementById('ftExGif');if(gf)gf.checked=false;
-      switchView('exlib');renderFtExGrid();
+      switchView('exlib');exRenderChips();renderFtExGrid();
       return;
     }
     if(event.target.closest('#bmSheetX')){bmDeselect();return;}
@@ -6803,6 +6824,33 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
       };
       planBody.addEventListener('pointerup',endGrip);
       planBody.addEventListener('pointercancel',endGrip);
+    }
+    const plStepBtn=event.target.closest('[data-plstep]');
+    if(plStepBtn){
+      const row=plStepBtn.closest('.plan-act');
+      const inp=row?row.querySelector('[data-pf="'+plStepBtn.dataset.plstep+'"]'):null;
+      if(inp){
+        const k=plStepBtn.dataset.plstep;
+        let v=Number(inp.value||0)+Number(plStepBtn.dataset.d||0);
+        if(k==='sets')v=Math.min(20,Math.max(1,Math.round(v)));
+        else if(k==='reps')v=Math.min(100,Math.max(1,Math.round(v)));
+        else if(k==='weight')v=Math.min(500,Math.max(0,Math.round(v*100)/100));
+        else v=Math.min(600,Math.max(0,Math.round(v/15)*15));
+        inp.value=v;
+      }
+      return;
+    }
+    const exMuscleChip=event.target.closest('[data-exmuscle]');
+    if(exMuscleChip){
+      const sel=document.getElementById('ftExMuscle');
+      if(sel){sel.value=exMuscleChip.dataset.exmuscle;renderFtExGrid();exRenderChips();}
+      return;
+    }
+    const exGifBtn=event.target.closest('[data-exgif]');
+    if(exGifBtn){
+      const c=document.getElementById('ftExGif');
+      if(c){c.checked=!c.checked;exGifBtn.classList.toggle('on',c.checked);exGifBtn.setAttribute('aria-pressed',c.checked?'true':'false');renderFtExGrid();}
+      return;
     }
     const pdelBtn=event.target.closest('[data-pdel]');
     if(pdelBtn){
@@ -7000,31 +7048,39 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     const box=document.getElementById('planDow');if(!box)return;
     box.innerHTML=[0,1,2,3,4,5,6].map(d=>'<button type="button" data-pdow="'+d+'"'+(String(d)===planEditDow?' class="on"':'')+'>'+PDOW[d]+'</button>').join('');
   }
+  function plStep(k,label,val,step,pi,ai){
+    const sv=(k==='weight')?(Math.round(Number(val)*100)/100):Number(val);
+    return '<div class="pl-f"><span class="pl-fl">'+label+'</span><div class="pl-srow">'+
+      '<button type="button" class="pl-sb" data-plstep="'+k+'" data-part="'+pi+'" data-ai="'+ai+'" data-d="'+(-step)+'" aria-label="减少'+label+'">−</button>'+
+      '<input class="pl-sval" type="number" inputmode="none" readonly tabindex="-1" data-pf="'+k+'" data-part="'+pi+'" data-ai="'+ai+'" value="'+sv+'">'+
+      '<button type="button" class="pl-sb" data-plstep="'+k+'" data-part="'+pi+'" data-ai="'+ai+'" data-d="'+step+'" aria-label="增加'+label+'">+</button>'+
+      '</div></div>';
+  }
   function planActRow(a,pi,ai,lib){
     const favs=ftFavs();
     const opts=lib.map(x=>'<option value="'+escapeHtml(x.id)+'"'+(x.id===a.aid?' selected':'')+'>'+((favs.indexOf(x.id)>-1)?'★ ':'')+escapeHtml(x.name)+'</option>').join('');
     return '<div class="plan-act" data-part="'+pi+'" data-ai="'+ai+'">'+
       '<div class="pa-top"><select data-pf="aid" data-part="'+pi+'" data-ai="'+ai+'">'+opts+'</select>'+
+      '<button type="button" class="pa-x" data-pdel="action" data-part="'+pi+'" data-ai="'+ai+'" aria-label="移除这个动作"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>'+
       '<button type="button" class="pa-grip" data-grip="1" aria-label="按住拖动排序"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M7 9h10M7 12h10M7 15h10"/></svg></button></div>'+
-      '<div class="pa-grid">'+
-      '<span><label>组数</label><input type="number" inputmode="numeric" min="1" max="20" data-pf="sets" data-part="'+pi+'" data-ai="'+ai+'" value="'+Number(a.sets||3)+'"></span>'+
-      '<span><label>次数</label><input type="number" inputmode="numeric" min="1" max="100" data-pf="reps" data-part="'+pi+'" data-ai="'+ai+'" value="'+Number(a.reps||10)+'"></span>'+
-      '<span><label>重量kg</label><input type="number" inputmode="decimal" min="0" max="500" step="0.5" data-pf="weight" data-part="'+pi+'" data-ai="'+ai+'" value="'+Number(a.weight||0)+'"></span>'+
-      '<span><label>休息s</label><input type="number" inputmode="numeric" min="0" max="600" data-pf="rest" data-part="'+pi+'" data-ai="'+ai+'" value="'+Number(a.rest||60)+'"></span>'+
-      '</div>'+
-      '<button type="button" class="pa-del" data-pdel="action" data-part="'+pi+'" data-ai="'+ai+'">移除该动作</button></div>';
+      '<div class="pa-grid">'+plStep('sets','组数',Number(a.sets||3),1,pi,ai)+plStep('reps','次数',Number(a.reps||10),1,pi,ai)+plStep('weight','重量',Number(a.weight||0),1.25,pi,ai)+plStep('rest','休息',Number(a.rest||60),15,pi,ai)+'</div>'+
+      '</div>';
   }
   function renderPlanDay(){
     const box=document.getElementById('planDayBody');if(!box)return;
-    const day=planDay()||[],lib=ftLib();
-    box.innerHTML=(day.length?'':'<p class="wnote2" style="margin-top:6px">周'+FT_DAYS[Number(planEditDow)]+'还没安排，点下面「添加部位」开配。</p>')+
-      day.map((p,pi)=>'<div class="plan-part" data-part="'+pi+'">'+
-        '<div class="pp-head"><input class="pp-muscle" data-pf="muscle" data-part="'+pi+'" placeholder="部位名，如 胸" value="'+escapeHtml(p.muscle||'')+'"><button type="button" class="pp-del" data-pdel="part" data-part="'+pi+'">删部位</button></div>'+
-        (p.actions||[]).map((a,ai)=>planActRow(a,pi,ai,lib)).join('')+
-        '<div class="plan-add"><button class="wbtn ghostbtn" type="button" data-act="actPick" data-part="'+pi+'" style="width:100%">+ 从动作库多选添加</button></div>'+
-      '</div>').join('')+
-      '<div class="plan-add"><button class="wbtn" type="button" data-padd="part" style="width:100%">+ 添加部位</button></div>'+
-      (day.length?'<div class="plan-add"><button class="btn ghost" type="button" data-padd="clearday" style="width:100%">清空周'+escapeHtml(FT_DAYS[Number(planEditDow)])+'安排</button></div>':'');
+    const day=planDay()||[],lib=ftLib(),dowName=FT_DAYS[Number(planEditDow)];
+    if(!day.length){
+      box.innerHTML='<div class="pl-empty"><b>周'+dowName+' 还是空的</b><p>先加一个部位（胸、背、腿之类），再从动作库挑动作填进去。</p></div>'+
+        '<button class="pl-addpart" type="button" data-padd="part">＋ 添加部位</button>';
+      return;
+    }
+    box.innerHTML=day.map((p,pi)=>'<section class="plan-part pl-part" data-part="'+pi+'">'+
+        '<div class="pl-phead"><input class="pl-muscle" data-pf="muscle" data-part="'+pi+'" placeholder="部位名，如 胸" value="'+escapeHtml(p.muscle||'')+'"><button type="button" class="pl-pdel" data-pdel="part" data-part="'+pi+'">删除</button></div>'+
+        '<div class="pl-acts">'+(p.actions||[]).map((a,ai)=>planActRow(a,pi,ai,lib)).join('')+'</div>'+
+        '<button class="pl-addbtn" type="button" data-act="actPick" data-part="'+pi+'">＋ 添加动作</button>'+
+      '</section>').join('')+
+      '<button class="pl-addpart" type="button" data-padd="part">＋ 添加部位</button>'+
+      '<button class="pl-clearday" type="button" data-padd="clearday">清空周'+escapeHtml(dowName)+'的全部安排</button>';
   }
   function syncPlanDraft(){
     const parts=planDay();if(!parts)return;
@@ -7069,13 +7125,13 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
   function exCardHTML(x,mode,on){
     const fav=ftFavs().indexOf(x.id)>-1;
     const def=(x.equipment||'自重')==='自重'&&(x.unit||'次')==='次';
-    const img=x.gif?'<div class="ex-thumb"><img loading="lazy" alt="动作演示" src="'+escapeHtml(x.gif)+'"><span class="wft-g">动图</span></div>'
+    const img=x.gif?'<div class="ex-thumb"><img loading="lazy" alt="动作演示" src="'+escapeHtml(x.gif)+'"></div>'
       :'<div class="ex-thumb ex-noimg"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-fitness"/></svg></div>';
     const corner=mode==='view'
       ?'<span class="ft-fav'+(fav?' on':'')+'" data-act="ftFav" data-aid="'+escapeHtml(x.id)+'" title="收藏" aria-label="收藏"><svg aria-hidden="true"><use href="#i-star"/></svg></span>'
       :'<span class="ex-check"></span>';
     const data=mode==='view'?'data-ft-ex="'+escapeHtml(x.id)+'" data-ft-gif="'+escapeHtml(x.gif||'')+'"':'data-expick="'+escapeHtml(x.id)+'"';
-    return '<div class="ex-card'+(on?' on':'')+'" '+data+' title="'+escapeHtml(x.tip||'')+'">'+img+corner+'<span class="ex-name">'+escapeHtml(x.name||'')+'<span class="wbadge">'+escapeHtml(x.muscle||'未分类')+'</span></span>'+(def?'':'<span class="ex-sub">'+escapeHtml(x.equipment||'自重')+' · '+escapeHtml(x.unit||'次')+'</span>')+'</div>';
+    return '<div class="ex-card'+(on?' on':'')+'" '+data+' title="'+escapeHtml(x.tip||'')+'">'+img+corner+'<span class="ex-name">'+escapeHtml(x.name||'')+'</span><span class="ex-sub">'+escapeHtml(x.equipment||'自重')+'</span></div>';
   }
   let exdMode=null,exdPart=-1,exdPicked={},exdSwapRef=null;
   function exdFillFilters(mSel,eSel){
@@ -8293,5 +8349,263 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
   window.__schPickSync=function(){syncTimeLbl();};
 })();
 </script>
+<style id="v3skin">
+/* ============================================================
+   v3 视觉重构 · 2026-10-28
+   四块统一：编辑周计划 / 健身计划页 / 动作库 / 首页小组件
+   原则：少边框、多留白、数字当主角、说明文字砍到一句
+   ============================================================ */
+
+/* ---- 1. 编辑周计划弹层 ---- */
+#planSheet.settings-backdrop{padding:0;place-items:end center;background:rgba(31,26,22,.44);backdrop-filter:blur(8px)}
+#planSheet .settings-sheet{width:min(560px,100%);max-height:min(92vh,860px);padding:0;border:0;border-radius:24px 24px 0 0;background:#fbf7f0;box-shadow:0 -20px 60px rgba(36,26,22,.28);display:flex;flex-direction:column;overflow:hidden}
+#planSheet .settings-head{margin:0;padding:18px 18px 12px;flex:0 0 auto;align-items:center;border-bottom:1px solid rgba(31,26,22,.07);background:#fbf7f0}
+#planSheet .settings-head .eyebrow{margin:0 0 3px;font-size:10px;letter-spacing:.12em;color:#a3947f}
+#planSheet .settings-head h2{font-size:21px;font-weight:800;letter-spacing:-.01em;margin:0}
+#planSheet .sheet-close{width:34px;height:34px;border:0;border-radius:50%;background:rgba(31,26,22,.06);color:#6d6255;font-size:19px;line-height:1;display:grid;place-items:center}
+#planSheet .plan-dow{margin:0;padding:13px 14px 12px;flex:0 0 auto;display:grid;grid-template-columns:repeat(7,1fr);gap:4px;background:#fbf7f0;border-bottom:1px solid rgba(31,26,22,.06)}
+#planSheet .plan-dow button{min-height:38px;border:0;border-radius:10px;background:transparent;color:#9a8d7c;font:inherit;font-size:12.5px;font-weight:700;cursor:pointer;transition:background .14s,color .14s,transform .14s}
+#planSheet .plan-dow button:active{transform:scale(.94)}
+#planSheet .plan-dow button.on{background:var(--plum);color:#fff;box-shadow:0 4px 12px rgba(77,48,69,.26)}
+#planDayBody{flex:1 1 auto;overflow-y:auto;padding:16px 16px 8px;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+#planSheet .sheet-actions{flex:0 0 auto;margin:0;padding:12px 16px calc(14px + env(safe-area-inset-bottom));border-top:1px solid rgba(31,26,22,.07);background:#fbf7f0;display:flex;gap:9px}
+#planSheet .sheet-actions .btn{flex:1;min-height:46px;border-radius:14px;font-size:14px;font-weight:700}
+#planSheet .sheet-actions .btn.ghost{flex:0 0 92px;background:transparent;border:1px solid rgba(31,26,22,.14);color:#8a7d6c}
+#planSheet .sheet-actions .btn.primary{background:var(--plum);color:#fff;border:0}
+
+@media (min-width:861px){
+  #planSheet.settings-backdrop{padding:24px;place-items:center}
+  #planSheet .settings-sheet{border-radius:22px;max-height:min(88vh,780px);box-shadow:0 28px 80px rgba(36,26,22,.28)}
+  #planDayBody{padding:18px 20px 10px}
+  #planDayBody .pa-grid{gap:8px;padding:0 13px 12px}
+  #planDayBody .pl-f{padding:8px 6px 9px}
+  #planDayBody .pl-sb{width:26px;height:27px;font-size:15px}
+  #planDayBody .pl-sval{font-size:16px}
+  #planDayBody .pl-srow{gap:5px}
+  #planDayBody .pl-fl{font-size:10px;margin-bottom:5px}
+  #planDayBody .pl-muscle{font-size:20px}
+  #planDayBody .pa-top{padding:13px 13px 0}
+  #planDayBody .pa-top select{font-size:15.5px;min-height:30px}
+  #planDayBody .pl-empty{padding:34px 22px}
+}
+/* 空态 */
+#planDayBody .pl-empty{padding:26px 18px;border-radius:16px;background:#fff;text-align:center;box-shadow:0 1px 2px rgba(31,26,22,.05)}
+#planDayBody .pl-empty b{display:block;font-size:15px;color:var(--ink);margin-bottom:5px}
+#planDayBody .pl-empty p{margin:0;font-size:12.5px;line-height:1.6;color:#9a8d7c}
+
+/* 部位 */
+#planDayBody .pl-part{margin:0 0 20px;border:0;background:transparent;padding:0;border-radius:0}
+#planDayBody .pl-phead{display:flex;align-items:center;gap:8px;margin:0 0 9px;padding:0 2px}
+#planDayBody .pl-muscle{flex:1;min-width:0;border:0;background:transparent;padding:2px 0;font:800 18px/1.25 inherit;letter-spacing:-.01em;color:var(--ink);-webkit-appearance:none;appearance:none;border-radius:0}
+#planDayBody .pl-muscle:focus{outline:0;background:rgba(255,255,255,.7);border-radius:8px;padding-left:8px}
+#planDayBody .pl-muscle::placeholder{color:#c6b9a6;font-weight:700}
+#planDayBody .pl-pdel{flex:none;border:0;background:transparent;color:#b99a8b;font:inherit;font-size:11.5px;font-weight:700;padding:6px 4px;min-height:30px;cursor:pointer}
+#planDayBody .pl-pdel:active{color:#a5533a}
+#planDayBody .pl-acts{display:block}
+
+/* 动作卡：靠阴影分块，不用边框 */
+#planDayBody .plan-act{position:relative;display:block;margin:0 0 9px;padding:0 0 4px;border:0;border-radius:15px;background:#fff;box-shadow:0 1px 2px rgba(48,34,22,.055),0 0 0 1px rgba(48,34,22,.05);overflow:hidden}
+#planDayBody .plan-act.dragging{box-shadow:0 14px 30px rgba(60,45,30,.22),0 0 0 1.5px var(--plum);border:0}
+
+/* 动作名：把原生 select 伪装成纯文字 + 细箭头 */
+#planDayBody .pa-top{display:flex;align-items:center;gap:6px;padding:10px 11px 0}
+#planDayBody .pa-top select{flex:1;min-width:0;border:0;background-color:transparent;padding:0 18px 0 0;min-height:26px;font:700 14.5px/1.3 inherit;color:var(--ink);-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a3947f' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 10l5 5 5-5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 2px center;background-size:12px;text-overflow:ellipsis}
+#planDayBody .pa-top select:focus{outline:0}
+#planDayBody .pa-grip{flex:none;width:30px;height:30px;min-height:0;padding:0;border:0;border-radius:8px;background:rgba(31,26,22,.045);color:#a99b88;display:grid;place-items:center;-webkit-appearance:none;appearance:none;cursor:grab;touch-action:none}
+#planDayBody .pa-grip svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2}
+#planDayBody .pa-grip:active{background:var(--plum);color:#fff}
+
+/* 步进器 2×2 */
+#planDayBody .pa-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin:8px 0 0;padding:0 10px 10px}
+#planDayBody .pl-f{min-width:0;padding:5px 4px 6px;border-radius:9px;background:#f7f1e7}
+#planDayBody .pl-fl{display:block;margin:0 0 3px;text-align:center;font-size:9px;font-weight:800;letter-spacing:.03em;color:#a89a86}
+#planDayBody .pl-srow{display:flex;align-items:center;gap:4px;min-width:0}
+#planDayBody .pl-sb{flex:none;width:21px;height:24px;min-height:0;padding:0;border:0;border-radius:7px;background:#fff;color:#7a6d5c;font-family:inherit;font-size:14px;line-height:1;font-weight:600;display:grid;place-items:center;cursor:pointer;box-shadow:0 1px 1px rgba(31,26,22,.06);transition:background .12s,color .12s,transform .12s;-webkit-appearance:none;appearance:none}
+#planDayBody .pl-sb:active{background:var(--plum);color:#fff;transform:scale(.88)}
+#planDayBody .pl-sval{flex:1;min-width:0;width:100%;min-height:0;padding:0;border:0;background:transparent;text-align:center;font:800 15px/1.1 inherit;color:var(--ink);font-variant-numeric:tabular-nums;letter-spacing:-.02em;-webkit-appearance:none;appearance:none;-moz-appearance:textfield;pointer-events:none}
+#planDayBody .pl-sval::-webkit-outer-spin-button,#planDayBody .pl-sval::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+#planDayBody .pa-x{flex:none;width:26px;height:26px;min-height:0;padding:0;border:0;border-radius:8px;background:transparent;color:#cbb5a4;display:grid;place-items:center;cursor:pointer;-webkit-appearance:none;appearance:none}
+#planDayBody .pa-x svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round}
+#planDayBody .pa-x:active{background:rgba(165,83,58,.1);color:#a5533a}
+@media (max-width:359px){
+  #planDayBody .pa-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
+/* 添加按钮 */
+#planDayBody .pl-addbtn{width:100%;min-height:40px;margin:0 0 2px;border:1px dashed rgba(77,48,69,.24);border-radius:13px;background:transparent;color:#8a7b68;font:inherit;font-size:12.5px;font-weight:700;cursor:pointer}
+#planDayBody .pl-addbtn:active{background:rgba(77,48,69,.05)}
+#planDayBody .pl-addpart{display:block;width:100%;min-height:48px;margin:2px 0 0;border:0;border-radius:14px;background:var(--plum);color:#fff;font:inherit;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 6px 16px rgba(77,48,69,.2)}
+#planDayBody .pl-addpart:active{transform:scale(.985)}
+#planDayBody .pl-clearday{display:block;width:100%;min-height:42px;margin:9px 0 4px;border:0;background:transparent;color:#b09a89;font:inherit;font-size:12px;font-weight:600;cursor:pointer}
+
+/* ---- 2. 健身计划页 ---- */
+#fsec-plan .fit-card{padding:14px 13px 11px;border-radius:18px}
+#fsec-plan .fp-head{align-items:flex-start;margin-bottom:11px}
+#fsec-plan .fp-head>div{min-width:0}
+#fsec-plan .fp-head .fit-eyebrow{margin:0 0 2px;font-size:9.5px;letter-spacing:.12em;color:#a8987f}
+#fsec-plan .fp-head h2{font-size:19px;font-weight:800;letter-spacing:-.01em;margin:0}
+#fsec-plan .fp-head .fit-note{display:block;margin:3px 0 0;font-size:11px;color:#a3947f;font-weight:600}
+.fp-hbtns{flex:none;display:flex;gap:5px;padding-top:2px}
+.fp-hbtn{min-height:31px;padding:0 11px;border:1px solid rgba(77,48,69,.18);border-radius:10px;background:#fff;color:var(--plum);font:inherit;font-size:12px;font-weight:700;cursor:pointer;-webkit-appearance:none;appearance:none;transition:transform .12s,background .12s}
+.fp-hbtn:active{transform:scale(.95)}
+.fp-hbtn:first-child{background:var(--plum);border-color:var(--plum);color:#fff;box-shadow:0 3px 9px rgba(77,48,69,.2)}
+#fsec-plan .ft-weekrow{gap:5px;margin:0 0 13px}
+#fsec-plan .ftwk-day{padding:7px 2px 6px;border:0;border-radius:12px;background:rgba(31,26,22,.042);gap:2px;color:#a3947f}
+#fsec-plan .ftwk-day span{font-size:9.5px;font-weight:800;color:#a8987f;letter-spacing:.04em}
+#fsec-plan .ftwk-day b{font-size:11.5px;font-weight:700;color:#c8bba6;letter-spacing:-.01em}
+#fsec-plan .ftwk-day.has b{color:#5f5446}
+#fsec-plan .ftwk-day.today{background:var(--plum);box-shadow:0 5px 14px rgba(77,48,69,.28)}
+#fsec-plan .ftwk-day.today span{color:rgba(255,255,255,.6);font-weight:800}
+#fsec-plan .ftwk-day.today b{color:#fff}
+#ftPlanList.wbranch{display:block;padding:0}
+.fp-week{display:block}
+.fp-sep{display:flex;align-items:center;gap:9px;margin:14px 0 9px;padding:0 2px}
+.fp-sep:before,.fp-sep:after{content:'';flex:1;height:1px;background:rgba(48,34,22,.09)}
+.fp-sep span{flex:none;font-size:10px;font-weight:800;letter-spacing:.1em;color:#b3a48d}
+.fp-day{margin:0 0 11px;border-radius:16px;background:#fff;box-shadow:0 1px 2px rgba(48,34,22,.05),0 0 0 1px rgba(48,34,22,.055);overflow:hidden;transition:box-shadow .16s}
+.fp-day:last-child{margin-bottom:2px}
+.fp-dhead{display:flex;align-items:center;gap:7px;padding:10px 13px;background:#faf4ea;border-bottom:1px solid rgba(48,34,22,.05)}
+.fp-dhead>b{flex:none;font-size:12.5px;font-weight:800;color:#7d7060;letter-spacing:.01em}
+.fp-dhead>em{flex:none;font-style:normal;padding:2px 7px 3px;border-radius:999px;background:var(--plum);color:#fff;font-size:9.5px;font-weight:800;letter-spacing:.04em}
+.fp-mus{flex:1;min-width:0;font-size:13px;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fp-sum{flex:none;font-size:10.5px;font-weight:700;color:#ab9c86;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.fp-rows{padding:1px 13px 5px}
+.fp-row{display:flex;align-items:center;gap:10px;padding:9px 0}
+.fp-row+.fp-row{border-top:1px solid rgba(48,34,22,.055)}
+.fp-thumb{flex:none;width:44px;height:44px;border-radius:11px;overflow:hidden;background:#f4ede2;display:grid;place-items:center}
+.fp-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.fp-thumb svg{width:19px;height:19px;stroke:#c9bcaa;fill:none;stroke-width:1.6}
+.fp-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.fp-info b{font-size:13.5px;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.35}
+.fp-info small{font-size:11px;color:#a2947f;font-variant-numeric:tabular-nums;line-height:1.35}
+.fp-bar{display:block;height:2.5px;border-radius:2px;background:#efe6d8;margin-top:4px;overflow:hidden}
+.fp-bar i{display:block;height:100%;border-radius:2px;background:var(--plum);transition:width .32s ease}
+.fp-row.is-full .fp-info b{color:#8a7d6b}
+.fp-row.is-full .fp-bar i{background:#b8a892}
+.fp-log{flex:none;min-width:50px;min-height:33px;padding:0 8px;border:1.5px solid rgba(77,48,69,.2);border-radius:11px;background:#fff;color:var(--plum);font:inherit;font-size:12px;font-weight:800;font-variant-numeric:tabular-nums;cursor:pointer;transition:transform .12s,background .12s;-webkit-appearance:none;appearance:none}
+.fp-log:active{transform:scale(.94)}
+.fp-log[data-s="1"]{background:rgba(77,48,69,.09);border-color:rgba(77,48,69,.3)}
+.fp-log[data-s="2"]{background:var(--plum);border-color:var(--plum);color:#fff}
+.fp-day.is-today{box-shadow:0 3px 14px rgba(77,48,69,.13),0 0 0 1.5px rgba(77,48,69,.3)}
+.fp-day.is-today .fp-dhead{background:var(--plum);border-bottom-color:transparent}
+.fp-day.is-today .fp-dhead>b{color:#fff}
+.fp-day.is-today .fp-dhead>em{background:rgba(255,255,255,.24);color:#fff}
+.fp-day.is-today .fp-mus{color:#fff}
+.fp-day.is-today .fp-sum{color:rgba(255,255,255,.6)}
+
+/* ---- 3. 动作库 ---- */
+#view-exlib .ex-page-head{margin-bottom:12px;align-items:center}
+.ex-htxt{flex:1;min-width:0}
+.ex-htxt .eyebrow{margin:0 0 1px;font-size:9.5px;letter-spacing:.12em;color:#a8987f}
+.ex-htxt b{display:flex;align-items:baseline;gap:8px;font-size:17px;font-weight:800;letter-spacing:-.02em;color:var(--ink);line-height:1.25}
+.ex-htxt b i{font-style:normal;font-size:11px;font-weight:700;color:#ab9c86;letter-spacing:0}
+#view-exlib .ex-backbtn{width:34px;height:34px;border:0;border-radius:50%;background:rgba(31,26,22,.065);color:#5f5446}
+#view-exlib .ex-backbtn svg{width:16px;height:16px}
+.ex-bar{display:block;margin:0 0 10px}
+.ex-sbox{display:flex;align-items:center;gap:8px;min-height:44px;padding:0 13px;border-radius:14px;background:#fff;box-shadow:0 0 0 1px rgba(48,34,22,.065),0 1px 2px rgba(48,34,22,.04)}
+.ex-sbox>svg{flex:none;width:16px;height:16px;stroke:#b0a18c;fill:none;stroke-width:2;stroke-linecap:round}
+.ex-sbox input{flex:1;min-width:0;border:0;background:transparent;font:inherit;font-size:14px;color:var(--ink);min-height:42px;padding:0}
+.ex-sbox input:focus{outline:0}
+.ex-sbox input::placeholder{color:#bcaf9b}
+.ex-chips{display:flex;gap:6px;overflow-x:auto;padding:0 22px 11px 0;margin:0;scrollbar-width:none;-webkit-overflow-scrolling:touch;-webkit-mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 26px),transparent 100%);mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 26px),transparent 100%)}
+.ex-chips::-webkit-scrollbar{display:none}
+.ex-chip{flex:none;min-height:33px;padding:0 13px;border:1px solid rgba(48,34,22,.1);border-radius:999px;background:#fff;color:#7d7060;font:inherit;font-size:12.5px;font-weight:700;cursor:pointer;white-space:nowrap;transition:background .14s,color .14s,border-color .14s,box-shadow .14s}
+.ex-chip:active{transform:scale(.96)}
+.ex-chip.on{background:var(--plum);border-color:var(--plum);color:#fff;box-shadow:0 3px 10px rgba(77,48,69,.22)}
+.ex-subbar{display:flex;align-items:center;gap:8px;margin:0 0 8px}
+.ex-eq{flex:1;min-width:0;min-height:38px;border:1px solid rgba(48,34,22,.1);border-radius:11px;background-color:#fff;color:#6d6255;font:inherit;font-size:12.5px;font-weight:700;padding:0 30px 0 11px;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a3947f' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 10l5 5 5-5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;background-size:11px}
+.ex-gifbtn{flex:none;display:inline-flex;align-items:center;gap:5px;min-height:38px;padding:0 12px;border:1px solid rgba(48,34,22,.1);border-radius:11px;background:#fff;color:#8a7d6c;font:inherit;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;-webkit-appearance:none;appearance:none;transition:background .14s,color .14s,border-color .14s}
+.ex-gifbtn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.6}
+.ex-gifbtn.on{background:var(--plum);border-color:var(--plum);color:#fff}
+.ex-group{margin:0 0 0}
+.ex-ghead{border:0;border-radius:0;background:transparent;box-shadow:none;padding:12px 3px;min-height:46px;border-bottom:1px solid rgba(48,34,22,.075);transition:background .14s}
+.ex-ghead:active{background:rgba(31,26,22,.03)}
+.ex-gname{font-size:14.5px;font-weight:800;letter-spacing:-.015em;color:var(--ink)}
+.ex-gcount{font-size:11.5px;color:#ab9c86;font-weight:700;font-variant-numeric:tabular-nums}
+.ex-gchev{width:13px;height:13px;color:#c4b5a0}
+.ex-group.open .ex-ghead{border-bottom-color:rgba(48,34,22,.04)}
+.ex-gbody{padding:12px 0 14px}
+#exPageGrid .ex-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+#exPageGrid .ex-card{border:0;border-radius:16px;background:#fff;box-shadow:0 1px 2px rgba(48,34,22,.055),0 0 0 1px rgba(48,34,22,.055);padding:0;gap:0;overflow:hidden;transition:box-shadow .16s,transform .16s}
+#exPageGrid .ex-card:active{transform:scale(.985)}
+#exPageGrid .ex-thumb{aspect-ratio:4/3;background:#f6f0e5;border:0}
+#exPageGrid .ex-thumb.ex-noimg{background:repeating-linear-gradient(45deg,#f6f0e5,#f6f0e5 8px,#efe7da 8px,#efe7da 16px);border:0}
+#exPageGrid .ex-thumb .wft-g{top:7px;right:7px}
+#exPageGrid .ex-card .ft-fav{top:7px;left:7px;width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.86);color:#bcab93;display:grid;place-items:center;box-shadow:0 1px 4px rgba(28,20,12,.1);z-index:2}
+#exPageGrid .ex-card .ft-fav svg{width:13px;height:13px}
+#exPageGrid .ex-card .ft-fav.on{color:#c9a227;background:#fff}
+#exPageGrid .ex-name{padding:9px 11px 0;font-size:13px;font-weight:700;line-height:1.35;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#exPageGrid .ex-sub{padding:2px 11px 11px;font-size:10.5px;color:#ab9c86;font-weight:600;display:block}
+#exPageGrid .ex-card.on{box-shadow:0 0 0 2px var(--plum),0 8px 20px rgba(77,48,69,.18)}
+#exPageGrid .ex-check{top:7px;right:7px;width:21px;height:21px;border-radius:50%;border-color:rgba(255,255,255,.8);background:rgba(255,255,255,.7);box-shadow:0 1px 4px rgba(0,0,0,.12)}
+@media (min-width:861px){
+  #fsec-plan .fp-thumb{width:54px;height:54px;border-radius:13px}
+  #fsec-plan .fp-row{padding:11px 0;gap:13px}
+  #fsec-plan .fp-info b{font-size:14.5px}
+  #fsec-plan .fp-info small{font-size:11.5px}
+  #fsec-plan .fp-log{min-width:58px;min-height:35px;font-size:12.5px}
+  #fsec-plan .fp-dhead{padding:12px 15px}
+  #fsec-plan .fp-rows{padding:2px 15px 6px}
+}
+@media (min-width:900px){
+  #exPageGrid .ex-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+  #exPageGrid .ex-name{font-size:13.5px;padding:10px 13px 0}
+  #exPageGrid .ex-sub{padding:2px 13px 12px;font-size:11px}
+}
+
+/* ---- 4. 首页小组件 ---- */
+#view-dashboard .dashboard-grid{gap:11px}
+#view-dashboard .panel{border-radius:18px}
+/* 示例数据横幅：去掉虚线，收成低调提示条 */
+#view-dashboard .sample-banner{grid-column:1/-1;border:0;border-radius:14px;background:#fbf3e2;padding:11px 13px;gap:8px 12px;align-items:center;box-shadow:none}
+#view-dashboard .sample-banner p{font-size:11.5px;line-height:1.6;color:#7d6a4a;font-weight:600}
+#view-dashboard .sample-banner .sb-actions{gap:14px;flex-wrap:nowrap}
+#view-dashboard .sample-banner .wbtn{min-height:32px;padding:0 12px;font-size:11.5px;border-radius:10px;background:#8a6a3a}
+#view-dashboard .sample-banner .text-btn{font-size:11.5px;color:#9b8663}
+/* 灵感卡：字重与行距重排 */
+#view-dashboard .inspire-card blockquote{font:600 19px/1.5 "Songti SC",serif;letter-spacing:.015em;margin:13px 0 11px}
+#view-dashboard .inspire-card .insight-tag{font-size:10px}
+#view-dashboard .inspire-card .insight-next{font-size:10.5px;opacity:.75}
+/* 数据卡：数字当家，标签退后 */
+#view-dashboard .stat-card{align-items:flex-start;min-height:0;padding:15px 15px 16px;gap:12px}
+#view-dashboard .stat-card>div:last-child{min-width:0;flex:1}
+#view-dashboard .stat-card span{font-size:10.5px;font-weight:700;letter-spacing:.05em;color:#a8987f}
+#view-dashboard .stat-card strong{font-size:25px;font-weight:800;letter-spacing:-.035em;line-height:1.12;margin:4px 0 3px;font-variant-numeric:tabular-nums}
+#view-dashboard .stat-card small{font-size:10.5px;color:#a8987f;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#view-dashboard .stat-icon{width:40px;height:40px;border-radius:13px;margin-top:1px}
+#view-dashboard .stat-icon svg{width:18px;height:18px}
+/* 快速开始：四色方块改白底彩图标 */
+#view-dashboard .quick-grid{gap:8px}
+#view-dashboard .quick-action{min-height:88px;padding:13px 12px;gap:0;justify-content:space-between;border-radius:15px;background:#fff;box-shadow:0 0 0 1px rgba(48,34,22,.06),0 1px 2px rgba(48,34,22,.04);transition:transform .14s,box-shadow .14s}
+#view-dashboard .quick-action:active{transform:scale(.965);box-shadow:0 0 0 1px rgba(48,34,22,.1),0 4px 12px rgba(48,34,22,.09)}
+#view-dashboard .quick-action.terracotta{background:#fff;color:#a2532f}
+#view-dashboard .quick-action.plum{background:#fff;color:#5d3b54}
+#view-dashboard .quick-action.sage{background:#fff;color:#4f6b52}
+#view-dashboard .quick-action.sand{background:#fff;color:#8a6a3a}
+#view-dashboard .quick-action>svg{width:25px;height:25px;stroke-width:1.65}
+#view-dashboard .quick-action span strong{font-size:12.5px;font-weight:700;color:var(--ink);letter-spacing:-.01em}
+#view-dashboard .quick-action span small{margin-top:2px;color:#a8987f;font-size:10px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+#view-dashboard .quick-action i{display:none}
+#view-dashboard .quick-panel .panel-head h2{font-size:19px;font-weight:800;letter-spacing:-.015em}
+/* 备忘录与列表卡统一收紧 */
+#view-dashboard .dash-memo textarea{font-size:13px}
+#view-dashboard .panel-head h2{letter-spacing:-.015em}
+#view-dashboard .clean-list{gap:6px}
+#view-dashboard .timeline-item{padding:8px 0}
+/* 三域投影：从三个大灰块改成有分隔的列表 */
+#view-dashboard [data-p5="cockpit"] .wlist{gap:0}
+#view-dashboard [data-p5="cockpit"] .wrv{border:0;border-radius:0;background:transparent;padding:11px 0;gap:3px;border-top:1px solid rgba(48,34,22,.06)}
+#view-dashboard [data-p5="cockpit"] .wrv:first-child{border-top:0;padding-top:2px}
+#view-dashboard [data-p5="cockpit"] .wrv-date{display:flex;align-items:center;gap:7px;font-size:10.5px;font-weight:800;letter-spacing:.07em;color:#a8987f}
+#view-dashboard [data-p5="cockpit"] .wrv-date .text-btn{min-height:0;padding:0;font-size:10.5px;font-weight:700;color:#c0af95;letter-spacing:0}
+#view-dashboard [data-p5="cockpit"] .wrv-date .text-btn:after{content:'';display:inline-block;width:5px;height:5px;border-top:1.4px solid currentColor;border-right:1.4px solid currentColor;transform:rotate(45deg);margin-left:4px;vertical-align:1.5px}
+#view-dashboard [data-p5="cockpit"] .wrv-line{font-size:13px;line-height:1.6;color:#6d6255;font-weight:600}
+#view-dashboard [data-p5="cockpit"] .wrv-line b{color:var(--ink);font-weight:800;font-size:15px;font-variant-numeric:tabular-nums;margin:0 2px}
+#view-dashboard [data-p5="cockpit"] .wbadge{display:inline-block;white-space:nowrap;font-size:9.5px;font-weight:800;padding:2px 6px;border-radius:6px;vertical-align:1px;letter-spacing:.02em}
+/* 卡片右上角的文字入口：降低音量，别和标题抢 */
+#view-dashboard .text-btn{color:#b8a68e;font-weight:700;letter-spacing:.01em}
+#view-dashboard .text-btn:active{color:var(--plum)}
+</style>
+
 </body>
 </html>
