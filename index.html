@@ -3506,7 +3506,7 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     const svg=document.getElementById('moneyPie'),legend=document.getElementById('moneyLegend');
     if(!svg)return;
     if(!total){
-      svg.innerHTML='<circle cx="110" cy="110" r="72" fill="none" stroke="#f2ece3" stroke-width="15"/>'
+      svg.innerHTML='<circle cx="110" cy="110" r="84" fill="none" stroke="#f2ece3" stroke-width="16"/>'
         +'<text x="110" y="108" text-anchor="middle" fill="#b3a89a" font-size="10.5" font-weight="800" letter-spacing="0.6">本月还没支出</text>'
         +'<text x="110" y="126" text-anchor="middle" fill="#cdc2b3" font-size="10">记一笔就有图</text>';
       if(legend)legend.innerHTML='';
@@ -3514,19 +3514,21 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
       return;
     }
     const noteEl=document.getElementById('moneyPieNote');if(noteEl)noteEl.textContent=expenses.length+' 笔 · '+entries.length+' 类';
-    const R=73,SW=13,C=2*Math.PI*R;let offset=0;
+    /* 2026-10-29 F：环半径按「外沿到画布边留 8px」反推。画布 176px、viewBox 220 → 1px = 1.25 单位，
+       8px 即 10 单位，故外沿半径 100，环宽 16 时 R = 92。 */
+    const R=92,SW=16,C=2*Math.PI*R;let offset=0;
     const arcs=entries.map(([category,value],index)=>{
       const raw=value/total*C,gap=raw>14?3:0,draw=Math.max(0.8,raw-gap);
       const item='<circle cx="110" cy="110" r="'+R+'" fill="none" stroke="'+CATEGORY_COLORS[index%CATEGORY_COLORS.length]+'" stroke-width="'+SW+'" stroke-dasharray="'+draw.toFixed(2)+' '+(C-draw).toFixed(2)+'" stroke-dashoffset="'+(-offset).toFixed(2)+'" transform="rotate(-90 110 110)"/>';
       offset+=raw;return item;
     }).join('');
     svg.innerHTML='<circle cx="110" cy="110" r="'+R+'" fill="none" stroke="#f4eee6" stroke-width="'+SW+'"/>'+arcs
-      +'<text x="110" y="117" text-anchor="middle" fill="#2f2a24" font-size="21" font-weight="800" letter-spacing="-0.8">'+escapeHtml(money(total))+'</text>';
+      +'<text x="110" y="118" text-anchor="middle" fill="#2f2a24" font-size="20" font-weight="800" letter-spacing="0.6">'+escapeHtml(money(total))+'</text>';
     const pcts=entries.map(([,v])=>v/total*100),rounded=pcts.map(p=>Math.floor(p));
     let rest=100-rounded.reduce((a,b)=>a+b,0);
     const order=pcts.map((p,i)=>[p,i]).sort((a,b)=>b[0]-a[0]);
     for(let i=0;i<rest;i++)rounded[order[i%order.length][1]]++;
-    if(legend)legend.innerHTML=entries.map(([category,value],index)=>'<button type="button" class="legend-item" data-mfilter="'+escapeHtml(category)+'" title="'+escapeHtml(category)+' '+money(value)+'"><i style="background:'+CATEGORY_COLORS[index%CATEGORY_COLORS.length]+'"></i><span>'+escapeHtml(category)+'</span><small>'+money(value)+'</small><b>'+rounded[index]+'%</b><u style="--w:'+rounded[index]+'%;--c:'+CATEGORY_COLORS[index%CATEGORY_COLORS.length]+'"></u></button>').join('');
+    if(legend)legend.innerHTML=entries.map(([category,value],index)=>'<button type="button" class="legend-item" data-mfilter="'+escapeHtml(category)+'" title="'+escapeHtml(category)+' '+money(value)+'"><i style="background:'+CATEGORY_COLORS[index%CATEGORY_COLORS.length]+'"></i><span>'+escapeHtml(category)+'</span><b>'+rounded[index]+'%</b><small>'+money(value)+'</small></button>').join('');
   }
   const ACC_KINDS=[['cash','现金'],['wechat','微信零钱'],['debit','储蓄卡'],['credit','信用卡'],['huabei','花呗'],['baitiao','白条'],['douyin','抖音月付'],['meituan','美团月付'],['loan','网贷'],['other','其他']];
   const ACC_CREDIT=['credit','huabei','baitiao','douyin','meituan','loan'];
@@ -4836,8 +4838,69 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     closeList();
     return h;
   }
+  /* ===== 2026-10-29 E：还款与花钱计划重排 =====
+     第一层一行大字给本期该还总额，第二层按平台一行一个「平台名 + 金额」，
+     原来的长句按标点切成不超过 30 字一行。旧版排版函数保留不删，这里先接手渲染。 */
+  function fpChop(s,n){
+    const src=String(s||'').replace(/\s+/g,' ').trim();
+    const out=[];let cur='';
+    for(let i=0;i<src.length;i++){
+      const ch=src[i];cur+=ch;
+      if('，。；、：！？'.indexOf(ch)>-1&&cur.length>=12){out.push(cur);cur='';}
+      else if(cur.length>=n){out.push(cur);cur='';}
+    }
+    if(cur)out.push(cur);
+    return out;
+  }
+  function fpRenderPlan(txt,fin){
+    if(!txt)return;
+    const text=fin.plan?String(fin.plan.text||''):'';
+    if(!text){txt.textContent='';return;}
+    const P=parsePlanText(text)||parsePlanLoose(text);
+    const rows=(P&&P.items&&P.items.length)?P.items:[];
+    const canPay=Number((P&&P.canPay)||0),debtTotal=Number((P&&P.debtTotal)||0);
+    const payTotal=rows.length?rows.reduce((s,d)=>s+(Number(d.pay)||0),0):canPay;
+    const heroVal=payTotal>0?payTotal:debtTotal;
+    let h='';
+    if(heroVal>0){
+      h+='<div class="fp-hero"><span>'+(payTotal>0?'本期该还':'总欠款')+'</span><b>'+money(heroVal)+'</b>'
+        +(rows.length?'<em>'+rows.length+' 个平台</em>':'')+'</div>';
+    }
+    const kv=[];
+    if(debtTotal>0)kv.push(['总欠款',money(debtTotal)]);
+    if(canPay>0)kv.push(['本期可还',money(canPay)]);
+    if(P&&P.bal!=null&&P.bal!=='')kv.push(['可用余额',money(P.bal)]);
+    if(P&&P.daily)kv.push(['每天可花',money(P.daily)]);
+    if(P&&P.mClear)kv.push(['清空期数','约 '+P.mClear+' 期']);
+    if(kv.length)h+='<div class="fp-lines">'+kv.map(x=>'<span><i>'+x[0]+'</i><b>'+x[1]+'</b></span>').join('')+'</div>';
+    if(rows.length){
+      h+='<div class="fp-h"><span>还款顺序 · 按平台</span><em>本期应还</em></div><div class="fp-plat">'
+        +rows.map(d=>'<div class="fp-plat-row"><span>'+escapeHtml(d.name)+'</span><b>'+money(d.pay)+'</b></div>').join('')
+        +'</div>';
+    }else{
+      const skip=[/总负债/,/可用余额/,/^还款顺序/,/^本期可还约/,/^发薪前每天可花/,/期清空/];
+      const lines=String(text).split('\n').map(x=>x.trim()).filter(Boolean).filter(l=>!skip.some(rx=>rx.test(l)));
+      if(lines.length){
+        h+='<div class="fp-h"><span>计划要点</span></div><div class="fp-para30">'
+          +lines.map(l=>fpChop(l.replace(/^[·•\-*]\s*/,''),30).map(x=>'<p>'+planHi(x)+'</p>').join('')).join('')
+          +'</div>';
+      }
+    }
+    txt.innerHTML=h||escapeHtml(text);
+    if(!fin.balance||!fin.expected){
+      const g=document.createElement('div');g.className='pA-guide';
+      g.innerHTML='<span>补齐两笔数就能出数字格：</span><button type="button" class="pA-gbtn" data-pg="bal">校准余额</button><button type="button" class="pA-gbtn" data-pg="sal">登记工资</button>';
+      txt.appendChild(g);
+      g.querySelectorAll('.pA-gbtn').forEach(b=>b.addEventListener('click',()=>{
+        const sheet=document.getElementById('aiSheet');const inp=document.getElementById('aiInput');
+        if(sheet)sheet.hidden=false;if(typeof renderAiStatus==='function')renderAiStatus();
+        if(inp){inp.value=b.getAttribute('data-pg')==='bal'?'手上还有 ':'下月 15 号发工资 ';setTimeout(()=>inp.focus(),80);}
+      }));
+    }
+  }
   function renderFinPlanText(txt,fin){
     if(!txt)return;
+    if(typeof fpRenderPlan==='function')return fpRenderPlan(txt,fin);
     const text=fin.plan?String(fin.plan.text||''):'';
     if(!text){txt.textContent='';return;}
     const P=parsePlanText(text)||parsePlanLoose(text);
@@ -7819,7 +7882,7 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     document.getElementById('planSettings').addEventListener('click',event=>{if(event.target.id==='planSettings')closePlanSettings();});
     document.getElementById('fitnessProfileSettings').addEventListener('click',event=>{if(event.target.id==='fitnessProfileSettings')closeFitnessProfile();});
     document.addEventListener('keydown',event=>{if(event.key==='Escape'){closeBrandSettings();closeHabitSettings();closePlanSettings();closeFitnessProfile();}});
-    window.addEventListener('resize',()=>{segSyncAll();});
+    window.addEventListener('resize',()=>{segSyncAll();if(typeof dashEditLayout==='function')dashEditLayout();});
     document.addEventListener('click',event=>{
       const segBtn=event.target.closest('.wseg button');
       if(segBtn){const seg=segBtn.parentElement;setTimeout(()=>segSync(seg),0);}
@@ -7898,7 +7961,30 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     if(!DASH_SPAN_STEPS.includes(n))return;
     const sp={...dashSpanMap()};sp[id]=n;state.settings.dashSpan=sp;
     saveState();dashApplySize();
+    if(typeof dashEditLayout==='function')dashEditLayout();
     toast(`「${DASH_META[id]?DASH_META[id][0]:id}」改成 ${DASH_SIZE_LABEL[n]} 号`);
+  }
+  /* 2026-10-29 D：编辑态工具行按卡片实际宽度分配按钮，并按工具行真实高度留出上边距。
+     卡片窄（半宽）只给 S / M，卡片够宽（整行）才给 S / M / L。 */
+  function dashEditLayout(){
+    const grid=document.querySelector('#view-dashboard .dashboard-grid');
+    if(!grid||!grid.classList.contains('editing'))return;
+    [...grid.children].forEach(el=>{
+      if(!el.dataset.dcard)return;
+      const row=el.querySelector('.dh-move');
+      if(!row||row.hidden)return;
+      const box=row.querySelector('.dh-size');
+      if(!box)return;
+      const allow=el.clientWidth>=300?DASH_SPAN_STEPS:DASH_SPAN_STEPS.filter(n=>n<=8);
+      const key=allow.join('-');
+      if(box.dataset.sizes!==key){
+        box.dataset.sizes=key;
+        box.innerHTML=allow.map(n=>`<button type="button" data-action="dash-size" data-size="${n}" title="${DASH_SIZE_LABEL[n]} 号尺寸" aria-label="${DASH_SIZE_LABEL[n]} 号尺寸">${DASH_SIZE_LABEL[n]}</button>`).join('');
+      }
+      const cur=Number(el.dataset.dspan)||((el.dataset.dsize==='s')?4:12);
+      box.querySelectorAll('button').forEach(b=>b.classList.toggle('on',Number(b.dataset.size)===cur));
+      el.style.paddingTop=(Math.round(row.getBoundingClientRect().height)+10)+'px';
+    });
   }
   function dashCardMap(){
     const grid=document.querySelector('#view-dashboard .dashboard-grid');if(!grid)return null;
@@ -8070,6 +8156,9 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
         h.querySelectorAll('.dh-size button').forEach(b=>b.classList.toggle('on',Number(b.dataset.size)===cur));
       }else if(h)h.hidden=true;
     });
+    /* 2026-10-29 D：工具行建好后再量一次真实宽度 / 高度，按钮组数量与上边距都按量出来的算 */
+    if(on){requestAnimationFrame(()=>{dashEditLayout();requestAnimationFrame(dashEditLayout);});}
+    else{[...grid.children].forEach(el=>{el.style.paddingTop='';});}
   }
   function renderDashJump(){
     const set=function(id,txt){const el=document.getElementById(id);if(el)el.textContent=txt;};
@@ -8605,6 +8694,110 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
 /* 卡片右上角的文字入口：降低音量，别和标题抢 */
 #view-dashboard .text-btn{color:#b8a68e;font-weight:700;letter-spacing:.01em}
 #view-dashboard .text-btn:active{color:var(--plum)}
+
+/* ===== 2026-10-29 A：今天页节奏统一（间距 14 / 内边距 16 / 圆角 22 / 字号三级 26·17·14） =====
+   只加不改：靠后覆盖旧值，旧规则原样留着。编辑态单独排除，免得把工具行预留的 padding-top 盖掉。 */
+body:has(#view-dashboard.active) .topbar h1{font-size:26px;line-height:1.25}
+#view-dashboard .dashboard-grid{gap:14px}
+#view-dashboard .dashboard-grid:not(.editing)>article{padding:16px;border-radius:22px}
+#view-dashboard .dashboard-grid.editing>article{border-radius:22px}
+#view-dashboard .dashboard-grid>article.dash-add-tile{border-radius:22px}
+#view-dashboard .panel-head{margin-bottom:14px;gap:14px}
+#view-dashboard .panel-head h2{font-size:17px;line-height:1.35}
+#view-dashboard .quick-panel .panel-head h2{font-size:17px}
+#view-dashboard .dash-memo .panel-head h2{font-size:17px}
+#view-dashboard .wrv-line,
+#view-dashboard .timeline-item .ti-title,
+#view-dashboard .memo-mini .t,
+#view-dashboard .dash-jump .dj-tx small,
+#view-dashboard .insight-row,
+#view-dashboard .quick-action span strong,
+#view-dashboard .clean-list .task-row{font-size:14px}
+#view-dashboard .stat-card strong{font-size:26px;line-height:1.1}
+/* 把还卡在 13 / 15 / 19 的几处正文拉回 14 与 17，页面上不再出现第四级中号字 */
+#view-dashboard .inspire-card blockquote{font-size:17px;line-height:1.5}
+#view-dashboard [data-p5="cockpit"] .wrv-line{font-size:14px}
+#view-dashboard [data-p5="cockpit"] .wrv-line b{font-size:14px}
+#view-dashboard .clean-list .task-title{font-size:14px}
+#view-dashboard .dash-memo .memo-quick .btn{font-size:14px}
+#view-dashboard .counter-control strong{font-size:17px}
+#view-dashboard .band-read-btn b{font-size:17px}
+
+/* ===== 2026-10-29 B：备忘录卡重排（输入框与按钮同一行，按钮固定 72，输入框 100% + min-width 0） =====
+   原规则靠 flex:1 / flex:0 0 auto 撑，按钮实际只有 56px；粘贴长文本时 textarea 的默认 cols 宽度
+   会把 .memo-quick 顶宽。这里把宽度算死：输入框吃满剩余空间，按钮不吃不收。 */
+#view-dashboard .dash-memo{min-width:0;overflow:hidden}
+#view-dashboard .dash-memo .memo-quick{display:flex;flex-wrap:nowrap;align-items:flex-start;gap:9px;min-width:0}
+#view-dashboard .dash-memo .memo-quick textarea{flex:1 1 auto;width:100%;min-width:0;max-width:100%}
+#view-dashboard .dash-memo .memo-quick .btn{flex:0 0 72px;width:72px;min-width:72px;padding:0 6px;white-space:nowrap;margin-right:0}
+#view-dashboard .dash-memo-list{min-width:0}
+
+/* ===== 2026-10-29 C：小组件三档尺寸（桌面 12 栏 → 4 / 8 / 12；手机 S 半宽、M 整行、L 整行） =====
+   旧规则的 8 档在手机上被当成半宽、12 档没有高度，档位和画面一直对不上。
+   高度改成下限而不是死高度：120 / 216 / 216，内容多的卡自己长高，不会被裁。 */
+@media(max-width:860px){
+  #view-dashboard .dashboard-grid>article[data-dspan="4"]{grid-column:span 1;height:auto;min-height:120px;overflow:visible}
+  #view-dashboard .dashboard-grid>article[data-dspan="8"]{grid-column:1/-1;height:auto;min-height:216px;overflow:visible}
+  #view-dashboard .dashboard-grid>article[data-dspan="12"]{grid-column:1/-1;height:auto;min-height:216px;overflow:visible}
+  /* 矮卡放到整行尺寸时内容垂直居中，免得顶上挤成一团、下面空一大块 */
+  #view-dashboard .dashboard-grid>article.stat-card[data-dspan="8"],
+  #view-dashboard .dashboard-grid>article.stat-card[data-dspan="12"],
+  #view-dashboard .dashboard-grid>article.dash-jump[data-dspan="8"],
+  #view-dashboard .dashboard-grid>article.dash-jump[data-dspan="12"]{align-items:center;grid-auto-rows:auto}
+  /* 纯数字卡（支出 / 习惯 / 待办数 / 净可用）与跳转卡本身只有一行数据，抬到 216 会空出一大块，
+     这两类整行档只保 120 下限，高度跟着内容走；文字型卡片照旧 216 起 */
+  #view-dashboard .dashboard-grid>article.stat-card[data-dspan="8"],
+  #view-dashboard .dashboard-grid>article.stat-card[data-dspan="12"],
+  #view-dashboard .dashboard-grid>article.dash-jump[data-dspan="8"],
+  #view-dashboard .dashboard-grid>article.dash-jump[data-dspan="12"],
+  #view-dashboard .dashboard-grid>article.sample-banner[data-dspan="8"],
+  #view-dashboard .dashboard-grid>article.sample-banner[data-dspan="12"]{min-height:120px}
+}
+/* 861–1180 是两栏，4 档占一栏、8 与 12 档铺满整行 */
+@media(min-width:861px) and (max-width:1180px){
+  #view-dashboard .dashboard-grid>article[data-dspan="4"]{grid-column:span 1}
+  #view-dashboard .dashboard-grid>article[data-dspan="8"],
+  #view-dashboard .dashboard-grid>article[data-dspan="12"]{grid-column:1/-1}
+}
+
+/* ===== 2026-10-29 D：编辑态工具行跟着卡片实际宽度走 =====
+   半宽卡只留 S / M，整行卡才有 S / M / L；工具行高度由 JS 量出来写进 padding-top，不压内容。 */
+.dashboard-grid.editing>article .dh-move{align-items:center;gap:6px;padding:10px 12px 0}
+.dashboard-grid.editing>article .dh-size{margin-left:auto;flex:none}
+@media(max-width:860px){.dashboard-grid.editing>article .dh-move{padding:8px 8px 0;gap:4px}}
+
+/* ===== 2026-10-29 E：还款与花钱计划的新版式（旧 .pA-* 规则原样保留，这套只在 fpRenderPlan 产出时生效） ===== */
+.money-plan .fp-hero{display:flex;align-items:baseline;gap:10px;padding:2px 0 12px;border-bottom:1px solid var(--line);min-width:0}
+.money-plan .fp-hero>span{flex:none;font-size:12px;font-weight:800;letter-spacing:.04em;color:#a8987f}
+.money-plan .fp-hero>b{min-width:0;font-size:30px;font-weight:800;letter-spacing:-.03em;line-height:1.05;font-variant-numeric:tabular-nums;color:var(--ink)}
+.money-plan .fp-hero>em{flex:none;margin-left:auto;font-style:normal;font-size:11.5px;color:#a89d90;font-weight:600;white-space:nowrap}
+.money-plan .fp-lines{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px 8px;padding:12px 0 4px}
+.money-plan .fp-lines>span{display:flex;flex-direction:column;gap:2px;min-width:0}
+.money-plan .fp-lines i{font-style:normal;font-size:11px;font-weight:750;color:#a8987f;letter-spacing:.02em}
+.money-plan .fp-lines b{font-size:15px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
+.money-plan .fp-plat{display:flex;flex-direction:column;min-width:0}
+.money-plan .fp-plat-row{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:44px;padding:6px 0;border-top:1px solid rgba(48,34,22,.07)}
+.money-plan .fp-plat-row:first-child{border-top:0}
+.money-plan .fp-plat-row>span{flex:1;min-width:0;font-size:14px;font-weight:650;color:#3f3a33;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.money-plan .fp-plat-row>b{flex:none;font-size:15px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums}
+.money-plan .fp-para30 p{margin:0 0 5px;font-size:13.5px;line-height:1.68;color:#6f6559;max-width:30em}
+@media(min-width:960px){.money-plan #finPlanText{display:flex;flex-direction:column;align-items:stretch;align-content:stretch;gap:0;column-gap:0}}
+
+/* ===== 2026-10-29 F：消费结构环形图版式（环外留白 8px、图例右对齐列表、百分比与金额同一行靠右） ===== */
+.money-chart .pie-wrap{grid-template-columns:176px minmax(0,1fr);gap:12px}
+.money-chart .pie-wrap svg{width:176px;height:176px;padding:0;overflow:visible}
+.money-wrap .chart-legend{display:flex;flex-direction:column;gap:2px;min-width:0;align-content:center}
+.money-wrap .chart-legend .legend-item{display:grid;grid-template-columns:8px minmax(0,1fr) auto auto;align-items:center;gap:7px;width:100%;min-height:30px;padding:0;border:0;background:none;text-align:left;font:inherit;cursor:pointer}
+.money-wrap .chart-legend .legend-item>i{width:8px;height:8px;border-radius:2px;flex:none}
+.money-wrap .chart-legend .legend-item>span{min-width:0;font-size:13px;color:#5d554a;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.money-wrap .chart-legend .legend-item>b{flex:none;font-size:12.5px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums;text-align:right;min-width:34px}
+.money-wrap .chart-legend .legend-item>small{flex:none;font-size:11.5px;color:#a8987f;font-weight:700;font-variant-numeric:tabular-nums;text-align:right;min-width:52px}
+.money-wrap .chart-legend .legend-item>u{display:none}
+@media(max-width:860px){
+  .money-chart .pie-wrap{grid-template-columns:1fr;gap:10px;justify-items:stretch}
+  .money-chart .pie-wrap svg{width:176px;height:176px;margin:0 auto}
+  .money-wrap .chart-legend{grid-template-columns:none;width:100%;margin-top:2px}
+}
 </style>
 
 </body>
