@@ -41,10 +41,10 @@
 .mp-badge .k{font-size:11px;color:#9b9186}
 .mp-badge.mp-dim .v{color:#9b9186;font-weight:600}
 .mp-badge.mp-hot .v{color:var(--terra)}.toast{position:fixed;left:50%;bottom:28px;z-index:130;max-width:calc(100vw - 32px);padding:11px 17px;border-radius:12px;background:#27231f;color:white;box-shadow:0 10px 30px rgba(0,0,0,.18);font-size:12px;opacity:0;transform:translate(-50%,12px);pointer-events:none;transition:.25s}.toast.show{opacity:1;transform:translate(-50%,0)}.confetti{position:fixed;inset:0;z-index:99;pointer-events:none;overflow:hidden}.confetti i{position:absolute;left:var(--x);top:45%;width:7px;height:12px;border-radius:3px;background:var(--c);animation:burst .85s ease-out forwards}@keyframes burst{to{transform:translate(var(--dx),var(--dy)) rotate(280deg);opacity:0}}
-@media(max-width:1280px){.split-grid{grid-template-columns:1fr}.pie-wrap{grid-template-columns:210px minmax(130px,1fr)}}
+@media(max-width:1280px){.split-grid{grid-template-columns:1fr}}
 @media(max-width:1180px){.main-content{padding-left:26px;padding-right:26px}.dashboard-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.quick-panel{grid-column:span 1}.quick-grid{grid-template-columns:repeat(2,1fr)}.stat-card:last-of-type{grid-column:span 2}.module-layout{grid-template-columns:310px minmax(0,1fr)}.daily-habits{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:860px){:root{--sidebar:0px}html,body{overflow-x:hidden}.sidebar{display:none}.main-content{margin-left:0;padding:0 16px calc(92px + env(safe-area-inset-bottom))}.topbar{min-height:88px;padding-top:18px;align-items:center;flex-wrap:wrap}.topbar .top-actions{width:auto;min-width:0;display:flex;align-items:center;gap:8px;justify-content:flex-end}.topbar>div:first-child{flex:1;min-width:150px}.topbar h1{font-size:24px}.top-actions{width:100%;min-width:0;display:grid;grid-template-columns:48px minmax(0,1fr) minmax(0,1.35fr)}.top-actions .save-state{display:none}.top-actions:has(#clearSamplesBtn[hidden]){grid-template-columns:minmax(0,1fr) minmax(0,1.35fr)}.top-actions .btn{width:100%;min-width:0;min-height:46px;padding:0 8px;white-space:nowrap}.top-actions #clearSamplesBtn span{display:none}.dashboard-grid{display:flex;flex-direction:column}.hero-card{min-height:190px}.quick-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.quick-action{min-height:96px;padding:14px 10px}.quick-action span small{display:none}.module-layout{display:flex;flex-direction:column}.form-panel,.sticky-stack{position:static;width:100%}.module-main{width:100%}[data-memo-add]{margin-right:58px}.mobile-nav{position:fixed;display:grid;grid-template-columns:repeat(6,1fr);left:10px;right:10px;bottom:calc(8px + env(safe-area-inset-bottom));z-index:40;height:66px;padding:6px;border:1px solid rgba(85,69,55,.14);border-radius:20px;background:rgba(255,252,247,.94);box-shadow:0 14px 35px rgba(53,41,31,.16);backdrop-filter:blur(14px)}.mobile-nav button{min-width:0;border:0;border-radius:14px;background:transparent;color:#847a70;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:10.5px}.mobile-nav button svg{width:21px;height:21px}.mobile-nav button.active{background:var(--plum);color:var(--white)}.daily-habits{grid-template-columns:repeat(2,1fr)}.archive-head{align-items:flex-start;flex-direction:column}.archive-record{grid-template-columns:72px 1fr}.archive-record>span:last-child{display:none}.delete-btn,.habit-card-delete,.plan-delete{opacity:1}.section-actions{justify-content:flex-start;overflow-x:auto}.media-toolbar{align-items:flex-start;flex-direction:column}.media-controls{width:100%;justify-content:flex-start;overflow-x:auto;flex-wrap:nowrap;padding-bottom:3px}.media-controls>*{flex:0 0 auto}.media-delete{opacity:1}.section-actions .btn{min-height:46px;white-space:nowrap}.system-alert{align-items:flex-start}.system-alert .btn{white-space:nowrap}.week-strip{overflow-x:auto;grid-template-columns:repeat(7,78px)}.pie-wrap{grid-template-columns:190px 1fr}.pie-wrap svg{width:190px;height:190px}}
-@media(max-width:560px){body{font-size:14px}.main-content{padding-left:12px;padding-right:12px}.topbar{gap:8px}.topbar h1{font-size:22px}.panel{padding:18px;border-radius:19px}.quick-panel{padding:17px}.quick-grid{gap:7px}.quick-action{min-height:84px;padding:12px 8px}.quick-action>svg{width:19px}.quick-action span strong{font-size:11px;white-space:nowrap}.quick-action i{font-size:15px;right:8px;top:8px}.hero-card{padding:24px}.hero-card h2{font-size:54px}.metric-row{gap:7px}.metric{min-height:88px;padding:14px 12px}.metric strong{font-size:18px}.form-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:9px}.field input[type=date],.field input[type=time],.field input[type=datetime-local]{padding:0 7px;font-size:13px}.daily-habits{grid-template-columns:1fr}.daily-habit{min-height:122px}.habit-action{grid-template-columns:70px minmax(0,1fr)}.theme-swatches{grid-template-columns:repeat(2,1fr)}.media-wall{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 13px}.rating-distribution{gap:7px}.settings-sheet{padding:20px}.weekly-plan{grid-template-columns:1fr}.pie-wrap{grid-template-columns:1fr}.pie-wrap svg{margin:auto}.record-row{grid-template-columns:38px 1fr auto 30px;gap:8px}.record-row .record-main small{max-width:140px}.filter-chips{width:100%;overflow:auto;flex-wrap:nowrap;padding-bottom:3px}.filter-chips button{flex:0 0 auto;min-height:38px}.panel-head:has(.filter-chips){flex-direction:column}.compare-card{align-items:flex-start;flex-direction:column}.system-alert{flex-direction:column}.system-alert .btn{width:100%;min-height:46px}.shopping-row{grid-template-columns:28px 1fr auto 30px}.archive-head h2{font-size:24px}.legend-inline{display:none}}
+@media(max-width:860px){:root{--sidebar:0px}html,body{overflow-x:hidden}.sidebar{display:none}.main-content{margin-left:0;padding:0 16px calc(92px + env(safe-area-inset-bottom))}.topbar{min-height:88px;padding-top:18px;align-items:center;flex-wrap:wrap}.topbar .top-actions{width:auto;min-width:0;display:flex;align-items:center;gap:8px;justify-content:flex-end}.topbar>div:first-child{flex:1;min-width:150px}.topbar h1{font-size:24px}.top-actions{width:100%;min-width:0;display:grid;grid-template-columns:48px minmax(0,1fr) minmax(0,1.35fr)}.top-actions .save-state{display:none}.top-actions:has(#clearSamplesBtn[hidden]){grid-template-columns:minmax(0,1fr) minmax(0,1.35fr)}.top-actions .btn{width:100%;min-width:0;min-height:46px;padding:0 8px;white-space:nowrap}.top-actions #clearSamplesBtn span{display:none}.dashboard-grid{display:flex;flex-direction:column}.hero-card{min-height:190px}.quick-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.quick-action{min-height:96px;padding:14px 10px}.quick-action span small{display:none}.module-layout{display:flex;flex-direction:column}.form-panel,.sticky-stack{position:static;width:100%}.module-main{width:100%}[data-memo-add]{margin-right:58px}.mobile-nav{position:fixed;display:grid;grid-template-columns:repeat(6,1fr);left:10px;right:10px;bottom:calc(8px + env(safe-area-inset-bottom));z-index:40;height:66px;padding:6px;border:1px solid rgba(85,69,55,.14);border-radius:20px;background:rgba(255,252,247,.94);box-shadow:0 14px 35px rgba(53,41,31,.16);backdrop-filter:blur(14px)}.mobile-nav button{min-width:0;border:0;border-radius:14px;background:transparent;color:#847a70;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:10.5px}.mobile-nav button svg{width:21px;height:21px}.mobile-nav button.active{background:var(--plum);color:var(--white)}.daily-habits{grid-template-columns:repeat(2,1fr)}.archive-head{align-items:flex-start;flex-direction:column}.archive-record{grid-template-columns:72px 1fr}.archive-record>span:last-child{display:none}.delete-btn,.habit-card-delete,.plan-delete{opacity:1}.section-actions{justify-content:flex-start;overflow-x:auto}.media-toolbar{align-items:flex-start;flex-direction:column}.media-controls{width:100%;justify-content:flex-start;overflow-x:auto;flex-wrap:nowrap;padding-bottom:3px}.media-controls>*{flex:0 0 auto}.media-delete{opacity:1}.section-actions .btn{min-height:46px;white-space:nowrap}.system-alert{align-items:flex-start}.system-alert .btn{white-space:nowrap}.week-strip{overflow-x:auto;grid-template-columns:repeat(7,78px)}}
+@media(max-width:560px){body{font-size:14px}.main-content{padding-left:12px;padding-right:12px}.topbar{gap:8px}.topbar h1{font-size:22px}.panel{padding:18px;border-radius:19px}.quick-panel{padding:17px}.quick-grid{gap:7px}.quick-action{min-height:84px;padding:12px 8px}.quick-action>svg{width:19px}.quick-action span strong{font-size:11px;white-space:nowrap}.quick-action i{font-size:15px;right:8px;top:8px}.hero-card{padding:24px}.hero-card h2{font-size:54px}.metric-row{gap:7px}.metric{min-height:88px;padding:14px 12px}.metric strong{font-size:18px}.form-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:9px}.field input[type=date],.field input[type=time],.field input[type=datetime-local]{padding:0 7px;font-size:13px}.daily-habits{grid-template-columns:1fr}.daily-habit{min-height:122px}.habit-action{grid-template-columns:70px minmax(0,1fr)}.theme-swatches{grid-template-columns:repeat(2,1fr)}.media-wall{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 13px}.rating-distribution{gap:7px}.settings-sheet{padding:20px}.weekly-plan{grid-template-columns:1fr}.record-row{grid-template-columns:38px 1fr auto 30px;gap:8px}.record-row .record-main small{max-width:140px}.filter-chips{width:100%;overflow:auto;flex-wrap:nowrap;padding-bottom:3px}.filter-chips button{flex:0 0 auto;min-height:38px}.panel-head:has(.filter-chips){flex-direction:column}.compare-card{align-items:flex-start;flex-direction:column}.system-alert{flex-direction:column}.system-alert .btn{width:100%;min-height:46px}.shopping-row{grid-template-columns:28px 1fr auto 30px}.archive-head h2{font-size:24px}.legend-inline{display:none}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
 .lang-switch{position:fixed;right:18px;bottom:18px;z-index:90;display:flex;align-items:center;gap:5px;padding:5px 7px;border:1px solid rgba(85,69,55,.14);border-radius:999px;background:rgba(255,253,250,.94);box-shadow:0 8px 24px rgba(53,41,31,.12);backdrop-filter:blur(12px)}.lang-switch button{min-width:34px;height:28px;padding:0 8px;border:0;border-radius:999px;background:transparent;color:var(--muted);font-size:11px;font-weight:700}.lang-switch button.active{background:var(--plum);color:var(--white)}.lang-switch span{color:#b2a89d;font-size:11px}.lang-switch button:focus-visible{outline:2px solid var(--terra);outline-offset:2px}@media(max-width:860px){.lang-switch{right:14px;bottom:calc(82px + env(safe-area-inset-bottom))}}
 
@@ -943,7 +943,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
           </article>
 
           <div class="money-row">
-            <article class="money-card money-chart"><div class="mc-head"><div><p class="eyebrow">消费结构</p><h2>钱花在了哪里</h2></div><span class="mc-note" id="moneyPieNote"></span></div><div class="pie-wrap"><svg aria-label="消费结构饼图" id="moneyPie" viewBox="0 0 220 220"></svg><div class="chart-legend" id="moneyLegend"></div></div></article>
+            <article class="money-card money-chart"><div class="mc-head"><div><p class="eyebrow">消费结构</p><h2>钱花在了哪里</h2></div><span class="mc-note" id="moneyPieNote"></span></div><div class="pie-wrap"><svg aria-label="消费结构饼图" id="moneyPie" viewBox="0 0 200 200"></svg><div class="chart-legend" id="moneyLegend"></div></div></article>
             <article class="money-card money-ledger"><div class="mc-head"><div><p class="eyebrow">流水</p><h2>最近账目</h2></div></div><div class="pick-chips cat-filter" id="moneyCatFilter"></div><div class="record-list" id="moneyList"></div></article>
           </div>
         </div>
@@ -2601,16 +2601,21 @@ body:has(.dashboard-grid.editing) .ai-fab{opacity:0;pointer-events:none;transfor
 .fp-li b,.fp-para b{color:var(--ink);font-weight:800;font-variant-numeric:tabular-nums}
 .fp-para{margin:6px 0 0;font-size:11.5px;line-height:1.7;color:#6f6559}
 
-/* ---- 图表 ---- */
-.money-chart .pie-wrap{display:grid;grid-template-columns:172px minmax(0,1fr);align-items:center;gap:14px;margin-top:8px;min-width:0}
-.money-chart .pie-wrap svg{display:block;width:180px;height:180px;overflow:visible}
-.money-wrap .chart-legend{display:grid;grid-template-columns:1fr;gap:7px;min-width:0;align-content:center}
-.money-wrap .legend-item{display:grid;grid-template-columns:8px minmax(0,1fr) auto 40px;align-items:center;gap:8px;font-size:11px;padding:2px 0;border:0;background:transparent;font-family:inherit;color:inherit;text-align:left;cursor:pointer}
-.money-wrap .legend-item i{width:8px;height:8px;border-radius:3px}
-.money-wrap .legend-item span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#6f6559;font-weight:700}
-.money-wrap .legend-item b{font-size:11px;font-weight:800;color:#8b8074;font-variant-numeric:tabular-nums;text-align:right}
-.money-wrap .legend-item u{grid-column:1/-1;display:block;height:5px;border-radius:99px;background:#eae1d5;position:relative;overflow:hidden;text-decoration:none;margin-top:2px}
-.money-wrap .legend-item u::after{content:"";position:absolute;left:0;top:0;bottom:0;min-width:3px;width:var(--w,0%);border-radius:99px;background:var(--c,#b65f42);opacity:.92}
+/* ---- 图表（2026-11-01 A 重做：全站唯一一份环形图样式。
+        旧的四套（基础 .pie-wrap / 172px 版 / 手机 178 版 / 桌面 200 版 / 176 版）已合并并删净，
+        以后要调只改这一段。） ---- */
+.money-chart .pie-wrap{display:grid;grid-template-columns:200px minmax(0,1fr);align-items:center;gap:16px;margin-top:8px;min-width:0}
+.money-chart .pie-wrap svg{display:block;width:200px;height:200px;overflow:visible}
+.money-wrap .chart-legend{display:flex;flex-direction:column;gap:2px;min-width:0;align-content:center}
+.money-wrap .chart-legend .legend-item{display:grid;grid-template-columns:8px minmax(0,1fr) 36px 62px;align-items:center;gap:8px;width:100%;min-height:30px;padding:0;border:0;background:none;text-align:left;font:inherit;cursor:pointer}
+.money-wrap .chart-legend .legend-item>i{width:8px;height:8px;border-radius:2px;flex:none}
+.money-wrap .chart-legend .legend-item>span{min-width:0;font-size:13px;color:#5d554a;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.money-wrap .chart-legend .legend-item>b{font-size:12.5px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+.money-wrap .chart-legend .legend-item>small{font-size:11.5px;color:#a8987f;font-weight:700;font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+@media(max-width:860px){
+  .money-chart .pie-wrap{grid-template-columns:1fr;gap:10px;justify-items:center}
+  .money-wrap .chart-legend{width:100%;margin-top:2px}
+}
 
 /* ---- 流水 ---- */
 .money-ledger .cat-filter{margin:12px 0 2px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding:0 14px 2px 0;-webkit-mask-image:linear-gradient(90deg,#000 86%,transparent 100%);mask-image:linear-gradient(90deg,#000 86%,transparent 100%)}
@@ -2635,7 +2640,6 @@ body:has(.dashboard-grid.editing) .ai-fab{opacity:0;pointer-events:none;transfor
 .dash-sheet .chips-grid button{height:38px;padding:0 6px;display:grid;place-items:center;font-size:12px;border-radius:10px;min-width:0;overflow:hidden;text-overflow:ellipsis}
 .dash-sheet .sheet-submit{margin-top:18px;min-height:50px;font-size:14.5px;font-weight:800;border-radius:15px}
 .money-wallet .mc-head h2{font-size:26px;font-weight:800;letter-spacing:-.035em;font-variant-numeric:tabular-nums;margin-top:4px}
-.money-wrap .legend-item small{font-size:10.5px;color:#a89d90;font-weight:600;font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
 .money-wallet .fin-row{display:flex;align-items:center;gap:9px;padding:9px 0;border-bottom:1px solid #f5efe7;font-size:12.5px}
 .money-wallet #finExpected .fin-row{border-bottom:0;padding-bottom:2px}
 .money-wallet .fin-row .grow{flex:1;min-width:0;color:#6f6559;font-weight:600}
@@ -2657,9 +2661,6 @@ body:has(.dashboard-grid.editing) .ai-fab{opacity:0;pointer-events:none;transfor
   .money-amount input{font-size:32px}
   .debt-top b{font-size:14.5px}
   .pick-lb{flex:0 0 26px}
-  .money-chart .pie-wrap{grid-template-columns:1fr;gap:6px;justify-items:center}
-  .money-chart .pie-wrap svg{width:178px;height:178px;margin:0 auto}
-  .money-wrap .chart-legend{grid-template-columns:1fr;width:100%;gap:7px;margin-top:6px}
 }
 @media(min-width:960px){
   .money-wrap{display:grid;grid-template-columns:minmax(0,1.02fr) minmax(0,1fr);gap:14px;align-items:start}
@@ -2692,8 +2693,6 @@ body:has(.dashboard-grid.editing) .ai-fab{opacity:0;pointer-events:none;transfor
   .money-ledger #moneyList>.ml-day{grid-column:1/-1}
   .money-ledger #moneyList>.empty-state{grid-column:1/-1}
   .money-ledger .record-list{max-height:620px}
-  .money-chart .pie-wrap{grid-template-columns:210px minmax(0,1fr)}
-  .money-chart .pie-wrap svg{width:200px;height:200px}
   .sch-wrap{gap:15px}
   .sch-item{grid-template-columns:62px minmax(0,1fr) 34px 30px;padding:12px 12px 12px 4px}
   .sch-body b{font-size:15px}
@@ -3500,35 +3499,63 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
   }
 
   function previousMonthKey(){const d=new Date();d.setDate(1);d.setMonth(d.getMonth()-1);return isoDate(d).slice(0,7);}
+  /* ===== 2026-11-01 A：消费结构环形图重做 =====
+     几何按 1 像素 = 1 单位算（viewBox 200，CSS 200px）：圆心 100，环宽 26，
+     R=76 → 外沿 89（离画布边 11），内沿 63（中心文字左右各留约 18）。
+     环段之间加 0.6 单位重叠用来盖住抗锯齿白缝，不再挖缺口，所以环上没有断层。 */
+  const PIE_PALETTE=['#b65f42','#627a67','#a57c45','#4d3045','#5f7188'];
+  const PIE_COLOR_KEY='richangji-pie-colors-v1';
+  function pieColorStore(){try{const v=JSON.parse(localStorage.getItem(PIE_COLOR_KEY)||'{}');return (v&&typeof v==='object'&&!Array.isArray(v))?v:{};}catch(e){return{};}}
+  /* 分类固定配色：首次按金额从大到小依次拿调色板，拿到就把映射存进 localStorage。
+     以后同一分类不管金额怎么变、页面刷新多少次，颜色都不换。 */
+  function pieColorsFor(entries){
+    const store=pieColorStore(),used=new Set(),out=[];
+    entries.forEach(([cat],i)=>{
+      let c=store[cat];
+      if(!c||used.has(c)||PIE_PALETTE.indexOf(c)<0){
+        c=PIE_PALETTE.find(p=>!used.has(p))||PIE_PALETTE[i%PIE_PALETTE.length];
+        store[cat]=c;
+      }
+      used.add(c);out.push(c);
+    });
+    const keys=Object.keys(store);
+    if(keys.length>60)keys.slice(0,keys.length-60).forEach(k=>{delete store[k];});
+    try{localStorage.setItem(PIE_COLOR_KEY,JSON.stringify(store));}catch(e){}
+    return out;
+  }
   function renderMoneyPie(expenses){
     const byCategory={};expenses.forEach(r=>byCategory[r.data.category]=(byCategory[r.data.category]||0)+Number(r.data.amount||0));
     const entries=Object.entries(byCategory).sort((a,b)=>b[1]-a[1]),total=sum(entries,e=>e[1]);
     const svg=document.getElementById('moneyPie'),legend=document.getElementById('moneyLegend');
     if(!svg)return;
+    const R=76,SW=26,C=2*Math.PI*R,CX=100,CY=100;
+    const amountText=escapeHtml(money(total||0));
+    const amtSize=amountText.length>9?18:22;
+    const center=''
+      /* 全局 svg{stroke:currentColor;stroke-width:1.8} 会被 fill 型文字继承，字被撑成一团，
+         两条 text 必须显式写 stroke="none"。（项目里踩过两次的同一个坑） */
+      +'<text x="'+CX+'" y="91" text-anchor="middle" fill="#8d8175" font-size="12" font-weight="700" stroke="none" letter-spacing="0.4">本月支出</text>'
+      +'<text x="'+CX+'" y="'+(amtSize===22?119:118)+'" text-anchor="middle" fill="#29251f" font-size="'+amtSize+'" font-weight="800" stroke="none" letter-spacing="0.4">'+amountText+'</text>';
     if(!total){
-      svg.innerHTML='<circle cx="110" cy="110" r="84" fill="none" stroke="#f2ece3" stroke-width="16"/>'
-        +'<text x="110" y="108" text-anchor="middle" fill="#b3a89a" font-size="10.5" font-weight="800" letter-spacing="0.6">本月还没支出</text>'
-        +'<text x="110" y="126" text-anchor="middle" fill="#cdc2b3" font-size="10">记一笔就有图</text>';
+      svg.innerHTML='<circle cx="'+CX+'" cy="'+CY+'" r="'+R+'" fill="none" stroke="#f1eae1" stroke-width="'+SW+'"/>'+center;
       if(legend)legend.innerHTML='';
       const emptyNote=document.getElementById('moneyPieNote');if(emptyNote)emptyNote.textContent='';
       return;
     }
     const noteEl=document.getElementById('moneyPieNote');if(noteEl)noteEl.textContent=expenses.length+' 笔 · '+entries.length+' 类';
-    /* 2026-10-29 F：环半径按「外沿到画布边留 8px」反推。画布 176px、viewBox 220 → 1px = 1.25 单位，
-       8px 即 10 单位，故外沿半径 100，环宽 16 时 R = 92。 */
-    const R=92,SW=16,C=2*Math.PI*R;let offset=0;
+    const colors=pieColorsFor(entries);
+    let offset=0;
     const arcs=entries.map(([category,value],index)=>{
-      const raw=value/total*C,gap=raw>14?3:0,draw=Math.max(0.8,raw-gap);
-      const item='<circle cx="110" cy="110" r="'+R+'" fill="none" stroke="'+CATEGORY_COLORS[index%CATEGORY_COLORS.length]+'" stroke-width="'+SW+'" stroke-dasharray="'+draw.toFixed(2)+' '+(C-draw).toFixed(2)+'" stroke-dashoffset="'+(-offset).toFixed(2)+'" transform="rotate(-90 110 110)"/>';
+      const raw=value/total*C,draw=Math.min(C,Math.max(1,raw+0.6));
+      const item='<circle cx="'+CX+'" cy="'+CY+'" r="'+R+'" fill="none" stroke="'+colors[index]+'" stroke-width="'+SW+'" stroke-linecap="butt" stroke-dasharray="'+draw.toFixed(2)+' '+(C-draw).toFixed(2)+'" stroke-dashoffset="'+(-offset).toFixed(2)+'" transform="rotate(-90 '+CX+' '+CY+')"/>';
       offset+=raw;return item;
     }).join('');
-    svg.innerHTML='<circle cx="110" cy="110" r="'+R+'" fill="none" stroke="#f4eee6" stroke-width="'+SW+'"/>'+arcs
-      +'<text x="110" y="118" text-anchor="middle" fill="#2f2a24" font-size="20" font-weight="800" letter-spacing="0.6">'+escapeHtml(money(total))+'</text>';
+    svg.innerHTML='<circle cx="'+CX+'" cy="'+CY+'" r="'+R+'" fill="none" stroke="#f1eae1" stroke-width="'+SW+'"/>'+arcs+center;
     const pcts=entries.map(([,v])=>v/total*100),rounded=pcts.map(p=>Math.floor(p));
     let rest=100-rounded.reduce((a,b)=>a+b,0);
     const order=pcts.map((p,i)=>[p,i]).sort((a,b)=>b[0]-a[0]);
     for(let i=0;i<rest;i++)rounded[order[i%order.length][1]]++;
-    if(legend)legend.innerHTML=entries.map(([category,value],index)=>'<button type="button" class="legend-item" data-mfilter="'+escapeHtml(category)+'" title="'+escapeHtml(category)+' '+money(value)+'"><i style="background:'+CATEGORY_COLORS[index%CATEGORY_COLORS.length]+'"></i><span>'+escapeHtml(category)+'</span><b>'+rounded[index]+'%</b><small>'+money(value)+'</small></button>').join('');
+    if(legend)legend.innerHTML=entries.map(([category,value],index)=>'<button type="button" class="legend-item" data-mfilter="'+escapeHtml(category)+'" title="'+escapeHtml(category)+' '+money(value)+'"><i style="background:'+colors[index]+'"></i><span>'+escapeHtml(category)+'</span><b>'+rounded[index]+'%</b><small>'+money(value)+'</small></button>').join('');
   }
   const ACC_KINDS=[['cash','现金'],['wechat','微信零钱'],['debit','储蓄卡'],['credit','信用卡'],['huabei','花呗'],['baitiao','白条'],['douyin','抖音月付'],['meituan','美团月付'],['loan','网贷'],['other','其他']];
   const ACC_CREDIT=['credit','huabei','baitiao','douyin','meituan','loan'];
@@ -4862,41 +4889,40 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     const payTotal=rows.length?rows.reduce((s,d)=>s+(Number(d.pay)||0),0):canPay;
     const heroVal=payTotal>0?payTotal:debtTotal;
     let h='';
-    if(heroVal>0){
-      h+='<div class="fp-hero"><span>'+(payTotal>0?'本期该还':'总欠款')+'</span><b>'+money(heroVal)+'</b>'
-        +(rows.length?'<em>'+rows.length+' 个平台</em>':'')+'</div>';
-    }
-    const kv=[];
-    if(debtTotal>0)kv.push(['总欠款',money(debtTotal)]);
-    if(canPay>0)kv.push(['本期可还',money(canPay)]);
-    if(P&&P.bal!=null&&P.bal!=='')kv.push(['可用余额',money(P.bal)]);
-    if(P&&P.daily)kv.push(['每天可花',money(P.daily)]);
-    if(P&&P.mClear)kv.push(['清空期数','约 '+P.mClear+' 期']);
-    if(kv.length)h+='<div class="fp-lines">'+kv.map(x=>'<span><i>'+x[0]+'</i><b>'+x[1]+'</b></span>').join('')+'</div>';
+    /* 第一层：一行大字给本期应还总额，右边跟缺口。
+       缺口按「总欠款 - 本期可还」算：本期还的那点额度永远等于可还，用它相减永远是 0，
+       只有拿总欠款比才有意义（差多少才清得空）。 */
+    const shortVal=debtTotal>0?Math.max(0,debtTotal-canPay):Math.max(0,payTotal-canPay);
+    const tag=canPay>0?(shortVal>0?'<em>缺口 '+money(shortVal)+'</em>':'<em class="is-ok">够还，不用欠新账</em>'):'<em>缺口待校准</em>';
+    h+='<div class="fp-hero"><span>'+(payTotal>0?'本期应还':'总欠款')+'</span><b>'+money(heroVal)+'</b>'+tag+'</div>';
+    /* 第二层：每个平台一行，名字 / 占总额比例条 / 金额 */
     if(rows.length){
-      h+='<div class="fp-h"><span>还款顺序 · 按平台</span><em>本期应还</em></div><div class="fp-plat">'
-        +rows.map(d=>'<div class="fp-plat-row"><span>'+escapeHtml(d.name)+'</span><b>'+money(d.pay)+'</b></div>').join('')
-        +'</div>';
-    }else{
-      const skip=[/总负债/,/可用余额/,/^还款顺序/,/^本期可还约/,/^发薪前每天可花/,/期清空/];
-      const lines=String(text).split('\n').map(x=>x.trim()).filter(Boolean).filter(l=>!skip.some(rx=>rx.test(l)));
-      if(lines.length){
-        h+='<div class="fp-h"><span>计划要点</span></div><div class="fp-para30">'
-          +lines.map(l=>fpChop(l.replace(/^[·•\-*]\s*/,''),30).map(x=>'<p>'+planHi(x)+'</p>').join('')).join('')
-          +'</div>';
-      }
+      h+='<div class="fp-plat">'+rows.map(d=>{
+        const pct=payTotal>0?Math.max(0,Math.min(100,Math.round((Number(d.pay)||0)/payTotal*100))):0;
+        return '<div class="fp-plat-row"><span title="'+escapeHtml(d.name)+'">'+escapeHtml(d.name)+'</span>'
+          +'<i class="fp-bar"><u style="width:'+pct+'%"></u></i>'
+          +'<b>'+money(d.pay)+'</b></div>';
+      }).join('')+'</div>';
     }
-    txt.innerHTML=h||escapeHtml(text);
-    if(!fin.balance||!fin.expected){
-      const g=document.createElement('div');g.className='pA-guide';
-      g.innerHTML='<span>补齐两笔数就能出数字格：</span><button type="button" class="pA-gbtn" data-pg="bal">校准余额</button><button type="button" class="pA-gbtn" data-pg="sal">登记工资</button>';
-      txt.appendChild(g);
-      g.querySelectorAll('.pA-gbtn').forEach(b=>b.addEventListener('click',()=>{
-        const sheet=document.getElementById('aiSheet');const inp=document.getElementById('aiInput');
-        if(sheet)sheet.hidden=false;if(typeof renderAiStatus==='function')renderAiStatus();
-        if(inp){inp.value=b.getAttribute('data-pg')==='bal'?'手上还有 ':'下月 15 号发工资 ';setTimeout(()=>inp.focus(),80);}
-      }));
-    }
+    /* 第三层：两句结论，每句不超过 30 字 */
+    const concl=[];
+    if(P&&P.mClear)concl.push('按这个节奏约 '+P.mClear+' 期清空');
+    else if(rows.length)concl.push('按当前额度排，先清小额');
+    if(P&&P.daily)concl.push('发薪前每天可花约 '+money(P.daily));
+    String(text).split('\n').map(x=>x.trim()).filter(Boolean)
+      .filter(l=>!/^·|^(总负债|本期可还约|还款顺序|发薪前|约 \d+ 期)/.test(l))
+      .filter(l=>!/还没校准|说「/.test(l))
+      .forEach(l=>{if(concl.length<2){const c=fpChop(l,30)[0];if(c)concl.push(c);}});
+    if(!concl.length)concl.push('先校准余额，额度出来再排');
+    h+='<ul class="fp-concl">'+concl.slice(0,2).map(c=>'<li>'+planHi(c)+'</li>').join('')+'</ul>';
+    /* 两个按钮并排靠右 */
+    h+='<div class="fp-acts"><button type="button" data-pg="bal">校准余额</button><button type="button" class="pri" data-pg="sal">登记工资</button></div>';
+    txt.innerHTML=h;
+    txt.querySelectorAll('.fp-acts button').forEach(b=>b.addEventListener('click',()=>{
+      const sheet=document.getElementById('aiSheet');const inp=document.getElementById('aiInput');
+      if(sheet)sheet.hidden=false;if(typeof renderAiStatus==='function')renderAiStatus();
+      if(inp){inp.value=b.getAttribute('data-pg')==='bal'?'手上还有 ':'下月 15 号发工资 ';setTimeout(()=>inp.focus(),80);}
+    }));
   }
   function renderFinPlanText(txt,fin){
     if(!txt)return;
@@ -8766,38 +8792,33 @@ body:has(#view-dashboard.active) .topbar h1{font-size:26px;line-height:1.25}
 .dashboard-grid.editing>article .dh-size{margin-left:auto;flex:none}
 @media(max-width:860px){.dashboard-grid.editing>article .dh-move{padding:8px 8px 0;gap:4px}}
 
-/* ===== 2026-10-29 E：还款与花钱计划的新版式（旧 .pA-* 规则原样保留，这套只在 fpRenderPlan 产出时生效） ===== */
-.money-plan .fp-hero{display:flex;align-items:baseline;gap:10px;padding:2px 0 12px;border-bottom:1px solid var(--line);min-width:0}
+/* ===== 2026-11-01 B：还款计划分三层（总额与缺口 / 平台比例条 / 两句结论 / 两个按钮靠右） =====
+   旧 .pA-* 那套（三格数字 + 长句）原样留在上方，不再被这套渲染调用。 */
+.money-plan .fp-hero{display:flex;align-items:baseline;gap:10px;padding:2px 0 14px;border-bottom:1px solid var(--line);min-width:0;flex-wrap:wrap}
 .money-plan .fp-hero>span{flex:none;font-size:12px;font-weight:800;letter-spacing:.04em;color:#a8987f}
-.money-plan .fp-hero>b{min-width:0;font-size:30px;font-weight:800;letter-spacing:-.03em;line-height:1.05;font-variant-numeric:tabular-nums;color:var(--ink)}
-.money-plan .fp-hero>em{flex:none;margin-left:auto;font-style:normal;font-size:11.5px;color:#a89d90;font-weight:600;white-space:nowrap}
-.money-plan .fp-lines{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px 8px;padding:12px 0 4px}
-.money-plan .fp-lines>span{display:flex;flex-direction:column;gap:2px;min-width:0}
-.money-plan .fp-lines i{font-style:normal;font-size:11px;font-weight:750;color:#a8987f;letter-spacing:.02em}
-.money-plan .fp-lines b{font-size:15px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
-.money-plan .fp-plat{display:flex;flex-direction:column;min-width:0}
-.money-plan .fp-plat-row{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:44px;padding:6px 0;border-top:1px solid rgba(48,34,22,.07)}
+.money-plan .fp-hero>b{min-width:0;font-size:32px;font-weight:800;letter-spacing:-.03em;line-height:1.05;font-variant-numeric:tabular-nums;color:var(--ink)}
+.money-plan .fp-hero>em{flex:none;margin-left:auto;font-style:normal;font-size:12px;font-weight:700;color:var(--terra);white-space:nowrap;background:rgba(182,95,66,.09);padding:3px 8px;border-radius:8px}
+.money-plan .fp-hero>em.is-ok{color:var(--sage);background:rgba(98,122,103,.1)}
+.money-plan .fp-plat{display:flex;flex-direction:column;min-width:0;margin-top:4px}
+.money-plan .fp-plat-row{display:grid;grid-template-columns:minmax(0,38%) minmax(40px,1fr) auto;align-items:center;gap:10px;min-height:40px;padding:5px 0;border-top:1px solid rgba(48,34,22,.07)}
 .money-plan .fp-plat-row:first-child{border-top:0}
-.money-plan .fp-plat-row>span{flex:1;min-width:0;font-size:14px;font-weight:650;color:#3f3a33;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.money-plan .fp-plat-row>b{flex:none;font-size:15px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums}
+.money-plan .fp-plat-row>span{min-width:0;font-size:13.5px;font-weight:650;color:#3f3a33;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.money-plan .fp-plat-row>b{font-size:14.5px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap;text-align:right;min-width:62px}
+.money-plan .fp-bar{display:block;height:8px;border-radius:99px;background:var(--line);overflow:hidden;min-width:40px}
+.money-plan .fp-bar>u{display:block;height:100%;min-width:3px;border-radius:99px;background:var(--terra);text-decoration:none}
+.money-plan .fp-concl{margin:12px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:4px}
+.money-plan .fp-concl>li{font-size:12.5px;line-height:1.6;color:#6f6559;padding-left:12px;position:relative}
+.money-plan .fp-concl>li:before{content:"";position:absolute;left:2px;top:9px;width:4px;height:4px;border-radius:50%;background:#c3b6a4}
+.money-plan .fp-acts{display:flex;justify-content:flex-end;gap:8px;margin-top:12px;flex-wrap:wrap}
+.money-plan .fp-acts button{min-height:38px;padding:0 16px;border:1px solid var(--line);border-radius:11px;background:#fff;color:var(--ink);font:inherit;font-size:13px;font-weight:700;cursor:pointer}
+.money-plan .fp-acts button.pri{background:var(--plum);border-color:var(--plum);color:#fff}
 .money-plan .fp-para30 p{margin:0 0 5px;font-size:13.5px;line-height:1.68;color:#6f6559;max-width:30em}
 @media(min-width:960px){.money-plan #finPlanText{display:flex;flex-direction:column;align-items:stretch;align-content:stretch;gap:0;column-gap:0}}
 
-/* ===== 2026-10-29 F：消费结构环形图版式（环外留白 8px、图例右对齐列表、百分比与金额同一行靠右） ===== */
-.money-chart .pie-wrap{grid-template-columns:176px minmax(0,1fr);gap:12px}
-.money-chart .pie-wrap svg{width:176px;height:176px;padding:0;overflow:visible}
-.money-wrap .chart-legend{display:flex;flex-direction:column;gap:2px;min-width:0;align-content:center}
-.money-wrap .chart-legend .legend-item{display:grid;grid-template-columns:8px minmax(0,1fr) auto auto;align-items:center;gap:7px;width:100%;min-height:30px;padding:0;border:0;background:none;text-align:left;font:inherit;cursor:pointer}
-.money-wrap .chart-legend .legend-item>i{width:8px;height:8px;border-radius:2px;flex:none}
-.money-wrap .chart-legend .legend-item>span{min-width:0;font-size:13px;color:#5d554a;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.money-wrap .chart-legend .legend-item>b{flex:none;font-size:12.5px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums;text-align:right;min-width:34px}
-.money-wrap .chart-legend .legend-item>small{flex:none;font-size:11.5px;color:#a8987f;font-weight:700;font-variant-numeric:tabular-nums;text-align:right;min-width:52px}
-.money-wrap .chart-legend .legend-item>u{display:none}
-@media(max-width:860px){
-  .money-chart .pie-wrap{grid-template-columns:1fr;gap:10px;justify-items:stretch}
-  .money-chart .pie-wrap svg{width:176px;height:176px;margin:0 auto}
-  .money-wrap .chart-legend{grid-template-columns:none;width:100%;margin-top:2px}
-}
+/* ===== 2026-11-01 C：这两张卡跟今天页对齐（圆角 22 / 内边距 16 / 沿用 --shadow 那一级，不新增阴影） ===== */
+.money-wrap .money-card.money-chart,
+.money-wrap .money-card.money-plan{border-radius:22px;padding:16px;box-shadow:var(--shadow)}
+
 </style>
 
 </body>
