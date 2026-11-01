@@ -809,7 +809,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
    部署脚本 _sync_deploy.js 会在发布时把 BUILD 改成时间戳并同步写 version.json，两边自动一致。
    注意：首次仍需手动刷新一次（旧页面里还没有这段代码），之后就能自己发现更新。 */
 (function(){
-  var BUILD='20261102_0206';
+  var BUILD='20261102_0210';
   window.__RJ_BUILD=BUILD;
   var bar=function(){return document.getElementById('verBar');};
   function check(){
@@ -5872,9 +5872,11 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     }
     const hint=document.getElementById('homeCatHint');
     if(!hint)return;
+    const typed=((form&&form.elements&&form.elements.name)?String(form.elements.name.value||'').trim():'');
     if(manual)hint.textContent='分类：'+final+'（手动）';
     else if(cat)hint.textContent='分类：'+final+' · 自动判断';
-    else hint.textContent='没认出，先归「其他」，点「改」手动选';
+    else if(typed)hint.textContent='没认出，先归「其他」，点「改」手动选';
+    else hint.textContent='分类随物品名自动判断';
   }
   function homeCatBind(){
     const form=document.getElementById('homeForm');
