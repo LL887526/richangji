@@ -1583,7 +1583,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
             <p class="zdesc">数据只存在本机浏览器，建议定期导出备份文件保存到别处。导出的 JSON：在新设备打开本页 → 设置 → 导入备份（覆盖当前）即可继续用。</p>
             <div class="wmore">
               <button class="wbtn" data-act="bkExport"><svg><use href="#i-download"/></svg>导出备份 JSON</button>
-              <button class="wbtn ghostbtn" data-act="bkImport"><svg><use href="#i-download"/></svg>导入备份（覆盖当前）</button>
+              <button class="wbtn ghostbtn" data-act="bkImport"><svg><use href="#i-upload"/></svg>导入备份（覆盖当前）</button>
               <button class="wbtn ghostbtn" data-action="export-money"><svg><use href="#i-chart"/></svg>导出记账 Excel</button>
               <button class="wbtn ghostbtn" data-action="export-fitness"><svg><use href="#i-chart"/></svg>导出健身 Excel</button>
             </div>
@@ -5678,10 +5678,10 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     const hd=(state.habits||[]).filter(h=>habitDone(h,today)).length,ht=(state.habits||[]).length;
     const mr=sortedRecords('money'),mtoday=mr.filter(r=>r.date===today).length;
     const mo=document.getElementById('mpMoney');
-    if(mo){mo.querySelector('.v').textContent=mtoday||'—';mo.classList.toggle('mp-hot',mtoday>0);const ms=document.getElementById('mpMoneySub');if(ms)ms.textContent=mtoday?`今天记了 ${mtoday} 笔`:(mr.length?'今天还没记账':'还没有账目，点进去记第一笔');}
+    if(mo){mo.querySelector('.v').textContent=mtoday||'—';mo.classList.toggle('mp-hot',mtoday>0);const ms=document.getElementById('mpMoneySub');if(ms)ms.textContent=mtoday?'记一笔，掌握现金流':(mr.length?'今天还没记账':'还没有账目，点进去记第一笔');}
     const hb=document.getElementById('mpHabits');
     if(hb){hb.querySelector('.v').textContent=ht?`${hd}/${ht}`:'—';hb.classList.toggle('mp-hot',ht>0&&hd<ht);hb.classList.toggle('mp-dim',!ht);}
-    if(ht)document.getElementById('mpHabitsSub').textContent=hd>=ht?'今天全部完成':`今日已打卡 ${hd} / ${ht}`;
+    if(ht)document.getElementById('mpHabitsSub').textContent=hd>=ht?'今天全部完成':'打卡连续与热力图';
     const issues=(loadHealth().issues||[]).filter(i=>i.status!=='ok');
     const he=document.getElementById('mpHealth');
     he.querySelector('.v').textContent=issues.length||'—';
@@ -5694,10 +5694,10 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     const ho=document.getElementById('mpHome');
     ho.querySelector('.v').textContent=pending||'—';
     ho.classList.toggle('mp-hot',pending>0);
-    document.getElementById('mpHomeSub').textContent=pending?`${pending} 件未完成`:'清单已经清空';
+    document.getElementById('mpHomeSub').textContent=pending?'要买的东西都在这':'清单已经清空';
     const mc=(state.mediaItems||[]).length;
     document.getElementById('mpMedia').querySelector('.v').textContent=mc||'—';
-    document.getElementById('mpMediaSub').textContent=mc?`攒了 ${mc} 条`:'还没有收藏的作品';
+    document.getElementById('mpMediaSub').textContent=mc?'想看的想听的都在攒':'还没有收藏的作品';
     const ac=sortedRecords().length;
     document.getElementById('mpArchive').querySelector('.v').textContent=ac?String(ac):'—';
     document.getElementById('mpArchiveSub').textContent=ac?'所有记录都可回翻':'还没有任何记录';
@@ -7670,13 +7670,13 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     const H=Number(b.h||0),hd=Number(b.hd||H)||H;
     const deepP=H?Number(b.deep||0)/H*100:0,remP=H?Number(b.rem||0)/H*100:0;
     const bedTs=Number(b.bed||0);
-    const mk=(label,val,unit,p,sub)=>{const t=toneOf(p);return `<div class="bd-m"><span>${label}</span><b>${val}${unit?`<i>${unit}</i>`:''}</b><u><i style="width:${Math.max(5,Math.round(p*100))}%;background:${TONE[t]}"></i></u><p style="color:${TONE[t]}">${sub||wordOf(p)}</p></div>`;};
+    const mk=(label,val,unit,p,sub,barP)=>{const t=toneOf(p);const bp=barP===undefined?p:barP;return `<div class="bd-m"><span>${label}</span><b>${val}${unit?`<i>${unit}</i>`:''}</b><u><i style="width:${Math.round(bp*100)}%;background:${TONE[t]}"></i></u><p style="color:${TONE[t]}">${sub||wordOf(p)}</p></div>`;};
     const effP=Number(b.eff||0)||0;
     const effp=effP>=90?1:effP>=85?.82:effP>=80?.6:.35;
     const metrics=[
       mk('睡眠效率',effP||'—','%',effp,effP?(effP>=90?'很好':effP>=85?'尚可':'偏低'):'无数据'),
-      mk('深睡占比',Math.round(deepP),'%',pi('深度睡眠')),
-      mk('快速眼动',Math.round(remP),'%',pi('快速眼动')),
+      mk('深睡占比',Math.round(deepP),'%',pi('深度睡眠'),null,Math.max(0,Math.min(100,deepP))/100),
+      mk('快速眼动',Math.round(remP),'%',pi('快速眼动'),null,Math.max(0,Math.min(100,remP))/100),
       mk('夜醒',Number(b.awakeN||0),'次',pi('连续性')),
       mk('睡眠心率',Number(b.hr||0)||'—','',pi('恢复'),`${wordOf(pi('恢复'))} · 氧 ${Number(b.spo2Min||b.spo2||0)||'—'}%`),
       mk('入睡',bedTs?bandHM(bedTs):'—','',pi('作息'))
@@ -7766,7 +7766,7 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     const mv=document.querySelector('#mpBand .v');if(mv)mv.textContent=bandHMShort(b.h);
     const msub=document.getElementById('mpBandSub');
     const stressLast=(()=>{const s=series('stress',1);return s.length?s[s.length-1].v:0;})();
-    if(msub)msub.textContent=`昨夜 ${bandHMShort(b.h)}${stressLast?' · 压力 '+stressLast:''}`;
+    if(msub)msub.textContent=stressLast?`昨夜压力 ${stressLast}`:'睡眠、压力、心率、血氧';
     const st=document.getElementById('bandStamp');if(st)st.textContent=bandStampText();
   }
   function habitStateText(h,isDone,pendingWord){
