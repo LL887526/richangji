@@ -3530,7 +3530,10 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     if(!svg)return;
     const R=76,SW=26,C=2*Math.PI*R,CX=100,CY=100;
     const amountText=escapeHtml(money(total||0));
-    const amtSize=amountText.length>9?18:22;
+    /* 中心是固定直径 126 的圆（内沿半径 63），字数一多就顶到环上。
+       按字符数分档缩字号，实测「¥11,676」7 字在 22px 下宽 115、余 11px；
+       再长就降档，宁可字小一点也不让数字压线。 */
+    const amtSize=amountText.length<=6?22:amountText.length<=8?19:amountText.length<=10?16:14;
     const center=''
       /* 全局 svg{stroke:currentColor;stroke-width:1.8} 会被 fill 型文字继承，字被撑成一团，
          两条 text 必须显式写 stroke="none"。（项目里踩过两次的同一个坑） */
@@ -3555,7 +3558,9 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     let rest=100-rounded.reduce((a,b)=>a+b,0);
     const order=pcts.map((p,i)=>[p,i]).sort((a,b)=>b[0]-a[0]);
     for(let i=0;i<rest;i++)rounded[order[i%order.length][1]]++;
-    if(legend)legend.innerHTML=entries.map(([category,value],index)=>'<button type="button" class="legend-item" data-mfilter="'+escapeHtml(category)+'" title="'+escapeHtml(category)+' '+money(value)+'"><i style="background:'+colors[index]+'"></i><span>'+escapeHtml(category)+'</span><b>'+rounded[index]+'%</b><small>'+money(value)+'</small></button>').join('');
+    /* 占比不足 1% 的分类四舍五入会变 0%，标成「<1%」才是实话，写 0% 会让人以为没花钱 */
+    const pctText=index=>(rounded[index]===0&&entries[index][1]>0?'&lt;1':rounded[index])+'%';
+    if(legend)legend.innerHTML=entries.map(([category,value],index)=>'<button type="button" class="legend-item" data-mfilter="'+escapeHtml(category)+'" title="'+escapeHtml(category)+' '+money(value)+'"><i style="background:'+colors[index]+'"></i><span>'+escapeHtml(category)+'</span><b>'+pctText(index)+'</b><small>'+money(value)+'</small></button>').join('');
   }
   const ACC_KINDS=[['cash','现金'],['wechat','微信零钱'],['debit','储蓄卡'],['credit','信用卡'],['huabei','花呗'],['baitiao','白条'],['douyin','抖音月付'],['meituan','美团月付'],['loan','网贷'],['other','其他']];
   const ACC_CREDIT=['credit','huabei','baitiao','douyin','meituan','loan'];
@@ -4788,7 +4793,7 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     let pool=canPay;
     list.forEach((d,i)=>{const amt=Number(d.amount)||0;const pay=Math.min(amt,Math.max(0,pool));pool-=pay;lines.push('· '+(i+1)+'. '+d.name+' '+money(amt)+'，本期还 '+money(pay)+(pay>=amt?'（可清）':pay>0?'（下期继续）':'（本期不动）'));});
     if(canPay>0)lines.push('按这个节奏约 '+Math.ceil(debtTotal/canPay)+' 期清空，不算新增消费。');
-    if(bal>0)lines.push('发薪前每天可花约 '+money(Math.max(0,bal)/Math.max(1,days))+'（按 '+days+' 天平摊）。');
+    if(bal>0)lines.push('发薪前每天可花约 '+money(Math.round(Math.max(0,bal)/Math.max(1,days)))+'（按 '+days+' 天平摊）。');
     return lines.join('\n');
   }
   function finPlanAI(onDone){
@@ -4868,6 +4873,16 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
   /* ===== 2026-10-29 E：还款与花钱计划重排 =====
      第一层一行大字给本期该还总额，第二层按平台一行一个「平台名 + 金额」，
      原来的长句按标点切成不超过 30 字一行。旧版排版函数保留不删，这里先接手渲染。 */
+  /* 结论句里的金额统一取整：模型偶尔给「¥1,044.21」这种带角分的数，
+     一句 30 字里塞着小数点既占宽又读着累，直接四舍五入到元。
+     只动「¥数字.数字」这一种形状，其余文字原样不动。 */
+  function fpTidyMoney(s){
+    return String(s==null?'':s).replace(/¥\s*(\d[\d,]*)(\.\d+)?/g,(all,int,dec)=>{
+      if(!dec)return all;
+      const n=Math.round(Number(String(int).replace(/,/g,''))+Number(dec));
+      return '¥'+n.toLocaleString('zh-CN');
+    });
+  }
   function fpChop(s,n){
     const src=String(s||'').replace(/\s+/g,' ').trim();
     const out=[];let cur='';
@@ -4889,12 +4904,13 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     const payTotal=rows.length?rows.reduce((s,d)=>s+(Number(d.pay)||0),0):canPay;
     const heroVal=payTotal>0?payTotal:debtTotal;
     let h='';
-    /* 第一层：一行大字给本期应还总额，右边跟缺口。
-       缺口按「总欠款 - 本期可还」算：本期还的那点额度永远等于可还，用它相减永远是 0，
-       只有拿总欠款比才有意义（差多少才清得空）。 */
+    /* 第一层：一行大字给本期还款总额，右边跟「还差多少清空」。
+       缺口按「总欠款 - 本期可还」算：本期还的那点额度永远等于可还，用它相减永远是 0。
+       标签写「本期还款」不写「本期应还」——这个数是按可还额度分配后实际能还的，不是账单要求额，
+       写成「应还」再配一个按总欠款算的缺口，会读成「要还 11759 却缺 8241」，自相矛盾。 */
     const shortVal=debtTotal>0?Math.max(0,debtTotal-canPay):Math.max(0,payTotal-canPay);
-    const tag=canPay>0?(shortVal>0?'<em>缺口 '+money(shortVal)+'</em>':'<em class="is-ok">够还，不用欠新账</em>'):'<em>缺口待校准</em>';
-    h+='<div class="fp-hero"><span>'+(payTotal>0?'本期应还':'总欠款')+'</span><b>'+money(heroVal)+'</b>'+tag+'</div>';
+    const tag=canPay>0?(shortVal>0?'<em>还差 '+money(shortVal)+' 清空</em>':'<em class="is-ok">一期可清空</em>'):'<em>余额未校准</em>';
+    h+='<div class="fp-hero"><span>'+(payTotal>0?'本期还款':'总欠款')+'</span><b>'+money(heroVal)+'</b>'+tag+'</div>';
     /* 第二层：每个平台一行，名字 / 占总额比例条 / 金额 */
     if(rows.length){
       h+='<div class="fp-plat">'+rows.map(d=>{
@@ -4906,13 +4922,15 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     }
     /* 第三层：两句结论，每句不超过 30 字 */
     const concl=[];
-    if(P&&P.mClear)concl.push('按这个节奏约 '+P.mClear+' 期清空');
-    else if(rows.length)concl.push('按当前额度排，先清小额');
-    if(P&&P.daily)concl.push('发薪前每天可花约 '+money(P.daily));
+    /* 「一期可清空」已经在第一层说过了，结论里别再重复「约 1 期清空」占一行。 */
+    if(P&&P.mClear)concl.push(Number(P.mClear)<=1?'这期还完就不欠了':'按这个节奏约 '+P.mClear+' 期清空');
+    else if(canPay>0&&rows.length)concl.push('按当前额度排，先清小额');
+    else concl.push('先校准余额，再排还款顺序');
+    if(P&&P.daily)concl.push('发薪前每天可花约 '+money(Math.round(Number(P.daily)||0)));
     String(text).split('\n').map(x=>x.trim()).filter(Boolean)
       .filter(l=>!/^·|^(总负债|本期可还约|还款顺序|发薪前|约 \d+ 期)/.test(l))
       .filter(l=>!/还没校准|说「/.test(l))
-      .forEach(l=>{if(concl.length<2){const c=fpChop(l,30)[0];if(c)concl.push(c);}});
+      .forEach(l=>{if(concl.length<2){const c=fpTidyMoney(fpChop(l,30)[0]);if(c)concl.push(c);}});
     if(!concl.length)concl.push('先校准余额，额度出来再排');
     h+='<ul class="fp-concl">'+concl.slice(0,2).map(c=>'<li>'+planHi(c)+'</li>').join('')+'</ul>';
     /* 两个按钮并排靠右 */
@@ -8795,7 +8813,7 @@ body:has(#view-dashboard.active) .topbar h1{font-size:26px;line-height:1.25}
 /* ===== 2026-11-01 B：还款计划分三层（总额与缺口 / 平台比例条 / 两句结论 / 两个按钮靠右） =====
    旧 .pA-* 那套（三格数字 + 长句）原样留在上方，不再被这套渲染调用。 */
 .money-plan .fp-hero{display:flex;align-items:baseline;gap:10px;padding:2px 0 14px;border-bottom:1px solid var(--line);min-width:0;flex-wrap:wrap}
-.money-plan .fp-hero>span{flex:none;font-size:12px;font-weight:800;letter-spacing:.04em;color:#a8987f}
+.money-plan .fp-hero>span{flex:none;font-size:13px;font-weight:800;letter-spacing:.02em;color:#8a7e6f}
 .money-plan .fp-hero>b{min-width:0;font-size:32px;font-weight:800;letter-spacing:-.03em;line-height:1.05;font-variant-numeric:tabular-nums;color:var(--ink)}
 .money-plan .fp-hero>em{flex:none;margin-left:auto;font-style:normal;font-size:12px;font-weight:700;color:var(--terra);white-space:nowrap;background:rgba(182,95,66,.09);padding:3px 8px;border-radius:8px}
 .money-plan .fp-hero>em.is-ok{color:var(--sage);background:rgba(98,122,103,.1)}
