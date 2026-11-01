@@ -800,7 +800,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
    部署脚本 _sync_deploy.js 会在发布时把 BUILD 改成时间戳并同步写 version.json，两边自动一致。
    注意：首次仍需手动刷新一次（旧页面里还没有这段代码），之后就能自己发现更新。 */
 (function(){
-  var BUILD='20261102_0123';
+  var BUILD='20261102_0136';
   window.__RJ_BUILD=BUILD;
   var bar=function(){return document.getElementById('verBar');};
   function check(){
@@ -4770,6 +4770,7 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
       badge.textContent=has+' / '+total+' 已配置'+(has?' · 可用 '+ok:'');
       badge.className='ai-status '+(has===total&&ok===total?'on':has?'warn':'off');
     }
+    if(typeof syncSetRows==='function')syncSetRows();
   }
   function keyResult(target,msg,tone){
     const el=typeof target==='string'?document.getElementById(target):target;
@@ -4854,6 +4855,9 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     state.settings.brand.skin=skin;
     saveState();applySkin(skin);
     const hit=SKINS.filter(function(x){return x[0]===skin;})[0];
+    /* 入口行的当前值要跟着变（切皮肤不走 renderAll，这里手动同步，2026-11-02 自检发现） */
+    const rowVal=document.getElementById('setRowSkin');
+    if(rowVal)rowVal.textContent=hit?hit[1]:'素纸';
     toast('底图已换成「'+(hit?hit[1]:'素纸')+'」');
   }
   function renderImgStatus(){renderKeyPanels();}
@@ -5826,12 +5830,13 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
 
   /* 待买分类自动判断（2026-11-02）：分类下拉默认隐藏，按物品名关键词推一次。
      输入停 600ms 才判断，连打期间不重算；提交时再同步判一次兜底（避免 600ms 内直接点提交）。 */
+  /* 关键词尽量用两字以上的词：单字「面 / 米 / 油」会把面膜、米老鼠之类的误判进食品 */
   const HOME_CAT_RULES=[
-    ['食品',['牛奶','酸奶','面包','鸡蛋','蛋','米','面','食用油','盐','糖','水果','苹果','香蕉','橙','蔬菜','肉','鱼','零食','咖啡','茶','饮料','燕麦','麦片','豆浆','酱','醋','速冻','火腿','香肠','饼干','坚果']],
-    ['日用品',['洗衣液','洗衣粉','洗洁精','纸巾','卫生纸','纸抽','牙膏','牙刷','洗发','沐浴','肥皂','毛巾','垃圾袋','湿巾','拖把','百洁布','洗手液','护手霜']],
-    ['家居',['床单','枕头','被子','收纳','拖鞋','衣架','水杯','锅','碗','灯','窗帘','坐垫','置物架','靠垫']],
-    ['数码',['数据线','充电','耳机','鼠标','键盘','硬盘','电池','手机壳','内存卡','转换器','网线','支架','插座']],
-    ['药品',['药','感冒','维生素','创可贴','口罩','酒精','碘伏','棉签','消炎','退烧']]
+    ['日用品',['洗衣液','洗衣粉','洗洁精','纸巾','卫生纸','纸抽','牙膏','牙刷','洗发','沐浴','肥皂','毛巾','垃圾袋','湿巾','拖把','百洁布','洗手液','护手霜','面膜','洗面奶','沐浴露','卫生巾','尿不湿']],
+    ['食品',['牛奶','酸奶','面包','鸡蛋','鸭蛋','鹌鹑蛋','大米','小米','糯米','面条','挂面','面粉','食用油','花生油','香油','食盐','白糖','红糖','冰糖','水果','苹果','香蕉','橙子','蔬菜','白菜','青菜','猪肉','牛肉','鸡肉','羊肉','鲜鱼','带鱼','零食','咖啡','茶叶','饮料','燕麦','麦片','豆浆','酱油','香醋','速冻','火腿','香肠','饼干','坚果','方便面']],
+    ['家居',['床单','枕头','被子','收纳','拖鞋','衣架','水杯','锅','碗','灯','窗帘','坐垫','置物架','靠垫','垃圾桶','保鲜盒','垃圾篓']],
+    ['数码',['数据线','充电','耳机','鼠标','键盘','硬盘','电池','手机壳','内存卡','转换器','网线','支架','插座','U盘','充电宝']],
+    ['药品',['药','感冒','维生素','创可贴','口罩','酒精','碘伏','棉签','消炎','退烧','止疼','肠胃']]
   ];
   function homeAutoCat(name){
     const t=String(name||'');
@@ -6659,6 +6664,8 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
      先把 height 归 auto 再读 scrollHeight，否则内容删短时高度降不下来。 */
   function memoAutoGrow(el){
     if(!el||el.tagName!=='TEXTAREA')return;
+    /* 清空后浏览器这一拍还会按旧内容算 scrollHeight，直接给回最小高度 */
+    if(!el.value){el.style.height='44px';el.classList.remove('grown');return;}
     el.style.height='auto';
     const need=el.scrollHeight;
     const h=Math.max(44,Math.min(need,180));
@@ -7687,14 +7694,23 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
       box.innerHTML=keys.length?keys.map(k=>{const ts=Number(k.slice(SNAP_PREFIX.length));return '<div class="snap-row"><span>快照 · '+new Date(ts).toLocaleString()+'</span><button class="wbtn ghostbtn" data-act="snap-restore" data-ts="'+ts+'">从快照恢复</button></div>';}).join(''):'<p class="wempty-task">还没有快照。执行危险操作前会自动生成。</p>';
     }
     renderKeyPanels();
-    /* 入口行只显示当前值（2026-11-02）：备份时间 / 两个 Key 状态 / 皮肤名 */
+    syncSetRows();
+  }
+  /* 入口行当前值同步（2026-11-02）：备份时间 / 两个 Key / 皮肤名。
+     切皮肤、存 Key、导备份都不会走 renderAll，所以这些入口各自调用一次。 */
+  function syncSetRows(){
     const rb=document.getElementById('setRowBackup');
     if(rb){const l=Number(localStorage.getItem('richangji-lastExport')||0);rb.textContent=l?('上次 '+new Date(l).toLocaleDateString('zh-CN')):'还没有备份过';}
     const kv=id=>{const d=KEY_DEFS.filter(x=>x.id===id)[0];return d&&d.get?d.get():'';};
     const ra=document.getElementById('setRowAi');if(ra)ra.textContent=kv('ai')?'已配置':'未配置';
     const ri=document.getElementById('setRowImg');if(ri)ri.textContent=kv('img')?'已配置':'未配置';
     const rs=document.getElementById('setRowSkin');
-    if(rs){const sk=(state.settings.brand&&state.settings.brand.skin)||'plain';const hit=SKINS.filter(x=>x[0]===sk)[0];rs.textContent=hit?hit[1]:'素纸';}
+    if(rs){
+      const sk=(state.settings&&state.settings.brand&&state.settings.brand.skin)||'plain';
+      const list=(typeof SKINS!=='undefined')?SKINS:[];
+      const hit=list.filter(x=>x[0]===sk)[0];
+      rs.textContent=hit?hit[1]:'素纸';
+    }
   }
   /* 设置页入口行的弹层开关（2026-11-02）。复用的是页面已有的 .settings-backdrop / .settings-sheet。 */
   const SET_SHEETS={backup:'setSheetBackup',danger:'setSheetDanger',ai:'setSheetAi',img:'setSheetImg',keys:'setSheetKeys',skin:'setSheetSkin',about:'setSheetAbout'};
@@ -7715,7 +7731,7 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
       dump.keys={};BK_KEYS.forEach(k=>{try{const v=localStorage.getItem(k);if(v!==null&&v!=='')dump.keys[k]=v;}catch(e3){}});
       downloadBlob(JSON.stringify(dump),'application/json','richangji-backup-'+isoDate()+'.json');
       try{localStorage.setItem('richangji-lastExport',String(Date.now()));}catch(e2){}
-      renderBackupHint();toast('备份已导出到下载');
+      renderBackupHint();if(typeof syncSetRows==='function')syncSetRows();toast('备份已导出到下载');
     }catch(e){toast('导出失败：'+((e&&e.message)||'未知错误'));}
   }
   const bkFileEl=document.getElementById('bkFile');
@@ -7757,7 +7773,7 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     document.getElementById('moneyForm').addEventListener('submit',e=>{e.preventDefault();const data=Object.fromEntries(new FormData(e.currentTarget));if(!(Number(data.amount)>0))return toast('请输入有效金额');const fin=loadFin();const acc=(fin.accounts||[]).find(a=>a.id===data.account)||null;const payload={flow:data.flow,amount:Number(data.amount),category:data.category,note:(data.note||'').trim()};if(acc){payload.account=acc.id;payload.accountName=acc.name;}if(addRecord('money',data.date,payload,true)){toast(translateText('已记')+' '+data.category+' '+money(Number(data.amount)));if(acc&&accIsCredit(acc.kind)&&data.flow==='expense')chargeCredit(acc,Number(data.amount));clearDraft(e.currentTarget);}});
     document.getElementById('fitnessForm').addEventListener('submit',e=>{e.preventDefault();const data=Object.fromEntries(new FormData(e.currentTarget));if(!(Number(data.weight)>0))return toast('请记录今天的体重');if(addRecord('fitness',data.date,{weight:Number(data.weight),bodyFat:data.bodyFat?Number(data.bodyFat):null,calories:Number(data.calories||0),duration:Number(data.duration||0),note:data.note.trim()}))clearDraft(e.currentTarget);});
     document.getElementById('plannerForm').addEventListener('submit',e=>{e.preventDefault();const data=Object.fromEntries(new FormData(e.currentTarget));let title=String(data.title||'').trim();if(!title)return;title=schStripTitle(title)||title;if(addRecord('planner',data.date,{title:title,time:data.time||'',priority:data.priority||'normal',list:data.list||'生活',note:(data.note||'').trim(),remind:data.remind==='1',done:false},true)){toast(translateText('已加到')+' '+schDateLabel(data.date)+(data.time?' '+data.time:''));clearDraft(e.currentTarget);}});
-    document.getElementById('homeForm').addEventListener('submit',e=>{e.preventDefault();const data=Object.fromEntries(new FormData(e.currentTarget));const cat=homeAutoCat(data.name)||data.category||'其他';if(addRecord('home',isoDate(),{name:data.name.trim(),quantity:data.quantity.trim(),category:cat,price:Number(data.price||0),priority:data.priority,note:data.note.trim(),bought:false}))clearDraft(e.currentTarget);});
+    document.getElementById('homeForm').addEventListener('submit',e=>{e.preventDefault();const data=Object.fromEntries(new FormData(e.currentTarget));const cat=homeAutoCat(data.name)||'其他';if(addRecord('home',isoDate(),{name:data.name.trim(),quantity:data.quantity.trim(),category:cat,price:Number(data.price||0),priority:data.priority,note:data.note.trim(),bought:false}))clearDraft(e.currentTarget);});
     homeCatBind();
     document.getElementById('mediaCoverInput').addEventListener('change',async e=>{const[file]=e.target.files;if(!file)return;if(file.size>12*1024*1024){toast('封面图片请控制在 12MB 以内');e.target.value='';return;}try{pendingMediaCover=await compressCover(file);const preview=document.getElementById('mediaCoverPreview');preview.style.backgroundImage=`url(${pendingMediaCover})`;preview.closest('.cover-upload').classList.add('has-cover');toast('封面已压缩，可以保存了');}catch(error){toast(error.message);resetMediaCover();}});
     document.getElementById('mediaForm').addEventListener('submit',e=>{e.preventDefault();const data=Object.fromEntries(new FormData(e.currentTarget));var newItem={id:uid(),name:data.name.trim(),type:data.type,status:data.status,rating:Number(data.rating||0),review:data.review.trim(),date:data.date,cover:pendingMediaCover,sample:false};state.mediaItems.push(newItem);pushMedia(newItem);state.settings.recordsSinceExport=Number(state.settings.recordsSinceExport||0)+1;const saved=saveState(true);renderAll();if(saved){clearDraft(e.currentTarget);resetMediaCover();toast('已加入书影音清单');}});
