@@ -437,7 +437,9 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
      加 max-height 后 SVG 按比例居中缩，两侧留白，人形不变形，下面「训练覆盖」那几栏能进首屏。
      markup 里原来还写了一份同样的 inline style，已删掉，尺寸只由这一条决定。 */
   #bodyMap{width:min(228px,56vw);height:auto;aspect-ratio:128/420;max-height:min(500px,54vh);display:block;overflow:visible}
-  @media(min-width:960px){#bodyMap{max-height:min(620px,66vh)}}
+  /* 桌面下右栏数据只有 250 左右，人形 748 会把整卡撑到 800，底下空一大片。
+     上限压到 500，右栏改成垂直居中，空白上下均分，不再全堆在右栏下面。 */
+  @media(min-width:960px){#bodyMap{max-height:min(500px,54vh)}#view-health #bmCard{align-items:center}}
   #bodyMap .part{stroke:#e2d7c8;stroke-width:.9;transition:fill .18s ease,stroke .18s ease,opacity .18s ease}
   #bodyMap .part.na{fill:#f1ece4}
   #bodyMap .part.t0{fill:#ede7dd}
