@@ -516,7 +516,16 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   @media(max-width:860px){#bmCard{gap:14px}#bmSheet{bottom:calc(82px + env(safe-area-inset-bottom))}}
   /* ===== 备忘录 ===== */
   .memo-layout{align-items:start}
-  #homeCatLabel[hidden]{display:none!important}#homeForm .form-row:has(#homeCatLabel[hidden]){grid-template-columns:1fr}
+  /* 待买分类识别提示与手动纠正（2026-11-02） */
+.cat-hint-row{display:flex;align-items:center;gap:8px;margin:2px 0 0}
+.cat-hint-row .zdesc{margin:0;flex:1;min-width:0;font-size:11.5px;color:var(--muted)}
+.cat-edit{flex:none;min-height:28px;padding:0 11px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--muted);font:inherit;font-size:11.5px;-webkit-appearance:none;appearance:none}
+.cat-edit:active{background:var(--paper-soft)}
+.cat-chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0}
+.cat-chips[hidden]{display:none!important}
+.cat-chips button{min-height:32px;padding:0 12px;border:1px solid var(--line);border-radius:999px;background:var(--white);color:#8a7f72;font:inherit;font-size:12px;-webkit-appearance:none;appearance:none}
+.cat-chips button.on{border-color:#d9c3b2;background:#f7ece3;color:#8d442e;font-weight:700}
+#homeCatLabel[hidden]{display:none!important}#homeForm .form-row:has(#homeCatLabel[hidden]){grid-template-columns:1fr}
   .memo-compose-wrap{display:flex;flex-direction:column;gap:12px}
   .memo-compose textarea{width:100%;min-height:44px;max-height:180px;padding:12px 13px;border:1px solid var(--line);border-radius:13px;background:#fbf8f2;color:var(--ink);font:inherit;font-size:14px;line-height:1.62;resize:none;outline:none;overflow-y:hidden;transition:border-color .15s,background .15s}
   /* 输入框随内容长高（2026-11-02）：44 → 180px，到顶后在框内滚动，由 memoAutoGrow() 设 height */
@@ -800,7 +809,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
    部署脚本 _sync_deploy.js 会在发布时把 BUILD 改成时间戳并同步写 version.json，两边自动一致。
    注意：首次仍需手动刷新一次（旧页面里还没有这段代码），之后就能自己发现更新。 */
 (function(){
-  var BUILD='20261102_0136';
+  var BUILD='20261102_0206';
   window.__RJ_BUILD=BUILD;
   var bar=function(){return document.getElementById('verBar');};
   function check(){
@@ -1450,7 +1459,8 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
             <div data-page-node-id="vMjS4TNM6HkR4aTBqafTAq" class="form-row"><label data-page-node-id="LCFslUL36EEEkhbGAT1E1h" class="field"><span data-page-node-id="ddiNzxcTpA0epcEOiYVivh"><!--pnid:6RLrZJeX5n5k37sEq3cxgF-->数量</span><input data-page-node-id="KlRVmpM2HoCu8K636HYKT2" maxlength="16" name="quantity" placeholder="2 盒"></label><label data-page-node-id="XGjw5bNteTp2VoGI0bnYth" class="field" id="homeCatLabel" hidden><span data-page-node-id="nqedS7WdlKV8GgcOyrWeDj"><!--pnid:wdt54ImPm0Pm3mj1Y7ihVf-->分类</span><select data-page-node-id="m7HkStYy4FH8tfgvy8KEzF" name="category"><option data-page-node-id="yNWyW6dw0cfTcuqNMp7zUi"><!--pnid:V4bd5gHJRaiXbLlxQe42sD-->食品</option><option data-page-node-id="0AgVQ2thAvABOJ7D8U8sjH"><!--pnid:FL9zhY80JHIRgTF6rNQPhd-->日用品</option><option data-page-node-id="MXjAKntUEwmAWr7o3cKsNW"><!--pnid:v1QJAD1WMUySQUno4FUyxp-->家居</option><option data-page-node-id="4Sbj33JlqulT9RAjhN87pw"><!--pnid:GlnJJLoFGR99LhFzBr8TcY-->数码</option><option data-page-node-id="6VWHtpcrQpybHUf6g84Qgh"><!--pnid:aScB2F3KE8Y2n70qJZKlC4-->药品</option><option data-page-node-id="JrWjLIE3WrcwKHTQIUJ6ed"><!--pnid:amg8XmRaqTQtx7GIIO9QIi-->其他</option></select></label></div>
             <div data-page-node-id="kfObyCjjc7i0PDhnCNYXF0" class="form-row"><label data-page-node-id="klBFnp7KCWVTBQZ1gcXKMD" class="field"><span data-page-node-id="ygDmqYYe0nbzRWH4Lcf89V"><!--pnid:1VY3wlgjNSTorAgaWczjqN-->预算 ¥</span><input data-page-node-id="t9zdLJFqmZx03bijIVRXcN" inputmode="decimal" min="0" name="price" step="0.01" type="number"></label><label data-page-node-id="skGAOcCjJzCEX9giUPReJ8" class="field"><span data-page-node-id="tagaTN7qyGXZjH5taFHkHB"><!--pnid:Zul8YMWwDbTdnLgKKtPlL1-->优先级</span><select data-page-node-id="d1TGxMkqCw978wVguod5no" name="priority"><option data-page-node-id="lAqE8LmGcI2L72QPUYZ6ab" value="normal"><!--pnid:GQQhu40Ok5fEEWDQHsJget-->有空买</option><option data-page-node-id="1O93fGMWuDfJUSIvt7PiSl" value="high"><!--pnid:siNHXpeaVxGyhPy6omVQZx-->急需</option><option data-page-node-id="ip31CFVfvzczLzbnqGL6FK" value="low"><!--pnid:3xfrW3BPZCOIYNOY6ZQr5T-->等等再买</option></select></label></div>
             <label data-page-node-id="6tFPF37MyPImm1NsvANEpq" class="field"><span data-page-node-id="aJYQlksJ5sMY9GlBAeHrBZ"><!--pnid:JJfLZwHjU3nIjlJ3YPge82-->备注</span><input data-page-node-id="twb0dgKG7D5UYtFBM5qeLe" maxlength="60" name="note" placeholder="品牌、规格或购买渠道"></label>
-            <p class="zdesc" id="homeCatHint" style="margin:2px 0 0">分类随物品名自动判断</p>
+            <div class="cat-hint-row"><span class="zdesc" id="homeCatHint" style="margin:0">分类随物品名自动判断</span><button class="cat-edit" type="button" data-act="homeCatEdit">改</button></div>
+            <div class="cat-chips" id="homeCatChips" hidden><button type="button" data-hcat="auto">自动判断</button><button type="button" data-hcat="食品">食品</button><button type="button" data-hcat="日用品">日用品</button><button type="button" data-hcat="家居">家居</button><button type="button" data-hcat="数码">数码</button><button type="button" data-hcat="药品">药品</button><button type="button" data-hcat="其他">其他</button></div>
             <button data-page-node-id="NpfpFHemVRJRsMRcwiFlez" class="btn primary full" type="submit"><svg data-page-node-id="dklxIhb9cZtv1ShX5OV2cO"><use data-page-node-id="jNU18s1z3OjaYg0AQrzRvd" href="#i-plus"/></svg><!--pnid:ylpIFnd76pieCjIcSVzTbC-->加入待买清单</button>
           </form></article>
           <div data-page-node-id="V9KV9JF7IZ1FXFl90gERIU" class="module-main">
@@ -5847,22 +5857,61 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     }
     return'';
   }
+  /* 分类落到界面（2026-11-02 修）：识别失败也要明确说「归到其他」，不能让界面停在上一个词的结果 */
+  let homeCatManual='';
+  function homeCatApply(cat,manual){
+    const form=document.getElementById('homeForm');
+    const sel=(form&&form.elements)?form.elements.category:null;
+    const final=cat||'其他';
+    if(sel)sel.value=final;
+    homeCatManual=manual?final:'';
+    const chips=document.getElementById('homeCatChips');
+    if(chips){
+      const hl=manual?final:(cat||'auto');
+      chips.querySelectorAll('[data-hcat]').forEach(b=>b.classList.toggle('on',b.dataset.hcat===hl));
+    }
+    const hint=document.getElementById('homeCatHint');
+    if(!hint)return;
+    if(manual)hint.textContent='分类：'+final+'（手动）';
+    else if(cat)hint.textContent='分类：'+final+' · 自动判断';
+    else hint.textContent='没认出，先归「其他」，点「改」手动选';
+  }
   function homeCatBind(){
     const form=document.getElementById('homeForm');
-    if(!form||form.dataset.catBound==='1')return;
-    form.dataset.catBound='1';
+    if(!form)return;
     const inp=form.elements.name;
-    if(!inp)return;
-    let timer=0;
-    inp.addEventListener('input',()=>{
-      clearTimeout(timer);
-      timer=setTimeout(()=>{
-        const cat=homeAutoCat(inp.value);
-        if(cat&&form.elements.category)form.elements.category.value=cat;
-        const hint=document.getElementById('homeCatHint');
-        if(hint)hint.textContent=cat?('分类：'+cat+' · 按物品名自动判断'):'分类随物品名自动判断';
-      },600);
-    });
+    if(inp&&form.dataset.catBound!=='1'){
+      form.dataset.catBound='1';
+      let timer=0;
+      const run=()=>{homeCatApply(homeAutoCat(inp.value),false);};
+      inp.addEventListener('input',()=>{
+        clearTimeout(timer);
+        /* 删空立刻回落，不等超时，否则界面看不出重来过 */
+        if(!inp.value.trim()){homeCatApply('',false);return;}
+        timer=setTimeout(run,250);
+      });
+      /* 中文输入法上屏那一下立刻判一次，不再等防抖 */
+      inp.addEventListener('compositionend',()=>{clearTimeout(timer);run();});
+    }
+    const edit=document.querySelector('[data-act="homeCatEdit"]');
+    if(edit&&edit.dataset.bound!=='1'){
+      edit.dataset.bound='1';
+      edit.addEventListener('click',()=>{const c=document.getElementById('homeCatChips');if(c)c.hidden=!c.hidden;});
+    }
+    const chips=document.getElementById('homeCatChips');
+    if(chips&&chips.dataset.bound!=='1'){
+      chips.dataset.bound='1';
+      chips.addEventListener('click',e=>{
+        const b=e.target.closest('[data-hcat]');if(!b)return;
+        if(b.dataset.hcat==='auto'){
+          const n=document.getElementById('homeForm').elements.name;
+          homeCatApply(homeAutoCat(n?n.value:''),false);
+        }else{
+          homeCatApply(b.dataset.hcat,true);
+        }
+        chips.hidden=true;/* 选完就收起，不用再点一次「改」 */
+      });
+    }
   }
 
   function renderHome(){
@@ -7773,7 +7822,7 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     document.getElementById('moneyForm').addEventListener('submit',e=>{e.preventDefault();const data=Object.fromEntries(new FormData(e.currentTarget));if(!(Number(data.amount)>0))return toast('请输入有效金额');const fin=loadFin();const acc=(fin.accounts||[]).find(a=>a.id===data.account)||null;const payload={flow:data.flow,amount:Number(data.amount),category:data.category,note:(data.note||'').trim()};if(acc){payload.account=acc.id;payload.accountName=acc.name;}if(addRecord('money',data.date,payload,true)){toast(translateText('已记')+' '+data.category+' '+money(Number(data.amount)));if(acc&&accIsCredit(acc.kind)&&data.flow==='expense')chargeCredit(acc,Number(data.amount));clearDraft(e.currentTarget);}});
     document.getElementById('fitnessForm').addEventListener('submit',e=>{e.preventDefault();const data=Object.fromEntries(new FormData(e.currentTarget));if(!(Number(data.weight)>0))return toast('请记录今天的体重');if(addRecord('fitness',data.date,{weight:Number(data.weight),bodyFat:data.bodyFat?Number(data.bodyFat):null,calories:Number(data.calories||0),duration:Number(data.duration||0),note:data.note.trim()}))clearDraft(e.currentTarget);});
     document.getElementById('plannerForm').addEventListener('submit',e=>{e.preventDefault();const data=Object.fromEntries(new FormData(e.currentTarget));let title=String(data.title||'').trim();if(!title)return;title=schStripTitle(title)||title;if(addRecord('planner',data.date,{title:title,time:data.time||'',priority:data.priority||'normal',list:data.list||'生活',note:(data.note||'').trim(),remind:data.remind==='1',done:false},true)){toast(translateText('已加到')+' '+schDateLabel(data.date)+(data.time?' '+data.time:''));clearDraft(e.currentTarget);}});
-    document.getElementById('homeForm').addEventListener('submit',e=>{e.preventDefault();const data=Object.fromEntries(new FormData(e.currentTarget));const cat=homeAutoCat(data.name)||'其他';if(addRecord('home',isoDate(),{name:data.name.trim(),quantity:data.quantity.trim(),category:cat,price:Number(data.price||0),priority:data.priority,note:data.note.trim(),bought:false}))clearDraft(e.currentTarget);});
+    document.getElementById('homeForm').addEventListener('submit',e=>{e.preventDefault();const data=Object.fromEntries(new FormData(e.currentTarget));const cat=homeCatManual||homeAutoCat(data.name)||'其他';if(addRecord('home',isoDate(),{name:data.name.trim(),quantity:data.quantity.trim(),category:cat,price:Number(data.price||0),priority:data.priority,note:data.note.trim(),bought:false})){clearDraft(e.currentTarget);homeCatManual='';homeCatApply('',false);}});
     homeCatBind();
     document.getElementById('mediaCoverInput').addEventListener('change',async e=>{const[file]=e.target.files;if(!file)return;if(file.size>12*1024*1024){toast('封面图片请控制在 12MB 以内');e.target.value='';return;}try{pendingMediaCover=await compressCover(file);const preview=document.getElementById('mediaCoverPreview');preview.style.backgroundImage=`url(${pendingMediaCover})`;preview.closest('.cover-upload').classList.add('has-cover');toast('封面已压缩，可以保存了');}catch(error){toast(error.message);resetMediaCover();}});
     document.getElementById('mediaForm').addEventListener('submit',e=>{e.preventDefault();const data=Object.fromEntries(new FormData(e.currentTarget));var newItem={id:uid(),name:data.name.trim(),type:data.type,status:data.status,rating:Number(data.rating||0),review:data.review.trim(),date:data.date,cover:pendingMediaCover,sample:false};state.mediaItems.push(newItem);pushMedia(newItem);state.settings.recordsSinceExport=Number(state.settings.recordsSinceExport||0)+1;const saved=saveState(true);renderAll();if(saved){clearDraft(e.currentTarget);resetMediaCover();toast('已加入书影音清单');}});
