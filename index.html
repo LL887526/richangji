@@ -88,6 +88,16 @@
 .v13bar small{font-size:12px;color:var(--muted);line-height:1.6;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .v13bar .grow{flex:1;min-width:100px}
 .v13bar .wbtn{min-height:38px;padding:0 14px}
+/* 新版本提示条（2026-11-02）：手机浏览器会缓存旧页面，靠它主动告知并一键刷新。
+   右侧必须给 AI 悬浮球让位（手机 fab 占 right 14~66px，桌面 18~70px），否则「刷新/关闭」按钮被球盖住点不到。 */
+.verbar[hidden]{display:none!important}
+.verbar{position:fixed;left:12px;right:74px;bottom:calc(136px + env(safe-area-inset-bottom));z-index:60;display:flex;align-items:center;gap:8px;padding:10px 10px 10px 13px;margin:0 auto;max-width:430px;border:1px solid var(--line);border-radius:16px;background:var(--card);box-shadow:0 14px 34px rgba(63,48,36,.2)}
+.verbar .vb-tx{flex:1;min-width:0;font-size:13px;line-height:1.45;color:var(--ink)}
+.verbar .vb-tx small{display:block;color:var(--muted);font-size:11px}
+.verbar .vb-btn{flex:none;min-height:38px;padding:0 13px;border:0;border-radius:11px;background:var(--plum);color:var(--white);font-size:13px;font-weight:700}
+.verbar .vb-x{flex:none;width:32px;height:32px;padding:0;display:grid;place-items:center;border:0;border-radius:10px;background:transparent;color:var(--faint)}
+.verbar .vb-x svg{width:15px;height:15px}
+@media(min-width:861px){.verbar{left:auto;right:78px;bottom:26px;width:352px;max-width:352px}}
 .v13bar .wbtn.ghostbtn{background:transparent;color:var(--plum);border:1px solid var(--line)}
 .v13bar.done{border-color:var(--sage);background:var(--sage-soft)}
 .wrv{display:flex;flex-direction:column;gap:6px;padding:14px;border:1px solid var(--line);border-radius:14px;background:var(--paper)}
@@ -742,6 +752,11 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     <p id="gateErr" hidden style="margin:10px 0 0;color:var(--red);font-size:13px">口令不对，再试一次</p>
   </div>
 </div>
+<div class="verbar" id="verBar" hidden>
+  <span class="vb-tx">有新版本可用<small>点刷新即可更新，数据不受影响</small></span>
+  <button class="vb-btn" type="button" data-act="verReload">刷新</button>
+  <button class="vb-x" type="button" data-act="verDismiss" aria-label="稍后再说"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+</div>
 <script>
 /* 禁止双击放大与双指缩放（2026-10-27）。触屏双指靠 gesture* 事件拦，
    双击靠 CSS touch-action:manipulation 拦，这里只补一道 dblclick 兜底。 */
@@ -751,6 +766,38 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   document.addEventListener('gesturechange',stop,{passive:false});
   document.addEventListener('gestureend',stop,{passive:false});
   document.addEventListener('dblclick',stop,{passive:false});
+})();
+/* 新版本检测（2026-11-02）：手机浏览器会缓存旧页面，导致更新后看不到变化。
+   页面带 BUILD 常量，打开后静默取线上 version.json 比对，不一致就在底部弹一条提示。
+   部署脚本 _sync_deploy.js 会在发布时把 BUILD 改成时间戳并同步写 version.json，两边自动一致。
+   注意：首次仍需手动刷新一次（旧页面里还没有这段代码），之后就能自己发现更新。 */
+(function(){
+  var BUILD='20261102_0017';
+  window.__RJ_BUILD=BUILD;
+  var bar=function(){return document.getElementById('verBar');};
+  function check(){
+    try{
+      fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.json():null;}).then(function(j){
+        if(!j||!j.build||j.build===BUILD)return;
+        var seen='';try{seen=sessionStorage.getItem('richangji-ver-seen')||'';}catch(e){}
+        if(seen===j.build)return;
+        window.__RJ_REMOTE=j.build;
+        var el=bar();if(el)el.hidden=false;
+      }).catch(function(){});
+    }catch(e){}
+  }
+  document.addEventListener('click',function(e){
+    var b=e.target&&e.target.closest?e.target.closest('#verBar [data-act]'):null;
+    if(!b)return;
+    if(b.dataset.act==='verDismiss'){
+      try{sessionStorage.setItem('richangji-ver-seen',window.__RJ_REMOTE||'1');}catch(e){}
+      var el=bar();if(el)el.hidden=true;
+    }else if(b.dataset.act==='verReload'){
+      try{location.replace(location.pathname+'?v='+Date.now()+location.hash);}catch(e){location.reload();}
+    }
+  });
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',function(){setTimeout(check,1800);});}
+  else{setTimeout(check,1800);}
 })();
 (function(){
   return; /* 口令门已停用（2026-09-23 拍板：手机锁屏为主防线）。恢复口令门：删除本行即可 */
