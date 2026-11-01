@@ -379,6 +379,15 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
 .snap-row:last-child{border-bottom:0}
 .snap-row .wbtn{min-height:38px;padding:0 14px;font-size:12px;margin-left:auto}
 @media(max-width:860px){.wnote{display:none}.wpanel{padding:17px;border-radius:19px}.wmore{grid-template-columns:1fr}.wadd{flex-wrap:wrap}.wadd input{flex:1 1 100%}.wadd .wbtn{flex:0 0 100%;width:100%}.wsel{flex:1 1 40%}.wtree-stage{flex-direction:column;align-items:stretch;gap:14px}.wtree-gamify{min-width:0;width:100%}.wsk-grid{grid-template-columns:1fr}.wword-grid{grid-template-columns:1fr}.wb-name{flex:0 0 100%}.wb-nodes{gap:6px}.wm-row .wsel{flex:1 1 28%}}
+/* 今日待办的输入框 + 按钮在手机上也并成一行（.wadd 默认在 ≤860 会整宽换行）。
+   同一个页面里「任务看板」是行内窄按钮、「今日待办」是整宽大按钮，明明是同一个动作，
+   看着像两套设计。加 .wadd-row 的才走行内，其它 .wadd 保持原样。 */
+.wadd.wadd-row .wbtn{min-width:74px}
+@media(max-width:860px){
+  .wadd.wadd-row{flex-wrap:nowrap}
+  .wadd.wadd-row input{flex:1 1 auto;min-width:0}
+  .wadd.wadd-row .wbtn{flex:0 0 auto;width:auto;min-width:74px;padding:0 16px;white-space:nowrap}
+}
   .ftcal-head{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin:10px 0 4px;font-size:11px;color:#9a9186;text-align:center}
   .ftcal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
   .ftcal-cell{position:relative;min-height:46px;border-radius:10px;background:#f7f2ea;font-size:13px;color:#6b6357;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border:0;cursor:default;padding:2px}
@@ -424,7 +433,11 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   .bm-seg.wide button{flex:1;min-height:38px}
   #bmStage{display:flex;justify-content:center;padding:6px 0 0;transition:opacity .15s ease}
   #bmStage.sw{opacity:0}
-  #bodyMap{width:min(228px,56vw);height:auto;aspect-ratio:128/420;display:block;overflow:visible}
+  /* 人形本身是 128:420 的细长比例，宽 228 时高会到 748，手机首屏基本被它占满。
+     加 max-height 后 SVG 按比例居中缩，两侧留白，人形不变形，下面「训练覆盖」那几栏能进首屏。
+     markup 里原来还写了一份同样的 inline style，已删掉，尺寸只由这一条决定。 */
+  #bodyMap{width:min(228px,56vw);height:auto;aspect-ratio:128/420;max-height:min(500px,54vh);display:block;overflow:visible}
+  @media(min-width:960px){#bodyMap{max-height:min(620px,66vh)}}
   #bodyMap .part{stroke:#e2d7c8;stroke-width:.9;transition:fill .18s ease,stroke .18s ease,opacity .18s ease}
   #bodyMap .part.na{fill:#f1ece4}
   #bodyMap .part.t0{fill:#ede7dd}
@@ -1243,7 +1256,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
                 <button data-bm-side="back" type="button">背面</button>
               </div>
               <div id="bmStage">
-                <svg id="bodyMap" viewBox="36 0 128 420" aria-label="人体健康图" style="width:min(228px,56vw);height:auto;aspect-ratio:128/420;display:block;overflow:visible">
+                <svg id="bodyMap" viewBox="36 0 128 420" aria-label="人体健康图">
                   <g id="bmVis"></g>
                   <g id="bmDet"></g>
                   <g id="bmHit"></g>
@@ -1414,7 +1427,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
           </article>
           <article class="wpanel">
             <div class="wpanel-head"><div><p class="eyebrow">今天要收尾的</p><h2>今日待办</h2></div><span class="wnote" id="taskStats"></span></div>
-            <div class="wadd"><input type="text" id="todoInput" maxlength="60" placeholder="添加一条任务，回车确认"><button class="wbtn" data-act="addTodo">添加</button></div>
+            <div class="wadd wadd-row"><input type="text" id="todoInput" maxlength="60" placeholder="添加一条任务，回车确认"><button class="wbtn" data-act="addTodo">添加</button></div>
             <div class="wlist" id="todoList"></div>
           </article>
         </div>
@@ -7364,11 +7377,14 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     if(btn&&!btn.dataset.bound){btn.dataset.bound='1';btn.addEventListener('click',function(ev){ev.preventDefault();ev.stopPropagation();try{localStorage.setItem('richangji-v13bar-dismissed','1');}catch(e){}bar.hidden=true;toast('已收起，之后想迁移可去「全局设置」');});}
     if(localStorage.getItem('richangji-v13bar-dismissed')){bar.hidden=true;return;}
     const m=(state.migrated&&state.migrated.v13)?state.migrated:null;
+    /* 这条横幅原来只要没点过「知道了」就一直挂着，本机没旧数据时写的还是一句负面文案
+       （「本机没读到」），等于每次进工作页先挨一句提醒。改成只有真要动手时才出现：
+       检测到本机有旧数据 → 提示去迁；已经迁过 / 压根没有 → 不占位，入口仍在「全局设置 → 危险区」。 */
+    const pending=!m&&scanV13().found;
+    if(!pending){bar.hidden=true;return;}
     bar.hidden=false;
-    bar.classList.toggle('done',!!m);
-    if(m){const d=new Date(m.ts);info.textContent='已导入 '+(m.count||0)+' 条（'+(d.getMonth()+1)+'月'+d.getDate()+'日 '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')+'，来源：'+(m.src==='file'?'备份文件':'本机')+'）。旧 key 全部保留未删，可重复导入。';}
-    else if(scanV13().found){info.textContent='检测到本机有旧工作台数据，去「全局设置 → 危险区」迁入。';}
-    else{info.textContent='本机没读到。若换过浏览器或清理过缓存，去「全局设置 → 危险区」从备份文件导入。';}
+    bar.classList.toggle('done',false);
+    info.textContent='检测到本机有旧工作台数据，去「全局设置 → 危险区」迁入。';
   }
   const v13FileEl=document.getElementById('v13File');
   if(v13FileEl)v13FileEl.addEventListener('change',e=>{
