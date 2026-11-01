@@ -5388,6 +5388,19 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     const freq=Number(localStorage.getItem('richangji-backup-freq')||14);
     const due=!last||(Date.now()-last)>freq*86400000;
     const dismissed=localStorage.getItem('richangji-backup-dismissed')===new Date().toDateString();
+    /* 数据损坏兜底：loadState 解析失败时原数据存进了 -corrupt-backup，页面却静默换成空白示例，
+       dataCorrupted 这个标志此前从来没人读——用户只会看到「记录全没了」而不知道数据其实还在本机。
+       这里把它接上：今天页弹说明卡（优先于普通备份提醒），设置页给一键导出原始数据的按钮。 */
+    const corruptRaw=localStorage.getItem(STORAGE_KEY+'-corrupt-backup');
+    if(corruptRaw){
+      el.hidden=false;
+      const head=el.querySelector('h2');if(head)head.textContent='你的数据还在，但需要你处理一下';
+      /* note 在下面才声明，这里不能引用，单独取 */
+      const noteEl=document.getElementById('backupHintNote');
+      if(noteEl)noteEl.textContent='上次打开时这份数据没能正常加载（可能带有旧版本或编辑过的记录）。原始数据已原样保存在本机，一条没丢。去「设置 → 数据与备份」点「导出损坏前的原始数据」，把文件发我或自己排查后重新导入即可。';
+      const stamp2=document.getElementById('backupStamp');if(stamp2)stamp2.textContent='检测到未加载的原始数据备份';
+      return;
+    }
     el.hidden=!(due&&!dismissed);
     const note=document.getElementById('backupHintNote');
     if(note&&!el.hidden)note.textContent=last?('距上次导出已超过 '+freq+' 天（上次：'+new Date(last).toLocaleDateString()+'）。数据只存在本机浏览器，换设备或清缓存会丢。'):('还没有导出过备份。数据只存在本机浏览器，换设备或清缓存会丢。');
@@ -7337,7 +7350,7 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
 
   const V13_INDEP=["wb_todayGoals","wb_dailyTasks","wb_dailyTaskLog","wb_dailyTaskTotal","wb_lastActive","wb_workoutSchedule","wb_workoutLib","wb_workoutPlans","wb_workoutLog","wb_workoutToday","wb_bodyWeight"];
   const V13_MAPPED=["tasks","todos","projects","collab","ideas","caps","topics","copy","reviews","skills","materials","mstats","goals","overdue","tree","nodeOverride","workout","workoutSets","meals"];
-  const BK_KEYS=["richangji-finance-v1","richangji-health-v1","richangji-reminders-v1"];
+  const BK_KEYS=["richangji-finance-v1","richangji-health-v1","richangji-reminders-v1","richangji-v13bar-dismissed"];
   function scanV13(){
     const out={state:null,indep:{},found:0};
     try{const r=localStorage.getItem('wb_workbench_v3');if(r){out.state=JSON.parse(r);out.found++;}}catch(e){}
@@ -7435,6 +7448,19 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
   function renderSettingsPage(){
     const stamp=document.getElementById('setBackupStamp');
     if(stamp){const last=Number(localStorage.getItem('richangji-lastExport')||0);stamp.textContent=last?('上次备份：'+new Date(last).toLocaleString()):'还没有备份过';}
+    /* 损坏数据的导出入口：按钮动态插在「导出备份 JSON」旁边，corrupt-backup 不存在时不出现 */
+    const corruptRaw=localStorage.getItem(STORAGE_KEY+'-corrupt-backup');
+    const oldBtn=document.getElementById('bkCorruptBtn');if(oldBtn)oldBtn.remove();
+    if(corruptRaw){
+      const ex=document.querySelector('[data-act="bkExport"]');
+      if(ex&&ex.parentElement){
+        const b=document.createElement('button');
+        b.type='button';b.className='wbtn ghostbtn';b.id='bkCorruptBtn';
+        b.innerHTML='<svg><use href="#i-download"/></svg>导出损坏前的原始数据';
+        b.addEventListener('click',()=>downloadBlob(corruptRaw,'application/json','richangji-corrupt-recovery-'+isoDate()+'.json'));
+        ex.parentElement.insertBefore(b,ex.nextSibling);
+      }
+    }
     const sel=document.getElementById('bkFreqSel');
     if(sel&&!sel.dataset.init){sel.dataset.init='1';sel.value=String(Number(localStorage.getItem('richangji-backup-freq')||14));}
     const box=document.getElementById('snapList');
@@ -7524,8 +7550,10 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
         if(Number(h.entries[d]||0)>0)return;   // 已有记录（手动填过）一律不覆盖
         h.entries[d]=v;pushHabit(h,d);filled++;
       });
-      if(filled){const saved=saveState();renderAll();if(saved)toast('手环已同步 '+filled+' 晚睡眠记录');}
-      else{renderAll();if(manual)toast('手环数据已是最新，无需写入');}
+      /* dataCorrupted 时内存里是空白示例，这里一写盘就会把 -corrupt-backup 之外的原数据在主 key 上覆盖掉，
+         手环回填的那点睡眠不值得冒这个险（init 里的 saveState 已有同样保护，这条是漏网的） */
+      if(filled&&!dataCorrupted){const saved=saveState();renderAll();if(saved)toast('手环已同步 '+filled+' 晚睡眠记录');}
+      else{renderAll();if(manual&&filled&&dataCorrupted)toast('数据加载异常期间，手环同步暂不写入，先在设置页导出损坏前的数据');else if(manual)toast('手环数据已是最新，无需写入');}
     }catch(e){/* file:// 或离线时静默 */}
     finally{bandSyncing=false;}
   }
@@ -8283,7 +8311,7 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     const target=document.getElementById('view-dashboard');
     if(target&&window.MutationObserver)new MutationObserver(sync).observe(target,{attributes:true,attributeFilter:['class']});
   }
-  function init(){const now=new Date(),weekdays=['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];document.getElementById('todayLabel').textContent=LANG==='en'?new Intl.DateTimeFormat('en-US',{month:'long',day:'numeric',weekday:'long'}).format(now):`${now.getMonth()+1} 月 ${now.getDate()} 日 · ${weekdays[now.getDay()]}`;setDateDefaults();updateMoneyCategories();restoreDrafts();bindForms();bindEvents();if(typeof bindBatchD==='function')bindBatchD();dashApplySize();dashApplyOrder();dashWatchView();bandSyncApply(false);setInterval(()=>bandSyncApply(false),30*60*1000);const debtFixed=migrateDebtFlow();renderAll();renderAiStatus();checkDueReminders();renderFinanceCard();if(debtFixed)setTimeout(function(){toast('已把 '+debtFixed+' 笔「欠款」从支出改为负债，不再计入本月支出');},600);var aiInp=document.getElementById('aiInput');if(aiInp)aiInp.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();aiSend();}});switchView(document.getElementById(`view-${location.hash.slice(1)}`)?location.hash.slice(1):'dashboard');if(!dataCorrupted)saveState();pullAllRemote(function(ok){ if(ok){ saveState(); renderAll(); } });}
+  function init(){const now=new Date(),weekdays=['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];document.getElementById('todayLabel').textContent=LANG==='en'?new Intl.DateTimeFormat('en-US',{month:'long',day:'numeric',weekday:'long'}).format(now):`${now.getMonth()+1} 月 ${now.getDate()} 日 · ${weekdays[now.getDay()]}`;setDateDefaults();updateMoneyCategories();restoreDrafts();bindForms();bindEvents();if(typeof bindBatchD==='function')bindBatchD();dashApplySize();dashApplyOrder();dashWatchView();bandSyncApply(false);setInterval(()=>bandSyncApply(false),30*60*1000);const debtFixed=migrateDebtFlow();renderAll();renderAiStatus();checkDueReminders();renderFinanceCard();if(debtFixed)setTimeout(function(){toast('已把 '+debtFixed+' 笔「欠款」从支出改为负债，不再计入本月支出');},600);var aiInp=document.getElementById('aiInput');if(aiInp)aiInp.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();aiSend();}});switchView(document.getElementById(`view-${location.hash.slice(1)}`)?location.hash.slice(1):'dashboard');if(!dataCorrupted)saveState();pullAllRemote(function(ok){ if(ok&&!dataCorrupted){ saveState(); renderAll(); } });}
   startI18n();
   document.addEventListener('DOMContentLoaded',init);
 })();
