@@ -839,7 +839,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
    部署脚本 _sync_deploy.js 会在发布时把 BUILD 改成时间戳并同步写 version.json，两边自动一致。
    注意：首次仍需手动刷新一次（旧页面里还没有这段代码），之后就能自己发现更新。 */
 (function(){
-  var BUILD='20261102_1459';
+  var BUILD='20261102_1949';
   window.__RJ_BUILD=BUILD;
   var bar=function(){return document.getElementById('verBar');};
   function check(){
@@ -1565,7 +1565,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
               <select id="projCat" class="wsel"><option>工作</option><option>健身</option><option>生活</option><option>成长</option><option>其他</option></select>
               <button class="wbtn" data-act="addProj">新建</button>
             </div>
-            <p class="wnote2">点右侧按钮切换「未完成 / 已完成」，已完成会沉到下面</p>
+            <p class="wnote2">点按钮切换「未完成 / 已完成」· 已完成的排在下面</p>
             <div class="wlist" id="projList"></div>
           </article>
         </div>
@@ -6149,12 +6149,22 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     if(typeof p.done==='boolean')return p.done;
     return Math.min(100,p.progress||0)>0||p.status==='已完成';
   }
+  /* 点完状态不立刻重排（2026-11-02）：排序结果按 id 缓存，只有项目增删（id 集合变了）
+     或刷新页面才重新排序。否则点「已完成」那行会瞬间沉底，手指连点就容易误删/误点下一条。 */
+  let projSortIds=null;
+  function projOrderedList(){
+    const all=(state.work&&state.work.projects)||[];
+    const ids=all.map(p=>p.id);
+    const same=projSortIds&&projSortIds.length===ids.length&&ids.every(id=>projSortIds.indexOf(id)>=0);
+    if(!same)projSortIds=all.slice().sort((a,b)=>(projDone(a)?1:0)-(projDone(b)?1:0)).map(p=>p.id);
+    return projSortIds.map(id=>all.filter(p=>p.id===id)[0]).filter(Boolean);
+  }
   function renderProjects(){
     const box=document.getElementById('projList');if(!box)return;
     const all=state.work.projects;
     const cnt=document.getElementById('projCount');if(cnt)cnt.textContent=all.length?all.length+' 个':'';
     if(!all.length){box.innerHTML='<p class="wempty-task">还没有项目，上面加一个</p>';return;}
-    box.innerHTML=all.slice().sort((a,b)=>(projDone(a)?1:0)-(projDone(b)?1:0)).map(p=>{
+    box.innerHTML=projOrderedList().map(p=>{
       const done=projDone(p);
       return '<div class="wproj'+(done?' wproj-done':'')+'"><div class="wrow-top">'+
         '<span class="wdot" data-c="'+escapeHtml(p.category||'其他')+'"></span>'+
