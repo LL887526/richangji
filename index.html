@@ -776,6 +776,36 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   .wadd-inline{display:inline-flex;align-items:center;gap:6px;margin:4px 0 0}
   .wadd-inline input{height:36px;padding:0 13px;border:1px solid var(--line);border-radius:999px;background:#fbf8f3;outline:0;min-width:190px}
   .wadd-inline .wbtn{min-height:36px;padding:0 13px;font-size:12px}
+  /* ===== 采购清单卡片重排（2026-11-02） =====
+     原问题：手机端 .check-btn 被 38px 规则覆盖，但栅格列只有 28px，
+     勾选框溢出到文字前一格（间距仅 2px）；删除按钮 38px 挤进 30px 列，
+     右边缘只剩 9px，几乎贴到卡片边。价格列宽度随内容变化，多张卡片的
+     金额也不竖直对齐。这里把勾选框 / 价格 / 删除三者尺寸与栅格重新对齐。 */
+  .shopping-row{grid-template-columns:26px minmax(0,1fr) 58px 30px;gap:12px;min-height:64px;padding:14px 16px;align-items:center}
+  .shopping-row .check-btn{flex:0 0 auto;width:26px;height:26px;border:1.5px solid #cbbdaf;border-radius:9px;align-self:center;background:var(--card)}
+  .shopping-row .check-btn svg{width:15px;height:15px}
+  /* 视觉 30px，实际点按区扩到 44px（透明外扩，不改变外观），手机上更好点 */
+  .shopping-row .check-btn{position:relative;-webkit-tap-highlight-color:transparent}
+  .shopping-row .check-btn::after{content:'';position:absolute;inset:-7px;border-radius:14px}
+  .shopping-row .check-btn.checked{background:var(--sage);border-color:var(--sage)}
+  .shopping-row .check-btn.checked svg{width:16px;height:16px}
+  .shopping-row .shopping-main{min-width:0}
+  .shopping-row .shopping-main strong{font-size:13.5px;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .shopping-row .shopping-main small{margin-top:1px;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .shopping-row .shopping-price{min-width:0;font-variant-numeric:tabular-nums}
+  .shopping-row .shopping-price strong{font-size:14px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .shopping-row .shopping-price small{line-height:1.3;white-space:nowrap}
+  .shopping-row .delete-btn{width:30px;height:30px;padding:0;display:grid;place-items:center;border:0;border-radius:9px;background:transparent;color:#b4a99d;opacity:1}
+  .shopping-row .delete-btn svg{width:15px;height:15px}
+  .shopping-row:active{background:#faf6f0}
+  @media(max-width:560px){
+    .shopping-row{grid-template-columns:30px minmax(0,1fr) 54px 30px;gap:11px;padding:16px;min-height:68px}
+    .shopping-row .check-btn{width:30px;height:30px;border-radius:10px;background:var(--card)}
+    .shopping-row .check-btn svg{width:17px;height:17px}
+    .shopping-row .delete-btn{width:30px;height:30px;border-radius:10px;color:#bcb1a5}
+    .shopping-row .shopping-main strong{font-size:14px}
+  }
+
   </style>
   <title data-page-node-id="N9uQg0dpiKTsyB4FFPFrxl" data-pnid-children="1t2kuYHDk4UITU5HQoJQo7">日常集 · 生活工作台</title>
 </head>
@@ -809,7 +839,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
    部署脚本 _sync_deploy.js 会在发布时把 BUILD 改成时间戳并同步写 version.json，两边自动一致。
    注意：首次仍需手动刷新一次（旧页面里还没有这段代码），之后就能自己发现更新。 */
 (function(){
-  var BUILD='20261102_1416';
+  var BUILD='20261102_1441';
   window.__RJ_BUILD=BUILD;
   var bar=function(){return document.getElementById('verBar');};
   function check(){
