@@ -809,7 +809,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
    部署脚本 _sync_deploy.js 会在发布时把 BUILD 改成时间戳并同步写 version.json，两边自动一致。
    注意：首次仍需手动刷新一次（旧页面里还没有这段代码），之后就能自己发现更新。 */
 (function(){
-  var BUILD='20261102_1408';
+  var BUILD='20261102_1416';
   window.__RJ_BUILD=BUILD;
   var bar=function(){return document.getElementById('verBar');};
   function check(){
@@ -1281,7 +1281,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
         <div class="module-layout memo-layout">
           <article class="panel form-panel memo-compose">
             <div class="panel-head"><div><p class="eyebrow">先扔进来，晚点再说</p><h2>写一条备忘</h2></div><span class="mini-note" id="memoHint">自动保存</span></div>
-            <textarea id="memoInput" maxlength="4000" placeholder="想法、待办、视频链接……随便写，长一点也没关系"></textarea>
+            <textarea id="memoInput" maxlength="4000" placeholder="想法、待办、链接……随便写"></textarea>
             <div class="memo-compose-bar">
               <div class="memo-kinds" id="memoKinds">
                 <button type="button" data-memokind="idea" class="on">想法</button>
