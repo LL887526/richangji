@@ -527,7 +527,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
 .cat-chips button.on{border-color:#d9c3b2;background:#f7ece3;color:#8d442e;font-weight:700}
 #homeCatLabel[hidden]{display:none!important}#homeForm .form-row:has(#homeCatLabel[hidden]){grid-template-columns:1fr}
   .memo-compose-wrap{display:flex;flex-direction:column;gap:12px}
-  .memo-compose textarea{width:100%;min-height:44px;max-height:180px;padding:12px 13px;border:1px solid var(--line);border-radius:13px;background:#fbf8f2;color:var(--ink);font:inherit;font-size:14px;line-height:1.62;resize:none;outline:none;overflow-y:hidden;transition:border-color .15s,background .15s}
+  .memo-compose textarea{width:100%;min-height:44px;max-height:180px;padding:8px 12px;border:1px solid var(--line);border-radius:13px;background:#fbf8f2;color:var(--ink);font:inherit;font-size:14px;line-height:1.5;resize:none;outline:none;overflow-y:hidden;transition:border-color .15s,background .15s}
   /* 输入框随内容长高（2026-11-02）：44 → 180px，到顶后在框内滚动，由 memoAutoGrow() 设 height */
   .memo-compose textarea.grown{overflow-y:auto}
   .memo-compose textarea:focus{border-color:#cdb9a8;background:var(--white)}
@@ -567,7 +567,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   .memo-empty{padding:36px 12px;text-align:center;color:#a2988a;font-size:13px;line-height:1.7}
   .memo-empty b{display:block;margin-bottom:4px;color:#8b8175;font-size:14px;font-weight:600}
   .dash-memo .memo-quick{display:flex;gap:9px;align-items:flex-start}
-  .dash-memo .memo-quick textarea{flex:1;min-height:46px;max-height:140px;padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:#fbf8f2;font:inherit;font-size:13px;line-height:1.5;resize:none;outline:none;transition:border-color .15s,background .15s}
+  .dash-memo .memo-quick textarea{flex:1;min-height:46px;max-height:140px;padding:9px 12px;border:1px solid var(--line);border-radius:12px;background:#fbf8f2;font:inherit;font-size:13px;line-height:1.5;resize:none;outline:none;transition:border-color .15s,background .15s}
   .dash-memo .memo-quick textarea:focus{border-color:#cdb9a8;background:var(--white)}
   .dash-memo .memo-quick .btn{min-height:38px;padding:0 14px;white-space:nowrap;flex:0 0 auto}
   .dash-memo-list{margin-top:6px}
@@ -809,7 +809,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
    部署脚本 _sync_deploy.js 会在发布时把 BUILD 改成时间戳并同步写 version.json，两边自动一致。
    注意：首次仍需手动刷新一次（旧页面里还没有这段代码），之后就能自己发现更新。 */
 (function(){
-  var BUILD='20261102_0211';
+  var BUILD='20261102_1408';
   window.__RJ_BUILD=BUILD;
   var bar=function(){return document.getElementById('verBar');};
   function check(){
@@ -2566,7 +2566,7 @@ body:has(.dashboard-grid.editing) .ai-fab{opacity:0;pointer-events:none;transfor
 .sample-banner{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;border:1px dashed var(--sand,#a57c45);background:var(--paper-soft,#f5f0e8)}
 .sample-banner p{margin:0;font-size:13px;line-height:1.5;color:var(--ink)}
 .sample-banner[hidden]{display:none}
-.fab-hint{position:fixed;right:78px;bottom:32px;z-index:59;padding:9px 13px;border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--ink);font-size:13px;box-shadow:0 10px 26px rgba(53,41,31,.18);cursor:pointer;white-space:nowrap}
+.fab-hint{position:fixed;right:78px;bottom:32px;z-index:59;padding:9px 13px;border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--ink);font-size:13px;box-shadow:0 10px 26px rgba(53,41,31,.18);cursor:default;white-space:nowrap;pointer-events:none}
 .fab-hint::after{content:"";position:absolute;right:-5px;top:50%;width:10px;height:10px;background:var(--card);border-top:1px solid var(--line);border-right:1px solid var(--line);transform:translateY(-50%) rotate(45deg)}
 .fab-hint[hidden]{display:none}
 @media(max-width:860px){.fab-hint{right:78px;bottom:calc(94px + env(safe-area-inset-bottom,0px))}}
@@ -6717,13 +6717,16 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
      先把 height 归 auto 再读 scrollHeight，否则内容删短时高度降不下来。 */
   function memoAutoGrow(el){
     if(!el||el.tagName!=='TEXTAREA')return;
+    /* 上下限读元素自己的 min/max-height：备忘录是 44/180，首页随手记是 46/140 */
+    const cs=getComputedStyle(el);
+    const mn=parseFloat(cs.minHeight)||44, mx=parseFloat(cs.maxHeight)||180;
     /* 清空后浏览器这一拍还会按旧内容算 scrollHeight，直接给回最小高度 */
-    if(!el.value){el.style.height='44px';el.classList.remove('grown');return;}
+    if(!el.value){el.style.height=mn+'px';el.classList.remove('grown');return;}
     el.style.height='auto';
     const need=el.scrollHeight;
-    const h=Math.max(44,Math.min(need,180));
+    const h=Math.max(mn,Math.min(need,mx));
     el.style.height=h+'px';
-    el.classList.toggle('grown',need>180);
+    el.classList.toggle('grown',need>mx);
   }
   ['memoInput','dashMemoInput'].forEach(id=>{const el=document.getElementById(id);if(el)memoAutoGrow(el);});
   function renderMemos(){
@@ -8332,7 +8335,9 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     document.getElementById('mediaRatingFilter').addEventListener('change',e=>{state.settings.mediaRatingFilter=Number(e.target.value);saveState();renderMedia();});
     document.getElementById('clearSamplesBtn').addEventListener('click',()=>{const recordSamples=state.records.filter(r=>r.sample).length,mediaSamples=state.mediaItems.filter(item=>item.sample).length,sampleCount=recordSamples+mediaSamples;if(!sampleCount&&!state.habits.some(h=>h.sample))return;if(!confirm(`将清空 ${sampleCount} 条示例记录和示例打卡，你自己的内容会保留。是否继续？`))return;if(!preDestruct())return;state.records=state.records.filter(r=>!r.sample);state.mediaItems=state.mediaItems.filter(item=>!item.sample);state.habits.forEach(h=>{if(h.sample){h.entries={};h.sample=false;}});state.settings.weeklyPlan=DEFAULT_PLAN.map(x=>({...x}));const saved=saveState();renderAll();if(saved)toast('示例内容已清空');});
     (function(){const sb=document.getElementById('sampleBanner');if(!sb)return;const c=document.getElementById('sbClearBtn'),l=document.getElementById('sbLaterBtn');if(c)c.addEventListener('click',()=>{document.getElementById('clearSamplesBtn').click();});if(l)l.addEventListener('click',()=>{localStorage.setItem('richangji-sample-banner','done');sb.hidden=true;});})();
-    (function(){const fh=document.getElementById('fabHint');if(!fh)return;if(localStorage.getItem('richangji-fab-hint')!=='done')fh.hidden=false;fh.addEventListener('click',()=>{fh.hidden=true;localStorage.setItem('richangji-fab-hint','done');var af=document.querySelector('.ai-fab');if(af)af.click();});var af2=document.querySelector('.ai-fab');if(af2)af2.addEventListener('click',()=>{fh.hidden=true;localStorage.setItem('richangji-fab-hint','done');});})();
+    (function(){const fh=document.getElementById('fabHint');if(!fh)return;if(localStorage.getItem('richangji-fab-hint')!=='done')fh.hidden=false;fh.addEventListener('click',()=>{fh.hidden=true;localStorage.setItem('richangji-fab-hint','done');var af=document.querySelector('.ai-fab');if(af)af.click();});var af2=document.querySelector('.ai-fab');if(af2)af2.addEventListener('click',()=>{fh.hidden=true;localStorage.setItem('richangji-fab-hint','done');});
+      /* 气泡已设 pointer-events:none（它压在输入框上会吃掉点击），所以补一个超时兜底：10 秒自己收掉 */
+      setTimeout(()=>{if(!fh.hidden){fh.hidden=true;try{localStorage.setItem('richangji-fab-hint','done');}catch(e){}}},10000);})();
     window.addEventListener('storage',e=>{if(e.key!==STORAGE_KEY||!e.newValue)return;try{state=normalizeState(JSON.parse(e.newValue));renderAll();toast('另一个页面的数据已同步');}catch{}});
   }
 
