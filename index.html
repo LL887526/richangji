@@ -839,7 +839,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
    部署脚本 _sync_deploy.js 会在发布时把 BUILD 改成时间戳并同步写 version.json，两边自动一致。
    注意：首次仍需手动刷新一次（旧页面里还没有这段代码），之后就能自己发现更新。 */
 (function(){
-  var BUILD='20261102_1949';
+  var BUILD='20261106_0126';
   window.__RJ_BUILD=BUILD;
   var bar=function(){return document.getElementById('verBar');};
   function check(){
@@ -1301,6 +1301,12 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
           </div>
         </div>
         <div class="mp-panel">
+          <p class="mp-label">待办</p>
+          <div class="mp-group">
+            <button class="mp-row" type="button" data-iact="open"><span class="mp-ic"><svg><use href="#i-note"/></svg></span><span class="mp-rt"><b>问题记录</b><small id="mpIssueSub">工作台哪里不好用，随手记一条</small></span><span class="mp-badge mp-dim" id="mpIssue"><span class="v">—</span><span class="k">待处理</span></span></button>
+          </div>
+        </div>
+        <div class="mp-panel">
           <p class="mp-label">通用</p>
           <div class="mp-group">
             <button class="mp-row" data-nav="settings"><span class="mp-ic mp-ic-grey"><svg><use href="#i-settings"/></svg></span><span class="mp-rt"><b>全局设置</b><small>密钥、外观与数据备份</small></span><span class="mp-badge mp-dim" id="mpBackup"><span class="v">—</span><span class="k">上次备份</span></span></button>
@@ -1740,6 +1746,26 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
           </div>
         </div></section>
     </main>
+
+  <!-- 问题记录弹窗（2026-11-06）：复用 .dash-sheet 弹层，不新建 view -->
+  <div class="dash-sheet" id="issueSheet" hidden>
+    <div class="mask" data-iact="close"></div>
+    <div class="box">
+      <div class="sheet-head"><div><p class="eyebrow">给工作台挑刺</p><h2>问题记录</h2></div><button class="dash-icon-btn" type="button" data-iact="close" aria-label="关闭"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></button></div>
+      <p class="sheet-tip">记下不好用的地方，凑一批点「合并」，复制出来一次处理。</p>
+      <div class="issue-form">
+        <textarea id="issueInput" maxlength="500" placeholder="哪里别扭、哪个点不动、哪句话看不懂"></textarea>
+        <div class="issue-bar"><button class="btn primary" type="button" data-iact="add">记一条</button><span class="it-count" id="issueCount"></span></div>
+      </div>
+      <div class="issue-h"><span>未处理</span><span id="issueOpenHint"></span></div>
+      <div class="issue-list" id="issueOpenList"></div>
+      <div class="issue-h"><span>合并成一批</span><span></span></div>
+      <div class="issue-bar"><button class="btn ghost" type="button" data-iact="merge">合并并复制清单</button></div>
+      <div id="issueOutWrap" hidden><div class="issue-out"><textarea id="issueOut" readonly></textarea></div><div class="issue-bar"><button class="btn primary" type="button" data-iact="copyOut">复制这段</button><span class="it-count" id="issueOutMeta"></span></div></div>
+      <div class="issue-h"><span>批次</span><span id="issueBatchHint"></span></div>
+      <div class="issue-list" id="issueBatchList"></div>
+    </div>
+  </div>
 
   <div class="settings-backdrop set-sheet" hidden id="setSheetBackup">
     <section class="settings-sheet" role="dialog" aria-modal="true" aria-label="数据与备份">
@@ -2852,6 +2878,28 @@ body:has(.dashboard-grid.editing) .ai-fab{opacity:0;pointer-events:none;transfor
 .dash-sheet .chips-grid{gap:8px}
 .dash-sheet .chips-grid button{height:38px;padding:0 6px;display:grid;place-items:center;font-size:12px;border-radius:10px;min-width:0;overflow:hidden;text-overflow:ellipsis}
 .dash-sheet .sheet-submit{margin-top:18px;min-height:50px;font-size:14.5px;font-weight:800;border-radius:15px}
+/* 问题记录（2026-11-06） */
+.dash-sheet .issue-form{margin-top:14px}
+.dash-sheet .issue-form textarea{width:100%;min-height:62px;padding:11px 12px;border:1px solid var(--line);border-radius:14px;background:#fffdfa;font-size:16px;line-height:1.5;resize:vertical;color:var(--ink)}
+.dash-sheet .issue-bar{display:flex;gap:8px;margin-top:8px;align-items:center;flex-wrap:wrap}
+.dash-sheet .issue-bar .btn{min-height:40px;padding:0 16px;border-radius:12px}
+.dash-sheet .issue-bar .it-count{color:var(--muted);font-size:12px;margin-left:auto}
+.dash-sheet .issue-h{margin:16px 0 8px;color:var(--muted);font-size:11.5px;letter-spacing:.06em;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.dash-sheet .issue-list{display:grid;gap:8px}
+.dash-sheet .issue-item{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1px solid var(--line);border-radius:14px;background:#fffdfa}
+.dash-sheet .issue-item .n{flex:none;width:20px;height:20px;border-radius:7px;background:rgba(77,48,69,.08);color:var(--plum);font-size:11px;font-weight:700;display:grid;place-items:center;margin-top:1px}
+.dash-sheet .issue-item p{margin:0;flex:1;min-width:0;font-size:13.5px;line-height:1.5;word-break:break-word}
+.dash-sheet .issue-item.done p{color:var(--muted)}
+.dash-sheet .issue-item time{flex:none;color:#a8a094;font-size:11px;margin-top:2px}
+.dash-sheet .issue-batch{padding:11px 12px;border:1px solid var(--line);border-radius:14px;background:#fffdfa;display:grid;gap:6px}
+.dash-sheet .issue-batch .bt{font-size:12.5px;font-weight:700}
+.dash-sheet .issue-batch .bm{color:var(--muted);font-size:11.5px}
+.dash-sheet .issue-batch .ba{display:flex;gap:8px;flex-wrap:wrap}
+.dash-sheet .issue-batch .ba button{min-height:34px;padding:0 12px;border-radius:10px;border:1px solid var(--line);background:#fff;font-size:12.5px;color:var(--ink)}
+.dash-sheet .issue-batch .ba button.primary{background:var(--plum);color:#fff;border-color:var(--plum)}
+.dash-sheet .issue-out{margin-top:12px;padding:12px;border:1px dashed var(--line);border-radius:14px;background:#fbf7f0}
+.dash-sheet .issue-out textarea{width:100%;min-height:120px;border:0;background:transparent;font-size:13px;line-height:1.7;resize:vertical;color:var(--ink)}
+.dash-sheet .issue-empty{padding:14px;border:1px dashed var(--line);border-radius:14px;color:var(--muted);font-size:12.5px;text-align:center}
 .money-wallet .mc-head h2{font-size:26px;font-weight:800;letter-spacing:-.035em;font-variant-numeric:tabular-nums;margin-top:4px}
 .money-wallet .fin-row{display:flex;align-items:center;gap:9px;padding:9px 0;border-bottom:1px solid #f5efe7;font-size:12.5px}
 .money-wallet #finExpected .fin-row{border-bottom:0;padding-bottom:2px}
@@ -5952,7 +6000,7 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     const records=sortedRecords('home'),filter=state.settings.shoppingFilter,month=isoDate().slice(0,7),pending=records.filter(r=>!r.data.bought),bought=records.filter(r=>r.data.bought);
     document.getElementById('homeTotal').textContent=pending.length;document.getElementById('homeBudget').textContent=money(sum(pending,r=>r.data.price));document.getElementById('homeBought').textContent=bought.filter(r=>(r.data.boughtDate||r.date).startsWith(month)).length;
     document.querySelectorAll('[data-shopping-filter]').forEach(b=>b.classList.toggle('active',b.dataset.shoppingFilter===filter));const filtered=records.filter(r=>filter==='all'||(filter==='pending'&&!r.data.bought)||(filter==='bought'&&r.data.bought));
-    document.getElementById('homeList').innerHTML=filtered.length?filtered.map(r=>{const name=r.sample?localizedHtml(r.data.name):userHtml(r.data.name),quantity=r.sample?localizedHtml(r.data.quantity||'数量未填'):userHtml(r.data.quantity||t('数量未填')),note=r.data.note?(r.sample?` · ${localizedHtml(r.data.note)}`:` · ${userHtml(r.data.note)}`):'';return`<div class="shopping-row ${r.data.bought?'bought':''}"><button class="check-btn ${r.data.bought?'checked':''}" data-action="toggle-shopping" data-id="${r.id}">${r.data.bought?icon('i-check'):''}</button><span class="shopping-main"><strong>${r.data.priority==='high'?'<i class="urgent-dot"></i>':''}${name}</strong><small>${quantity} · ${localizedHtml(r.data.category||'其他')}${note}</small></span><span class="shopping-price"><strong>${r.data.price?money(r.data.price):t('待定')}</strong><small>${t(r.data.bought?'已买':'预算')}</small></span><button class="delete-btn" data-action="delete" data-id="${r.id}" aria-label="${t('删除')}">${icon('i-trash')}</button></div>`;}).join(''):empty(filter==='pending'?'待买清单已经清空':'这里还没有物品');
+    document.getElementById('homeList').innerHTML=filtered.length?filtered.map(r=>{const name=r.sample?localizedHtml(r.data.name):userHtml(r.data.name),quantity=r.sample?localizedHtml(r.data.quantity||'数量未填'):userHtml(r.data.quantity||t('数量未填')),note=r.data.note?(r.sample?` · ${localizedHtml(r.data.note)}`:` · ${userHtml(r.data.note)}`):'';return`<div class="shopping-row ${r.data.bought?'bought':''}"><button class="check-btn ${r.data.bought?'checked':''}" data-action="toggle-shopping" data-id="${r.id}">${r.data.bought?icon('i-check'):''}</button><span class="shopping-main"><strong>${r.data.priority==='high'?'<i class="urgent-dot"></i>':''}${name}</strong><small>${quantity} · ${localizedHtml(r.data.category||'其他')}${note}</small></span><span class="shopping-price"><strong>${r.data.price?money(r.data.price):t('待定')}</strong></span><button class="delete-btn" data-action="delete" data-id="${r.id}" aria-label="${t('删除')}">${icon('i-trash')}</button></div>`;}).join(''):empty(filter==='pending'?'待买清单已经清空':'这里还没有物品');
   }
 
   function renderMedia(){
@@ -6007,6 +6055,7 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
       bk.querySelector('.v').textContent='从未';
       bk.classList.add('mp-hot');bk.classList.remove('mp-dim');
     }
+    renderIssueMore();
   }
   function renderBackupStatus(){const hasSamples=state.records.some(r=>r.sample)||state.habits.some(h=>h.sample)||state.mediaItems.some(item=>item.sample);document.getElementById('clearSamplesBtn').hidden=!hasSamples;const sb=document.getElementById('sampleBanner');if(sb)sb.hidden=!hasSamples||localStorage.getItem('richangji-sample-banner')==='done';}
   function renderHabitManageList(){const list=document.getElementById('habitManageList');list.innerHTML=state.habits.length?state.habits.map(h=>{const isBuiltIn=HABIT_DEFS.some(def=>def.key===h.key)||h.sample,hdef=HABIT_DEFS.find(d=>d.key===h.key),unit=h.type==='check'?localizedHtml('次'):hdef?escapeHtml(resolveHabitUnit(hdef)):isBuiltIn?localizedHtml(h.unit):userHtml(h.unit);return`<div class="custom-manage-row"><span><strong>${habitNameHtml(h)}</strong><small>${t(h.type==='check'?'完成 / 未完成':h.type==='counter'?'计数累加':'填写数值')} · ${LANG==='en'?'Target':'目标'} ${h.target} ${unit}</small></span><button type="button" data-action="delete-habit-custom" data-id="${h.id}" aria-label="${t('删除习惯')}">${icon('i-trash')}</button></div>`;}).join(''):empty('还没有习惯');}
@@ -6259,6 +6308,118 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     if(!ok&&navigator.clipboard)navigator.clipboard.writeText(txt).catch(()=>{});
     toast('已复制到剪贴板');
   }
+
+  /* ===== 问题记录（2026-11-06 新增，独立 key wb_issueLog） ===== */
+  let issueLastBatch='';
+  const ISSUE_KEY='wb_issueLog';
+  function issueBlank(){return {items:[],budgets:[]};}
+  function loadIssueLog(){
+    let raw=null;
+    try{raw=localStorage.getItem(ISSUE_KEY);}catch(e){return issueBlank();}
+    if(!raw)return issueBlank();
+    let o=null;
+    try{o=JSON.parse(raw);}catch(e){return issueBlank();}
+    if(!o||typeof o!=='object')return issueBlank();
+    const items=(Array.isArray(o.items)?o.items:[]).filter(x=>x&&typeof x==='object'&&typeof x.text==='string'&&x.text).map(x=>({
+      id:(typeof x.id==='string'&&x.id)?x.id:uid(),
+      text:x.text,
+      status:x.status==='merged'?'merged':'open',
+      createdAt:Number(x.createdAt)||Date.now(),
+      batchId:(typeof x.batchId==='string')?x.batchId:''
+    }));
+    const budgets=(Array.isArray(o.budgets)?o.budgets:[]).filter(x=>x&&typeof x==='object'&&typeof x.text==='string').map(x=>({
+      id:(typeof x.id==='string'&&x.id)?x.id:uid(),
+      text:x.text,
+      count:Number(x.count)||0,
+      createdAt:Number(x.createdAt)||Date.now(),
+      snapshot:Array.isArray(x.snapshot)?x.snapshot:[]
+    }));
+    return {items:items,budgets:budgets};
+  }
+  function saveIssueLog(d){
+    try{localStorage.setItem(ISSUE_KEY,JSON.stringify(d));return true;}
+    catch(e){toast('保存失败：存储空间不足');return false;}
+  }
+  function issueFmt(ts){
+    const d=new Date(Number(ts)||Date.now());
+    const p=n=>String(n).padStart(2,'0');
+    return `${p(d.getMonth()+1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+  }
+  function issueAdd(){
+    const ta=document.getElementById('issueInput');if(!ta)return;
+    const text=String(ta.value||'').replace(/[\r\n]+/g,' ').trim();
+    if(!text){toast('先写一句');return;}
+    const d=loadIssueLog();
+    d.items.push({id:uid(),text:text,status:'open',createdAt:Date.now(),batchId:''});
+    if(!saveIssueLog(d))return;
+    ta.value='';
+    renderIssueSheet();renderIssueMore();
+    toast('已记下');
+  }
+  function issueMerge(){
+    const d=loadIssueLog();
+    const open=d.items.filter(x=>x.status==='open').sort((a,b)=>a.createdAt-b.createdAt);
+    if(!open.length){toast('还没有未处理的');return;}
+    const bid=uid(),now=Date.now();
+    const text='以下是工作台问题记录，按顺序处理\n'+open.map((x,i)=>`${i+1}. ${x.text}`).join('\n');
+    d.budgets.push({id:bid,text:text,count:open.length,createdAt:now,snapshot:open.map(x=>({id:x.id,text:x.text,createdAt:x.createdAt}))});
+    open.forEach(x=>{x.status='merged';x.batchId=bid;});
+    if(!saveIssueLog(d))return;
+    issueLastBatch=bid;
+    renderIssueSheet();renderIssueMore();
+    const wrap=document.getElementById('issueOutWrap');
+    const out=document.getElementById('issueOut');
+    if(wrap)wrap.hidden=false;
+    if(out)out.value=text;
+    const meta=document.getElementById('issueOutMeta');
+    if(meta)meta.textContent=`已合并 ${open.length} 条 · ${issueFmt(now)}`;
+    toast(`已合并 ${open.length} 条`);
+  }
+  function issueCopyOut(){
+    const out=document.getElementById('issueOut');
+    copyTextOut(out?out.value:'');
+  }
+  function issueCopyBatch(id){
+    const b=loadIssueLog().budgets.find(x=>x.id===id);
+    if(b)copyTextOut(b.text);
+  }
+  function openIssueSheet(){
+    const sh=document.getElementById('issueSheet');if(!sh)return;
+    sh.hidden=false;
+    renderIssueSheet();
+  }
+  function closeIssueSheet(){const sh=document.getElementById('issueSheet');if(sh)sh.hidden=true;}
+  function renderIssueSheet(){
+    const d=loadIssueLog();
+    const open=d.items.filter(x=>x.status==='open').sort((a,b)=>a.createdAt-b.createdAt);
+    const list=document.getElementById('issueOpenList');
+    if(list)list.innerHTML=open.length?open.map((x,i)=>`<div class="issue-item"><span class="n">${i+1}</span><p>${escapeHtml(x.text)}</p><time>${issueFmt(x.createdAt)}</time></div>`).join(''):'<div class="issue-empty">还没有记录</div>';
+    const cnt=document.getElementById('issueCount');
+    if(cnt)cnt.textContent=open.length?`未处理 ${open.length} 条`:'';
+    const oh=document.getElementById('issueOpenHint');
+    if(oh)oh.textContent=open.length?`合并后共 ${open.length} 条`:'';
+    const bl=document.getElementById('issueBatchList');
+    if(bl)bl.innerHTML='<div class="issue-empty">还没有批次</div>';
+  }
+  function renderIssueMore(){
+    const el=document.getElementById('mpIssue');
+    if(!el)return;
+    const n=loadIssueLog().items.filter(x=>x.status==='open').length;
+    el.querySelector('.v').textContent=n?String(n):'—';
+    el.classList.toggle('mp-dim',!n);
+    el.classList.toggle('mp-hot',n>0);
+    const sub=document.getElementById('mpIssueSub');
+    if(sub)sub.textContent=n?`${n} 条还没处理`:'工作台哪里不好用，随手记一条';
+  }
+  document.addEventListener('click',e=>{
+    const b=e.target.closest('[data-iact]');if(!b)return;
+    const act=b.dataset.iact;
+    if(act==='open')openIssueSheet();
+    else if(act==='close')closeIssueSheet();
+    else if(act==='add')issueAdd();
+  });
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeIssueSheet();});
+  renderIssueMore();
 
   function renderWork(){
     document.querySelectorAll('#workTabs [data-wsec]').forEach(b=>b.classList.toggle('on',b.dataset.wsec===activeWorkSec));
