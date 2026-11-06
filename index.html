@@ -885,7 +885,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
    部署脚本 _sync_deploy.js 会在发布时把 BUILD 改成时间戳并同步写 version.json，两边自动一致。
    注意：首次仍需手动刷新一次（旧页面里还没有这段代码），之后就能自己发现更新。 */
 (function(){
-  var BUILD='20261106_2342';
+  var BUILD='20261106_2347';
   window.__RJ_BUILD=BUILD;
   var bar=function(){return document.getElementById('verBar');};
   /* 版本号写进设置页（2026-11-06）：原来关于页写死「V1.3 2026-09-23 构建」，
@@ -2153,7 +2153,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   /* 用 padding-top 百分比撑高（2026-11-06 修）：aspect-ratio 在这个 flex 列里算不出高度，
      实测 thumb 高 1px、卡片被 min-height:38 撑着，图片一直不可见。padding-top:75% 永远等于宽度的 3/4，
      不受图片加载状态影响。 */
-  .ex-thumb{position:relative;width:100%;padding-top:75%;background:var(--white);border-bottom:1px solid var(--line);overflow:hidden}
+  .ex-thumb{position:relative;width:100%;padding-top:75%;background:#f7f2e9;border-bottom:1px solid var(--line);overflow:hidden}
   /* 图片绝对定位（2026-11-06 修）：原来 img 用 height:100%，而 thumb 的高又由 4/3 比例算，
      两者互等导致整块算成 0，卡片被 min-height:38 撑着，图片永远看不见（线上实测 thumb 高 1px）。
      改成绝对铺满，thumb 的高度只由比例决定，不再受图片加载状态影响。 */
@@ -7958,6 +7958,10 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
       gifFirst:document.getElementById('exdGif').checked
     });
     box.innerHTML=list.length?list.map(x=>exCardHTML(x,'pick',exdMode==='multi'&&!!exdPicked[x.id])).join(''):'<p class="wempty-task">没有匹配的动作</p>';
+    /* 首屏 8 张改成立即加载（2026-11-06）：动图单个 100-190KB，全懒加载时打开抽屉一片空白，
+       像图坏了。前 8 张先拉，其余仍懒加载，滚到再下。 */
+    const _imgs=box.querySelectorAll('.ex-thumb img');
+    for(let _i=0;_i<_imgs.length&&_i<8;_i++){_imgs[_i].loading='eager';_imgs[_i].decoding='async';}
     if(exdMode==='multi'){const n=Object.keys(exdPicked).length;document.getElementById('exdConfirmBtn').textContent='加入 '+(n||'0')+' 个动作';}
   }
   function exdConfirm(){
