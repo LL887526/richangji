@@ -839,7 +839,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
    部署脚本 _sync_deploy.js 会在发布时把 BUILD 改成时间戳并同步写 version.json，两边自动一致。
    注意：首次仍需手动刷新一次（旧页面里还没有这段代码），之后就能自己发现更新。 */
 (function(){
-  var BUILD='20261106_0126';
+  var BUILD='20261106_1140';
   window.__RJ_BUILD=BUILD;
   var bar=function(){return document.getElementById('verBar');};
   function check(){
@@ -950,6 +950,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
         <div data-page-node-id="ARnhWI9oaHlJyk1UodQGzS" class="nav-label"><!--pnid:sHzsShyXhbGkze4VQlmZ54-->数据</div>
         <button data-page-node-id="WaaufKYMRJZMwemHBYfWsu" class="nav-item" data-nav="archive"><svg data-page-node-id="E9AOWNpB9yQ2Hih85OKAG4"><use data-page-node-id="acez8fsTiHlVCLksP97hbs" href="#i-archive"/></svg><span data-page-node-id="YMT9yZq9sE9oenXS5nwntG"><!--pnid:3bB2z1756YcX3uDvkG9f5K-->时光档案</span></button>
         <div class="nav-label">系统</div>
+        <button class="nav-item" data-nav="more"><svg><use href="#i-grid"/></svg><span>更多板块</span></button>
         <button class="nav-item" data-nav="settings"><svg><use href="#i-settings"/></svg><span>全局设置</span></button>
       </nav>
     </aside>
@@ -1000,6 +1001,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
           <article class="panel dash-jump" data-dcard="health" data-nav="health"><span class="dj-ic"><svg><use href="#i-note"/></svg></span><span class="dj-tx"><b>健康档案</b><small id="djHealth">—</small></span><span class="dj-go"></span></article>
           <article class="panel dash-jump" data-dcard="mymedia" data-nav="mymedia"><span class="dj-ic"><svg><use href="#i-media"/></svg></span><span class="dj-tx"><b>我的自媒体</b><small id="djMedia">—</small></span><span class="dj-go"></span></article>
           <article class="panel dash-jump" data-dcard="exlib" data-nav="exlib"><span class="dj-ic"><svg><use href="#i-archive"/></svg></span><span class="dj-tx"><b>动作库</b><small id="djExlib">—</small></span><span class="dj-go"></span></article>
+          <article class="panel dash-jump" data-dcard="issue" data-iact="open"><span class="dj-ic"><svg><use href="#i-note"/></svg></span><span class="dj-tx"><b>问题记录</b><small id="djIssue">—</small></span><span class="dj-go"></span></article>
           <article class="dash-add-tile" data-addtile><button class="dash-pill primary" type="button" data-action="dash-add"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M10.9 4.6h2.2v14.8h-2.2z" fill="currentColor" stroke="none"/><path d="M4.6 10.9h14.8v2.2H4.6z" fill="currentColor" stroke="none"/></svg>添加小组件</button></article>
         </div>
       </section>
@@ -1269,7 +1271,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
       </section>
 
       <section class="view" data-title="更多" id="view-more">
-        <p class="mp-hint">今天 / 工作 / 健身 / 账本 在底部常驻，其余板块都在这里。<span id="mpHintTodo"></span></p>
+        <p class="mp-hint">常用板块常驻，没在导航里的都在这里。<span id="mpHintTodo"></span></p>
         <div class="mp-panel">
           <p class="mp-label">时间与成长</p>
           <div class="mp-group">
@@ -1759,6 +1761,8 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
       </div>
       <div class="issue-h"><span>未处理</span><span id="issueOpenHint"></span></div>
       <div class="issue-list" id="issueOpenList"></div>
+      <div class="issue-h"><span>已合并</span><span id="issueMergedHint"></span></div>
+      <div class="issue-list" id="issueMergedList"></div>
       <div class="issue-h"><span>合并成一批</span><span></span></div>
       <div class="issue-bar"><button class="btn ghost" type="button" data-iact="merge">合并并复制清单</button></div>
       <div id="issueOutWrap" hidden><div class="issue-out"><textarea id="issueOut" readonly></textarea></div><div class="issue-bar"><button class="btn primary" type="button" data-iact="copyOut">复制这段</button><span class="it-count" id="issueOutMeta"></span></div></div>
@@ -1946,7 +1950,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   <div class="settings-backdrop" hidden id="aiSheet">
     <section class="settings-sheet" role="dialog" aria-modal="true" aria-labelledby="aiTitle">
       <div class="settings-head"><button class="ai-back" data-action="close-ai" aria-label="返回"><svg aria-hidden="true"><use href="#i-back"/></svg></button><div><p class="eyebrow">对话即记录</p><h2 id="aiTitle">AI 助理</h2></div><button class="sheet-close" data-action="close-ai" aria-label="关闭">×</button></div>
-      <div class="ai-log" id="aiLog"><div class="ai-msg bot ai-hello"><div class="ai-hello-b"><b id="aiHelloT">嗨</b><p>想记什么直接说：记账、加待办、记睡眠、身体不舒服，我落到对应板块，写入前先给你确认。</p></div><div class="ai-chips"><button type="button" class="ai-chip" data-ai-fill="记一笔：">记一笔账</button><button type="button" class="ai-chip" data-ai-fill="加条待办：">加条待办</button><button type="button" class="ai-chip" data-ai-fill="身体不舒服：">身体不舒服</button><button type="button" class="ai-chip" data-ai-fill="记一下昨晚睡眠：">记睡眠</button></div></div></div>
+      <div class="ai-log" id="aiLog"><div class="ai-msg bot ai-hello"><div class="ai-hello-b"><b id="aiHelloT">嗨</b><p>想记什么直接说：记账、加待办、记睡眠、身体不舒服，我落到对应板块，写入前先给你确认。</p></div><div class="ai-chips"><button type="button" class="ai-chip" data-ai-fill="记一笔：">记一笔账</button><button type="button" class="ai-chip" data-ai-fill="加条待办：">加条待办</button><button type="button" class="ai-chip" data-ai-fill="身体不舒服：">身体不舒服</button><button type="button" class="ai-chip" data-ai-fill="记一下昨晚睡眠：">记睡眠</button><button type="button" class="ai-chip" data-ai-fill="记个问题：">记个问题</button></div></div></div>
       <div class="ai-inputbar">
         <button id="aiCamBtn" data-action="ai-cam" aria-label="拍照或从相册选图"><svg><use href="#i-camera"/></svg></button>
         <input type="file" id="aiCamFile" accept="image/*" hidden>
@@ -4492,7 +4496,7 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
       +'<div class="ai-cap-row"><b>本地兜底</b><span class="ai-cap-no">'+(hasKey?'备用':'仅此')+'</span><small>没配 DeepSeek Key 时只有本地关键词识别，只认「吃饭花了 30」这类短句，识别不到会直说没听懂</small></div>';
   }
   function checkDueReminders(){const today=isoDate();const due=loadReminders().filter(r=>!r.done&&r.due<=today);if(!due.length)return;const box=document.getElementById('remList');if(box)box.innerHTML=due.map(r=>'<div class="rem-row" data-rem-id="'+escapeHtml(r.id)+'"><span class="grow">'+escapeHtml(r.text)+'<small>应于 '+escapeHtml(r.due)+' 跟进</small></span><button class="wbtn" data-act="remDone">已办</button><button class="wbtn ghostbtn" data-act="remSnooze">没办，顺延</button></div>').join('');const sheet=document.getElementById('reminderSheet');if(sheet)sheet.hidden=false;}
-  const AI_SYSTEM='你是「日常集」个人工作台的记录助理。把用户输入解析成一个待执行动作，只输出 JSON：{"intent":"...","reply":"一句话说明你打算做什么","draft":{...}}。reply 措辞铁律：只描述「将要做的事」，绝对不许出现「已完成、已记录、已经帮你、记好了、搞定了、OK了」这类完成态说法，真正的写入由界面在用户确认后才发生，不由你宣告。intent 可选：money_expense 支出，draft:{amount:数字,category:"吃饭/交通/购物/娱乐/房租/看病/学习/其他"之一,note,date:"YYYY-MM-DD"}；money_income 收入，draft:{amount,category:"工资/奖金/兼职/理财/其他"之一,note,date}；shopping 待买，draft:{name,quantity,price:数字或null,remind_date:"YYYY-MM-DD"或null}；planner 日程，draft:{title,time:"HH:MM"或"",date,priority:"high/normal/low",note}；task 工作任务，draft:{text,account:"company/own/qjt"之一}；fitness 身体记录，draft:{weight:数字或null,bodyFat:数字或null,calories:数字或null,duration:数字或null,note,date}；reminder 通用提醒，draft:{text,due:"YYYY-MM-DD"}；health_issue 身体不适记录（今天哪里不舒服），draft:{part:"部位如胃/头/肚子/喉咙/腰",desc:"一句话症状描述"}；health_history 疾病史登记（已确诊的基础疾病或既往病史），draft:{name:"疾病名",note:"确诊时间或情况备注"}；mood 心情或习惯打卡，draft:{habit:"习惯名",note}；debt_update 欠款登记（明确说「欠/月付/还差」的钱，计入负债台账，不计入本月支出；注意：说了「欠」的不要走 money_expense），draft:{name:"平台名",amount:数字}，一句话含多笔欠款则 draft:{items:[{name,amount},...]}；debt_pay 还款（还掉部分欠款，记还款支出并从负债扣减），draft:{name:"平台名",amount:数字}；debt_exclude 把已经记成支出的欠款改成负债（用户说「负债不计入支出」），draft:{}；debt_set 校准某平台负债金额（用户说「花呗欠款改成 2000」），draft:{name:"平台名",amount:数字}；money_fix 修改最近一笔记账的金额或分类，draft:{amount:数字或null,text:"用户原话"}；money_remove 删除最近一笔记账，draft:{}；balance_update 余额校准（用户报当前手头现金总额），draft:{amount:数字}；income_expected 预期收入（未来才到账的钱，如下月工资），draft:{amount:数字,date:"YYYY-MM-DD",label:"工资"}；finance_plan 还款与花钱规划（用户让你规划还款顺序和每天可花多少），draft:{}；chat 纯聊天、问工作台里的数据或闲聊，draft:{}；unsupported 工作台做不到的事（发帖发布、付款转账、联系他人、操作其他 App、查实时行情或天气、读微信相册、联网搜索等），draft:{need:"缺的能力或权限，一句短话"}。拿不准是哪一个时用 chat 或 unsupported，不要硬凑成记账类意图。中文数字金额换算成阿拉伯数字（两千九百多→2900）。日期无法确定用今天 '+isoDate()+'。只输出 JSON，不要输出其他文字。';
+  const AI_SYSTEM='你是「日常集」个人工作台的记录助理。把用户输入解析成一个待执行动作，只输出 JSON：{"intent":"...","reply":"一句话说明你打算做什么","draft":{...}}。reply 措辞铁律：只描述「将要做的事」，绝对不许出现「已完成、已记录、已经帮你、记好了、搞定了、OK了」这类完成态说法，真正的写入由界面在用户确认后才发生，不由你宣告。intent 可选：money_expense 支出，draft:{amount:数字,category:"吃饭/交通/购物/娱乐/房租/看病/学习/其他"之一,note,date:"YYYY-MM-DD"}；money_income 收入，draft:{amount,category:"工资/奖金/兼职/理财/其他"之一,note,date}；shopping 待买，draft:{name,quantity,price:数字或null,remind_date:"YYYY-MM-DD"或null}；planner 日程，draft:{title,time:"HH:MM"或"",date,priority:"high/normal/low",note}；task 工作任务，draft:{text,account:"company/own/qjt"之一}；fitness 身体记录，draft:{weight:数字或null,bodyFat:数字或null,calories:数字或null,duration:数字或null,note,date}；reminder 通用提醒，draft:{text,due:"YYYY-MM-DD"}；health_issue 身体不适记录（今天哪里不舒服），draft:{part:"部位如胃/头/肚子/喉咙/腰",desc:"一句话症状描述"}；health_history 疾病史登记（已确诊的基础疾病或既往病史），draft:{name:"疾病名",note:"确诊时间或情况备注"}；mood 心情或习惯打卡，draft:{habit:"习惯名",note}；debt_update 欠款登记（明确说「欠/月付/还差」的钱，计入负债台账，不计入本月支出；注意：说了「欠」的不要走 money_expense），draft:{name:"平台名",amount:数字}，一句话含多笔欠款则 draft:{items:[{name,amount},...]}；debt_pay 还款（还掉部分欠款，记还款支出并从负债扣减），draft:{name:"平台名",amount:数字}；debt_exclude 把已经记成支出的欠款改成负债（用户说「负债不计入支出」），draft:{}；debt_set 校准某平台负债金额（用户说「花呗欠款改成 2000」），draft:{name:"平台名",amount:数字}；money_fix 修改最近一笔记账的金额或分类，draft:{amount:数字或null,text:"用户原话"}；money_remove 删除最近一笔记账，draft:{}；balance_update 余额校准（用户报当前手头现金总额），draft:{amount:数字}；income_expected 预期收入（未来才到账的钱，如下月工资），draft:{amount:数字,date:"YYYY-MM-DD",label:"工资"}；finance_plan 还款与花钱规划（用户让你规划还款顺序和每天可花多少），draft:{}；issue_note 记录工作台本身的问题（用户抱怨某个页面、按钮、卡片、小组件别扭、点不动、错位、卡、有 bug，记进问题记录等以后处理），draft:{text:"问题原话，保留用户描述"}；chat 纯聊天、问工作台里的数据或闲聊，draft:{}；unsupported 工作台做不到的事（发帖发布、付款转账、联系他人、操作其他 App、查实时行情或天气、读微信相册、联网搜索等），draft:{need:"缺的能力或权限，一句短话"}。拿不准是哪一个时用 chat 或 unsupported，不要硬凑成记账类意图。中文数字金额换算成阿拉伯数字（两千九百多→2900）。日期无法确定用今天 '+isoDate()+'。只输出 JSON，不要输出其他文字。';
   function aiAppendMsg(role,text){const log=document.getElementById('aiLog');if(!log)return null;const div=document.createElement('div');div.className='ai-msg '+(role==='user'?'user':'bot');div.textContent=text;log.appendChild(div);log.scrollTop=log.scrollHeight;return div;}
   function aiBuildCard(out){
     const d=out.draft||{},today=isoDate();
@@ -4539,6 +4543,7 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
       case 'debt_set':{const amt=Number(d.amount)||0;if(!amt)return null;const nm=String(d.name||'').slice(0,20);const fin=loadFin();const hit=fin.debts.find(x=>!nm||x.name===nm||x.name.indexOf(nm)>-1||nm.indexOf(x.name)>-1);if(!hit)return {label:'负债金额校准',detail:'负债清单里没有「'+(nm||'该平台')+'」，先在设置页或对 AI 说欠款登记',view:'money',exec:()=>{toast('负债清单里没有「'+(nm||'该平台')+'」');return false;}};const old=Number(hit.amount)||0;return {label:'负债金额校准',detail:hit.name+' '+money(old)+' 改为 '+money(amt)+'，不计入本月支出',view:'money',exec:()=>{hit.amount=amt;hit.updatedAt=Date.now();saveFin(fin);const rec=state.records.filter(r=>r.type==='money'&&/欠款$/.test(String(r.data.note||''))&&String(r.data.note||'').indexOf(hit.name)>-1).sort((a,b)=>(Number(b.createdAt)||0)-(Number(a.createdAt)||0))[0];if(rec)rec.data.amount=amt;saveState(true);renderAll();return true;}};}
       case 'text_extract':{const txt=String(d.text||'').trim();if(!txt)return null;return {label:'图片文字提取',detail:txt.slice(0,300),copy:txt,view:'archive',exec:()=>addRecord('vision',today,{kind:'text',text:txt.slice(0,600)})};}
       case 'describe':{const txt=String(d.text||'').trim();if(!txt)return null;return {label:'图片识别',detail:txt.slice(0,300),copy:txt,view:'archive',exec:()=>addRecord('vision',today,{kind:'desc',text:txt.slice(0,600)})};}
+      case 'issue_note':{const txt=String(d.text||'').replace(/[\r\n]+/g,' ').trim().slice(0,300);if(!txt)return null;return {label:'问题记录',detail:txt+' · 记为未处理，可点合并成一批',view:'',exec:()=>{const lg=loadIssueLog();lg.items.push({id:uid(),text:txt,status:'open',createdAt:Date.now(),batchId:''});if(!saveIssueLog(lg))return false;renderIssueMore();return true;}};}
       case 'unsupported':{const need=String(d.need||'').slice(0,60);const why=String(out.reply||'').trim().slice(0,90);return {blocked:true,label:'这件事我现在做不到',detail:(why||'这个动作超出了工作台的范围')+(need?'（需要：'+need+'）':'')+'，没有写入任何内容',view:'settings'};}
       default:return null;
     }
@@ -4589,6 +4594,7 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
   function localParse(text){
     const t=String(text||'').trim(),today=isoDate();
     const m=t.match(/(\d+(?:\.\d+)?)/),amt=m?Number(m[1]):null;
+    if(/^(记个问题|记一个问题|记条问题|问题|bug)[:：]/.test(t)||(/(工作台|首页|这个页|页面|按钮|弹窗|小组件|卡片|导航|侧栏|底导|记账页|健身页|更多页|设置页|手环页)/.test(t)&&/(不好用|别扭|卡住|卡死|点不动|点不了|打不开|错位|重叠|挡住|显示不对|显示错|乱|慢|报错|bug|问题|不顺|难用|会跳|抖|闪)/i.test(t)))return{intent:'issue_note',reply:'记进问题记录：',draft:{text:t.replace(/^(记个问题|记一个问题|记条问题|问题|bug)[:：]\s*/i,'').slice(0,300)}};
     if(/确诊|病史|既往|我有.{0,10}(炎|结节|结石|高血压|糖尿病|贫血|过敏)/.test(t))return{intent:'health_history',reply:'记入疾病史：',draft:{name:(t.match(/[\u4e00-\u9fa5]{2,10}(?:炎|结节|结石|综合征|高血压|糖尿病|贫血)/)||[''])[0]||t.slice(0,10),note:t.slice(0,30)}};
     if(amt==null&&/不舒服|不太舒服|不大舒服|不怎么舒服|不太对劲|难受|疼|痛|酸|胀|痒|感冒|发烧|发热|拉肚子|腹泻|便秘|失眠|头晕|恶心|过敏|鼻塞|咳嗽|没胃口|反胃/.test(t))return{intent:'health_issue',reply:'记身体不适：',draft:{part:(t.match(/胃|头|肚子|喉咙|嗓子|牙|腰|背|肩|脖子|腿|膝盖|眼|耳|皮肤|心口|肋|腹|鼻|手|脚/)||['身体'])[0],desc:t.slice(0,40)}};
     if(/负债|欠款/.test(t)&&/(不计入|不算|不要计入|别计入|不纳入|剔除|移出|不进)/.test(t))return{intent:'debt_exclude',reply:'把「欠款」从支出里移出来，改为负债：',draft:{}};
@@ -4632,6 +4638,7 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     money_fix:{name:'修改最近一笔记账',need:'改成多少或什么分类',ex:'把刚才那笔改成 100'},
     money_remove:{name:'删除最近一笔记账',need:'一句话确认',ex:'删掉最近一笔记账'},
     finance_plan:{name:'生成还款方案',need:'欠款和余额的数据',ex:'还款优化方案'},
+    issue_note:{name:'记进问题记录',need:'哪里不好用',ex:'记个问题：更多页卡片顺序看不懂'},
     text_extract:{name:'提取图片文字',need:'一张更清晰的图',ex:''},
     describe:{name:'看图',need:'一张更清晰的图',ex:''}
   };
@@ -6383,6 +6390,33 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     const b=loadIssueLog().budgets.find(x=>x.id===id);
     if(b)copyTextOut(b.text);
   }
+  function issueDelBatch(id){
+    const d=loadIssueLog();
+    const b=d.budgets.find(x=>x.id===id);
+    if(!b)return;
+    const before=d.items.length;
+    d.items=d.items.filter(x=>!(x.batchId===id&&x.createdAt<=b.createdAt));
+    const cut=before-d.items.length;
+    if(!saveIssueLog(d))return;
+    renderIssueSheet();renderIssueMore();
+    toast(cut?`已清除 ${cut} 条，文本还在批次里`:'这批已经没有可清除的条目');
+  }
+  function issueRestoreBatch(id){
+    const d=loadIssueLog();
+    const b=d.budgets.find(x=>x.id===id);
+    if(!b)return;
+    const inBatch=d.items.filter(x=>x.batchId===id);
+    if(inBatch.length){
+      inBatch.forEach(x=>{x.status='open';x.batchId='';});
+    }else{
+      (Array.isArray(b.snapshot)?b.snapshot:[]).forEach(s=>{
+        if(!d.items.some(x=>x.id===s.id))d.items.push({id:s.id||uid(),text:String(s.text||''),status:'open',createdAt:Number(s.createdAt)||Date.now(),batchId:''});
+      });
+    }
+    if(!saveIssueLog(d))return;
+    renderIssueSheet();renderIssueMore();
+    toast('已恢复为未处理');
+  }
   function openIssueSheet(){
     const sh=document.getElementById('issueSheet');if(!sh)return;
     sh.hidden=false;
@@ -6398,8 +6432,21 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     if(cnt)cnt.textContent=open.length?`未处理 ${open.length} 条`:'';
     const oh=document.getElementById('issueOpenHint');
     if(oh)oh.textContent=open.length?`合并后共 ${open.length} 条`:'';
+    const merged=d.items.filter(x=>x.status==='merged').sort((a,b)=>b.createdAt-a.createdAt);
+    const ml=document.getElementById('issueMergedList');
+    if(ml)ml.innerHTML=merged.length?merged.map(x=>`<div class="issue-item done"><span class="n">·</span><p>${escapeHtml(x.text)}</p><time>已合并</time></div>`).join(''):'<div class="issue-empty">还没有已合并的</div>';
+    const mh=document.getElementById('issueMergedHint');
+    if(mh)mh.textContent=merged.length?`${merged.length} 条`:'';
     const bl=document.getElementById('issueBatchList');
-    if(bl)bl.innerHTML='<div class="issue-empty">还没有批次</div>';
+    const batches=d.budgets.slice().sort((a,b)=>b.createdAt-a.createdAt);
+    if(bl)bl.innerHTML=batches.length?batches.map(x=>{
+      const first=String(x.text||'').split('\n')[1]||'';
+      const prev=first.length>26?first.slice(0,26)+'…':first;
+      const alive=d.items.filter(it=>it.batchId===x.id).length;
+      return `<div class="issue-batch"><div class="bt">${issueFmt(x.createdAt)} · ${x.count} 条${alive?'':'<span class="bm"> · 已清除</span>'}</div><div class="bm">${escapeHtml(prev)}</div><div class="ba"><button type="button" data-iact="copyBatch" data-id="${escapeHtml(x.id)}">复制</button><button type="button" class="primary" data-iact="restoreBatch" data-id="${escapeHtml(x.id)}">恢复</button><button type="button" data-iact="delBatch" data-id="${escapeHtml(x.id)}">清除条目</button></div></div>`;
+    }).join(''):'<div class="issue-empty">还没有批次</div>';
+    const bh=document.getElementById('issueBatchHint');
+    if(bh)bh.textContent=batches.length?`共 ${batches.length} 批`:'';
   }
   function renderIssueMore(){
     const el=document.getElementById('mpIssue');
@@ -6410,6 +6457,8 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     el.classList.toggle('mp-hot',n>0);
     const sub=document.getElementById('mpIssueSub');
     if(sub)sub.textContent=n?`${n} 条还没处理`:'工作台哪里不好用，随手记一条';
+    const dj=document.getElementById('djIssue');
+    if(dj)dj.textContent=n?`${n} 条未处理，点开处理`:'哪里不好用，记一条';
   }
   document.addEventListener('click',e=>{
     const b=e.target.closest('[data-iact]');if(!b)return;
@@ -6417,6 +6466,11 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     if(act==='open')openIssueSheet();
     else if(act==='close')closeIssueSheet();
     else if(act==='add')issueAdd();
+    else if(act==='merge')issueMerge();
+    else if(act==='copyOut')issueCopyOut();
+    else if(act==='copyBatch')issueCopyBatch(b.dataset.id);
+    else if(act==='delBatch')issueDelBatch(b.dataset.id);
+    else if(act==='restoreBatch')issueRestoreBatch(b.dataset.id);
   });
   document.addEventListener('keydown',e=>{if(e.key==='Escape')closeIssueSheet();});
   renderIssueMore();
@@ -8542,10 +8596,10 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     window.addEventListener('storage',e=>{if(e.key!==STORAGE_KEY||!e.newValue)return;try{state=normalizeState(JSON.parse(e.newValue));renderAll();toast('另一个页面的数据已同步');}catch{}});
   }
 
-  const DASH_CARDS=[['inspire','#view-dashboard .inspire-card'],['sleep','#view-dashboard [data-dcard="sleep"]'],['quick','#view-dashboard .quick-panel'],['memo','#view-dashboard [data-dcard="memo"]'],['spend','#view-dashboard [data-page-node-id="QbWqicbgLq07V3DcCM2dGa"]'],['habit','#view-dashboard [data-page-node-id="TVGgNBxLSxp3J6cynLoCnd"]'],['tasks','#view-dashboard [data-page-node-id="1u4iTcySePGnGwjEhG1fsR"]'],['fin','#view-dashboard #dashFinCard'],['zones','#view-dashboard [data-p5="cockpit"]'],['todo','#view-dashboard [data-page-node-id="YfWNDApKCV3kvDVbTZj0Ln"]'],['checkin','#view-dashboard [data-page-node-id="toSQyfTgP9eqvkBFDAyZQM"]'],['recent','#view-dashboard [data-page-node-id="pjKPXRGwbmnI3lVIBpP52g"]'],['backup','#view-dashboard #backupHint'],['planner','#view-dashboard [data-dcard="planner"]'],['fitness','#view-dashboard [data-dcard="fitness"]'],['band','#view-dashboard [data-dcard="band"]'],['health','#view-dashboard [data-dcard="health"]'],['mymedia','#view-dashboard [data-dcard="mymedia"]'],['exlib','#view-dashboard [data-dcard="exlib"]']];
+  const DASH_CARDS=[['inspire','#view-dashboard .inspire-card'],['sleep','#view-dashboard [data-dcard="sleep"]'],['quick','#view-dashboard .quick-panel'],['memo','#view-dashboard [data-dcard="memo"]'],['spend','#view-dashboard [data-page-node-id="QbWqicbgLq07V3DcCM2dGa"]'],['habit','#view-dashboard [data-page-node-id="TVGgNBxLSxp3J6cynLoCnd"]'],['tasks','#view-dashboard [data-page-node-id="1u4iTcySePGnGwjEhG1fsR"]'],['fin','#view-dashboard #dashFinCard'],['zones','#view-dashboard [data-p5="cockpit"]'],['todo','#view-dashboard [data-page-node-id="YfWNDApKCV3kvDVbTZj0Ln"]'],['checkin','#view-dashboard [data-page-node-id="toSQyfTgP9eqvkBFDAyZQM"]'],['recent','#view-dashboard [data-page-node-id="pjKPXRGwbmnI3lVIBpP52g"]'],['backup','#view-dashboard #backupHint'],['planner','#view-dashboard [data-dcard="planner"]'],['fitness','#view-dashboard [data-dcard="fitness"]'],['band','#view-dashboard [data-dcard="band"]'],['health','#view-dashboard [data-dcard="health"]'],['mymedia','#view-dashboard [data-dcard="mymedia"]'],['exlib','#view-dashboard [data-dcard="exlib"]'],['issue','#view-dashboard [data-dcard="issue"]']];
   /* 可选跳转卡：默认不摆上首页，dashHidden 未设置过时全部隐藏，从「添加小组件」抽屉里加 */
   const DASH_OPT=['planner','fitness','band','health','mymedia','exlib'];
-  const DASH_META={inspire:['今日灵感','每天一句话，点一下换一句'],sleep:['昨夜睡眠','睡眠综合分与时长，来自手环'],quick:['快速开始','记一笔、排日程、记体重、待买的入口'],memo:['备忘录','想法、待办、视频链接随手扔'],spend:['本月支出','花了多少，预算还剩多少'],habit:['今日习惯','打卡完成度一览'],tasks:['今日待办','今天有几件事、完成了几件'],fin:['净可用','余额快照，点进去看明细'],zones:['三域投影','工作 · 成长 · 健身一览'],todo:['待办清单','今天的节奏安排'],checkin:['习惯打卡','逐项打卡面板'],recent:['最近记录','最近五条记录'],backup:['备份提醒','数据该备份时自动出现'],planner:['今日日程','今天与逾期的待办一眼看清'],fitness:['健身训练','最近一次训练与连续天数'],band:['手环数据','昨夜睡眠与恢复指标'],health:['健康档案','身体不适与待跟进'],mymedia:['我的自媒体','素材、数据、选题一站式'],exlib:['动作库','1324 个动作，带演示图']};
+  const DASH_META={inspire:['今日灵感','每天一句话，点一下换一句'],sleep:['昨夜睡眠','睡眠综合分与时长，来自手环'],quick:['快速开始','记一笔、排日程、记体重、待买的入口'],memo:['备忘录','想法、待办、视频链接随手扔'],spend:['本月支出','花了多少，预算还剩多少'],habit:['今日习惯','打卡完成度一览'],tasks:['今日待办','今天有几件事、完成了几件'],fin:['净可用','余额快照，点进去看明细'],zones:['三域投影','工作 · 成长 · 健身一览'],todo:['待办清单','今天的节奏安排'],checkin:['习惯打卡','逐项打卡面板'],recent:['最近记录','最近五条记录'],backup:['备份提醒','数据该备份时自动出现'],planner:['今日日程','今天与逾期的待办一眼看清'],fitness:['健身训练','最近一次训练与连续天数'],band:['手环数据','昨夜睡眠与恢复指标'],health:['健康档案','身体不适与待跟进'],mymedia:['我的自媒体','素材、数据、选题一站式'],exlib:['动作库','1324 个动作，带演示图'],issue:['问题记录','哪里不好用，记一条，凑一批处理']};
   /* 小中大三档 → 12 栏下的跨度。默认值等于改造前各卡的视觉宽度，所以不动设置时排版不变。 */
   /* 手机默认哪些卡走半宽。纯数字卡（睡眠 / 支出 / 习惯 / 待办数 / 余额）适合半宽，
      文字型卡片（灵感 / 快速开始 / 备忘录 / 清单）半宽会被压到读不动，一律整行。
@@ -8804,6 +8858,10 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     const mc=(state.mediaItems||[]).length;
     set('djMedia',mc?('攒了 '+mc+' 条书影音'):'记下想看的作品');
     set('djExlib','1324 个动作，带演示图');
+    try{
+      const n=loadIssueLog().items.filter(function(x){return x.status==='open';}).length;
+      set('djIssue',n?(n+' 条未处理，点开处理'):'哪里不好用，记一条');
+    }catch(e){set('djIssue','哪里不好用，记一条');}
   }
   function dashOpenAdd(){
     const grid=dashCardMap();if(!grid)return;
