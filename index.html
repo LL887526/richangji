@@ -831,6 +831,27 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
     .shopping-row .shopping-main strong{font-size:14px}
   }
 
+  /* ===== 采购清单二版（2026-11-06）：优先级左侧色条、预算就地改、勾选划线、依次进场 ===== */
+  .shopping-row{position:relative;grid-template-columns:26px minmax(0,1fr) 74px 30px;border-bottom:1px solid #f0e9df;animation:shopIn .24s ease both;animation-delay:calc(var(--i,0)*30ms)}
+  .shopping-row:last-child{border-bottom:0}
+  @keyframes shopIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .shopping-row:before{content:'';position:absolute;left:4px;top:14px;bottom:14px;width:3px;border-radius:3px;background:#ded5c8}
+  .shopping-row.pri-high:before{background:var(--terra)}
+  .shopping-row.pri-normal:before{background:var(--sand)}
+  .shopping-row.pri-low:before{background:#d8cec0}
+  .shopping-row.pri-high{background:linear-gradient(90deg,rgba(182,95,66,.05),rgba(182,95,66,0) 46%)}
+  .shopping-row .shopping-main strong{position:relative;display:inline-block}
+  .shopping-row.bought{opacity:.55}
+  .shopping-row.bought .shopping-main strong:after{content:'';position:absolute;left:0;right:0;top:50%;height:1px;background:currentColor;transform-origin:left;animation:shopStrike .22s ease both}
+  @keyframes shopStrike{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+  .shop-price{grid-column:3;justify-self:end;min-width:66px;min-height:34px;padding:0 8px;border:1px solid transparent;border-radius:10px;background:transparent;font:inherit;font-size:13.5px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums;cursor:pointer;transition:background .15s,border-color .15s}
+  .shop-price.tbd{color:#9b8f82;font-weight:600;background:#f7f2ea}
+  .shop-price:active{transform:scale(.97)}
+  .shop-price-in{grid-column:3;justify-self:end;width:74px;min-height:34px;padding:0 8px;border:1.5px solid var(--plum);border-radius:10px;background:var(--card);font:inherit;font-size:16px;font-weight:700;text-align:right;color:var(--ink);font-variant-numeric:tabular-nums;-webkit-appearance:none;appearance:none}
+  @media(hover:hover){.shop-price:hover{background:var(--card);border-color:var(--line)}}
+  @media(max-width:560px){.shopping-row{grid-template-columns:30px minmax(0,1fr) 80px 30px}}
+  @media(prefers-reduced-motion:reduce){.shopping-row,.shopping-row.bought .shopping-main strong:after{animation:none}}
+
   </style>
   <title data-page-node-id="N9uQg0dpiKTsyB4FFPFrxl" data-pnid-children="1t2kuYHDk4UITU5HQoJQo7">有迹 · 生活有迹可循</title>
 </head>
@@ -864,23 +885,37 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
    部署脚本 _sync_deploy.js 会在发布时把 BUILD 改成时间戳并同步写 version.json，两边自动一致。
    注意：首次仍需手动刷新一次（旧页面里还没有这段代码），之后就能自己发现更新。 */
 (function(){
-  var BUILD='20261106_2249';
+  var BUILD='20261106_2342';
   window.__RJ_BUILD=BUILD;
   var bar=function(){return document.getElementById('verBar');};
-  function check(){
+  /* 版本号写进设置页（2026-11-06）：原来关于页写死「V1.3 2026-09-23 构建」，
+     线上更新后看不出版本变没变，自动提示条又被 sessionStorage 记住后不再弹，等于没法核对。
+     现在本地版本直接显示，另有「检查更新」手动比对一次。 */
+  function paintVer(){
+    var tx='版本 '+BUILD;
+    var a=document.getElementById('setRowVer');if(a)a.textContent=tx;
+    var b=document.getElementById('setVerLine');if(b)b.textContent='版本：'+BUILD;
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){paintVer();setTimeout(paintVer,600);});
+  else{paintVer();setTimeout(paintVer,600);}
+  function stateTx(t){var s=document.getElementById('setVerState');if(s)s.textContent=t;}
+  function check(manual){
     try{
       fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.json():null;}).then(function(j){
-        if(!j||!j.build||j.build===BUILD)return;
+        if(!j||!j.build){if(manual)stateTx('查不到线上版本，可能没联网');return;}
+        window.__RJ_REMOTE=j.build;
+        if(j.build===BUILD){if(manual)stateTx('已是最新 · '+BUILD);return;}
+        if(manual){stateTx('线上是 '+j.build+'，点底部提示条刷新');var e0=bar();if(e0)e0.hidden=false;return;}
         var seen='';try{seen=sessionStorage.getItem('richangji-ver-seen')||'';}catch(e){}
         if(seen===j.build)return;
-        window.__RJ_REMOTE=j.build;
         var el=bar();if(el)el.hidden=false;
-      }).catch(function(){});
-    }catch(e){}
+      }).catch(function(){if(manual)stateTx('没查到线上版本，离线打开时正常');});
+    }catch(e){if(manual)stateTx('检查失败');}
   }
   document.addEventListener('click',function(e){
-    var b=e.target&&e.target.closest?e.target.closest('#verBar [data-act]'):null;
+    var b=e.target&&e.target.closest?e.target.closest('#verBar [data-act],[data-act="verCheck"]'):null;
     if(!b)return;
+    if(b.dataset.act==='verCheck'){stateTx('检查中…');setTimeout(function(){check(true);},80);return;}
     if(b.dataset.act==='verDismiss'){
       try{sessionStorage.setItem('richangji-ver-seen',window.__RJ_REMOTE||'1');}catch(e){}
       var el=bar();if(el)el.hidden=true;
@@ -888,8 +923,8 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
       try{location.replace(location.pathname+'?v='+Date.now()+location.hash);}catch(e){location.reload();}
     }
   });
-  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',function(){setTimeout(check,1800);});}
-  else{setTimeout(check,1800);}
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',function(){setTimeout(function(){check(false);},1800);});}
+  else{setTimeout(function(){check(false);},1800);}
 })();
 (function(){
   return; /* 口令门已停用（2026-09-23 拍板：手机锁屏为主防线）。恢复口令门：删除本行即可 */
@@ -1962,7 +1997,11 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
                 <span class="zdesc" style="margin:0">备份提醒频率</span>
                 <select id="bkFreqSel" class="wsel" style="flex:0 0 auto;min-height:38px"><option value="7">每 7 天</option><option value="14">每 14 天</option><option value="30">每 30 天</option></select>
               </div>
-              <p class="zdesc" style="margin:8px 0 0">版本：有迹 · 融合版 V1.3（2026-09-23 构建）</p>
+              <p class="zdesc" id="setVerLine" style="margin:8px 0 0">版本：读取中</p>
+              <div class="dgate" style="margin:10px 0 0;align-items:center">
+                <span class="zdesc" id="setVerState" style="margin:0">点右侧可手动查有没有新版</span>
+                <button class="wbtn ghostbtn" type="button" data-act="verCheck" style="flex:0 0 auto;min-height:38px">检查更新</button>
+              </div>
             </article>
     </section>
   </div>
@@ -2104,15 +2143,24 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
   .exd-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:4px 16px 12px}
   .exd-foot{display:flex;gap:10px;padding:10px 16px calc(12px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:var(--paper);border-radius:0 0 0 0}
   .exd-foot .btn{flex:1;min-height:42px}
-  .ex-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+  /* grid-auto-rows:max-content（2026-11-06 修）：抽屉里的 .ex-grid 同时是 flex:1 的滚动区，
+     不写这一条时行高被算成卡片的 min-height:38，卡片被 stretch 压扁、图片全被裁掉。
+     加上之后行高按内容算，卡片恢复成「图 + 名称 + 器械」。 */
+  .ex-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;grid-auto-rows:max-content}
   .ex-more-wrap{grid-column:1/-1;display:flex;justify-content:center;padding:6px 0}
   .ex-card{position:relative;display:flex;flex-direction:column;gap:6px;padding:0 0 8px;border:1px solid var(--line);border-radius:14px;background:var(--card);overflow:hidden;cursor:pointer;text-align:left;min-height:38px}
   .ex-card.on{border-color:var(--plum);box-shadow:0 0 0 1.5px var(--plum)}
-  .ex-thumb{position:relative;width:100%;aspect-ratio:4/3;background:var(--white);border-bottom:1px solid var(--line);overflow:hidden}
-  .ex-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+  /* 用 padding-top 百分比撑高（2026-11-06 修）：aspect-ratio 在这个 flex 列里算不出高度，
+     实测 thumb 高 1px、卡片被 min-height:38 撑着，图片一直不可见。padding-top:75% 永远等于宽度的 3/4，
+     不受图片加载状态影响。 */
+  .ex-thumb{position:relative;width:100%;padding-top:75%;background:var(--white);border-bottom:1px solid var(--line);overflow:hidden}
+  /* 图片绝对定位（2026-11-06 修）：原来 img 用 height:100%，而 thumb 的高又由 4/3 比例算，
+     两者互等导致整块算成 0，卡片被 min-height:38 撑着，图片永远看不见（线上实测 thumb 高 1px）。
+     改成绝对铺满，thumb 的高度只由比例决定，不再受图片加载状态影响。 */
+  .ex-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
   .ex-thumb .wft-g{position:absolute;top:6px;right:6px}
-  .ex-thumb.ex-noimg{display:flex;align-items:center;justify-content:center;background:repeating-linear-gradient(45deg,var(--paper),var(--paper) 8px,#f3ece2 8px,#f3ece2 16px);border-bottom-style:dashed}
-  .ex-thumb.ex-noimg svg{width:34px;height:34px;stroke:var(--line);fill:none;opacity:.8}
+  .ex-thumb.ex-noimg{background:repeating-linear-gradient(45deg,var(--paper),var(--paper) 8px,#f3ece2 8px,#f3ece2 16px);border-bottom-style:dashed}
+  .ex-thumb.ex-noimg svg{position:absolute;left:50%;top:50%;width:34px;height:34px;transform:translate(-50%,-50%);stroke:var(--line);fill:none;opacity:.8}
   .ex-name{display:flex;flex-wrap:wrap;align-items:center;gap:5px;padding:0 10px;font-size:13px;font-weight:600;color:var(--ink)}
   .ex-sub{padding:0 10px;font-size:11px;color:var(--muted)}
   .ex-card .ft-fav{position:absolute;top:6px;left:6px;z-index:2}
@@ -6050,11 +6098,51 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     }
   }
 
+  /* 预算就地改（2026-11-06）：原来想补价格必须去左边表单重新填一条，
+     现在点清单里的金额直接变输入框，回车或点空白保存，Esc 放弃。 */
+  function shopPriceEdit(id){
+    const box=document.querySelector('.shopping-row [data-action="shop-price"][data-id="'+id+'"]');
+    const item=state.records.find(r=>r.id===id&&r.type==='home');
+    if(!box||!item||box.dataset.editing)return;
+    box.dataset.editing='1';
+    const old=box.innerHTML;
+    box.innerHTML='<input class="shop-price-in" type="number" inputmode="decimal" min="0" step="0.01" placeholder="0" value="'+(item.data.price||'')+'" aria-label="'+t('预算')+'">';
+    const inp=box.querySelector('input');
+    inp.focus();try{inp.select();}catch(e){}
+    let done=false;
+    const commit=function(keep){
+      if(done)return;done=true;
+      box.dataset.editing='';
+      if(!keep){box.innerHTML=old;return;}
+      const v=parseFloat(inp.value);
+      item.data.price=(isFinite(v)&&v>0)?Number(v.toFixed(2)):0;
+      saveState();
+      renderHome();
+      if(item.data.price)toast('预算改成 '+money(item.data.price));
+    };
+    inp.addEventListener('blur',function(){commit(true);});
+    inp.addEventListener('keydown',function(e){
+      if(e.key==='Enter'){e.preventDefault();inp.blur();}
+      else if(e.key==='Escape'){e.preventDefault();commit(false);}
+    });
+  }
+
   function renderHome(){
     const records=sortedRecords('home'),filter=state.settings.shoppingFilter,month=isoDate().slice(0,7),pending=records.filter(r=>!r.data.bought),bought=records.filter(r=>r.data.bought);
     document.getElementById('homeTotal').textContent=pending.length;document.getElementById('homeBudget').textContent=money(sum(pending,r=>r.data.price));document.getElementById('homeBought').textContent=bought.filter(r=>(r.data.boughtDate||r.date).startsWith(month)).length;
     document.querySelectorAll('[data-shopping-filter]').forEach(b=>b.classList.toggle('active',b.dataset.shoppingFilter===filter));const filtered=records.filter(r=>filter==='all'||(filter==='pending'&&!r.data.bought)||(filter==='bought'&&r.data.bought));
-    document.getElementById('homeList').innerHTML=filtered.length?filtered.map(r=>{const name=r.sample?localizedHtml(r.data.name):userHtml(r.data.name),quantity=r.sample?localizedHtml(r.data.quantity||'数量未填'):userHtml(r.data.quantity||t('数量未填')),note=r.data.note?(r.sample?` · ${localizedHtml(r.data.note)}`:` · ${userHtml(r.data.note)}`):'';return`<div class="shopping-row ${r.data.bought?'bought':''}"><button class="check-btn ${r.data.bought?'checked':''}" data-action="toggle-shopping" data-id="${r.id}">${r.data.bought?icon('i-check'):''}</button><span class="shopping-main"><strong>${r.data.priority==='high'?'<i class="urgent-dot"></i>':''}${name}</strong><small>${quantity} · ${localizedHtml(r.data.category||'其他')}${note}</small></span><span class="shopping-price"><strong>${r.data.price?money(r.data.price):t('待定')}</strong></span><button class="delete-btn" data-action="delete" data-id="${r.id}" aria-label="${t('删除')}">${icon('i-trash')}</button></div>`;}).join(''):empty(filter==='pending'?'待买清单已经清空':'这里还没有物品');
+    /* 排序（2026-11-06）：购买顺序不按录入顺序。已买沉底，其余按 急需 → 有空买 → 等等再买，
+       同优先级里新记的靠前。 */
+    const SHOP_W={high:0,normal:1,low:2};
+    const shown=filtered.slice().sort((a,b)=>{
+      const ab=(a.data.bought?1:0)-(b.data.bought?1:0);if(ab)return ab;
+      const w=(SHOP_W[a.data.priority]??1)-(SHOP_W[b.data.priority]??1);if(w)return w;
+      const db=b.data.boughtDate||b.date||'',da=a.data.boughtDate||a.date||'';
+      if(da!==db)return db.localeCompare(da);
+      return (b.createdAt||0)-(a.createdAt||0);
+    });
+    /* 每条：勾选 / 名称与备注 / 预算（点一下就地改，不用回表单）/ 删除 */
+    document.getElementById('homeList').innerHTML=shown.length?shown.map((r,i)=>{const name=r.sample?localizedHtml(r.data.name):userHtml(r.data.name),quantity=r.sample?localizedHtml(r.data.quantity||'数量未填'):userHtml(r.data.quantity||t('数量未填')),note=r.data.note?(r.sample?` · ${localizedHtml(r.data.note)}`:` · ${userHtml(r.data.note)}`):'';const pri=r.data.priority||'normal';return`<div class="shopping-row pri-${pri} ${r.data.bought?'bought':''}" style="--i:${Math.min(i,10)}"><button class="check-btn ${r.data.bought?'checked':''}" data-action="toggle-shopping" data-id="${r.id}" aria-label="${escapeHtml(r.data.name)}">${r.data.bought?icon('i-check'):''}</button><span class="shopping-main"><strong>${name}</strong><small>${quantity} · ${localizedHtml(r.data.category||'其他')}${note}</small></span><button class="shop-price ${r.data.price?'':'tbd'}" type="button" data-action="shop-price" data-id="${r.id}" aria-label="${t('预算')}">${r.data.price?money(r.data.price):t('待定')}</button><button class="delete-btn" data-action="delete" data-id="${r.id}" aria-label="${t('删除')}">${icon('i-trash')}</button></div>`;}).join(''):empty(filter==='pending'?'待买清单已经清空':'这里还没有物品');
   }
 
   function renderMedia(){
@@ -7855,9 +7943,11 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     }
     exdFillFilters(document.getElementById('exdMuscle'),document.getElementById('exdEquip'));
     d.hidden=false;
+    /* 锁底层滚动（2026-11-06）：抽屉全屏时手指滑到底会带着背后的计划页一起滚，看着像弹窗没接住手势 */
+    document.documentElement.style.overflow='hidden';
     renderExdGrid();
   }
-  function closeExDrawer(){const d=document.getElementById('exDrawer');if(d)d.hidden=true;const c=document.getElementById('exdConfirmSheet');if(c)c.hidden=true;exdMode=null;exdPart=-1;exdPicked={};exdSwapRef=null;}
+  function closeExDrawer(){const d=document.getElementById('exDrawer');if(d)d.hidden=true;const c=document.getElementById('exdConfirmSheet');if(c)c.hidden=true;document.documentElement.style.overflow='';exdMode=null;exdPart=-1;exdPicked={};exdSwapRef=null;}
   function renderExdGrid(){
     const box=document.getElementById('exdGrid');if(!box)return;
     const list=exFilterList({
@@ -8581,6 +8671,7 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
       if(type==='toggle-plan'){const item=state.settings.weeklyPlan.find(x=>x.id===id);if(item){item.done=!item.done;const saved=saveState();renderFitness();if(saved&&item.done)celebrate();}}
       if(type==='delete-habit-custom'){const habit=state.habits.find(h=>h.id===id);if(habit&&confirm(LANG==='en'?`Delete the habit “${habit.name}” and all of its history?`:`确定删除习惯“${habit.name}”吗？历史打卡也会一起删除。`)){state.habits=state.habits.filter(h=>h.id!==id);if(HABIT_DEFS.some(def=>def.key===habit.key)){state.settings.hiddenHabitKeys=[...new Set([...(state.settings.hiddenHabitKeys||[]),habit.key])];}const saved=saveState();renderAll();renderHabitManageList();if(saved)toast('习惯已删除');}}
       if(type==='delete-plan'){const item=state.settings.weeklyPlan.find(x=>x.id===id);if(item&&confirm(LANG==='en'?`Delete the plan “${item.title}”?`:`确定删除计划“${item.title}”吗？`)){state.settings.weeklyPlan=state.settings.weeklyPlan.filter(x=>x.id!==id);const saved=saveState();renderFitness();renderPlanManageList();if(saved)toast('计划已删除');}}
+      if(type==='shop-price'){shopPriceEdit(id);return;}
       if(type==='toggle-shopping'){const item=state.records.find(r=>r.id===id&&r.type==='home');if(item){item.data.bought=!item.data.bought;item.data.boughtDate=item.data.bought?isoDate():null;updateRemoteShopping(item);const saved=saveState();renderAll();if(saved&&item.data.bought){celebrate();toast('买到了，已移入完成');}}}
       if(type==='delete-media'){const item=state.mediaItems.find(media=>media.id===id);if(item&&confirm(LANG==='en'?`Remove “${item.name}” from the list?`:`确定从清单中删除“${item.name}”吗？`)){if(item.remoteId)deleteRemoteMedia(item.remoteId);state.mediaItems=state.mediaItems.filter(media=>media.id!==id);const saved=saveState();renderMedia();if(saved)toast('已从书影音清单移除');}}
       if(type==='open-habit-settings')openHabitSettings();if(type==='close-habit-settings')closeHabitSettings();if(type==='open-plan-settings')openPlanSettings();if(type==='close-plan-settings')closePlanSettings();if(type==='open-fitness-profile')openFitnessProfile();if(type==='close-fitness-profile')closeFitnessProfile();
