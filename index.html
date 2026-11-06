@@ -285,11 +285,32 @@ body.ai-locked{overflow:hidden;height:100dvh;overscroll-behavior:none}
 .dash-sheet .box{position:relative;width:min(520px,100%);max-height:76vh;overflow:auto;background:var(--card);border-radius:20px;box-shadow:0 24px 60px rgba(53,41,31,.3);padding:22px}
 .dash-sheet .sheet-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
 .dash-sheet .sheet-tip{margin:6px 0 4px;color:#978c80;font-size:12px}
-.dash-wrow{display:flex;align-items:center;gap:12px;min-height:58px;padding:10px 0;border-bottom:1px solid #eee7de}
-.dash-wrow:last-child{border-bottom:0}
-.dash-wrow .grow{flex:1;min-width:0}
-.dash-wrow .grow strong{display:block;font-size:14px;font-weight:700}
-.dash-wrow .grow small{display:block;margin-top:2px;font-size:12px;color:#94887a}
+/* 添加小组件（2026-11-06 B 三版）：两列网格，图在上、名称说明在下居中，整格可点即添加。
+   缩略图仍是真卡按 S 档 195×130 渲染，宽度随列宽走，缩放比由 dashThumbFit() 算。 */
+#dashAddList{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:4px auto 0;max-width:400px}
+.dash-wcard{display:flex;flex-direction:column;align-items:center;min-width:0;padding:8px 8px 11px;border:1px solid var(--line);border-radius:16px;background:var(--paper-soft);color:inherit;font:inherit;cursor:pointer;transition:border-color .16s,transform .12s}
+.dash-wcard:active{transform:scale(.985);border-color:#cbbda9}
+.dash-wcard b{display:block;width:100%;margin-top:9px;font-size:13px;font-weight:800;line-height:1.3;color:var(--ink);text-align:center}
+.dash-wcard small{display:-webkit-box;width:100%;margin-top:3px;font-size:11px;line-height:1.35;color:#94887a;text-align:center;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.dthumb{position:relative;width:100%;aspect-ratio:195/130;border-radius:12px;overflow:hidden}
+.dthumb-in{position:absolute;top:0;left:0;width:195px;height:130px;transform:scale(.61538);transform-origin:0 0;pointer-events:none}
+.dthumb-in>article{width:195px;height:130px;margin:0;padding:14px;border-radius:22px;box-shadow:none;overflow:hidden;display:flex;flex-direction:column;justify-content:center;gap:4px;background:var(--card);border:1px solid var(--line)}
+.dthumb-in .eyebrow,.dthumb-in .panel-head>.text-btn,.dthumb-in .panel-head>button,.dthumb-in .panel-head .mini-note,.dthumb-in .panel-head .wnote,.dthumb-in .stat-icon{display:none!important}
+.dthumb-in article.stat-card small{display:none!important}
+.dthumb-in article.inspire-card .eyebrow{display:block!important;margin:0 0 3px;font-size:15px;font-weight:800;letter-spacing:0;color:var(--ink)}
+.dthumb-in .panel-head{margin:0;display:block}
+.dthumb-in .panel-head h2,.dthumb-in h2{font-size:15px;line-height:1.3;margin:0;font-weight:800;color:var(--ink)}
+.dthumb-in strong{font-size:22px;line-height:1.15;font-weight:800;display:block;color:var(--ink)}
+.dthumb-in>article.dash-jump{flex-direction:row;align-items:center;justify-content:flex-start;gap:9px}
+.dthumb-in .dash-jump{display:flex;align-items:center;gap:8px}
+.dthumb-in .dj-ic{display:grid;place-items:center;width:30px;height:30px;border-radius:9px;flex:none}
+.dthumb-in .dj-ic svg{width:16px;height:16px}
+.dthumb-in .dj-go{display:none}
+.dthumb-in .dj-tx b{display:block;font-size:15px;line-height:1.3}
+.dthumb-in .dj-tx small{display:block;margin-top:3px;font-size:13px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dthumb-in :is(.clean-list,.habit-stack,.timeline,.wlist,.dash-memo-list,.memo-quick,.quick-grid,.insight-row,.wmore,.dash-lfoot){display:none!important}
+.dthumb-in blockquote{margin:0;font-size:13px;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.dthumb-in .dash-kpi{display:block!important;margin:2px 0 0;font-size:13px;line-height:1.4;font-weight:700;color:var(--muted)}
 .inspire-card blockquote{margin:14px 0 12px;font:600 18px/1.55 "Songti SC",serif;letter-spacing:.02em;cursor:pointer}
 .insight-row{display:flex;align-items:baseline;gap:8px;font-size:12px;color:#7e756a}
 .insight-tag{flex:none;font-size:10.5px;font-weight:750;letter-spacing:.16em;color:#a89d90}
@@ -843,7 +864,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
    部署脚本 _sync_deploy.js 会在发布时把 BUILD 改成时间戳并同步写 version.json，两边自动一致。
    注意：首次仍需手动刷新一次（旧页面里还没有这段代码），之后就能自己发现更新。 */
 (function(){
-  var BUILD='20261106_1500';
+  var BUILD='20261106_2249';
   window.__RJ_BUILD=BUILD;
   var bar=function(){return document.getElementById('verBar');};
   function check(){
@@ -1047,7 +1068,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
               </div>
               <input type="hidden" name="account" id="moneyAccount" value="">
               <div class="money-lastrow">
-                <label class="mini-field" data-act="moneyDatePick"><svg><use href="#i-calendar"/></svg><span id="moneyDateLbl">今天</span><input type="date" name="date" id="moneyDate" required aria-label="日期"></label>
+                <label class="mini-field"><svg><use href="#i-calendar"/></svg><span id="moneyDateLbl">今天</span><input type="date" name="date" id="moneyDate" required aria-label="日期"></label>
                 <input class="money-note" name="note" maxlength="60" placeholder="这笔钱花在了哪里">
               </div>
               <button class="btn primary full" type="submit"><svg><use href="#i-plus"/></svg>记下这笔</button>
@@ -2347,12 +2368,25 @@ body:has(.dashboard-grid.editing) .ai-fab{opacity:0;pointer-events:none;transfor
 .tb-input-row .wbtn{flex:0 0 auto;min-width:74px;min-height:44px;border-radius:13px}
 .tb-meta-row{display:flex;align-items:flex-start;gap:10px;margin-top:12px;padding-top:12px;border-top:1px dashed rgba(146,116,138,.22)}
 .tb-lbl{flex:none;padding-top:7px;color:#8a7f72;font-size:12px;font-weight:700;letter-spacing:.02em}
-.tb-accs{display:flex;align-items:center;gap:7px;flex:0 1 auto;min-width:0;flex-wrap:wrap;padding:1px 0}
-.tb-acc{flex:none;display:inline-flex;align-items:center;gap:6px;min-height:32px;padding:0 12px;border:1px solid var(--line);border-radius:999px;background:var(--white);color:#655b50;font-size:13px;font-weight:700;cursor:pointer;transition:.16s}
+.tb-accs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;flex:1 1 auto;min-width:0;padding:1px 0}
+.tb-acc{display:flex;align-items:center;gap:6px;min-width:0;min-height:32px;padding:0 9px 0 8px;border:1px solid var(--line);border-left:3px solid transparent;border-radius:10px;background:var(--white);color:#655b50;font-size:13px;font-weight:700;cursor:pointer;overflow:hidden;transition:.16s}
+.tb-acc .tb-acc-n{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .tb-acc i{width:6px;height:6px;border-radius:50%;background:#c9bda9;flex:none}
 .tb-acc:hover{border-color:#c9bda9}
-.tb-acc.on{border-color:var(--plum);background:var(--plum);color:var(--white);box-shadow:0 3px 10px rgba(77,48,69,.16)}
-.tb-acc.on i{background:var(--white)}
+.tb-acc.on{border-color:var(--line);border-left:3px solid var(--acc,var(--plum));background:#f7f2ea;color:var(--ink);box-shadow:none}
+.tb-acc.on i{background:var(--acc,#4d3045)}
+/* 桌面三列别拉满，最宽 420；手机把「分配给」这行拆成两排，标签和管理按钮一行，账号网格独占一行 */
+.tb-accs{max-width:min(100%,420px)}
+@media(max-width:860px){
+  .tb-meta-row{flex-wrap:wrap;align-items:center}
+  .tb-lbl{order:1}
+  .tb-accs{order:3;flex:1 0 100%;max-width:none}
+  .tb-manage{order:2;margin-left:auto}
+}
+/* 320 这类超窄屏三列只剩 73px，装不下四字账号名，降到两列（仍然一行最多三个以内） */
+@media(max-width:359px){
+  .tb-accs{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
 .tb-manage{flex:none;margin-left:2px;display:inline-flex;align-items:center;gap:5px;min-height:32px;padding:0 10px;border:1px solid transparent;border-radius:999px;background:transparent;color:#8a7f72;font-size:12px;font-weight:700;cursor:pointer}
 .tb-manage svg{width:12px;height:12px;opacity:.75}
 .tb-manage:hover{background:#efe8dc;color:#5d554b}
@@ -3081,6 +3115,15 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
       <div class="exd-body ex-grid" id="exdGrid"></div>
       <div class="exd-foot" id="exdFoot"><button class="btn ghost" data-action="close-ex-drawer" type="button">取消</button><button class="btn primary" data-act="exdConfirm" type="button" id="exdConfirmBtn">加入 0 个动作</button></div>
     </div>
+  </div>
+  <!-- 2026-11-06 补：选动作之后的第三层确认。只做确认，写入仍在确认按钮里，取消就退回抽屉继续挑。 -->
+  <div class="settings-backdrop" hidden id="exdConfirmSheet" role="dialog" aria-modal="true" aria-labelledby="exdConfirmTitle">
+    <section class="settings-sheet exdc-sheet">
+      <div class="settings-head"><div><p class="eyebrow">加入周计划</p><h2 id="exdConfirmTitle">确认这几个动作</h2></div><button class="sheet-close" data-act="exdConfirmClose" type="button" aria-label="关闭">×</button></div>
+      <ul class="exdc-list" id="exdConfirmList"></ul>
+      <p class="exdc-tip">默认 3 组 × 10 次，重量和休息加进去后在计划里调。</p>
+      <div class="sheet-actions"><button class="btn ghost" data-act="exdConfirmClose" type="button">再挑挑</button><button class="btn primary" data-act="exdConfirmGo" type="button">确认加入</button></div>
+    </section>
   </div>
   <nav aria-label="手机导航" class="mobile-nav"><button class="active" data-nav="dashboard"><svg><use href="#i-home"/></svg><span>今天</span></button><button data-nav="work"><svg><use href="#i-briefcase"/></svg><span>工作</span></button><button data-nav="fitness"><svg><use href="#i-fitness"/></svg><span>健身</span></button><button data-nav="money"><svg><use href="#i-wallet"/></svg><span>账本</span></button><button data-nav="more"><svg><use href="#i-grid"/></svg><span>更多</span></button></nav>
   <div data-page-node-id="js3J8Y3JqDrvK2yBB598Ai" class="settings-backdrop" hidden id="habitSettings">
@@ -6110,8 +6153,8 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
   function renderAccSeg(){
     const seg=document.getElementById('accChips');if(!seg)return;
     const list=state.work.accList||[];
-    seg.innerHTML=list.map(a=>'<button type="button" class="tb-acc'+(a.id===state.work.account?' on':'')+'" data-acc="'+escapeHtml(a.id)+'" aria-pressed="'+(a.id===state.work.account)+'"><i style="background:'+(a.id===state.work.account?'var(--white)':accColor(a.id))+'"></i>'+escapeHtml(a.name)+'</button>').join('');
-    if(!list.length)seg.innerHTML='<button type="button" class="tb-acc on" data-acc="default">自用</button>';
+    seg.innerHTML=list.map(a=>'<button type="button" class="tb-acc'+(a.id===state.work.account?' on':'')+'" style="--acc:'+accColor(a.id)+'" data-acc="'+escapeHtml(a.id)+'" aria-pressed="'+(a.id===state.work.account)+'"><i style="background:'+accColor(a.id)+'"></i><span class="tb-acc-n">'+escapeHtml(a.name)+'</span></button>').join('');
+    if(!list.length)seg.innerHTML='<button type="button" class="tb-acc on" data-acc="default"><i></i><span class="tb-acc-n">自用</span></button>';
     renderAccManage();
   }
 
@@ -6512,7 +6555,6 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
   ];
   const TREE_LEVELS=[{name:'一粒种子',lo:0,hi:0},{name:'破土',lo:1,hi:2},{name:'幼苗',lo:3,hi:5},{name:'小树',lo:6,hi:9},{name:'成树',lo:10,hi:14},{name:'开花',lo:15,hi:19},{name:'硕果满枝',lo:20,hi:Infinity}];
   function msLitMap(){if(!state.grow.ms||typeof state.grow.ms!=='object')state.grow.ms={};return state.grow.ms;}
-  function msIsLit(id){return !!(msLitMap()[id]&&msLitMap()[id].on);}
   function msLitCount(){const m=msLitMap();return Object.keys(m).filter(k=>m[k].on).length;}
   function msAll(){const out=[];TREE_MILESTONES.forEach(([g,arr])=>arr.forEach(([id,n])=>out.push({id,n,g})));(state.grow.msCustom||[]).forEach(c=>out.push({id:c.id,n:c.n,g:'自定义'}));return out;}
   const TREE_LEAF_POS=(()=>{
@@ -6539,7 +6581,6 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     if(!last)return true;
     return (Date.now()-new Date(last).getTime())/864e5>7;
   }
-  function nodeState(nd){const ov=state.grow.nodeOverride||{};return ov[nd.id]!==undefined?ov[nd.id]:(nd.s||0);}
   /* 成长年轮：6 个环对应 6 个成长阶段，每点亮一个里程碑年轮就长一段 */
   const TREE_RINGS=[
     {r:44,cap:2},{r:63,cap:3},{r:82,cap:4},{r:101,cap:5},{r:120,cap:5},{r:139,cap:1}
@@ -6586,7 +6627,7 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
       svg.appendChild(mk('circle',{cx:CX,cy:CY,r:150,fill:'none',stroke:'#c9a45c','stroke-width':1.6,'stroke-dasharray':'3 6',opacity:.9}));
     }
   }
-  let treeFallRAF=null,treeFallRunning=false,treeFallParts=[],treeFallLit=0;
+  let treeFallRAF=null,treeFallRunning=false;
   const TREE_STYLES={
     ring:{eyebrow:'每点亮一次，年轮多长一圈',title:'成长年轮',desc:'从内向外，每个环是一个成长阶段。点亮里程碑，年轮就长一截；超过 7 天没写复盘，年轮会发黄。'},
     peak:{eyebrow:'点亮一次，翻一座山',title:'成长山峰',desc:'七座山头对应七个成长阶段，翻过一座插一面旗，正在爬的那座上有你的位置。超过 7 天没写复盘，山色会发黄。'},
@@ -6673,33 +6714,6 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     if(lit>=20&&lit>=msAll().length){
       svg.appendChild(mk('circle',{cx:CX,cy:CY,r:150,fill:'none',stroke:'#e8c96a','stroke-width':1.4,'stroke-dasharray':'4 7',opacity:.85}));
     }
-  }
-  function startTreeFall(lit){
-    treeFallLit=Number(lit)||0;
-    if(treeFallRunning)return;
-    const cv=document.getElementById('treeFall');if(!cv)return;
-    treeFallRunning=true;
-    if(!treeFallParts.length){
-      for(let i=0;i<6;i++)treeFallParts.push({x:Math.random()*200,y:Math.random()*220,r:1.4+Math.random()*2.1,vy:0.25+Math.random()*0.4,vx:(Math.random()-0.5)*0.3,rot:Math.random()*Math.PI,spin:(Math.random()-0.5)*0.05});
-    }
-    const ctx=cv.getContext('2d');
-    function tick(){
-      if(!treeFallRunning)return;
-      const sec=document.getElementById('gsec-tree');
-      const visible=sec&&sec.offsetParent!==null;
-      ctx.clearRect(0,0,200,220);
-      if(visible&&treeFallLit>0){
-        ctx.fillStyle=treeWilting()?'rgba(179,154,62,0.8)':'rgba(63,157,90,0.85)';
-        treeFallParts.forEach(p=>{
-          p.y+=p.vy;p.x+=p.vx;p.rot+=p.spin;
-          if(p.y>224){p.y=-6;p.x=Math.random()*200;}
-          ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);
-          ctx.beginPath();ctx.ellipse(0,0,p.r+1.6,p.r,0,0,Math.PI*2);ctx.fill();ctx.restore();
-        });
-      }
-      treeFallRAF=requestAnimationFrame(tick);
-    }
-    treeFallRAF=requestAnimationFrame(tick);
   }
   function stopTreeFall(){treeFallRunning=false;if(treeFallRAF){cancelAnimationFrame(treeFallRAF);treeFallRAF=null;}}
   function renderTree(){
@@ -7416,7 +7430,6 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     if(event.target.closest('[data-act="ftFinish"]')){finishTraining();return;}
     if(event.target.closest('[data-act="trHide"]')){closeTrainSheet();toast('训练继续计时，回健身页点「跟练页」回来');return;}
     if(event.target.closest('[data-act="trEnd"]')){const rec=finishTraining();if(rec)showTrainDone(rec);return;}
-    if(event.target.closest('[data-act="trSwap"]')){const cur=trCurTarget();if(!cur){toast('当前没有待练动作');return;}openExDrawer('swap',{act:cur.act});return;}
     if(event.target.closest('[data-act="trClose"]')){closeTrainSheet();return;}
     if(event.target.closest('[data-act="ftRestSkip"]')){if(ftRestTimer){clearInterval(ftRestTimer);ftRestTimer=null;}ftRestUntil=0;['ftRestBar','trRest'].forEach(id=>{const b=document.getElementById(id);if(b)b.hidden=true;});toast('休息跳过');return;}
     if(event.target.closest('[data-act="ftRestAdd"]')){ftRestUntil+=20000;toast('加 20 秒');return;}
@@ -7441,17 +7454,6 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
       if(arr.length<target)ftStartRest(Number(act.rest||60),'trRest');
       renderTrainSheet();renderFitTrain();
       if(arr.length>=target){celebrate();toast('这个动作练满了');}
-      return;
-    }
-    const trBtn=event.target.closest('[data-act="trDoneSet"]');
-    if(trBtn){
-      const aid=trBtn.dataset.aid,target=Number(trBtn.dataset.target||0),pw=Number(trBtn.dataset.w||0),pr=Number(trBtn.dataset.r||0),restS=Number(trBtn.dataset.rest||60),done=ftDoneMap(),arr=(done[aid]||[]).slice();
-      if(!state.fitTrain||!state.fitTrain.today)return;
-      if(arr.length>=target)ftSetDone(aid,[]);
-      else{arr.push({weight:pw,reps:pr,ts:Date.now()});ftSetDone(aid,arr);if(arr.length<target)ftStartRest(restS,'trRest');}
-      renderTrainSheet();renderFitTrain();
-      const nd=ftDoneMap();
-      if(((nd[aid]||[]).length)>=target&&target>0){celebrate();toast('这个动作练满了');}
       return;
     }
     if(event.target.closest('[data-act="ftPlanEdit"]')){openPlanSheet();return;}
@@ -7551,6 +7553,8 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     if(event.target.closest('[data-act="actPick"]')){openExDrawer('multi',event.target.closest('[data-act="actPick"]').dataset.part);return;}
     if(event.target.closest('[data-action="close-ex-drawer"]')){closeExDrawer();return;}
     if(event.target.closest('[data-act="exdConfirm"]')){exdConfirm();return;}
+    if(event.target.closest('[data-act="exdConfirmClose"]')){document.getElementById('exdConfirmSheet').hidden=true;return;}
+    if(event.target.closest('[data-act="exdConfirmGo"]')){exdConfirmGo();return;}
     if(event.target.closest('[data-act="exdHeight"]')){const sh=document.getElementById('exdSheet'),hb=document.getElementById('exdHeightBtn');const high=sh.classList.toggle('high');hb.textContent=high?'半屏':'全屏';return;}
     if(event.target.closest('#exDrawer .exd-head,#exDrawer .exd-filters')&&!event.target.closest('[data-act]'))return;
     const exPick=event.target.closest('#exdGrid [data-expick]');
@@ -7853,7 +7857,7 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     d.hidden=false;
     renderExdGrid();
   }
-  function closeExDrawer(){const d=document.getElementById('exDrawer');if(d)d.hidden=true;exdMode=null;exdPart=-1;exdPicked={};exdSwapRef=null;}
+  function closeExDrawer(){const d=document.getElementById('exDrawer');if(d)d.hidden=true;const c=document.getElementById('exdConfirmSheet');if(c)c.hidden=true;exdMode=null;exdPart=-1;exdPicked={};exdSwapRef=null;}
   function renderExdGrid(){
     const box=document.getElementById('exdGrid');if(!box)return;
     const list=exFilterList({
@@ -7868,12 +7872,29 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
   }
   function exdConfirm(){
     if(exdMode!=='multi'||exdPart<0)return;
-    syncPlanDraft();
-    const parts=planDay();if(!parts)return;
-    const p=parts[exdPart];if(!p)return;
-    p.actions=p.actions||[];
     const ids=Object.keys(exdPicked);
+    if(!ids.length){toast('还没选动作');return;}
+    const box=document.getElementById('exdConfirmList');
+    if(box){
+      box.innerHTML=ids.map(aid=>{
+        const meta=ftActById(aid)||{};
+        const nm=meta.name||aid;
+        const sub=meta.muscle?escapeHtml(meta.muscle):'';
+        return '<li><i></i><b>'+escapeHtml(nm)+'</b><span>'+(sub?sub+' · ':'')+'3 组 × 10 次</span></li>';
+      }).join('');
+    }
+    document.getElementById('exdConfirmSheet').hidden=false;
+  }
+  function exdConfirmGo(){
+    if(exdMode!=='multi'||exdPart<0){document.getElementById('exdConfirmSheet').hidden=true;return;}
+    syncPlanDraft();
+    const parts=planDay();
+    const p=parts?parts[exdPart]:null;
+    const ids=Object.keys(exdPicked);
+    if(!p||!ids.length){document.getElementById('exdConfirmSheet').hidden=true;return;}
+    p.actions=p.actions||[];
     ids.forEach(aid=>p.actions.push({aid:aid,sets:3,reps:10,weight:0,rest:60}));
+    document.getElementById('exdConfirmSheet').hidden=true;
     closeExDrawer();
     renderPlanDay();
     toast('已加入 '+ids.length+' 个动作');
@@ -8154,17 +8175,6 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     const info=bandTodayInfo(h);
     return `<div class="band-read"><button type="button" class="band-read-btn${(info.today||info.v>0)?'':' is-pending'}" data-action="band-sync" aria-label="${info.today?'手环已记录，点击重新同步':'同步手环睡眠'}">${bandHMHtml(info.v)}</button><button type="button" class="band-edit-link" data-action="band-manual" data-id="${h.id}">改</button></div>`;
   }
-  function bandSparkBars(){
-    if(!bandLast||!bandLast.nights)return '';
-    const vals=Object.keys(bandLast.nights).map(k=>Number(bandLast.nights[k]&&bandLast.nights[k].h||0)).filter(v=>v>0);
-    if(!vals.length)return '';
-    const max=Math.max(8,...vals);let out='';
-    for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const key=isoDate(d);const v=Number(bandLast.nights[key]&&bandLast.nights[key].h||0);
-      if(!v)continue;
-      const hgt=Math.max(6,Math.round(v/max*18));
-      out+=`<i class="${i===0?'now':'ok'}" style="height:${hgt}px" title="${key} ${bandHMShort(v)}"></i>`;}
-    return out?out+'<em>近 7 晚</em>':'';
-  }
   function bandHM(ts){const d=new Date(Number(ts)*1000);const p=n=>String(n).padStart(2,'0');return p(d.getHours())+':'+p(d.getMinutes());}
   function bandStampText(){
     if(!bandLast||!bandLast.t)return '尚未同步';
@@ -8173,12 +8183,6 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     if(m<60)return m+' 分钟前同步';
     const hr=Math.round(m/60);
     return hr<24?hr+' 小时前同步':Math.round(hr/24)+' 天前同步';
-  }
-  function bandDayOf(b){
-    const m=(b&&b.days)||{};
-    const ks=Object.keys(m).filter(k=>m[k]&&(m[k].steps||m[k].stress||m[k].hr));
-    ks.sort();
-    return ks.length?{date:ks[ks.length-1],v:m[ks[ks.length-1]]}:null;
   }
   function bandStressWord(v){if(!v)return '未测';if(v<30)return '轻松';if(v<60)return '一般';if(v<80)return '偏高';return '高';}
   // 睡眠综合分：只用“睡着以后”的数据，不依赖上床时间
@@ -8615,6 +8619,46 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
   const DASH_SIZE_LABEL={4:'S',8:'M',12:'L'};
   function dashHiddenList(){const v=state.settings.dashHidden;return Array.isArray(v)?v:DASH_OPT.slice();}
   function dashSpanMap(){const v=state.settings.dashSpan;return (v&&typeof v==='object'&&!Array.isArray(v))?v:{};}
+  /* 2026-11-06 C：S 的核心数字、L 的补充行。都从页面已有 DOM 里数，不新增状态，不写 localStorage。 */
+  function dashAuxText(id){
+    const cnt=sel=>{const b=document.querySelector(sel);return b?b.children.length:0;};
+    if(id==='todo'){const n=cnt('#dashboardTasks');return n?n+' 件在排':'今天还空着';}
+    if(id==='checkin'){const n=cnt('#dashboardHabits');return n?n+' 项习惯':'还没设习惯';}
+    if(id==='recent'){const n=cnt('#recentRecords');return n?n+' 条记录':'还没有记录';}
+    if(id==='memo'){const n=cnt('#dashMemoList');return n?n+' 条备忘':'随手记一条';}
+    if(id==='zones'){const el=document.getElementById('p5Note');const t=el?String(el.textContent||'').trim():'';return t||'三域合计';}
+    if(id==='quick')return '4 个入口';
+    if(id==='backup')return '该备份了';
+    return '';
+  }
+  function dashAuxFoot(id){
+    if(id==='todo')return '做完的会自己进时光档案';
+    if(id==='checkin')return '连续天数在习惯页里看';
+    if(id==='recent')return '全部记录在时光档案';
+    if(id==='zones')return '点标题进对应页面';
+    if(id==='memo')return '写在这里会自动保存';
+    if(id==='quick')return '常用入口，不用翻菜单';
+    if(id==='backup')return '备份文件存到你选的位置';
+    if(id==='inspire')return '每天换一句，不用管';
+    if(id==='planner'||id==='fitness'||id==='band'||id==='health'||id==='mymedia'||id==='exlib'||id==='issue')return '点一下进对应页面';
+    return '数据存本机，不上传云端';
+  }
+  function dashAux(el,id,sz){
+    const head=el.querySelector('.panel-head');
+    let kpi=el.querySelector('.dash-kpi');
+    if(sz==='s'&&head&&!el.classList.contains('stat-card')){
+      const t=dashAuxText(id);
+      if(t){
+        if(!kpi){kpi=document.createElement('p');kpi.className='dash-kpi';head.insertAdjacentElement('afterend',kpi);}
+        if(kpi.textContent!==t)kpi.textContent=t;
+      }else if(kpi){kpi.remove();kpi=null;}
+    }else if(kpi){kpi.remove();kpi=null;}
+    let ft=el.querySelector('.dash-lfoot');
+    if(sz==='l'){
+      if(!ft){ft=document.createElement('p');ft.className='dash-lfoot';el.appendChild(ft);}
+      const t=dashAuxFoot(id);if(ft.textContent!==t)ft.textContent=t;
+    }else if(ft){ft.remove();}
+  }
   /* 把尺寸写回 DOM。桌面读 data-dspan 换算 12 栏跨度；手机只看 data-dspan<=4 决定半宽。 */
   function dashApplySize(){
     const grid=dashCardMap();if(!grid)return;
@@ -8630,6 +8674,7 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
         delete el.dataset.dspan;
         el.dataset.dsize=DASH_MOBILE_DEFAULT[id]||'l';
       }
+      dashAux(el,id,el.dataset.dspan?el.dataset.dsize:'');
     });
   }
   function dashSetSize(id,n){
@@ -8868,14 +8913,71 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
       set('djIssue',n?(n+' 条未处理，点开处理'):'哪里不好用，记一条');
     }catch(e){set('djIssue','哪里不好用，记一条');}
   }
+  /* 小组件线框缩略图（2026-11-06 B）：96×64，标题条 + 占位块，按卡片类型分五种骨架。
+     只用内联 SVG 画灰块，不放真实数据和外部图片，所以离线、断网、手机都一样。 */
+  const DTHUMB_GROUP={sleep:'stat',spend:'stat',habit:'stat',tasks:'stat',fin:'stat',
+    planner:'jump',fitness:'jump',band:'jump',health:'jump',mymedia:'jump',exlib:'jump',issue:'jump',
+    memo:'list',todo:'list',checkin:'list',recent:'list',zones:'list',backup:'list',
+    inspire:'quote',quick:'grid'};
+  const DTHUMB_ICON={planner:'i-calendar',fitness:'i-fitness',band:'i-chart',health:'i-note',mymedia:'i-media',exlib:'i-archive',issue:'i-note'};
+  function dashThumb(id){
+    /* 二版：拿真实卡片的克隆体，按 S 档 180×120 塞进 96×64 的框里缩着看，内容是真数据。
+       克隆必须摘掉所有 id，否则 getElementById 可能取到缩略图里那份，整个页面数据会错位。 */
+    const live=document.querySelector(`[data-dcard="${id}"]`);
+    if(live){
+      const clone=live.cloneNode(true);
+      if(clone.id)clone.removeAttribute('id');
+      /* 编辑态卡片里挂着 S/M/L 工具行和拖拽手柄，缩略图不要这些东西 */
+      clone.querySelectorAll('.dh-move,.dh-size,.dh-ops').forEach(n=>n.remove());
+      clone.querySelectorAll('[id]').forEach(n=>n.removeAttribute('id'));
+      clone.querySelectorAll('[data-act],[data-action],[data-nav]').forEach(n=>{n.removeAttribute('data-act');n.removeAttribute('data-action');n.removeAttribute('data-nav');});
+      clone.removeAttribute('data-dcard');
+      clone.setAttribute('data-dsize','s');
+      clone.setAttribute('aria-hidden','true');
+      const isStat=clone.classList.contains('stat-card'),isJump=clone.classList.contains('dash-jump');
+      if(!isStat&&!isJump){
+        const t=dashAuxText(id);
+        if(t){const p=document.createElement('p');p.className='dash-kpi';p.textContent=t;const head=clone.querySelector('.panel-head');if(head)head.insertAdjacentElement('afterend',p);else clone.appendChild(p);}
+      }
+      return '<span class="dthumb"><span class="dthumb-in">'+clone.outerHTML+'</span></span>';
+    }
+    /* 兜底：万一张卡不在页面上（被删或隐藏），退回线框骨架 */
+    const g=DTHUMB_GROUP[id]||'list';
+    const bar='<rect x="8" y="9" width="32" height="4" rx="2" fill="#c6b8a5" stroke="none"/>';
+    const ln=(y,w)=>'<rect x="8" y="'+y+'" width="'+w+'" height="4" rx="2" fill="#e9dfd0" stroke="none"/>';
+    let body='';
+    if(g==='stat')body='<rect x="8" y="20" width="22" height="22" rx="6" fill="#ece3d4" stroke="none"/>'
+      +'<rect x="36" y="21" width="28" height="8" rx="3" fill="#d3c5b2" stroke="none"/>'
+      +'<rect x="36" y="33" width="20" height="5" rx="2.5" fill="#e9dfd0" stroke="none"/>';
+    else if(g==='jump')body='<rect x="8" y="23" width="16" height="16" rx="5" fill="#ece3d4" stroke="none"/>'
+      +(DTHUMB_ICON[id]?'<use href="#'+DTHUMB_ICON[id]+'" x="9.5" y="24.5" width="13" height="13" fill="none" stroke="#9d8a72" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>':'')
+      +'<rect x="30" y="24" width="34" height="6" rx="3" fill="#d3c5b2" stroke="none"/>'
+      +'<rect x="30" y="35" width="46" height="4" rx="2" fill="#e9dfd0" stroke="none"/>';
+    else if(g==='list')body=ln(20,80)+ln(29,68)+ln(38,76)+ln(47,56);
+    else if(g==='quote')body='<rect x="8" y="20" width="78" height="9" rx="3" fill="#dccfb9" stroke="none"/>'+ln(36,74)+ln(45,50);
+    else body='<rect x="8" y="19" width="36" height="14" rx="4" fill="#ece3d4" stroke="none"/><rect x="52" y="19" width="36" height="14" rx="4" fill="#ece3d4" stroke="none"/>'
+      +'<rect x="8" y="39" width="36" height="14" rx="4" fill="#ece3d4" stroke="none"/><rect x="52" y="39" width="36" height="14" rx="4" fill="#ece3d4" stroke="none"/>';
+    return '<span class="dthumb" aria-hidden="true"><svg viewBox="0 0 96 64">'+bar+body+'</svg></span>';
+  }
   function dashOpenAdd(){
     const grid=dashCardMap();if(!grid)return;
     const placed=new Set([...grid.children].filter(el=>el.dataset.dcard&&!el.classList.contains('dcard-off')).map(el=>el.dataset.dcard));
     const list=document.getElementById('dashAddList');if(!list)return;
-    const rows=DASH_CARDS.filter(pair=>!placed.has(pair[0])).map(pair=>{const m=DASH_META[pair[0]]||[pair[0],''];return `<div class="dash-wrow"><span class="grow"><strong>${m[0]}</strong><small>${m[1]}</small></span><button class="dash-pill" type="button" data-action="dash-add-item" data-wid="${pair[0]}">添加</button></div>`;}).join('');
+    const rows=DASH_CARDS.filter(pair=>!placed.has(pair[0])).map(pair=>{const m=DASH_META[pair[0]]||[pair[0],''];return `<button class="dash-wcard" type="button" data-action="dash-add-item" data-wid="${pair[0]}">${dashThumb(pair[0])}<b>${m[0]}</b><small>${m[1]}</small></button>`;}).join('');
     list.innerHTML=rows||'<p class="sheet-tip">能加的都在首页上了。想挪位置，先点右上角编辑，用上移 / 下移。</p>';
     const sh=document.getElementById('dashAddSheet');if(sh)sh.hidden=false;
+    dashThumbFit();
   }
+  /* 缩略图按列宽等比缩放：虚拟画布固定 195×130，实际宽度随两列网格变化 */
+  function dashThumbFit(){
+    const list=document.getElementById('dashAddList');if(!list)return;
+    list.querySelectorAll('.dthumb').forEach(t=>{
+      const w=t.clientWidth;if(!w)return;
+      const inner=t.querySelector('.dthumb-in');
+      if(inner)inner.style.transform='scale('+(w/195)+')';
+    });
+  }
+  window.addEventListener('resize',function(){const sh=document.getElementById('dashAddSheet');if(sh&&!sh.hidden)dashThumbFit();});
   function dashAddItem(id){
     if(!DASH_CARDS.some(pair=>pair[0]===id))return;
     state.settings.dashHidden=dashHiddenList().filter(k=>k!==id);
@@ -8891,6 +8993,38 @@ html[data-skin="ink"] i{background:#eef0ee;background-image:radial-gradient(56px
     if(target&&window.MutationObserver)new MutationObserver(sync).observe(target,{attributes:true,attributeFilter:['class']});
   }
   function init(){const now=new Date(),weekdays=['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];document.getElementById('todayLabel').textContent=LANG==='en'?new Intl.DateTimeFormat('en-US',{month:'long',day:'numeric',weekday:'long'}).format(now):`${now.getMonth()+1} 月 ${now.getDate()} 日 · ${weekdays[now.getDay()]}`;setDateDefaults();updateMoneyCategories();restoreDrafts();bindForms();bindEvents();if(typeof bindBatchD==='function')bindBatchD();dashApplySize();dashApplyOrder();dashWatchView();bandSyncApply(false);setInterval(()=>bandSyncApply(false),30*60*1000);const debtFixed=migrateDebtFlow();renderAll();renderAiStatus();checkDueReminders();renderFinanceCard();if(debtFixed)setTimeout(function(){toast('已把 '+debtFixed+' 笔「欠款」从支出改为负债，不再计入本月支出');},600);var aiInp=document.getElementById('aiInput');if(aiInp)aiInp.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();aiSend();}});switchView(document.getElementById(`view-${location.hash.slice(1)}`)?location.hash.slice(1):'dashboard');if(!dataCorrupted)saveState();pullAllRemote(function(ok){ if(ok&&!dataCorrupted){ saveState(); renderAll(); } });}
+  /* 弹层层级（2026-11-06 A）：全局计数器 zTop 初值 60。每打开一个弹层取 ++zTop 写到该容器的行内 zIndex。
+     容器自身就是遮罩和内容的共同父级，写一处两层一起抬。
+     全部关完时归一化回 60，所以开一天也不会把数字堆到几百，排序仍然是对的。
+     只认 hidden 这一种开合信号，display 切换的浮层（toast、底导）不受影响。
+     挂到 body 整个子树，后插入的弹层也能被接管。.pk-mask（日期时间选择器）不参与排序，保持 CSS 里的 300 永远最上。 */
+  let zTop=60;
+  const zStack=[];
+  const LAYER_SEL='.settings-backdrop,.dash-sheet,.exd-backdrop,.trainsheet';
+  function raiseLayer(el){
+    if(!el||!el.style)return null;
+    const i=zStack.indexOf(el);if(i>-1)zStack.splice(i,1);
+    zStack.push(el);el.style.zIndex=String(++zTop);return el;
+  }
+  /* 全部关完才归一化：计数器退回 60，行内 z 一起清掉，下次打开又从 61 起。
+     只在栈空时清，所以多层还开着时不会把下面那层打回 CSS 默认值。 */
+  function releaseLayer(el){
+    const i=zStack.indexOf(el);if(i>-1)zStack.splice(i,1);
+    if(zStack.length)return;
+    zTop=60;
+    document.querySelectorAll(LAYER_SEL).forEach(x=>{if(x.style&&x.style.zIndex)x.style.zIndex='';});
+  }
+  (function watchLayers(){
+    const obs=new MutationObserver(list=>{
+      for(let i=0;i<list.length;i++){
+        const m=list[i],el=m.target;
+        if(m.attributeName!=='hidden')continue;
+        if(!el.matches||!el.matches(LAYER_SEL))continue;
+        if(el.hidden)releaseLayer(el);else raiseLayer(el);
+      }
+    });
+    obs.observe(document.body,{attributes:true,subtree:true,attributeFilter:['hidden']});
+  })();
   startI18n();
   document.addEventListener('DOMContentLoaded',init);
 })();
@@ -9471,8 +9605,62 @@ body:has(#view-dashboard.active) .topbar h1{font-size:26px;line-height:1.25}
 /* ===== 2026-11-01 C：这两张卡跟今天页对齐（圆角 22 / 内边距 16 / 沿用 --shadow 那一级，不新增阴影） ===== */
 .money-wrap .money-card.money-chart,
 .money-wrap .money-card.money-plan{border-radius:22px;padding:16px;box-shadow:var(--shadow)}
+/* ===== 2026-11-06 C：小组件三档内容规则（只对用户点过 S/M/L、带 data-dspan 的卡生效，默认排版一张不动） =====
+   S 只留标题 + 一个核心数字；M 标题 + 两行内容；L 用补充行把底部填住。
+   字号固定：标题 15 / 正文 13，三档都不缩。新块放样式表最末，靠后覆盖旧规则，旧的一行没删。 */
+#view-dashboard .dashboard-grid>article[data-dspan="4"]{padding:14px;display:flex;flex-direction:column;justify-content:center;gap:5px;overflow:hidden}
+/* 标题区收干净：eyebrow、右上角入口、右上角说明全部让位 */
+#view-dashboard .dashboard-grid>article[data-dspan="4"] .panel-head{margin:0;display:block}
+#view-dashboard .dashboard-grid>article[data-dspan="4"] .panel-head h2{font-size:15px;line-height:1.3}
+#view-dashboard .dashboard-grid>article[data-dspan="4"]:not(.inspire-card) .eyebrow{display:none!important}
+#view-dashboard .dashboard-grid>article[data-dspan="4"] .panel-head>.text-btn,
+#view-dashboard .dashboard-grid>article[data-dspan="4"] .panel-head>button,
+#view-dashboard .dashboard-grid>article[data-dspan="4"] .panel-head .mini-note,
+#view-dashboard .dashboard-grid>article[data-dspan="4"] .panel-head .wnote{display:none!important}
+/* 内容区整块让位，只留一行核心数字 */
+#view-dashboard .dashboard-grid>article[data-dspan="4"] :is(.clean-list,.habit-stack,.timeline,.wlist,.dash-memo-list,.memo-quick,.quick-grid,.insight-row,.wmore,.wlist-row,.stat-icon){display:none!important}
+#view-dashboard .dashboard-grid>article[data-dspan="4"]>p.mini-note{display:none!important}
+#view-dashboard .dashboard-grid>article[data-dspan="4"] blockquote{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin:0;font-size:13px;line-height:1.45}
+#view-dashboard .dashboard-grid>article.inspire-card[data-dspan="4"] .eyebrow{font-size:15px;font-weight:800;letter-spacing:0;color:var(--ink);margin:0 0 3px}
+/* 统计卡：标签 15 + 数字，图标和说明去掉，不缩字 */
+#view-dashboard .dashboard-grid>article.stat-card[data-dspan="4"]{align-items:flex-start;gap:2px}
+#view-dashboard .dashboard-grid>article.stat-card[data-dspan="4"] small{display:none!important}
+#view-dashboard .dashboard-grid>article.stat-card[data-dspan="4"] span{font-size:15px;line-height:1.3}
+#view-dashboard .dashboard-grid>article.stat-card[data-dspan="4"] strong{font-size:22px;line-height:1.15;display:block;margin-top:2px}
+/* 跳转卡：标题 15 + 一行数据，图标箭头去掉 */
+#view-dashboard .dashboard-grid>article.dash-jump[data-dspan="4"] .dj-ic,
+#view-dashboard .dashboard-grid>article.dash-jump[data-dspan="4"] .dj-go{display:none}
+#view-dashboard .dashboard-grid>article.dash-jump[data-dspan="4"] .dj-tx b{font-size:15px}
+#view-dashboard .dashboard-grid>article.dash-jump[data-dspan="4"] .dj-tx small{font-size:13px;margin-top:3px;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+/* S 的核心数字（没有现成数字的卡才有这一行） */
+#view-dashboard .dash-kpi{display:none;margin:2px 0 0;font-size:13px;line-height:1.4;font-weight:700;color:var(--muted)}
+#view-dashboard .dashboard-grid>article[data-dspan="4"] .dash-kpi{display:block}
+/* M：标题 15 + 正文 13，只留两行内容 */
+#view-dashboard .dashboard-grid>article[data-dspan="8"]{padding:14px 16px;overflow:hidden}
+#view-dashboard .dashboard-grid>article[data-dspan="8"] .panel-head{margin-bottom:9px}
+#view-dashboard .dashboard-grid>article[data-dspan="8"] .panel-head h2{font-size:15px}
+#view-dashboard .dashboard-grid>article[data-dspan="8"] .eyebrow{font-size:10px}
+#view-dashboard .dashboard-grid>article[data-dspan="8"] :is(.clean-list,.habit-stack,.timeline,.wlist,.dash-memo-list,.quick-grid,.insight-row)>*:nth-child(n+3){display:none!important}
+#view-dashboard .dashboard-grid>article[data-dspan="8"] :is(.clean-list,.habit-stack,.timeline,.wlist,.dash-memo-list,.quick-grid,.insight-row){font-size:13px}
+/* 正文 13 固定：同一块内容在 M / L 两档字号一致，页头小标题除外 */
+#view-dashboard .dashboard-grid>article[data-dspan="8"] :is(.task-row,.wrv-line,.ti-title,.timeline-item,.memo-mini .t,.habit-row,.clean-list .ct),
+#view-dashboard .dashboard-grid>article[data-dspan="12"] :is(.task-row,.wrv-line,.ti-title,.timeline-item,.memo-mini .t,.habit-row,.clean-list .ct){font-size:13px}
+/* L：原有内容照旧，底部补一行补充信息，离底边 14px（不到 24） */
+#view-dashboard .dashboard-grid>article[data-dspan="12"]:not(.dash-jump){display:flex;flex-direction:column;padding:16px 16px 14px}
+#view-dashboard .dashboard-grid>article[data-dspan="12"] .panel-head h2{font-size:15px}
+#view-dashboard .dashboard-grid>article[data-dspan="12"] .dash-lfoot{margin:auto 0 0;padding-top:10px;border-top:1px solid rgba(48,34,22,.06);font-size:13px;line-height:1.4;color:var(--muted);font-weight:600}
+/* 跳转卡整行时改 grid：图标 / 标题 / 箭头一行，补充行独占下一行贴底，底部留白不超过 16 */
+#view-dashboard .dashboard-grid>article.dash-jump[data-dspan="12"]{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;column-gap:12px;row-gap:6px;align-content:space-between;min-height:216px;padding:16px}
+#view-dashboard .dashboard-grid>article.dash-jump[data-dspan="12"] .dash-lfoot{grid-column:1/-1;margin:0;padding-top:10px}
+
+/* 2026-11-06 补：选动作之后那层确认，尺寸跟其它 settings-sheet 一档 */
+.exdc-sheet{width:min(460px,100%)}
+.exdc-list{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px;max-height:44vh;overflow:auto}
+.exdc-list li{display:flex;align-items:center;gap:9px;padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:var(--paper-soft);font-size:13px;color:var(--ink)}
+.exdc-list li i{flex:none;width:6px;height:6px;border-radius:50%;background:var(--plum)}
+.exdc-list li b{flex:1;min-width:0;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.exdc-list li span{flex:none;color:var(--muted);font-size:12px;font-weight:600}
+.exdc-tip{margin:10px 0 2px;color:var(--muted);font-size:12px;line-height:1.5}
 
 </style>
-
-</body>
 </html>
