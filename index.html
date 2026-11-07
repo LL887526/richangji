@@ -890,7 +890,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
    部署脚本 _sync_deploy.js 会在发布时把 BUILD 改成时间戳并同步写 version.json，两边自动一致。
    注意：首次仍需手动刷新一次（旧页面里还没有这段代码），之后就能自己发现更新。 */
 (function(){
-  var BUILD='20261107_0916';
+  var BUILD='20261107_1013';
   window.__RJ_BUILD=BUILD;
   var bar=function(){return document.getElementById('verBar');};
   /* 版本号写进设置页（2026-11-06）：原来关于页写死「V1.3 2026-09-23 构建」，
@@ -917,6 +917,15 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
       }).catch(function(){if(manual)stateTx('没查到线上版本，离线打开时正常');});
     }catch(e){if(manual)stateTx('检查失败');}
   }
+  /* 回到前台时再查一次（2026-11-07）：添加到桌面的网页切走再切回来不会重新加载，
+     只靠打开时查一次，容易一直停在旧版。这里切回前台超过 5 分钟就再比对一次。 */
+  document.addEventListener('visibilitychange',function(){
+    if(document.visibilityState!=='visible')return;
+    var now=Date.now();
+    if(now-(window.__rjVerAt||0)<300000)return;
+    window.__rjVerAt=now;
+    check(false);
+  });
   document.addEventListener('click',function(e){
     var b=e.target&&e.target.closest?e.target.closest('#verBar [data-act],[data-act="verCheck"]'):null;
     if(!b)return;
