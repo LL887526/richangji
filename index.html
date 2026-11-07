@@ -301,12 +301,17 @@ body.ai-locked{overflow:hidden;height:100dvh;overscroll-behavior:none}
 .dthumb-in .panel-head{margin:0;display:block}
 .dthumb-in .panel-head h2,.dthumb-in h2{font-size:15px;line-height:1.3;margin:0;font-weight:800;color:var(--ink)}
 .dthumb-in strong{font-size:22px;line-height:1.15;font-weight:800;display:block;color:var(--ink)}
-.dthumb-in>article.dash-jump{flex-direction:row;align-items:center;justify-content:flex-start;gap:9px}
+/* 缩略图内容水平居中（2026-11-07）：原来 justify-content:flex-start，图标和文字挤在左边，
+   右边空一大块，看着像内容整体往左跑。 */
+.dthumb-in>article.dash-jump{flex-direction:row;align-items:center;justify-content:center;gap:9px}
 .dthumb-in .dash-jump{display:flex;align-items:center;gap:8px}
 .dthumb-in .dj-ic{display:grid;place-items:center;width:30px;height:30px;border-radius:9px;flex:none}
 .dthumb-in .dj-ic svg{width:16px;height:16px}
 .dthumb-in .dj-go{display:none}
 .dthumb-in .dj-tx b{display:block;font-size:15px;line-height:1.3}
+/* 文字块不再撑满（2026-11-07）：.dj-tx 原本 flex:1，把整行占满导致内容看着全挤在左边，
+   放开后图标和文字作为一组在缩略图里居中。 */
+.dthumb-in .dj-tx{flex:0 1 auto;min-width:0;max-width:160px}
 .dthumb-in .dj-tx small{display:block;margin-top:3px;font-size:13px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .dthumb-in :is(.clean-list,.habit-stack,.timeline,.wlist,.dash-memo-list,.memo-quick,.quick-grid,.insight-row,.wmore,.dash-lfoot){display:none!important}
 .dthumb-in blockquote{margin:0;font-size:13px;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
@@ -885,7 +890,7 @@ html.ios-standalone body{padding-top:max(env(safe-area-inset-top),44px)}
    部署脚本 _sync_deploy.js 会在发布时把 BUILD 改成时间戳并同步写 version.json，两边自动一致。
    注意：首次仍需手动刷新一次（旧页面里还没有这段代码），之后就能自己发现更新。 */
 (function(){
-  var BUILD='20261106_2347';
+  var BUILD='20261107_0916';
   window.__RJ_BUILD=BUILD;
   var bar=function(){return document.getElementById('verBar');};
   /* 版本号写进设置页（2026-11-06）：原来关于页写死「V1.3 2026-09-23 构建」，
